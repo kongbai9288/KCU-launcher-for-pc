@@ -54,6 +54,7 @@
 | --- | --- | --- |
 | 主路径 | git HTTP push | 受阻，github.com 主机 403 policy_default_denied |
 | 二级降级 | `scripts/api_push.py` | Git Data API 全量树快照，写入 refs/heads/main |
+| 空仓库初始化 | `PUT /contents/README.md` | 空仓库 `POST /git/blobs` 返回 409 `Git Repository is empty.`，初始化后可用 |
 
 ## 诊断行
 

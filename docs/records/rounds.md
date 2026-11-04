@@ -107,7 +107,9 @@
 | `POST /user/repos`，name=`KCU launcher for pc` | 201，实际名 `KCU-launcher-for-pc` |
 | `GET /repos/kongbai9288/KCU-launcher-for-pc` | 200，private=false，default_branch=main |
 | git HTTP push，三种认证方式 | 受阻，github.com 主机 403 policy_default_denied |
-| `scripts/api_push.py` | 启用，二级降级 |
+| `POST /git/blobs`，空仓库未初始化 | 409 `Git Repository is empty.` |
+| `PUT /contents/README.md` | 201，初始提交 d0acb0d |
+| `scripts/api_push.py` | 启用，二级降级；首次快照 c76f491，42 文件 |
 
 名称差异：
 

@@ -26,6 +26,8 @@
 | D13 | API 快照 | GitHub Git Data API：blobs → tree → commit → ref |
 | D14 | 本地历史 | 本地 git 提交链与远端 API 提交链不同哈希，树内容一致 |
 | D15 | 仓库归属 | 与 github.com/kongbai9288/KCU-Launcher 不合并 |
+| D16 | 空仓库初始化 | `PUT /repos/{owner}/{repo}/contents/README.md` → 201，生成初始提交 d0acb0d |
+| D17 | 首次快照 | `c76f491`，parent=d0acb0d，42 文件 |
 
 ## 名称约束
 
@@ -45,6 +47,9 @@
 | api.github.com GET /user，`Authorization: token` | 200 | `login: kongbai9288` |
 | api.github.com GET /repos/kongbai9288/KCU-launcher-for-pc | 200 | 仓库信息 |
 | api.github.com POST /user/repos | 201 | 仓库信息 |
+| api.github.com POST /git/blobs，空仓库未初始化 | 409 | `Git Repository is empty.` |
+| api.github.com PUT /contents/README.md | 201 | 初始提交，仓库 git 对象可用 |
+| api.github.com POST /git/blobs，初始化后 | 201 | blob sha |
 | github.com GET 仓库页 | 403 | `Request denied / policy_default_denied` |
 | github.com git-receive-pack info/refs | 403 | `Request denied / policy_default_denied` |
 | git push 三种认证方式 | 403 | `fatal: unable to access ... 403` |
@@ -71,3 +76,4 @@
 | V04 | `curl .../git/ref/heads/main` | 200，object.sha 为非空提交 |
 | V05 | `! grep -rqE 'gh[p]_' .` | exit 0 |
 | V06 | `git hash-object <file>` 与远端 blob sha 比对 | 一致 |
+| V07 | `GET /git/trees/<sha>?recursive=1` | 文件数与 `git ls-files` 一致 |

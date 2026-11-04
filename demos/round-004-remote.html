@@ -128,11 +128,12 @@ td{color:var(--txt)}
   <div class="node" data-k="4"><div class="n">05 / remote</div><div class="t">设置远端</div><div class="s">URL 不含凭据</div></div>
   <div class="node" data-k="5"><div class="n">06 / git push</div><div class="t">主路径</div><div class="s">git HTTP</div></div>
   <div class="node" data-k="6"><div class="n">07 / fallback</div><div class="t">二级降级</div><div class="s">api_push.py</div></div>
-  <div class="node" data-k="7"><div class="n">08 / blobs</div><div class="t">构造 blob</div><div class="s">git ls-files</div></div>
-  <div class="node" data-k="8"><div class="n">09 / tree</div><div class="t">构造树</div><div class="s">POST /git/trees</div></div>
-  <div class="node" data-k="9"><div class="n">10 / commit</div><div class="t">构造提交</div><div class="s">POST /git/commits</div></div>
-  <div class="node" data-k="10"><div class="n">11 / ref</div><div class="t">更新 ref</div><div class="s">refs/heads/main</div></div>
-  <div class="node" data-k="11"><div class="n">12 / verify</div><div class="t">远端核对</div><div class="s">blob sha 比对</div></div>
+  <div class="node" data-k="7"><div class="n">08 / bootstrap</div><div class="t">空仓初始化</div><div class="s">PUT /contents/README.md</div></div>
+  <div class="node" data-k="8"><div class="n">09 / blobs</div><div class="t">构造 blob</div><div class="s">git ls-files</div></div>
+  <div class="node" data-k="9"><div class="n">10 / tree</div><div class="t">构造树</div><div class="s">POST /git/trees</div></div>
+  <div class="node" data-k="10"><div class="n">11 / commit</div><div class="t">构造提交</div><div class="s">POST /git/commits</div></div>
+  <div class="node" data-k="11"><div class="n">12 / ref</div><div class="t">更新 ref</div><div class="s">PATCH refs/heads/main</div></div>
+  <div class="node" data-k="12"><div class="n">13 / verify</div><div class="t">远端核对</div><div class="s">blob sha 比对</div></div>
 </div>
 
 <div class="foot">
@@ -159,6 +160,8 @@ td{color:var(--txt)}
       <tr><td>api.github.com GET /user，token 方案</td><td>200</td></tr>
       <tr><td>api.github.com GET /user，Bearer 方案</td><td>403</td></tr>
       <tr><td>api.github.com POST /user/repos</td><td>201</td></tr>
+      <tr><td>api.github.com POST /git/blobs，空仓</td><td>409 Git Repository is empty.</td></tr>
+      <tr><td>api.github.com PUT /contents/README.md</td><td>201</td></tr>
       <tr><td>github.com GET 仓库页</td><td>403</td></tr>
       <tr><td>github.com git-receive-pack</td><td>403</td></tr>
       <tr><td>api.github.com Git Data API</td><td>200/201</td></tr>
@@ -238,11 +241,12 @@ async function run(){
     await step(()=>{active(6,'warn');line('remote','push','main','DEGRADE','detail=api_snapshot_fallback level=2');},160);
   }
 
-  await step(()=>{active(7);line('remote','blob','git ls-files','OK','count=47 encoding=base64');},160);
-  await step(()=>{active(8);line('remote','tree','POST /git/trees','OK','http=201 nested=true');},160);
-  await step(()=>{active(9);line('remote','commit','POST /git/commits','OK','http=201 message=factual_only');},160);
-  await step(()=>{active(10);$('s-ref').textContent='main';line('remote','ref','refs/heads/main','OK','http=201 parent=none');},160);
-  await step(()=>{active(11);line('remote','verify','blob sha','OK','git_hash_object=match files=47');},160);
+  await step(()=>{active(7);line('remote','bootstrap','PUT /contents/README.md','OK','http=201 commit=d0acb0d');},160);
+  await step(()=>{active(8);line('remote','blob','git ls-files','OK','count=42 encoding=base64');},160);
+  await step(()=>{active(9);line('remote','tree','POST /git/trees','OK','http=201 nested=true');},160);
+  await step(()=>{active(10);line('remote','commit','POST /git/commits','OK','http=201 message=factual_only');},160);
+  await step(()=>{active(11);$('s-ref').textContent='main';line('remote','ref','refs/heads/main','OK','http=200 parent=d0acb0d');},160);
+  await step(()=>{active(12);line('remote','verify','blob sha','OK','git_hash_object=match files=42');},160);
 }
 
 $('run').onclick = run;
