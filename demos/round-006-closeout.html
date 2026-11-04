@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KCU Launcher / 005 收口与 006 交付 / 006</title>
+<style>
+:root{
+  --bg:#0b0e14;--panel:#131824;--panel2:#1a2130;--line:#28324a;
+  --txt:#e6ecf5;--dim:#8b9ab3;--acc:#5ee0b4;--acc2:#6aa8ff;
+  --warn:#f5b95c;--err:#ff7a7a;--mut:#7d8aa3;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 12% -10%,#18233a 0%,var(--bg) 58%);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:18px}
+.wrap{max-width:1180px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;padding:6px 2px 18px;border-bottom:1px solid var(--line)}
+h1{font-size:19px;margin:0;letter-spacing:.5px;font-weight:650}
+.tag{font:12px var(--mono);color:var(--acc);border:1px solid #2c5b4c;border-radius:999px;padding:2px 10px;background:#10241e}
+.meta{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+.grid{display:grid;grid-template-columns:310px 1fr;gap:16px;margin-top:16px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--panel) 0%,#111623 100%);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{font-size:13px;margin:0 0 14px;color:var(--dim);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.field{margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--dim);margin-bottom:5px}
+select{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:13px var(--mono);outline:none}
+select:focus{border-color:var(--acc2)}
+.btns{display:flex;gap:9px;margin-top:16px}
+button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:13px/1.2 inherit;cursor:pointer}
+button.primary{background:linear-gradient(135deg,#2f7d68,#245f8f);border-color:#3f8f7e;font-weight:600}
+button:active{transform:translateY(1px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px}
+.stat .k{font-size:11px;color:var(--dim)}
+.stat .v{font:14px var(--mono);margin-top:3px;color:var(--acc)}
+#log{height:340px;overflow:auto;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.75 var(--mono);white-space:pre-wrap;word-break:break-all}
+.ln{color:#c9d6e8}.ln .d{color:var(--acc2)}.ln .r{color:var(--acc)}.ln .w{color:var(--warn)}.ln .e{color:var(--err)}.ln .m{color:var(--mut)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
+@media(max-width:980px){.flow{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;transition:.25s}
+.node .n{font:11px var(--mono);color:var(--mut)}
+.node .t{font-size:12px;margin:4px 0 5px;font-weight:600}
+.node .s{font-size:11px;color:var(--dim)}
+.node.on{border-color:var(--acc);box-shadow:0 0 0 1px #2f7d68,0 8px 26px rgba(46,125,104,.2);background:#12201e}
+.node.on .t{color:var(--acc)}
+.node.err{border-color:var(--err)}.node.err .t{color:var(--err)}
+.node.warn{border-color:var(--warn)}.node.warn .t{color:var(--warn)}
+.foot{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.foot{grid-template-columns:1fr}}
+pre{margin:0;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.7 var(--mono);color:#c9d6e8;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600}td{color:var(--txt)}
+.hint{color:var(--dim);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>KCU Launcher</h1>
+  <span class="tag">005 收口 / 006 交付</span>
+  <span class="tag">轮次 006</span>
+  <span class="meta" id="ts"></span>
+</header>
+
+<div class="grid">
+  <section class="card">
+    <h2>输入</h2>
+    <div class="field">
+      <label>开工预检</label>
+      <select id="preflight">
+        <option value="pass">15 项非空，时钟一致</option>
+        <option value="fail">必读文件缺失</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>被扫描域字面量</label>
+      <select id="literal">
+        <option value="clean">已清理，exit 0</option>
+        <option value="dirty">存在自我命中</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>github.com 主机</label>
+      <select id="host">
+        <option value="blocked">403 policy_default_denied</option>
+        <option value="open">可访问</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>独立验证结论</label>
+      <select id="verify">
+        <option value="partial">部分通过</option>
+        <option value="pass">通过</option>
+        <option value="fail">失败</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>D06 信号</label>
+      <select id="d06">
+        <option value="none">未提供</option>
+        <option value="given">已提供且蓝图已批准</option>
+      </select>
+    </div>
+    <div class="btns">
+      <button class="primary" id="run">执行本轮</button>
+      <button id="reset">重置</button>
+    </div>
+    <div class="hint">日志行格式：[KCU] &lt;域&gt; &lt;动作&gt; &lt;目标&gt; &lt;结果&gt; &lt;详情&gt;</div>
+  </section>
+
+  <section class="card">
+    <h2>状态</h2>
+    <div class="stats">
+      <div class="stat"><div class="k">本地提交</div><div class="v" id="s-commit">—</div></div>
+      <div class="stat"><div class="k">推送通道</div><div class="v" id="s-channel">—</div></div>
+      <div class="stat"><div class="k">远端比对</div><div class="v" id="s-parity">—</div></div>
+      <div class="stat"><div class="k">诊断行</div><div class="v" id="s-cnt">0</div></div>
+    </div>
+    <div id="log"></div>
+  </section>
+</div>
+
+<div class="flow" id="flow">
+  <div class="node" data-k="0"><div class="n">01 / preflight</div><div class="t">开工预检</div><div class="s">时钟 + 15 必读</div></div>
+  <div class="node" data-k="1"><div class="n">02 / legacy</div><div class="t">遗留检测</div><div class="s">005 未闭环 17 项</div></div>
+  <div class="node" data-k="2"><div class="n">03 / literal</div><div class="t">字面量清理</div><div class="s">A21 / A23 / A24</div></div>
+  <div class="node" data-k="3"><div class="n">04 / spec</div><div class="t">逐字副本</div><div class="s">006 指令 1 行</div></div>
+  <div class="node" data-k="4"><div class="n">05 / docs</div><div class="t">文档补齐</div><div class="s">rounds / index / README</div></div>
+  <div class="node" data-k="5"><div class="n">06 / demo</div><div class="t">HTML 演示</div><div class="s">本文件</div></div>
+  <div class="node" data-k="6"><div class="n">07 / scan</div><div class="t">双扫描</div><div class="s">凭据 + 措辞 + 四值</div></div>
+  <div class="node" data-k="7"><div class="n">08 / commit</div><div class="t">本地提交</div><div class="s">git add -A</div></div>
+  <div class="node" data-k="8"><div class="n">09 / git http</div><div class="t">主路径</div><div class="s">受阻 403</div></div>
+  <div class="node" data-k="9"><div class="n">10 / fallback</div><div class="t">二级降级</div><div class="s">api_push.py</div></div>
+  <div class="node" data-k="10"><div class="n">11 / parity</div><div class="t">远端比对</div><div class="s">blob sha 逐项</div></div>
+  <div class="node" data-k="11"><div class="n">12 / verify</div><div class="t">独立验证</div><div class="s">外部核对</div></div>
+  <div class="node" data-k="12"><div class="n">13 / stage</div><div class="t">阶段判定</div><div class="s">D06 未触发</div></div>
+</div>
+
+<div class="foot">
+  <section class="card">
+    <h2>统一信封</h2>
+<pre>{
+  "request_id": "006-a17c",
+  "type": "request | response | event",
+  "target": "round.closeout_and_push",
+  "payload": {
+    "rounds": [5, 6],
+    "remote": "kongbai9288/KCU-launcher-for-pc",
+    "branch": "main",
+    "auth": "env:KCU_PAT",
+    "fallback": "git_data_api",
+    "d06": false
+  },
+  "error": null
+}</pre>
+  </section>
+  <section class="card">
+    <h2>四值与边界</h2>
+    <table>
+      <tr><th>项</th><th>值</th></tr>
+      <tr><td>005 产物落盘</td><td>已证实</td></tr>
+      <tr><td>005 未提交 / 未推送 / 未验证</td><td>已失败</td></tr>
+      <tr><td>字面量自我命中清理</td><td>已证实</td></tr>
+      <tr><td>git HTTP 推送</td><td>受阻 403</td></tr>
+      <tr><td>src/ 实现</td><td>未证实</td></tr>
+      <tr><td>rustc / cargo 构建</td><td>受阻</td></tr>
+      <tr><td>正常模式 UI</td><td>受阻（未提供）</td></tr>
+      <tr><td>框架蓝图批准</td><td>未证实</td></tr>
+    </table>
+  </section>
+</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const nodes = [...document.querySelectorAll('.node')];
+let count = 0, timer = null;
+$('ts').textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function line(domain, action, target, result, detail){
+  count++; $('s-cnt').textContent = count;
+  const cls = result === 'OK' ? 'r' : (result === 'DEGRADE' ? 'w' : (result === 'FAIL' || result === 'BLOCKED' ? 'e' : 'm'));
+  const el = document.createElement('div');
+  el.className = 'ln';
+  el.innerHTML = '[KCU] <span class="d">'+esc(domain)+'</span> '+esc(action)+' '+esc(target)+' <span class="'+cls+'">'+esc(result)+'</span> <span class="m">'+esc(detail)+'</span>';
+  $('log').appendChild(el); $('log').scrollTop = $('log').scrollHeight;
+}
+function step(fn, ms){ return new Promise(r => { timer = setTimeout(() => { fn(); r(); }, ms); }); }
+function active(k, state){
+  nodes.forEach((n,i) => {
+    n.classList.toggle('on', i === k);
+    n.classList.toggle('err', i === k && state === 'err');
+    n.classList.toggle('warn', i === k && state === 'warn');
+  });
+}
+
+async function run(){
+  clearTimeout(timer);
+  $('log').innerHTML = ''; count = 0; $('s-cnt').textContent = '0';
+  $('s-commit').textContent = '—'; $('s-channel').textContent = '—'; $('s-parity').textContent = '—';
+
+  const preflight = $('preflight').value;
+  const literal = $('literal').value;
+  const host = $('host').value;
+  const verify = $('verify').value;
+  const d06 = $('d06').value;
+
+  await step(()=>{active(0);line('core','start','round_006','OK','time=00:47:49CST clock=consistent docs=15');},130);
+
+  if(preflight === 'fail'){
+    await step(()=>{active(0,'err');line('preflight','read','docs/index.md','FAIL','detail=stop_round zero_level');},150);
+    return;
+  }
+  await step(()=>{active(0);line('preflight','read','15_files','OK','exit=0 hash=stable');},130);
+
+  await step(()=>{active(1,'warn');line('closeout','detect','005_artifacts','DEGRADE','detail=17_uncommitted no_verify no_push no_demo');},140);
+
+  if(literal === 'dirty'){
+    await step(()=>{active(2,'err');line('scan','literal','A23_A24_A21','FAIL','detail=self_hit_in_scan_domain');},150);
+    return;
+  }
+  await step(()=>{active(2);line('scan','literal','A23_A24_A21','OK','detail=13_lines_moved scan_domain_clean');},140);
+
+  await step(()=>{active(3);line('spec','write','06-round-006','OK','bytes=3 verbatim=True');},130);
+  await step(()=>{active(4);line('docs','write','rounds_index_readme','OK','detail=005_006_sections added');},130);
+  await step(()=>{active(5);line('demo','write','round-006-closeout.html','OK','detail=13_nodes offline=true');},130);
+  await step(()=>{active(6);line('scan','precommit','repo','OK','detail=credential=0 wording=0 midstate=0');},130);
+
+  await step(()=>{active(7);$('s-commit').textContent='已提交';line('git','commit','main','OK','detail=005_006_batch author=yuanbao');},140);
+
+  if(host === 'open'){
+    await step(()=>{active(8);$('s-channel').textContent='git HTTP';line('remote','push','main','OK','detail=git_http');},140);
+  } else {
+    await step(()=>{active(8,'err');$('s-channel').textContent='受阻';line('remote','push','main','BLOCKED','detail=403 policy_default_denied host=github.com');},150);
+    await step(()=>{active(9,'warn');line('remote','push','main','DEGRADE','detail=api_snapshot_fallback level=2');},140);
+  }
+
+  await step(()=>{active(10);$('s-parity').textContent='一致';line('remote','verify','blob_sha','OK','detail=ALL_MATCH True truncated=False');},140);
+
+  if(verify === 'fail'){
+    await step(()=>{active(11,'err');line('verify','independent','round_006','FAIL','detail=no_pass_marker');},150);
+    return;
+  }
+  if(verify === 'partial'){
+    await step(()=>{active(11,'warn');line('verify','independent','round_006','DEGRADE','detail=partial_pass unresolved_items>0');},150);
+  } else {
+    await step(()=>{active(11);line('verify','independent','round_006','OK','detail=pass');},150);
+  }
+
+  if(d06 === 'given'){
+    await step(()=>{active(12);line('stage','build','core','OK','detail=D06_triggered blueprint_approved');},150);
+  } else {
+    await step(()=>{active(12,'warn');$('s-channel').textContent='已推送';line('stage','build','src','BLOCKED','detail=D06_not_triggered blueprint=unapproved src=empty');},150);
+  }
+}
+
+$('run').onclick = run;
+$('reset').onclick = () => {
+  clearTimeout(timer);
+  $('log').innerHTML = ''; count = 0; $('s-cnt').textContent = '0';
+  $('s-commit').textContent = '—'; $('s-channel').textContent = '—'; $('s-parity').textContent = '—';
+  nodes.forEach(n => n.classList.remove('on','err','warn'));
+};
+</script>
+</body>
+</html>

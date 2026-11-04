@@ -11,9 +11,10 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 004 |
+| 当前轮次 | 006 |
 | 当前阶段 | 功能输入阶段，未启动底层统一搭建 |
 | 图标 | assets/icon/kcu-launcher.jpg |
+| 框架蓝图 | docs/decisions/005-blueprint.md，状态未批准 |
 | 许可证 | 未确定 |
 
 ## 目录
@@ -21,8 +22,9 @@
 | 路径 | 内容 |
 | --- | --- |
 | docs/index.md | 文档索引与每轮必读顺序 |
-| docs/spec/ | 需求原文逐字副本 |
+| docs/spec/ | 需求原文与逐轮指令副本 |
 | docs/research/ | 官方文档与开发者经验事实条目 |
+| docs/licenses/ | 7 份第三方许可证原文与索引 |
 | docs/features/ | 功能登记 |
 | docs/decisions/ | 决策记录 |
 | docs/checklists/ | 防错清单 |

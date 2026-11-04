@@ -124,3 +124,82 @@
 - 框架蓝图落盘
 - 正常模式 UI 落盘
 - 底层统一搭建
+
+## 005
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/05-round-005-instructions.txt | 当轮指令逐字副本，1 行 |
+| docs/licenses/*.txt | 7 份第三方许可证原文 |
+| docs/licenses/index.md | 来源、许可证、字节、SHA-1、约束 |
+| docs/research/01-09.md | 9 份重写：锚点统一、四值纠正、一手证据补齐 |
+| docs/research/10-upstream-state.md | 时间核实、上游版本、网络边界、工具链 |
+| docs/research/index.md | 10 份索引、锚点规范、卡点状态 |
+| docs/decisions/005-blueprint.md | 分层、目录、扩展点、关键抽象方案，状态未批准 |
+| docs/decisions/index.md | 蓝图待确认，D06 未触发 |
+| docs/checklists/ai-errors.md | A21-A24 |
+| docs/checklists/windows-errors.md | W19-W20 |
+| docs/records/interface-log.md | I10、S01-S10、连接约定 |
+
+一手证据：
+
+| 项 | 结果 |
+| --- | --- |
+| HMCL LICENSE 全文 | 200，685 行，35507 字节 |
+| authlib-injector 规范 | 200，启动器 211 行、服务端 668 行 |
+| Fabric Meta README | 200，544 行，profile/json 与 launcherMeta |
+| github/docs api-versions.md | 200，91 行，410 Gone 规则 |
+| WebView2 检测键 | 200，4 个注册表位置与 pv (REG_SZ) |
+| server.properties | 200，68 键默认值 |
+| RFC 6762 / 6763 / 6455 | 200 |
+| 上游版本 | HMCL v3.16.4、wry-v0.57.1、Rust 1.99.1、fabric-loader 0.20.1 |
+| 两个 API 版本头 | 200 / 200 / 200 |
+
+纠错：
+
+| 位置 | 原结论 | 修复动作 |
+| --- | --- | --- |
+| 001 轮 06-server.md:34 | broadcast-rcon-to-ops 默认 false | 改为 true，示例值与默认值分离 |
+| 001 轮 06-server.md:43 | 2-byte pad | 改为 NULL 结尾 + 1-byte NULL pad |
+| 001-002 轮四值 | 中间态 | 全部改为四值之一，A23 锁定 |
+| 001-004 轮锚点 | 裸域名、短名、重复引用 | 10 份统一为 URL / path:line / cmd 输出 |
+
+005 轮未闭环：
+
+| 项 | 状态 |
+| --- | --- |
+| 本地提交 | 未执行 |
+| 远端推送 | 未执行 |
+| 独立验证 | 未执行 |
+| HTML 演示 | 未生成 |
+| 轮次记录 | 未写入 |
+| 索引与 README 更新 | 未执行 |
+
+## 006
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/06-round-006-instructions.txt | 当轮指令逐字副本，1 行 |
+| docs/research/01-10.md | 10 份锚点说明改为「锚点逐行独立」 |
+| docs/research/index.md | 清理 3 处被扫描域内的禁用词字面量 |
+| docs/decisions/005-blueprint.md | V03 改为引用 A23 |
+| docs/index.md | 必读 15 项、006 演示与 licenses 分区 |
+| README.md | 轮次 006 |
+| docs/records/rounds.md | 005、006 两段 |
+| demos/round-006-closeout.html | 005 收口与 006 交付运行逻辑 HTML |
+| docs/verification/round-006.md | 第 006 轮独立验证报告 |
+
+扫描域自我命中修复：
+
+| 检查 | 修复前命中 | 修复动作 |
+| --- | --- | --- |
+| A23 中间态扫描 | docs/research/index.md 2 处、005-blueprint.md 1 处 | 被扫描域内字面量移出，检查命令不动 |
+| A24 重复引用扫描 | 10 份 research 文档声明行 | 声明行改为「锚点逐行独立」 |
+| A21 服务状态扫描 | docs/research/index.md R05 | 改为「不记为上游服务异常」 |
+
+未做：
+- 源码与 src/ 实现
+- 底层统一搭建
+- 正常模式 UI
+- 框架蓝图批准
+- rustc / cargo 构建验证
