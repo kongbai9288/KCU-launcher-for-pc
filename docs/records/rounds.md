@@ -97,6 +97,7 @@
 | README.md | 轮次 004，远端地址、可见性、推送路径 |
 | docs/records/rounds.md | 本段落 |
 | demos/round-004-remote.html | 公仓创建与 API 快照推送运行逻辑 HTML |
+| docs/verification/round-004.md | 第 004 轮独立验证报告，结论部分通过 |
 
 远端动作：
 
