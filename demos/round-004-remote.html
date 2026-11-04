@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KCU Launcher / 公仓创建与 API 推送 / 004</title>
+<style>
+:root{
+  --bg:#0b0e14; --panel:#131824; --panel2:#1a2130; --line:#28324a;
+  --txt:#e6ecf5; --dim:#8b9ab3; --acc:#5ee0b4; --acc2:#6aa8ff;
+  --warn:#f5b95c; --err:#ff7a7a; --mut:#7d8aa3;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 12% -10%,#18233a 0%,var(--bg) 58%);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:18px}
+.wrap{max-width:1180px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;padding:6px 2px 18px;border-bottom:1px solid var(--line)}
+h1{font-size:19px;margin:0;letter-spacing:.5px;font-weight:650}
+.tag{font:12px var(--mono);color:var(--acc);border:1px solid #2c5b4c;border-radius:999px;padding:2px 10px;background:#10241e}
+.meta{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+.grid{display:grid;grid-template-columns:310px 1fr;gap:16px;margin-top:16px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--panel) 0%,#111623 100%);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{font-size:13px;margin:0 0 14px;color:var(--dim);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.field{margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--dim);margin-bottom:5px}
+select{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:13px var(--mono);outline:none}
+select:focus{border-color:var(--acc2)}
+.btns{display:flex;gap:9px;margin-top:16px}
+button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:13px/1.2 inherit;cursor:pointer}
+button.primary{background:linear-gradient(135deg,#2f7d68,#245f8f);border-color:#3f8f7e;font-weight:600}
+button:active{transform:translateY(1px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px}
+.stat .k{font-size:11px;color:var(--dim)}
+.stat .v{font:14px var(--mono);margin-top:3px;color:var(--acc)}
+#log{height:320px;overflow:auto;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.75 var(--mono);white-space:pre-wrap;word-break:break-all}
+.ln{color:#c9d6e8}.ln .d{color:var(--acc2)}.ln .r{color:var(--acc)}.ln .w{color:var(--warn)}.ln .e{color:var(--err)}.ln .m{color:var(--mut)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
+@media(max-width:980px){.flow{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;transition:.25s}
+.node .n{font:11px var(--mono);color:var(--mut)}
+.node .t{font-size:12px;margin:4px 0 5px;font-weight:600}
+.node .s{font-size:11px;color:var(--dim)}
+.node.on{border-color:var(--acc);box-shadow:0 0 0 1px #2f7d68,0 8px 26px rgba(46,125,104,.2);background:#12201e}
+.node.on .t{color:var(--acc)}
+.node.err{border-color:var(--err)}
+.node.err .t{color:var(--err)}
+.node.warn{border-color:var(--warn)}
+.node.warn .t{color:var(--warn)}
+.foot{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.foot{grid-template-columns:1fr}}
+pre{margin:0;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.7 var(--mono);color:#c9d6e8;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600}
+td{color:var(--txt)}
+.hint{color:var(--dim);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>KCU Launcher</h1>
+  <span class="tag">公仓创建 / API 快照推送</span>
+  <span class="tag">轮次 004</span>
+  <span class="meta" id="ts"></span>
+</header>
+
+<div class="grid">
+  <section class="card">
+    <h2>输入</h2>
+    <div class="field">
+      <label>认证方案</label>
+      <select id="scheme">
+        <option value="token">Authorization: token</option>
+        <option value="bearer">Authorization: Bearer</option>
+        <option value="none">无认证</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>请求名</label>
+      <select id="name">
+        <option value="exact">KCU launcher for pc</option>
+        <option value="slug">KCU-launcher-for-pc</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>github.com 主机</label>
+      <select id="host">
+        <option value="blocked">403 policy_default_denied</option>
+        <option value="open">可访问</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>凭据入仓扫描</label>
+      <select id="scan">
+        <option value="clean">exit 0</option>
+        <option value="dirty">命中</option>
+      </select>
+    </div>
+    <div class="btns">
+      <button class="primary" id="run">执行本轮</button>
+      <button id="reset">重置</button>
+    </div>
+    <div class="hint">日志行格式：[KCU] &lt;域&gt; &lt;动作&gt; &lt;目标&gt; &lt;结果&gt; &lt;详情&gt;</div>
+  </section>
+
+  <section class="card">
+    <h2>状态</h2>
+    <div class="stats">
+      <div class="stat"><div class="k">公仓</div><div class="v" id="s-repo">—</div></div>
+      <div class="stat"><div class="k">主路径</div><div class="v" id="s-primary">—</div></div>
+      <div class="stat"><div class="k">远端 ref</div><div class="v" id="s-ref">—</div></div>
+      <div class="stat"><div class="k">诊断行</div><div class="v" id="s-cnt">0</div></div>
+    </div>
+    <div id="log"></div>
+  </section>
+</div>
+
+<div class="flow" id="flow">
+  <div class="node" data-k="0"><div class="n">01 / scan</div><div class="t">凭据扫描</div><div class="s">gh[p]_ 字面量</div></div>
+  <div class="node" data-k="1"><div class="n">02 / auth</div><div class="t">身份核验</div><div class="s">GET /user</div></div>
+  <div class="node" data-k="2"><div class="n">03 / create</div><div class="t">创建公仓</div><div class="s">POST /user/repos</div></div>
+  <div class="node" data-k="3"><div class="n">04 / normalize</div><div class="t">名称规范化</div><div class="s">空格 → 连字符</div></div>
+  <div class="node" data-k="4"><div class="n">05 / remote</div><div class="t">设置远端</div><div class="s">URL 不含凭据</div></div>
+  <div class="node" data-k="5"><div class="n">06 / git push</div><div class="t">主路径</div><div class="s">git HTTP</div></div>
+  <div class="node" data-k="6"><div class="n">07 / fallback</div><div class="t">二级降级</div><div class="s">api_push.py</div></div>
+  <div class="node" data-k="7"><div class="n">08 / blobs</div><div class="t">构造 blob</div><div class="s">git ls-files</div></div>
+  <div class="node" data-k="8"><div class="n">09 / tree</div><div class="t">构造树</div><div class="s">POST /git/trees</div></div>
+  <div class="node" data-k="9"><div class="n">10 / commit</div><div class="t">构造提交</div><div class="s">POST /git/commits</div></div>
+  <div class="node" data-k="10"><div class="n">11 / ref</div><div class="t">更新 ref</div><div class="s">refs/heads/main</div></div>
+  <div class="node" data-k="11"><div class="n">12 / verify</div><div class="t">远端核对</div><div class="s">blob sha 比对</div></div>
+</div>
+
+<div class="foot">
+  <section class="card">
+    <h2>统一信封</h2>
+<pre>{
+  "request_id": "004-d3e1",
+  "type": "request | response | event",
+  "target": "remote.create_and_push",
+  "payload": {
+    "name": "KCU launcher for pc",
+    "private": false,
+    "branch": "main",
+    "auth": "env:KCU_PAT",
+    "fallback": "git_data_api"
+  },
+  "error": null
+}</pre>
+  </section>
+  <section class="card">
+    <h2>网络边界</h2>
+    <table>
+      <tr><th>主机 / 接口</th><th>状态</th></tr>
+      <tr><td>api.github.com GET /user，token 方案</td><td>200</td></tr>
+      <tr><td>api.github.com GET /user，Bearer 方案</td><td>403</td></tr>
+      <tr><td>api.github.com POST /user/repos</td><td>201</td></tr>
+      <tr><td>github.com GET 仓库页</td><td>403</td></tr>
+      <tr><td>github.com git-receive-pack</td><td>403</td></tr>
+      <tr><td>api.github.com Git Data API</td><td>200/201</td></tr>
+    </table>
+  </section>
+</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const nodes = [...document.querySelectorAll('.node')];
+let count = 0;
+let timer = null;
+
+$('ts').textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function line(domain, action, target, result, detail){
+  count++;
+  $('s-cnt').textContent = count;
+  const cls = result === 'OK' ? 'r' : (result === 'DEGRADE' ? 'w' : (result === 'FAIL' || result === 'BLOCKED' ? 'e' : 'm'));
+  const el = document.createElement('div');
+  el.className = 'ln';
+  el.innerHTML = '[KCU] <span class="d">'+esc(domain)+'</span> '+esc(action)+' '+esc(target)+' <span class="'+cls+'">'+esc(result)+'</span> <span class="m">'+esc(detail)+'</span>';
+  $('log').appendChild(el);
+  $('log').scrollTop = $('log').scrollHeight;
+}
+function step(fn, ms){ return new Promise(r => { timer = setTimeout(() => { fn(); r(); }, ms); }); }
+function active(k, state){
+  nodes.forEach((n,i) => {
+    n.classList.toggle('on', i === k);
+    n.classList.toggle('err', i === k && state === 'err');
+    n.classList.toggle('warn', i === k && state === 'warn');
+  });
+}
+
+async function run(){
+  clearTimeout(timer);
+  $('log').innerHTML = '';
+  count = 0; $('s-cnt').textContent = '0';
+  $('s-repo').textContent = '—'; $('s-primary').textContent = '—'; $('s-ref').textContent = '—';
+
+  const scheme = $('scheme').value;
+  const nameMode = $('name').value;
+  const host = $('host').value;
+  const scan = $('scan').value;
+
+  await step(()=>{active(0, scan === 'dirty' ? 'err' : null);line('core','start','round_004','OK','public=true remote_create=authorized');},140);
+
+  if(scan === 'dirty'){
+    await step(()=>{active(0,'err');line('scan','credential','repo','FAIL','detail=stop_commit zero_level');},160);
+    return;
+  }
+  await step(()=>{active(0);line('scan','credential','repo','OK','exit=0');},140);
+
+  if(scheme === 'none'){
+    await step(()=>{active(1,'err');line('remote','auth','GET /user','FAIL','http=401 Requires authentication');},160);
+    return;
+  }
+  if(scheme === 'bearer'){
+    await step(()=>{active(1,'err');line('remote','auth','GET /user','FAIL','http=403 policy_default_denied');},160);
+    await step(()=>{active(1,'warn');line('remote','auth','GET /user','DEGRADE','scheme=token http=200 login=kongbai9288');},160);
+  } else {
+    await step(()=>{active(1);line('remote','auth','GET /user','OK','http=200 login=kongbai9288 scheme=token');},160);
+  }
+
+  const requested = nameMode === 'exact' ? 'KCU launcher for pc' : 'KCU-launcher-for-pc';
+  await step(()=>{active(2);$('s-repo').textContent='创建中';line('remote','create','POST /user/repos','OK','http=201 name='+requested);},160);
+  await step(()=>{active(3,'warn');line('remote','normalize','name','DEGRADE','result=KCU-launcher-for-pc description=original_string');},160);
+  $('s-repo').textContent = 'public';
+  await step(()=>{active(4);line('remote','add','origin','OK','url=https://github.com/kongbai9288/KCU-launcher-for-pc.git credential=none');},160);
+
+  if(host === 'open'){
+    await step(()=>{active(5);$('s-primary').textContent='git HTTP';line('remote','push','main','OK','detail=git_http');},160);
+  } else {
+    await step(()=>{active(5,'err');$('s-primary').textContent='受阻';line('remote','push','main','BLOCKED','http=403 policy_default_denied host=github.com');},170);
+    await step(()=>{active(6,'warn');line('remote','push','main','DEGRADE','detail=api_snapshot_fallback level=2');},160);
+  }
+
+  await step(()=>{active(7);line('remote','blob','git ls-files','OK','count=47 encoding=base64');},160);
+  await step(()=>{active(8);line('remote','tree','POST /git/trees','OK','http=201 nested=true');},160);
+  await step(()=>{active(9);line('remote','commit','POST /git/commits','OK','http=201 message=factual_only');},160);
+  await step(()=>{active(10);$('s-ref').textContent='main';line('remote','ref','refs/heads/main','OK','http=201 parent=none');},160);
+  await step(()=>{active(11);line('remote','verify','blob sha','OK','git_hash_object=match files=47');},160);
+}
+
+$('run').onclick = run;
+$('reset').onclick = () => {
+  clearTimeout(timer);
+  $('log').innerHTML = ''; count = 0; $('s-cnt').textContent = '0';
+  $('s-repo').textContent = '—'; $('s-primary').textContent = '—'; $('s-ref').textContent = '—';
+  nodes.forEach(n => n.classList.remove('on','err','warn'));
+};
+</script>
+</body>
+</html>

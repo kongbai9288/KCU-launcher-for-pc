@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KCU Launcher / 图标资产登记 / 002</title>
+<style>
+:root{
+  --bg:#0b0e14; --panel:#131824; --panel2:#1a2130; --line:#28324a;
+  --txt:#e6ecf5; --dim:#8b9ab3; --acc:#5ee0b4; --acc2:#6aa8ff;
+  --warn:#f5b95c; --err:#ff7a7a; --mut:#7d8aa3;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 12% -10%,#18233a 0%,var(--bg) 58%);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:18px}
+.wrap{max-width:1180px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;padding:6px 2px 18px;border-bottom:1px solid var(--line)}
+h1{font-size:19px;margin:0;letter-spacing:.5px;font-weight:650}
+.tag{font:12px var(--mono);color:var(--acc);border:1px solid #2c5b4c;border-radius:999px;padding:2px 10px;background:#10241e}
+.meta{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:16px;margin-top:16px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--panel) 0%,#111623 100%);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{font-size:13px;margin:0 0 14px;color:var(--dim);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.preview{width:100%;aspect-ratio:1/1;border:1px solid var(--line);border-radius:10px;background:#f4f6f8;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.preview img{width:100%;height:100%;object-fit:contain;display:block}
+.preview .ph{color:#5a6a80;font:12px var(--mono);text-align:center;padding:12px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;margin-top:14px;font:12px/1.7 var(--mono)}
+.kv .k{color:var(--dim)}
+.kv .v{color:var(--txt);word-break:break-all}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px}
+.stat .k{font-size:11px;color:var(--dim)}
+.stat .v{font:14px var(--mono);margin-top:3px;color:var(--acc)}
+#log{height:330px;overflow:auto;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.75 var(--mono);white-space:pre-wrap;word-break:break-all}
+.ln{color:#c9d6e8}.ln .d{color:var(--acc2)}.ln .r{color:var(--acc)}.ln .w{color:var(--warn)}.ln .e{color:var(--err)}.ln .m{color:var(--mut)}
+.btns{display:flex;gap:9px;margin-top:14px}
+button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:13px/1.2 inherit;cursor:pointer}
+button.primary{background:linear-gradient(135deg,#2f7d68,#245f8f);border-color:#3f8f7e;font-weight:600}
+button:active{transform:translateY(1px)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
+@media(max-width:900px){.flow{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px;transition:.25s}
+.node .n{font:11px var(--mono);color:var(--mut)}
+.node .t{font-size:13px;margin:4px 0 5px;font-weight:600}
+.node .s{font-size:11px;color:var(--dim)}
+.node.on{border-color:var(--acc);box-shadow:0 0 0 1px #2f7d68,0 8px 26px rgba(46,125,104,.2);background:#12201e}
+.node.on .t{color:var(--acc)}
+.node.warn{border-color:var(--warn)}
+.node.warn .t{color:var(--warn)}
+.foot{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.foot{grid-template-columns:1fr}}
+pre{margin:0;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.7 var(--mono);color:#c9d6e8;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600}
+td{color:var(--txt)}
+.hint{color:var(--dim);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>KCU Launcher</h1>
+  <span class="tag">图标资产登记 / 运行逻辑</span>
+  <span class="tag">轮次 002</span>
+  <span class="meta" id="ts"></span>
+</header>
+
+<div class="grid">
+  <section class="card">
+    <h2>资产</h2>
+    <div class="preview" id="previewBox">
+      <img id="icon" alt="KCU Launcher 图标" src="../assets/icon/kcu-launcher.jpg">
+    </div>
+    <div class="kv">
+      <div class="k">源文件名</div><div class="v">CMP_20261024210823292.png</div>
+      <div class="k">声明扩展名</div><div class="v">.png</div>
+      <div class="k">魔数格式</div><div class="v">JPEG / 1440x1440 / RGB</div>
+      <div class="k">落盘路径</div><div class="v">assets/icon/kcu-launcher.jpg</div>
+      <div class="k">字节数</div><div class="v">175816</div>
+      <div class="k">SHA-1</div><div class="v">d453d3f5eb2b09913e6e19e85460f990f1e39076</div>
+      <div class="k">许可证</div><div class="v">未定</div>
+      <div class="k">构建状态</div><div class="v">未进入构建</div>
+    </div>
+    <div class="hint">预览按仓库相对路径加载。单独打开本文件时显示占位块并写诊断行。</div>
+  </section>
+
+  <section class="card">
+    <h2>状态</h2>
+    <div class="stats">
+      <div class="stat"><div class="k">当前阶段</div><div class="v" id="s-stage">—</div></div>
+      <div class="stat"><div class="k">格式纠正</div><div class="v" id="s-fix">—</div></div>
+      <div class="stat"><div class="k">兜底级别</div><div class="v" id="s-fb">—</div></div>
+      <div class="stat"><div class="k">诊断行</div><div class="v" id="s-cnt">0</div></div>
+    </div>
+    <div id="log"></div>
+    <div class="btns">
+      <button class="primary" id="run">执行登记</button>
+      <button id="reset">重置</button>
+    </div>
+  </section>
+</div>
+
+<div class="flow" id="flow">
+  <div class="node" data-k="0"><div class="n">01 / core</div><div class="t">启动登记</div><div class="s">round=002</div></div>
+  <div class="node" data-k="1"><div class="n">02 / probe</div><div class="t">读取源文件</div><div class="s">declared_ext=png</div></div>
+  <div class="node" data-k="2"><div class="n">03 / detect</div><div class="t">魔数探测</div><div class="s">JPEG 1440x1440</div></div>
+  <div class="node" data-k="3"><div class="n">04 / rename</div><div class="t">扩展名纠正</div><div class="s">.png → .jpg</div></div>
+  <div class="node" data-k="4"><div class="n">05 / copy</div><div class="t">原始字节落盘</div><div class="s">175816 bytes</div></div>
+  <div class="node" data-k="5"><div class="n">06 / hash</div><div class="t">SHA-1 核对</div><div class="s">d453d3f5…</div></div>
+  <div class="node" data-k="6"><div class="n">07 / records</div><div class="t">决策登记</div><div class="s">002-icon.md</div></div>
+  <div class="node" data-k="7"><div class="n">08 / build</div><div class="t">构建绑定</div><div class="s">skipped license=undefined</div></div>
+  <div class="node" data-k="8"><div class="n">09 / ui</div><div class="t">等待 UI</div><div class="s">pending=user_input</div></div>
+</div>
+
+<div class="foot">
+  <section class="card">
+    <h2>统一信封</h2>
+<pre>{
+  "request_id": "002-b1c9",
+  "type": "request | response | event",
+  "target": "assets.icon.register",
+  "payload": {
+    "source": "/data/inputs/CMP_20261024210823292.png",
+    "target": "assets/icon/kcu-launcher.jpg",
+    "sha1": "d453d3f5eb2b09913e6e19e85460f990f1e39076"
+  },
+  "error": null
+}</pre>
+  </section>
+  <section class="card">
+    <h2>约束</h2>
+    <table>
+      <tr><th>编号</th><th>内容</th></tr>
+      <tr><td>C01</td><td>字节未改动，SHA-1 与源文件一致</td></tr>
+      <tr><td>C02</td><td>许可证未定，不进入构建，不生成 ICO 与资产派生图</td></tr>
+      <tr><td>C03</td><td>白底与水印未裁切，窗口图标使用前需单独确认</td></tr>
+      <tr><td>C04</td><td>框架蓝图未确认前不绑定到 UI 模块</td></tr>
+    </table>
+  </section>
+</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const nodes = [...document.querySelectorAll('.node')];
+let count = 0;
+let timer = null;
+
+$('ts').textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+const imgEl = $('icon');
+function showPlaceholder(){
+  $('previewBox').innerHTML = '<div class="ph">资产预览不可用<br>assets/icon/kcu-launcher.jpg<br>单独打开 HTML 时按三级忽略处理</div>';
+  line('assets','preview','../assets/icon/kcu-launcher.jpg','DEGRADE','placeholder_shown fallback=level3');
+}
+imgEl.addEventListener('error', showPlaceholder);
+if (imgEl.complete && imgEl.naturalWidth === 0) showPlaceholder();
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function line(domain, action, target, result, detail){
+  count++;
+  $('s-cnt').textContent = count;
+  const cls = result === 'OK' ? 'r' : (result === 'DEGRADE' ? 'w' : (result === 'FAIL' ? 'e' : 'm'));
+  const el = document.createElement('div');
+  el.className = 'ln';
+  el.innerHTML = '[KCU] <span class="d">'+esc(domain)+'</span> '+esc(action)+' '+esc(target)+' <span class="'+cls+'">'+esc(result)+'</span> <span class="m">'+esc(detail)+'</span>';
+  $('log').appendChild(el);
+  $('log').scrollTop = $('log').scrollHeight;
+}
+function step(fn, ms){ return new Promise(r => { timer = setTimeout(() => { fn(); r(); }, ms); }); }
+function active(k, warn){
+  $('s-stage').textContent = String(k+1).padStart(2,'0') + ' / 09';
+  nodes.forEach((n,i) => {
+    n.classList.toggle('on', i === k);
+    n.classList.toggle('warn', i === k && !!warn);
+  });
+}
+
+const steps = [
+  () => { active(0); $('s-fb').textContent='无'; line('core','start','asset_registry','OK','round=002'); },
+  () => { active(1); line('assets','probe','/data/inputs/CMP_20261024210823292.png','OK','declared_ext=png bytes=175816'); },
+  () => { active(2); line('assets','detect','magic','OK','format=JPEG size=1440x1440 mode=RGB exif=upper-left'); },
+  () => { active(3,true); $('s-fix').textContent='.png → .jpg'; $('s-fb').textContent='二级'; line('assets','rename','kcu-launcher.png','DEGRADE','ext_mismatch target=kcu-launcher.jpg bytes_unchanged'); },
+  () => { active(4); line('assets','copy','assets/icon/kcu-launcher.jpg','OK','bytes=175816 mode=original'); },
+  () => { active(5); line('assets','hash','sha1','OK','d453d3f5eb2b09913e6e19e85460f990f1e39076 source_match=true'); },
+  () => { active(6); line('records','decision','002-icon.md','OK','status=implemented license=undefined'); },
+  () => { active(7,true); $('s-fb').textContent='一级'; line('build','bind','icon','DEGRADE','skipped license=undefined ico=none crop=none'); },
+  () => { active(8,true); line('ui','wait','normal_mode_ui','DEGRADE','pending=user_input framework=unconfirmed'); }
+];
+
+async function run(){
+  clearTimeout(timer);
+  $('log').innerHTML = '';
+  count = 0; $('s-cnt').textContent = '0';
+  $('s-stage').textContent = '—'; $('s-fix').textContent = '—'; $('s-fb').textContent = '—';
+  for(const s of steps){ await step(s, 190); }
+}
+
+$('run').onclick = run;
+$('reset').onclick = () => {
+  clearTimeout(timer);
+  $('log').innerHTML = ''; count = 0; $('s-cnt').textContent = '0';
+  $('s-stage').textContent = '—'; $('s-fix').textContent = '—'; $('s-fb').textContent = '—';
+  nodes.forEach(n => n.classList.remove('on','warn'));
+};
+</script>
+</body>
+</html>
