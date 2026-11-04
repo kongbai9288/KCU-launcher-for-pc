@@ -61,6 +61,7 @@
 | C04 | 语言范围中文与英文。 |
 | C05 | 扩展点注册不修改 core 模块。 |
 | C06 | 统一搭建启动需 003-remote.md D06 触发且本方案状态为已批准。 |
+| C07 | K08 与 E04 仅服务 normal 模式；lightweight 不加载 ui 框架与 normal 模式资产，见 docs/decisions/007-normal-ui.md D03-D05。 |
 
 ## 验证条件
 

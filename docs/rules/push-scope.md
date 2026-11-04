@@ -1,6 +1,6 @@
 # 远端推送范围
 
-轮次：004
+轮次：007
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
 
@@ -14,6 +14,7 @@
 | 版本与接口记录 | docs/records/changelog.md、docs/records/interface-log.md、docs/records/rounds.md |
 | 运行逻辑演示 | demos/ |
 | 图标资产 | assets/icon/ |
+| UI 设计稿 | assets/ui/，逐字副本与资产登记 |
 | 仓库配置 | README.md、.gitignore、LICENSE、第三方声明 |
 
 ## 不推送

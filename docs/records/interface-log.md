@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：005
+更新轮次：007
 
 ## 前置索引
 
@@ -15,7 +15,8 @@
 | I07 | mDNS / DNS-SD / WebSocket / 二维码 | docs/research/07-lan.md | RFC 6762 / 6763 / 6455 已证实 |
 | I08 | api.github.com | docs/research/08-github-api.md | 已证实 |
 | I09 | 第三方许可证 | docs/research/09-licenses.md、docs/licenses/index.md | 7 份全文已证实 |
-| I10 | 时间、上游版本、网络边界 | docs/research/10-upstream-state.md | 本轮新增 |
+| I10 | 时间、上游版本、网络边界 | docs/research/10-upstream-state.md | 005 轮新增 |
+| I11 | 正常模式 UI 设计稿 | assets/ui/index.md、docs/features/normal-ui.md | 已落盘，授权未证实 |
 
 ## 连接约定
 
@@ -54,6 +55,8 @@
 | S08 | https://www.rfc-editor.org/rfc/rfc6762 | mDNS UDP 5353 与组播地址 | 200 |
 | S09 | https://www.rfc-editor.org/rfc/rfc6763 | DNS-SD PTR / SRV / TXT | 200 |
 | S10 | https://www.rfc-editor.org/rfc/rfc6455 | WebSocket Upgrade 握手 | 200 |
+| S11 | /data/inputs/FCL揉纸启动器-桌面端-v3(1).txt | 正常模式 UI 逐字副本与结构登记 | 文件，172759 字节 |
+| S12 | https://miaoda.feishu.cn/fonts/css2 | 设计稿外部字体 CSS | 服务条款未取得 |
 
 ## 版本弃用
 

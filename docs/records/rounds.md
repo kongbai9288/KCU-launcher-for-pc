@@ -203,3 +203,72 @@
 - 正常模式 UI
 - 框架蓝图批准
 - rustc / cargo 构建验证
+
+## 007
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/07-round-007-instructions.txt | 当轮指令逐字副本，1 行，54 字符 |
+| assets/ui/normal-mode-v3.html | 正常模式 UI 设计稿逐字副本，172759 字节，2729 行 |
+| assets/ui/index.md | 结构事实、导航、外部资源、品牌标记、许可证边界 |
+| docs/features/normal-ui.md | F001 功能登记，5 个固定字段 |
+| docs/features/index.md | F001 条目、轻量模式视图计划项 |
+| docs/decisions/007-normal-ui.md | D01-D10、C01-C09、V01-V08 |
+| docs/decisions/index.md | 007 已批准；正常模式 UI 已落盘、未实现 |
+| docs/decisions/005-blueprint.md | C07，K08 与 E04 仅服务 normal |
+| docs/rules/push-scope.md | 轮次 007，允许清单加入 assets/ui/ |
+| docs/checklists/ai-errors.md | A25-A27 |
+| docs/checklists/windows-errors.md | W21-W22 |
+| docs/records/interface-log.md | I11、S11-S12 |
+| docs/index.md | 必读 16 项、UI 资产分区、007 演示、品牌扫描 |
+| README.md | 轮次 007、正常模式 UI 与轻量模式 UI 条目 |
+| docs/records/rounds.md | 本段落 |
+| demos/round-007-normal-ui.html | 正常模式 UI 与轻量分流运行逻辑 HTML |
+| docs/verification/round-007.md | 第 007 轮独立验证报告 |
+
+用户提供内容：
+
+| 项 | 值 |
+| --- | --- |
+| 正常模式 UI | FCL 揉纸启动器桌面端 v3 HTML 设计稿 |
+| 轻量模式约束 | 不复用正常模式 UI，保持极简 |
+| 字节核对 | cmp exit 0，SHA-1 235943d217560d89f8e0598c7f78b902d993e99d 双端一致 |
+
+结构事实：
+
+| 项 | 值 |
+| --- | --- |
+| 分区注释 | 23 |
+| 唯一 class | 274 |
+| id 属性 | 157，唯一 156 |
+| JS 函数 | 39 |
+| 导航项 | 10 |
+| CSS 变量 | 21 |
+| 外部 URL | 2，其中 1 个为字体 CDN |
+| 品牌标记 | 4 处，行 6、7、1589 与全文件计数 |
+
+决策边界：
+
+| 项 | 值 |
+| --- | --- |
+| 框架归属 | K08 UiFrame、E04 ui 仅服务 normal |
+| lightweight | 独立视图，排除 UI 框架、设计稿、双主题、三栏、网格、衣柜、工具箱、设备桥接面板、向导、右键菜单、日志抽屉 |
+| headless | 不加载任何 UI |
+| 品牌与字体授权 | 未取得，不进构建 |
+| D06 | 未提供，仍为功能输入阶段，src/ 保持空 |
+
+扫描域自我命中修复：
+
+| 检查 | 修复前命中 | 修复动作 |
+| --- | --- | --- |
+| A23 中间态扫描 | docs/decisions/007-normal-ui.md V07 | 改为引用 A23，字面量移出被扫描域，检查命令不动 |
+| A25 品牌扫描 | src/ 空目录导致 grep stderr | 命令追加 2>/dev/null，断言不变 |
+
+未做：
+- 源码与 src/ 实现
+- 底层统一搭建
+- 正常模式 UI 实现与构建
+- 框架蓝图批准
+- 品牌与字体授权取得
+- 浏览器内渲染实测
+- rustc / cargo 构建验证

@@ -1,7 +1,7 @@
 # 文档索引
 
 检索日期：2026-11-05
-更新轮次：006
+更新轮次：007
 
 ## 每轮开工必读顺序
 
@@ -12,20 +12,21 @@
 5. docs/spec/04-round-004-instructions.txt
 6. docs/spec/05-round-005-instructions.txt
 7. docs/spec/06-round-006-instructions.txt
-8. docs/checklists/ai-errors.md
-9. docs/checklists/windows-errors.md
-10. docs/rules/proof-rules.md
-11. docs/rules/fallback-rules.md
-12. docs/rules/push-scope.md
-13. docs/research/index.md
-14. docs/features/index.md
-15. docs/records/rounds.md
+8. docs/spec/07-round-007-instructions.txt
+9. docs/checklists/ai-errors.md
+10. docs/checklists/windows-errors.md
+11. docs/rules/proof-rules.md
+12. docs/rules/fallback-rules.md
+13. docs/rules/push-scope.md
+14. docs/research/index.md
+15. docs/features/index.md
+16. docs/records/rounds.md
 
 读取命令：
 
 ```
 cd /data/workspace/kcu-launcher-desktop
-for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/research/index.md docs/features/index.md docs/records/rounds.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
+for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/research/index.md docs/features/index.md docs/records/rounds.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
 ```
 
 ## 分区
@@ -41,14 +42,16 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 规则 | docs/rules/ | 四值判决、兜底分级、推送范围 |
 | 记录 | docs/records/ | 版本、接口、轮次 |
 | 验证 | docs/verification/ | 独立验证报告 |
+| UI 资产 | assets/ui/index.md | 正常模式 UI 逐字副本与结构登记 |
+| 图标资产 | assets/icon/kcu-launcher.jpg | 启动器图标原始字节 |
 | 演示 | demos/round-001-dispatch.html | 统一调度器运行逻辑 |
 | 演示 | demos/round-002-icon.html | 图标资产登记运行逻辑 |
 | 演示 | demos/round-003-remote.html | 远端推送与搭建阶段运行逻辑 |
 | 演示 | demos/round-004-remote.html | 公仓创建与 API 快照推送运行逻辑 |
 | 演示 | demos/round-006-closeout.html | 005 收口与 006 交付运行逻辑 |
+| 演示 | demos/round-007-normal-ui.html | 正常模式 UI 与轻量分流运行逻辑 |
 | 脚本 | scripts/push.sh | 推送入口，自动降级 |
 | 脚本 | scripts/api_push.py | Git Data API 全量树快照 |
-| 资产 | assets/icon/kcu-launcher.jpg | 启动器图标原始字节 |
 
 ## 远端
 
@@ -71,11 +74,13 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 解释性措辞扫描 | `! grep -rE '为什么\|这意味着\|值得注意的是\|综上所述\|让我们看看' src/ demos/ README.md docs/research/ docs/features/ docs/records/ docs/decisions/ scripts/` |
 | 中间态扫描 | `! grep -rE '部分已证实' docs/research/ docs/features/ docs/records/ docs/decisions/` |
 | 重复引用扫描 | `! grep -rE '同上' docs/research/` |
+| 品牌元素扫描 | `! grep -rE 'FCL\|揉纸启动器' src/` |
 
 ## 未写入项
 
 - 框架蓝图：005-blueprint.md 已落盘，状态未批准。
 - 源码：src/ 为空。
-- 正常模式 UI：未提供，未落盘。
+- 正常模式 UI 实现：设计稿已落盘，未实现、未进入构建。
+- UI 设计稿品牌与字体授权：未取得。
 - 图标 ICO 与裁切版本：许可证与范围未确认，未生成。
 - 本项目 LICENSE：未定，未生成。

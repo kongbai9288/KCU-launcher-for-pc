@@ -31,6 +31,9 @@
 | A22 | 示例配置值当成默认值 | `grep -n 'broadcast-rcon-to-ops' docs/research/06-server.md` 与 https://minecraft.wiki/w/Server.properties 逐项比对 |
 | A23 | 四值使用「部分已证实」 | `! grep -rE '部分已证实' docs/research/ docs/features/ docs/records/ docs/decisions/` |
 | A24 | 锚点写「同上」或裸域名短名 | `! grep -rE '同上' docs/research/`；逐行核对 URL 完整性 |
+| A25 | 设计稿品牌元素进入实现代码 | `! grep -rE 'FCL|揉纸启动器' src/ 2>/dev/null` |
+| A26 | 轻量模式引用正常模式 UI 资产 | `! grep -rE 'assets/ui|normal-mode-v3' src/ 2>/dev/null` |
+| A27 | 逐字副本字节被改动 | `cmp` 来源与落盘；SHA-1 双端一致 |
 
 ## 输出结构
 

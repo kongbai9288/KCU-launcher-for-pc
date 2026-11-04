@@ -22,3 +22,5 @@
 | W18 | 单文件发布 | 未确定工具链前不写死目标三元组 |
 | W19 | WebView2 检测 | 检查 pv (REG_SZ) 于 4 个注册表位置；缺失、空字符串或 0.0.0.0 时降级外置浏览器 / 连接码 |
 | W20 | server.properties 写入 | UTF-8，保留 # 注释，Windows 行尾 CRLF，启动时重新生成 |
+| W21 | 外部字体 CDN | 加载失败走本地字体栈，二级降级并写诊断行；不阻塞窗口渲染 |
+| W22 | 窗口拖拽 CSS | -webkit-app-region 仅适用于 webview 桌面壳；无 WebView2 时不加载该设计稿 |

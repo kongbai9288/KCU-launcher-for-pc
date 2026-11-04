@@ -4,7 +4,9 @@
 
 | 编号 | 功能 | 框架 | 状态 | 文件 |
 | --- | --- | --- | --- | --- |
-| 无 | 无 | 无 | 无 | 无 |
+| F001 | 正常模式 UI 设计稿 | normal.ui | 已批准 | normal-ui.md |
+
+F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 
 ## 计划登记项
 
@@ -12,7 +14,8 @@
 | --- | --- |
 | 统一调度器 | dispatcher |
 | 正常启动器 | normal |
-| 轻量启动器 | lightweight |
+| 正常模式 UI | normal.ui |
+| 轻量启动器视图 | lightweight.view |
 | 无头模式启动器 | headless |
 | 手机连接 | normal.lan |
 | 一键开服 | normal.server |
