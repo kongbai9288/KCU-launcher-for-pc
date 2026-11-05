@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：009
+更新轮次：010
 
 ## 前置索引
 
@@ -14,11 +14,12 @@
 | I06 | Paper / server.properties / RCON | docs/research/06-server.md | 68 键默认值、字节序、引入版本、分片上限已证实；Mojang 官方 RCON 文档未证实 |
 | I07 | mDNS / DNS-SD / WebSocket / 二维码 | docs/research/07-lan.md | RFC 6762 / 6763 / 6455 已证实 |
 | I08 | api.github.com | docs/research/08-github-api.md | 已证实 |
-| I09 | 第三方许可证 | docs/research/09-licenses.md、docs/licenses/index.md | 7 份全文已证实；slint 三许可全文未证实 |
+| I09 | 第三方许可证 | docs/research/09-licenses.md、docs/licenses/index.md、docs/research/12-compliance.md | 17 份逐字副本已证实，含 slint 三许可全文；Blessing Skin 未证实 |
 | I10 | 时间、上游版本、网络边界 | docs/research/10-upstream-state.md | 005 轮新增 |
 | I11 | 正常模式 UI 设计稿 | assets/ui/index.md、docs/features/normal-ui.md | 已落盘，授权未证实 |
 | I12 | RCON 与 UUID 一手补证 | docs/research/06-server.md、docs/research/02-auth.md | 008 轮新增，见 008 新增来源 |
 | I13 | Cargo profile / Win32 DLL 搜索 / std::process / WebView2 进程组 / MSVC 部署 / 目标三元组 | docs/research/11-runtime.md | 009 轮新增，9 份一手原文；2 项未证实；1 项受阻 |
+| I14 | CurseForge / Modrinth API 条款、DPAPI / CredWriteW、6 份许可证全文、slint 三许可、上游版本状态 | docs/research/12-compliance.md | 010 轮新增，见 010 新增来源；X01-X04 冲突已证实 |
 
 ## 连接约定
 
@@ -86,6 +87,33 @@
 | S24 | https://learn.microsoft.com/en-us/cpp/windows/deployment-in-visual-cpp | MSVC 三种部署 | 200 |
 | S25 | https://pcl2.ijinshan.com/pages/concepts/minecraft-launchers/ | 第三方横评，标推广措辞 | 200 |
 | S26 | https://learn.microsoft.com/en-us/cpp/windows/deploying-visual-cpp-applications | MSVC 部署首轮路径 | 受阻 |
+
+## 010 新增来源
+
+| 编号 | 来源 | 用途 | 状态码 |
+| --- | --- | --- | --- |
+| S27 | https://support.curseforge.com/en/support/solutions/articles/9000207405-curse-forge-3rd-party-api-terms-and-conditions | CurseForge API 条款 CF01-CF06 | 200 |
+| S28 | https://modrinth.com/legal/terms | Modrinth API License MR01-MR04 | 200 |
+| S29 | https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata | DPAPI 原文 | 200 |
+| S30 | https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-credwritew | CredWriteW 原文 | 200 |
+| S31 | https://learn.microsoft.com/en-us/windows/win32/secauthn/credential-manager | 凭据管理器提供程序页面 | 200 |
+| S32 | https://api.github.com/repos/slint-ui/slint/contents/LICENSES | slint 20 个许可条目与 3 份三许可全文 | 200 |
+| S33 | https://api.github.com/repos/kongbai9288/KCU-Launcher/contents/LICENSE 等 6 个 contents 端点 | 6 份许可证逐字副本 | 200 |
+| S34 | https://deepwiki.com/ElectronicWave/Elemental/5.2-mod-discovery-system | 加载器 schema 二手线索 | 200 |
+| S35 | https://minecraftserver.buzz/minecraft-offline-uuid-generator | 离线 UUID 社区线索 | 200 |
+| S36 | https://prismlauncher.org/wiki/getting-started/create-instance/ | Prism 实例创建流程 | 200 |
+| S37 | https://api.github.com/repos/Glavo/MCIM、/repos/mcim-api/mcim-api | MCIM 仓库定位 | 受阻，404 |
+
+## 合规冲突登记
+
+| 编号 | 条款 | 现有登记 | 状态 |
+| --- | --- | --- | --- |
+| X01 | CF03 不得缓存 API 数据 | docs/research/03-download.md 缓存头 sync_at | 已证实 |
+| X02 | CF03 不得缓存 API 数据 | docs/spec/00-requirements.txt:172 默认走国内镜像 | 已证实 |
+| X03 | CF02 不得隐藏身份或地理位置 | docs/research/03-download.md 6 个上游主机直连 403 | 已证实 |
+| X04 | CF01 API Key 不可共享 | docs/spec/00-requirements.txt:171 密钥可选 | 已证实 |
+
+处置见 docs/rules/build-preconditions.md；未取得用户拍板前不生成下载模块代码。
 
 ## 版本弃用
 

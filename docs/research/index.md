@@ -23,9 +23,10 @@
 | 06-server.md | 服务端 | 68 键默认值、UTF-8 与 CRLF、RCON 包字段与认证、字节序、引入版本、分片上限、EULA | Mojang 官方 RCON 文档 | 无 |
 | 07-lan.md | 局域网协议 | RFC 6762 / 6763 / 6455 原文 | Bonjour、HTTP 路由认证 TLS、二维码、发现端口 | 无 |
 | 08-github-api.md | GitHub REST API | 请求头、两个版本实测 200、认证限流 5000、github/docs 原文 91 行、410 Gone | 未认证限流 60 数值 | docs.github.com 网页直抓 |
-| 09-licenses.md | 许可证 | HMCL、wry、tao、egui、iced、authlib-injector、slint 清单、CC BY-SA 4.0 | slint 三许可全文、Blessing Skin、BMCLAPI、MCIM、Modrinth、CurseForge、KCU 原仓库 | 无 |
+| 09-licenses.md | 许可证 | HMCL、wry、tao、egui、iced、authlib-injector、slint 清单、CC BY-SA 4.0 | Blessing Skin | 无 |
 | 10-upstream-state.md | 时间、上游版本、网络边界、工具链 | 时钟一致、7 个上游 tag、api.github.com 200、6 个官方文档 200 | 无 | github.com 与 6 个上游主机 403、docs.github.com 与 wiki.vg 抓取、rustc/cargo 缺失 |
 | 11-runtime.md | 底层运行时、裁剪、进程管理、本地库加载、单文件发布、玩家分支横评、多操作入口交互 | Cargo profile 默认值、DLL 搜索顺序与 LOAD_LIBRARY_SEARCH 标志、std::process::Command、CommandExt、WebView2 进程组、目标三元组、MSVC 三种部署 | CREATE_NO_WINDOW 具体值、std::process 超时 API、WebView2 内存占用关系、本项目单文件发布工具链、横评排名与开源状态、多操作入口具体形式 | 1 个 MSVC 部署首轮路径抓取被拒 |
+| 12-compliance.md | 合规条款、凭据保护、许可证全文、上游版本、阻塞项 | CurseForge 6 条 API 条款、Modrinth 4 条 API License、DPAPI 与 CredWriteW 原文、6 份许可证全文、slint 三许可全文、6 个上游 release tag | CF04-CF06、MCIM / BMCLAPI 条款、Modrinth 缓存限流条款、加载器 schema、Notchian 行为、Forge / NeoForge v99.99 tag | MCIM 仓库定位 2 次 404、未认证 /rate_limit 404 |
 
 ## 来源类型
 
@@ -37,24 +38,26 @@
 | 协议规范 | https://www.rfc-editor.org/rfc/rfc6762、https://www.rfc-editor.org/rfc/rfc6763、https://www.rfc-editor.org/rfc/rfc6455 |
 | 社区文档 | https://minecraft.wiki/w/Server.properties、https://minecraft.wiki/w/RCON |
 
-## 005、008 与 009 卡点状态
+## 005、008、009 与 010 卡点状态
 
-| 001 轮遗留项 | 005 状态 | 008 状态 | 009 状态 |
-| --- | --- | --- | --- |
-| HMCL LICENSE 全文 | 已证实，docs/licenses/HMCL-LICENSE.txt | 已证实 | 已证实 |
-| 加载器 version json schema | Fabric Meta README 已证实；其余未证实 | 未证实，未变动 | 未证实，未变动 |
-| 离线 UUID 规则 | 算法已证实，Notchian 服务端行为未证实 | 算法补一手锚点已证实；Notchian 服务端行为未证实 | 未证实，未变动 |
-| RCON 默认值 | 已证实，并纠正 broadcast-rcon-to-ops | 已证实 | 已证实 |
-| RCON 字节序、引入版本、分片上限 | 降级为未证实 | 已证实，https://minecraft.wiki/w/RCON | 已证实 |
-| WebView2 检测键 | 已证实 | 已证实 | 已证实 |
-| docs.github.com 直抓 | 仍受阻；经 github/docs 仓库 API 取得一手原文 | 受阻，未变动 | 受阻，未变动 |
-| authlib-injector wiki 直抓 | 已证实，经 GitHub contents API 取得 211 + 668 行原文 | 已证实 | 已证实 |
-| 锚点格式不统一 | 10 份文档统一为 URL / path:line / cmd 输出 | 已证实 | 11 份文档统一，已证实 |
-| 远程仓库创建 | 004 轮已完成 | 已证实 | 已证实 |
-| 正常模式 UI | 未提供，未落盘 | 007 轮已落盘 assets/ui/normal-mode-v3.html；未实现、未进入构建 | 未实现，未进入构建 |
-| 框架蓝图 | 方案已落盘，未批准 | 未批准，未变动 | 未批准，未变动 |
-| slint 三许可全文 | 未证实 | 未证实，raw.githubusercontent.com 直抓受阻 | 未证实，未变动 |
-| Mojang 官方 RCON 文档 | 未证实 | 未证实，未取得 | 未证实，未取得 |
+| 001 轮遗留项 | 005 状态 | 008 状态 | 009 状态 | 010 状态 |
+| --- | --- | --- | --- | --- |
+| HMCL LICENSE 全文 | 已证实，docs/licenses/HMCL-LICENSE.txt | 已证实 | 已证实 | 已证实 |
+| 加载器 version json schema | Fabric Meta README 已证实；其余未证实 | 未证实，未变动 | 未证实，未变动 | 二手线索已登记，仍未证实 |
+| 离线 UUID 规则 | 算法已证实，Notchian 服务端行为未证实 | 算法补一手锚点已证实；Notchian 服务端行为未证实 | 未证实，未变动 | 社区线索已登记，仍未证实 |
+| RCON 默认值 | 已证实，并纠正 broadcast-rcon-to-ops | 已证实 | 已证实 | 已证实 |
+| RCON 字节序、引入版本、分片上限 | 降级为未证实 | 已证实，https://minecraft.wiki/w/RCON | 已证实 | 已证实 |
+| WebView2 检测键 | 已证实 | 已证实 | 已证实 | 已证实 |
+| docs.github.com 直抓 | 仍受阻；经 github/docs 仓库 API 取得一手原文 | 受阻，未变动 | 受阻，未变动 | 受阻，未变动 |
+| authlib-injector wiki 直抓 | 已证实，经 GitHub contents API 取得 211 + 668 行原文 | 已证实 | 已证实 | 已证实 |
+| 锚点格式不统一 | 10 份文档统一为 URL / path:line / cmd 输出 | 已证实 | 11 份文档统一，已证实 | 12 份文档统一，已证实 |
+| 远程仓库创建 | 004 轮已完成 | 已证实 | 已证实 | 已证实 |
+| 正常模式 UI | 未提供，未落盘 | 007 轮已落盘 assets/ui/normal-mode-v3.html；未实现、未进入构建 | 未实现，未进入构建 | 未实现，未进入构建 |
+| 框架蓝图 | 方案已落盘，未批准 | 未批准，未变动 | 未批准，未变动 | 未批准，未变动 |
+| slint 三许可全文 | 未证实 | 未证实，raw.githubusercontent.com 直抓受阻 | 未证实，未变动 | 已证实，docs/licenses/slint-LICENSES/ 3 份全文 |
+| Mojang 官方 RCON 文档 | 未证实 | 未证实，未取得 | 未证实，未取得 | 未证实，未取得 |
+| KCU 原仓库许可证 | 未证实 | 未证实 | 未证实 | 已证实，docs/licenses/KCU-Launcher-LICENSE.txt |
+| CurseForge / Modrinth 服务条款 | 未证实 | 未证实 | 未证实 | 已证实，docs/research/12-compliance.md CF01-CF06 / MR01-MR04 |
 
 ## 009 新增调研项
 
@@ -63,6 +66,16 @@
 | docs/spec/00-requirements.txt:229 底层运行时、裁剪工具、进程管理、单文件发布、本地库加载 | docs/research/11-runtime.md | 9 份一手原文已落盘；2 项未证实；1 项受阻 |
 | docs/spec/00-requirements.txt:228 玩家分支启动器可取之处 | docs/research/11-runtime.md | 页面存在已证实；排名、星级、开源状态未证实；功能项候选未证实 |
 | docs/spec/00-requirements.txt:231 电脑端多操作入口交互 | docs/research/11-runtime.md | 具体形式未证实，思路保留 |
+
+## 010 新增调研项
+
+| 需求条目 | 文档 | 状态 |
+| --- | --- | --- |
+| docs/spec/00-requirements.txt:17 正版凭据保护机制 | docs/research/12-compliance.md、docs/features/credential-guard.md | DPAPI 与 CredWriteW 原文已证实；方案未批准、未实现 |
+| docs/spec/00-requirements.txt:171-173 镜像与密钥 | docs/research/12-compliance.md | X01-X04 四项冲突已证实，见 docs/rules/build-preconditions.md |
+| docs/spec/00-requirements.txt:230 每轮联网核实现有时间与上游版本状态 | docs/research/12-compliance.md | 6 个 release tag 已证实；2 个 v99.99 tag 已失败 |
+| docs/spec/00-requirements.txt:228 玩家分支启动器可取之处 | docs/research/12-compliance.md | 两个一手仓库许可证与 README 已证实；功能清单未证实 |
+| docs/spec/00-requirements.txt:249 合规优先于功能进度 | docs/rules/build-preconditions.md | 前置条件清单已落盘，待用户拍板 |
 
 ## 禁止项
 

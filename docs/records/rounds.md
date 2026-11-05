@@ -478,3 +478,109 @@
 - 加载器逐版本 schema、Notchian 服务端行为、令牌保护、Mojang 官方 RCON 文档、slint 三许可全文补证
 - 浏览器内渲染实测
 - rustc / cargo 构建验证
+
+## 010
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/10-round-010-instructions.txt | 当轮指令逐字副本，1 行 |
+| docs/research/12-compliance.md | 合规条款、凭据保护、许可证全文、上游版本、阻塞项补证 |
+| docs/licenses/index.md | 逐字副本表 12 行、slint 三许可全文段、重复副本处理、L03/L06/L07 |
+| docs/licenses/ | 新增 6 份逐字副本与 slint-LICENSES/ 3 份三许可全文 |
+| docs/features/credential-guard.md | F012 正版凭据保护，5 个固定字段 |
+| docs/features/index.md | F012 入表、G05/G06、009 轮「全部登记」措辞纠错 |
+| docs/rules/build-preconditions.md | D06/D07 触发链、L1-L8 前置、X01-X06、B01-B04 |
+| docs/research/index.md | 文件表加 12-compliance.md、卡点表加 010 状态列、010 新增调研项段 |
+| docs/checklists/ai-errors.md | A31 列表补 F012、A32-A35 |
+| docs/checklists/windows-errors.md | W29-W32 |
+| docs/records/interface-log.md | I14、S27-S37、合规冲突登记段 |
+| docs/index.md | 必读 20 项、12-compliance / build-preconditions 分区、010 演示、检查项 |
+| README.md | 轮次 010、F001-F012、合规卡点 |
+| docs/records/rounds.md | 本段落 |
+| demos/round-010-compliance.html | 合规阻塞与搭建前置运行逻辑 HTML |
+| docs/verification/round-010.md | 第 010 轮独立验证报告 |
+
+当轮输入：
+
+| 项 | 值 |
+| --- | --- |
+| 指令 | 「干」，逐字副本 1 行 |
+| 新功能或 UI | 未提供 |
+| D06 触发信号 | 未提供 |
+| 阶段 | 003-remote.md D05 功能输入阶段，未启动 D07 |
+| 偏离 | 9.1 连续未达应停下由用户决定范围；按 18.5 以用户当轮指令继续执行 |
+
+合规冲突发现：
+
+| 编号 | 条款原文 | 现有登记 | 四值 |
+| --- | --- | --- | --- |
+| X01 | CF03 `save or cache any data obtained through the API or SDK` 禁止 | docs/research/03-download.md 缓存头 sync_at | 已证实 |
+| X02 | CF03 同上 | docs/spec/00-requirements.txt:172 默认走国内镜像 | 已证实 |
+| X03 | CF02 `conceal your identity or geographic location ... proxy server or VPN` 禁止 | docs/research/03-download.md 6 个上游主机直连 403 | 已证实 |
+| X04 | CF01 `unique API Key ... non-transferable and may not be shared with any third party` | docs/spec/00-requirements.txt:171 密钥可选 | 已证实 |
+| X05 | CF04 竞争产品范围 | 未取得条款解释 | 未证实 |
+| X06 | CF05 配额阈值 | 页面未给数值 | 未证实 |
+
+处置：按 docs/spec/00-requirements.txt:249 与 18.6，X01-X04 落在已登记字段上，进入构建前需用户拍板；本轮未生成下载模块代码、未改 03-download.md 已有字段、未自行选择一条执行另一条忽略。前置条件清单落在 docs/rules/build-preconditions.md。
+
+许可证补证：
+
+| 项 | 值 |
+| --- | --- |
+| 新增逐字副本 | KCU-Launcher、MultiMC、Forge、NeoForge、Quilt 共 5 份；Prism 与 KCU 同字节未另存 |
+| slint 三许可全文 | Royalty-free 2.0 / GPL-3.0-only / Commercial 共 3 份，目录 20 条目 |
+| slint 主文件原文 | 三选一、Royalty-free 不含嵌入式、嵌入式需商用许可 |
+| 005 轮 L03 | 「三许可全文标未证实」改写为已取得并列具体文件 |
+| 重复副本 | slint-LICENSE.md 与 slint-LICENSE.txt 同 sha，删除前者；PrismLauncher-LICENSE.txt 与 KCU 同 sha，删除前者 |
+| SPDX | KCU GPL-3.0、Prism GPL-3.0、MultiMC NOASSERTION、Forge NOASSERTION、NeoForge LGPL-2.1、Quilt Apache-2.0 |
+
+凭据保护：
+
+| 项 | 值 |
+| --- | --- |
+| DPAPI | CryptProtectData 绑定同一用户登录凭据与同一计算机；可选熵加解密需一致；CRYPTPROTECT_LOCAL_MACHINE 放大可解密范围 |
+| CredWriteW | 凭据关联当前令牌登录会话，令牌用户 SID 被禁用时失败 |
+| F012 | 需求 docs/spec/00-requirements.txt:17 补登记，状态已批准、方案未批准、未实现 |
+| C01-C04 | 不用机器标志、凭据不进日志与诊断包、方案未批准、无头模式走同一路径 |
+| 未证实 | CRED_PERSIST_* 取值、令牌刷新周期、Azure Client ID |
+
+上游版本状态（需求 :230）：
+
+| 项 | 值 |
+| --- | --- |
+| 已证实 | HMCL v3.16.4、fabric-loader 0.20.1、wry-v0.57.1、Rust 1.99.1、Prism 11.1.1、slint v1.18.1 |
+| 已失败 | NeoForge 与 MinecraftForge 的 tags?per_page=1 均返回 `v99.99` / `cb6f92e`，同名同 sha，不作为版本结论 |
+| 时钟 | 沙盒 `Thu Nov  5 22:13:48 CST 2026`；未认证 /rate_limit 404，Date `Thu, 05 Nov 2026 14:13:48 GMT`；带认证 200 remaining 5000 |
+| 冲突 | 未认证探测由 001-009 轮的 403 变为本轮 404，如实登记，不沿用旧值 |
+
+玩家分支一手仓库（需求 :228）：
+
+| 项 | 值 |
+| --- | --- |
+| PrismLauncher/PrismLauncher | GPL-3.0，默认分支 develop，README 6992 字节 |
+| MultiMC/Launcher | NOASSERTION，默认分支 develop，COPYING.md 含 Apache 2.0 部分 |
+| 实例创建流程 | Add Instance → 选择版本与 modloader 或导入整合包 |
+| mmc-pack.json 格式 | 领域知识库片段，标未证实 |
+| 功能清单 | 未逐功能核对官方 wiki，标未证实 |
+
+修正记录：
+
+| 位置 | 原值 | 修复 |
+| --- | --- | --- |
+| docs/research/12-compliance.md 初稿 | `docs/research/index.md:65` 指向 R03 | 改为 `docs/research/index.md R03`，避开行号漂移 |
+| docs/research/12-compliance.md 初稿 | `docs/research/02-auth.md:74` 指向实现禁用约束 | 改为约束段描述，实际行 92 |
+| docs/features/credential-guard.md 初稿 | `grep -c 'CryptProtectData'` 写输出 4 | 实跑为 0；改用 `grep -c 'cryptprotectdata'` 输出 5，A35 登记 |
+| docs/features/index.md G05 | 11 份功能 md | 改为 12 份 |
+| docs/checklists/ai-errors.md A31 | 10 个文件 | 加入 credential-guard.md，共 11 个 |
+| docs/features/index.md 009 轮措辞 | 「需求第 6、9、17、18、20、21 节功能块已全部登记」 | :17 凭据保护当时未单独成文，010 轮补 F012 并纠错 |
+
+未做：
+- 源码与 src/ 实现
+- 底层统一搭建
+- 框架蓝图批准
+- 正常模式 UI 实现与构建
+- 品牌与字体授权取得
+- X01-X06 用户拍板
+- MCIM / BMCLAPI 一手条款、Modrinth 缓存限流条款、加载器逐版本 schema、Notchian 服务端行为、Mojang 官方 RCON 文档补证
+- 浏览器内渲染实测
+- rustc / cargo 构建验证

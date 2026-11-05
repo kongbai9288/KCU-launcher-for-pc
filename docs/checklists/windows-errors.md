@@ -30,3 +30,7 @@
 | W26 | 进程超时 | std::process 页面未提供超时 API；超时由外层实现，不假设 wait 自带超时 |
 | W27 | WebView2 进程组 | 单 browser process + 多 renderer 绑定同一 user data folder；多个 folder 各建一组进程 |
 | W28 | MSVC 运行库部署 | central / local / static linking 三种；未选定工具链前不写死目标三元组，关联 W18 |
+| W29 | DPAPI 用户绑定 | CryptProtectData 默认绑定同一用户登录凭据与同一计算机；加解密需同一可选熵 |
+| W30 | DPAPI 机器标志 | 不设置 CRYPTPROTECT_LOCAL_MACHINE；该标志使本机任意用户可解密 |
+| W31 | CredWriteW 会话绑定 | 凭据关联当前令牌登录会话，令牌用户 SID 被禁用时失败；不假设跨登录会话可用 |
+| W32 | 凭据不落明文 | 凭据不进入日志、诊断包、配置快照、提交与远端 |
