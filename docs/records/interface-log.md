@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：008
+更新轮次：009
 
 ## 前置索引
 
@@ -18,6 +18,7 @@
 | I10 | 时间、上游版本、网络边界 | docs/research/10-upstream-state.md | 005 轮新增 |
 | I11 | 正常模式 UI 设计稿 | assets/ui/index.md、docs/features/normal-ui.md | 已落盘，授权未证实 |
 | I12 | RCON 与 UUID 一手补证 | docs/research/06-server.md、docs/research/02-auth.md | 008 轮新增，见 008 新增来源 |
+| I13 | Cargo profile / Win32 DLL 搜索 / std::process / WebView2 进程组 / MSVC 部署 / 目标三元组 | docs/research/11-runtime.md | 009 轮新增，9 份一手原文；2 项未证实；1 项受阻 |
 
 ## 连接约定
 
@@ -30,6 +31,9 @@
 | MCIM | 缓存头 `sync_at`；可能要求提交启动器 UA | 镜像基址配置项 |
 | RCON | 无 HTTP 头；小端包 | 端口配置项 |
 | server.properties | 无 HTTP 头；UTF-8，CRLF on Windows | 文件路径配置项 |
+| Win32 DLL 加载 | 无 HTTP 头；SetDefaultDllDirectories + LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | 应用目录配置项 |
+| std::process | 无 HTTP 头；args_os 参数，不经 cmd.exe / .bat | 可执行文件配置项 |
+| WebView2 进程组 | 无 HTTP 头；单 user data folder 对应单进程集合 | user data folder 配置项 |
 
 ## 同步上游
 
@@ -66,6 +70,22 @@
 | S13 | https://minecraft.wiki/w/RCON | 字节序、引入版本、分片上限、认证失败 | 200 |
 | S14 | https://minecraft.wiki/w/Universally_unique_identifier | 离线 UUID v3、在线 UUID v4 | 200 |
 | S15 | https://raw.githubusercontent.com/slint-ui/slint/master/LICENSE.md | slint 三许可全文 | 受阻 |
+
+## 009 新增来源
+
+| 编号 | 来源 | 用途 | 状态码 |
+| --- | --- | --- | --- |
+| S16 | https://doc.rust-lang.org/cargo/reference/profiles.html | Cargo profile 默认值 | 200 |
+| S17 | https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order | DLL 搜索顺序与预加载攻击 | 200 |
+| S18 | https://msdn.microsoft.com/zh-tw/windows/apps/ms682586 | LOAD_LIBRARY_SEARCH 中文原文 | 200 |
+| S19 | https://technet.microsoft.com/en-us/office/hh310515 | SetDefaultDllDirectories 标志与最低系统 | 200 |
+| S20 | https://doc.rust-lang.org/std/process/struct.Command.html | 进程创建与参数 | 200 |
+| S21 | https://doc.rust-lang.org/std/os/windows/process/trait.CommandExt.html | Windows CommandExt | 200 |
+| S22 | https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/process-model | WebView2 进程组 | 200 |
+| S23 | https://doc.rust-lang.org/rustc/platform-support.html | 目标三元组与 tier | 200 |
+| S24 | https://learn.microsoft.com/en-us/cpp/windows/deployment-in-visual-cpp | MSVC 三种部署 | 200 |
+| S25 | https://pcl2.ijinshan.com/pages/concepts/minecraft-launchers/ | 第三方横评，标推广措辞 | 200 |
+| S26 | https://learn.microsoft.com/en-us/cpp/windows/deploying-visual-cpp-applications | MSVC 部署首轮路径 | 受阻 |
 
 ## 版本弃用
 

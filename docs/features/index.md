@@ -8,23 +8,24 @@
 | F002 | 统一调度器 | dispatcher | 已批准 | dispatcher.md |
 | F003 | 轻量启动器视图 | lightweight.view | 已批准 | lightweight.md |
 | F004 | 无头模式启动器 | headless | 已批准 | headless.md |
+| F005 | 正常启动器 | normal | 已批准 | normal-launcher.md |
+| F006 | 手机连接 | normal.lan | 已批准 | lan.md |
+| F007 | 一键开服 | normal.server | 已批准 | server.md |
+| F008 | 日志 | core.log | 已批准 | log.md |
+| F009 | 兜底与安全模式 | core.fallback | 已批准 | fallback.md |
+| F010 | 跨进程统一信封 | core.ipc | 已批准 | envelope.md |
+| F011 | UI 框架 | normal.ui | 已批准 | ui-framework.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
-F002-F004 状态含义：需求条目已登记；未实现、未进入构建，src/ 为空。
+F002-F011 状态含义：需求条目已登记；未实现、未进入构建，src/ 为空。
 
 ## 计划登记项
 
-| 功能 | 框架归属 |
+| 状态 | 值 |
 | --- | --- |
-| 正常启动器 | normal |
-| 手机连接 | normal.lan |
-| 一键开服 | normal.server |
-| 日志 | core.log |
-| 兜底与安全模式 | core.fallback |
-| 跨进程统一信封 | core.ipc |
-| UI 框架 | normal.ui |
+| 待登记 | 无 |
 
-状态值：已批准 / 已实现 / 已验证 / 已合并 / 已进入构建 / 已部署 / 行为已确认。每份功能 md 只声明实际达到的一层。
+需求第 6、9、17、18、20、21 节列出的功能块已全部登记。docs/spec/00-requirements.txt:228 的玩家分支可取之处保留为调研候选项，不登记为实现项，见 docs/research/11-runtime.md。
 
 ## 登记约束
 
@@ -34,3 +35,6 @@ F002-F004 状态含义：需求条目已登记；未实现、未进入构建，s
 | G02 | 性能未实测时写「未实测」并标受阻，不写推测值。 |
 | G03 | 轻量模式 md 不引用 normal.ui 资产，见 docs/checklists/ai-errors.md A26。 |
 | G04 | 未证实字段不写进实现，见 docs/research/index.md R03。 |
+| G05 | 11 份功能 md 均写明未实现与 src/ 为空，不写入构建状态。 |
+
+状态值：已批准 / 已实现 / 已验证 / 已合并 / 已进入构建 / 已部署 / 行为已确认。每份功能 md 只声明实际达到的一层。

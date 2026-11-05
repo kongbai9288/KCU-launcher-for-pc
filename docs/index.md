@@ -1,7 +1,7 @@
 # 文档索引
 
 检索日期：2026-11-05
-更新轮次：008
+更新轮次：009
 
 ## 每轮开工必读顺序
 
@@ -14,20 +14,21 @@
 7. docs/spec/06-round-006-instructions.txt
 8. docs/spec/07-round-007-instructions.txt
 9. docs/spec/08-round-008-instructions.txt
-10. docs/checklists/ai-errors.md
-11. docs/checklists/windows-errors.md
-12. docs/rules/proof-rules.md
-13. docs/rules/fallback-rules.md
-14. docs/rules/push-scope.md
-15. docs/research/index.md
-16. docs/features/index.md
-17. docs/records/rounds.md
+10. docs/spec/09-round-009-instructions.txt
+11. docs/checklists/ai-errors.md
+12. docs/checklists/windows-errors.md
+13. docs/rules/proof-rules.md
+14. docs/rules/fallback-rules.md
+15. docs/rules/push-scope.md
+16. docs/research/index.md
+17. docs/features/index.md
+18. docs/records/rounds.md
 
 读取命令：
 
 ```
 cd /data/workspace/kcu-launcher-desktop
-for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/research/index.md docs/features/index.md docs/records/rounds.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
+for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/spec/09-round-009-instructions.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/research/index.md docs/features/index.md docs/records/rounds.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
 ```
 
 ## 分区
@@ -36,8 +37,9 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | --- | --- | --- |
 | 需求规格 | docs/spec/00-requirements.txt | 需求原文 |
 | 调研 | docs/research/index.md | 外部事实、锚点、四值 |
+| 底层运行时调研 | docs/research/11-runtime.md | Cargo profile、DLL 搜索、进程管理、WebView2 进程组、目标三元组、MSVC 部署、玩家分支横评 |
 | 许可证原文 | docs/licenses/index.md | 7 份第三方逐字副本 |
-| 功能登记 | docs/features/index.md | 每个功能一份 md |
+| 功能登记 | docs/features/index.md | 每个功能一份 md，F001-F011 |
 | 决策 | docs/decisions/index.md | 状态分层记录 |
 | 防错 | docs/checklists/ | AI 与 Windows 防错清单 |
 | 规则 | docs/rules/ | 四值判决、兜底分级、推送范围 |
@@ -52,6 +54,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 演示 | demos/round-006-closeout.html | 005 收口与 006 交付运行逻辑 |
 | 演示 | demos/round-007-normal-ui.html | 正常模式 UI 与轻量分流运行逻辑 |
 | 演示 | demos/round-008-mode-views.html | 模式视图登记与补证运行逻辑 |
+| 演示 | demos/round-009-coverage.html | 需求覆盖与底层调研运行逻辑 |
 | 脚本 | scripts/push.sh | 推送入口，自动降级 |
 | 脚本 | scripts/api_push.py | Git Data API 全量树快照 |
 
@@ -78,6 +81,8 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 重复引用扫描 | `! grep -rE '同上' docs/research/` |
 | 品牌元素扫描 | `! grep -rE 'FCL\|揉纸启动器' src/` |
 | 原文口径扫描 | `grep -n 'Introduced in' docs/research/06-server.md` |
+| 推广措辞扫描 | `! grep -rE '表现得最优\|使用人数最多\|社区反馈最积极' docs/features/ docs/decisions/` |
+| 功能状态扫描 | `test -z "$(grep -L '未实现' docs/features/dispatcher.md docs/features/lightweight.md docs/features/headless.md docs/features/normal-launcher.md docs/features/lan.md docs/features/server.md docs/features/log.md docs/features/fallback.md docs/features/envelope.md docs/features/ui-framework.md)"` |
 
 ## 未写入项
 
@@ -87,4 +92,6 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 - UI 设计稿品牌与字体授权：未取得。
 - 图标 ICO 与裁切版本：许可证与范围未确认，未生成。
 - 本项目 LICENSE：未定，未生成。
-- Notchian 服务端离线 UUID 行为、Mojang 官方 RCON 文档、slint 三许可全文：未证实。
+- Notchian 服务端离线 UUID 行为、Mojang 官方 RCON 文档、slint 三许可全文、加载器逐版本 schema、令牌保护：未证实。
+- CREATE_NO_WINDOW 具体值、std::process 超时 API、WebView2 内存占用关系、本项目单文件发布工具链：未证实。
+- 电脑端多操作入口交互具体形式：未证实。

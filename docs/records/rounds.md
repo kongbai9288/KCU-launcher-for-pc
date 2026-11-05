@@ -361,3 +361,96 @@
 - 加载器逐版本 schema、Notchian 服务端行为、令牌保护、Mojang 官方 RCON 文档、slint 三许可全文补证
 - 浏览器内渲染实测
 - rustc / cargo 构建验证
+
+## 009
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/09-round-009-instructions.txt | 当轮指令逐字副本，1 行 |
+| docs/research/11-runtime.md | 底层运行时、裁剪、进程管理、本地库加载、单文件发布、玩家分支横评、多操作入口交互 |
+| docs/research/index.md | 文件表加 11-runtime.md；卡点表加 009 状态列；新增 009 调研项段 |
+| docs/features/normal-launcher.md | F005 正常启动器，5 个固定字段 |
+| docs/features/lan.md | F006 手机连接，5 个固定字段 |
+| docs/features/server.md | F007 一键开服，5 个固定字段 |
+| docs/features/log.md | F008 日志，5 个固定字段 |
+| docs/features/fallback.md | F009 兜底与安全模式，5 个固定字段 |
+| docs/features/envelope.md | F010 跨进程统一信封，5 个固定字段 |
+| docs/features/ui-framework.md | F011 UI 框架，5 个固定字段 |
+| docs/features/index.md | F001-F011 全表、计划登记项清空、G01-G05 |
+| docs/checklists/ai-errors.md | A29-A31 |
+| docs/checklists/windows-errors.md | W23-W28 |
+| docs/records/interface-log.md | I13、连接约定 4 行、S16-S26 |
+| docs/index.md | 必读 18 项、11-runtime 分区、009 演示、A29-A31 检查 |
+| README.md | 轮次 009、F001-F011 |
+| docs/records/rounds.md | 本段落 |
+| demos/round-009-coverage.html | 需求覆盖与底层调研运行逻辑 HTML |
+| docs/verification/round-009.md | 第 009 轮独立验证报告 |
+
+当轮输入：
+
+| 项 | 值 |
+| --- | --- |
+| 指令 | 「干」，逐字副本 1 行 |
+| 新功能或 UI | 未提供 |
+| D06 触发信号 | 未提供 |
+| 阶段 | 003-remote.md D05 功能输入阶段，未启动 D07 |
+| 偏离 | 9.1 连续未达应停下由用户决定范围；按 18.5 以用户当轮指令继续执行 |
+
+需求 15 节待办推进：
+
+| 需求条目 | 009 处理 | 四值 |
+| --- | --- | --- |
+| :228 玩家分支启动器可取之处 | 横评页面存在与推广措辞已登记；排名、星级、开源状态标未证实；功能项候选标未证实，不写进实现计划 | 已证实 / 未证实 |
+| :229 底层官方文档 | 9 份一手原文落盘 11-runtime.md；2 项未证实；1 项受阻 | 已证实 / 未证实 / 受阻 |
+| :230 每轮联网核实现有时间与上游版本状态 | 开工时钟与网络 date 头核对；带认证 /rate_limit 200 | 已证实 |
+| :231 电脑端多操作入口交互 | 具体形式未证实，思路保留，不套用手机手势 | 未证实 |
+
+一手补证：
+
+| 主题 | 值 | 锚点 |
+| --- | --- | --- |
+| Cargo release 默认 | opt-level=3、lto=false、panic="unwind"、codegen-units=16、strip="none"、rpath=false | https://doc.rust-lang.org/cargo/reference/profiles.html |
+| DLL 安全搜索模式 | 当前目录第 11 位；禁用时第 8 位 | https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order |
+| LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | 0x00001000 | https://technet.microsoft.com/en-us/office/hh310515 |
+| std::process 参数 | 不经 shell；cmd.exe / .bat 非标准解码 | https://doc.rust-lang.org/std/process/struct.Command.html |
+| CommandExt | creation_flags 与 CREATE_UNICODE_ENVIRONMENT 按位或；raw_arg 不转义 | https://doc.rust-lang.org/std/os/windows/process/trait.CommandExt.html |
+| WebView2 进程组 | 单 browser process + 多 renderer + helper，绑定单个 user data folder | https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/process-model |
+| MSVC 部署 | central / local / static linking | https://learn.microsoft.com/en-us/cpp/windows/deployment-in-visual-cpp |
+| 目标三元组 | x86_64-pc-windows-msvc / gnu、aarch64-pc-windows-msvc；Tier 1-3 | https://doc.rust-lang.org/rustc/platform-support.html |
+
+口径与边界：
+
+| 项 | 值 |
+| --- | --- |
+| 横评页面归属 | PCL2 相关站点，含推广措辞；不作选型结论，见 A29 |
+| 未证实项 | CREATE_NO_WINDOW 具体值、std::process 超时 API、WebView2 内存占用关系、本项目单文件发布工具链、横评排名与开源状态、多操作入口形式 |
+| 受阻项 | MSVC 部署首轮路径抓取被拒，改用另一路径取得 |
+| 008 验证报告 U8 锚点 | 报告写「03-download.md」，实际令牌保护在 docs/research/02-auth.md:57；按 18.1 未改报告，本段登记待复核 |
+| src/ | 仍为空 |
+
+功能登记收口：
+
+| 项 | 值 |
+| --- | --- |
+| 已登记 | F001-F011，11 份 |
+| 计划登记项 | 无 |
+| 状态 | 全部「已批准」，全部写明未实现、未进入构建 |
+| 约束 | G05 锁定状态表述 |
+
+扫描命令语义修复：
+
+| 检查 | 修复前 | 修复后 |
+| --- | --- | --- |
+| A31 功能状态扫描 | `! grep -L '未实现' …` 在全部命中时仍 exit 0，取反为 1，误报 STATE_FOUND | `test -z "$(grep -L '未实现' …)"`，判定输出为空 |
+| 同步位置 | docs/checklists/ai-errors.md、docs/index.md | 断言含义不变，判定 10 份 md 均含未实现标记 |
+| 扫描域自我命中 | A29 推广措辞字面量在 docs/research/11-runtime.md，不在 A29 检查域 docs/features/ docs/decisions/ | 无需改动 |
+
+未做：
+- 源码与 src/ 实现
+- 底层统一搭建
+- 框架蓝图批准
+- 正常模式 UI 实现与构建
+- 品牌与字体授权取得
+- 加载器逐版本 schema、Notchian 服务端行为、令牌保护、Mojang 官方 RCON 文档、slint 三许可全文补证
+- 浏览器内渲染实测
+- rustc / cargo 构建验证

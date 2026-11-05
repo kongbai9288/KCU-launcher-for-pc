@@ -24,3 +24,9 @@
 | W20 | server.properties 写入 | UTF-8，保留 # 注释，Windows 行尾 CRLF，启动时重新生成 |
 | W21 | 外部字体 CDN | 加载失败走本地字体栈，二级降级并写诊断行；不阻塞窗口渲染 |
 | W22 | 窗口拖拽 CSS | -webkit-app-region 仅适用于 webview 桌面壳；无 WebView2 时不加载该设计稿 |
+| W23 | DLL 预加载 | SetDllDirectory 非空路径会禁用安全搜索模式；用 SetDefaultDllDirectories + LOAD_LIBRARY_SEARCH_DEFAULT_DIRS |
+| W24 | SetDefaultDllDirectories 最低系统 | Windows 8 / Server 2012；Windows 7、2008 R2、Vista、2008 需 KB2533623 并用 GetProcAddress |
+| W25 | 进程参数 | std::process 参数不经 shell；`cmd.exe` / `.bat` 非标准解码，不可信输入不走 raw_arg |
+| W26 | 进程超时 | std::process 页面未提供超时 API；超时由外层实现，不假设 wait 自带超时 |
+| W27 | WebView2 进程组 | 单 browser process + 多 renderer 绑定同一 user data folder；多个 folder 各建一组进程 |
+| W28 | MSVC 运行库部署 | central / local / static linking 三种；未选定工具链前不写死目标三元组，关联 W18 |

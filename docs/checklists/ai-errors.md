@@ -35,6 +35,9 @@
 | A26 | 轻量模式引用正常模式 UI 资产 | `! grep -rE 'assets/ui|normal-mode-v3' src/ 2>/dev/null` |
 | A27 | 逐字副本字节被改动 | `cmp` 来源与落盘；SHA-1 双端一致 |
 | A28 | 工具摘要与一手原文不一致时采用摘要（关联 A22） | `grep -n 'Introduced in' docs/research/06-server.md`；结论只取 EVIDENCE 原句 |
+| A29 | 第三方推广页排名写成选型结论（关联 R02） | `! grep -rE '表现得最优|使用人数最多|社区反馈最积极' docs/features/ docs/decisions/` |
+| A30 | 未取得一手原文就写死构建参数或进程参数 | `grep -n '未证实' docs/research/11-runtime.md`；构建配置生成前逐项核对 |
+| A31 | 功能登记写成已实现（关联 9.3 状态分层） | `test -z "$(grep -L '未实现' docs/features/dispatcher.md docs/features/lightweight.md docs/features/headless.md docs/features/normal-launcher.md docs/features/lan.md docs/features/server.md docs/features/log.md docs/features/fallback.md docs/features/envelope.md docs/features/ui-framework.md)"` |
 
 ## 输出结构
 
