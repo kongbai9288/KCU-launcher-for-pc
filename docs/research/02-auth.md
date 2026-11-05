@@ -43,7 +43,7 @@
 | --- | --- | --- | --- |
 | 离线 UUID 算法 | MD5(UTF-8("OfflinePlayer:"+name))，置 version=3、variant=2 | 已证实 | cmd: python3 → OFFLINE_UUID 'Notch' b50ad385-829d-3141-a216-7e7d7539ba7f |
 | 大小写敏感 | Notch → b50ad385…；notch → 42653081… | 已证实 | cmd: python3 → OFFLINE_UUID 'notch' 42653081-a90e-3475-b3d6-3550cdb43f8e |
-| Notchian 服务端采用该算法 | 社区协议规范文本，未取得 Mojang 官方原文 | 未证实 | cmd: web_search "minecraft.wiki OfflinePlayer UUID v3 nameUUIDFromBytes offline mode protocol page" → web_doc 8 片段 |
+| Notchian 服务端采用该算法 | 页面未写明服务端采用行为，未取得 Mojang 官方原文 | 未证实 | https://minecraft.wiki/w/Universally_unique_identifier |
 | 旧 Mojang 账号当前状态 | 未核实 | 未证实 | 一手资料未取得 |
 | authlib-injector 启动器技术规范 | 211 行，blob SHA-1 f466bf13dcce78a6bc1417c7f83b9d1bb03c85dd | 已证实 | https://api.github.com/repos/yushijinhun/authlib-injector/contents/wiki/src/zh/启动器技术规范.md |
 | Yggdrasil 服务端技术规范 | 668 行，blob SHA-1 c0bab4ff3e938dfa75ab34f8f667843ebf6d0121 | 已证实 | https://api.github.com/repos/yushijinhun/authlib-injector/contents/wiki/src/zh/Yggdrasil-服务端技术规范.md |
@@ -64,11 +64,29 @@
 | GET /contents/wiki/src/zh/启动器技术规范.md | 200，211 行 | 已证实 |
 | GET /contents/wiki/src/zh/Yggdrasil-服务端技术规范.md | 200，668 行 | 已证实 |
 
+## 008 补证
+
+| 一手原文 | 值 | 四值 | 锚点 |
+| --- | --- | --- | --- |
+| the unique identifier chosen for offline mode players is UUID version 3, generated from the MD5 hash of `OfflinePlayer:<username>` | 离线 UUID v3 / MD5 / OfflinePlayer: 前缀 | 已证实 | https://minecraft.wiki/w/Universally_unique_identifier |
+| Minecraft uses version 4, variant 1 (RFC) UUIDs | 在线 UUID v4 variant 1 | 已证实 | https://minecraft.wiki/w/Universally_unique_identifier |
+| A player UUID is generated when the user purchases and registers a new Minecraft: Java Edition account. | 在线 UUID 生成时机 | 已证实 | https://minecraft.wiki/w/Universally_unique_identifier |
+
+口径：
+
+| 项 | 值 |
+| --- | --- |
+| 005 轮 44 行 | 已由 cmd 复现，008 轮补一手文档锚点 |
+| 44 行实现禁用约束 | 不解除；Notchian 服务端采用行为仍未证实 |
+| 在线与离线 UUID | v4 variant 1 与 v3 地址空间不重叠 |
+| 该页面归属 | 社区文档，不等于 Mojang 官方原文 |
+
 来源：
 - https://learn.microsoft.com/zh-cn/entra/identity-platform/v2-oauth2-device-code
 - https://zh.minecraft.wiki/w/Mojang_API
 - https://api.github.com/repos/yushijinhun/authlib-injector/contents/wiki/src
 - https://blessing.netlify.app/yggdrasil-api/setup
+- https://minecraft.wiki/w/Universally_unique_identifier
 
 约束：
 - 离线 UUID 算法不写进实现，直到 Notchian 服务端行为取得一手确认。

@@ -34,6 +34,7 @@
 | A25 | 设计稿品牌元素进入实现代码 | `! grep -rE 'FCL|揉纸启动器' src/ 2>/dev/null` |
 | A26 | 轻量模式引用正常模式 UI 资产 | `! grep -rE 'assets/ui|normal-mode-v3' src/ 2>/dev/null` |
 | A27 | 逐字副本字节被改动 | `cmp` 来源与落盘；SHA-1 双端一致 |
+| A28 | 工具摘要与一手原文不一致时采用摘要（关联 A22） | `grep -n 'Introduced in' docs/research/06-server.md`；结论只取 EVIDENCE 原句 |
 
 ## 输出结构
 

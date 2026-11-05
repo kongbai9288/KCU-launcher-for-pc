@@ -1,7 +1,7 @@
 # 文档索引
 
 检索日期：2026-11-05
-更新轮次：007
+更新轮次：008
 
 ## 每轮开工必读顺序
 
@@ -13,20 +13,21 @@
 6. docs/spec/05-round-005-instructions.txt
 7. docs/spec/06-round-006-instructions.txt
 8. docs/spec/07-round-007-instructions.txt
-9. docs/checklists/ai-errors.md
-10. docs/checklists/windows-errors.md
-11. docs/rules/proof-rules.md
-12. docs/rules/fallback-rules.md
-13. docs/rules/push-scope.md
-14. docs/research/index.md
-15. docs/features/index.md
-16. docs/records/rounds.md
+9. docs/spec/08-round-008-instructions.txt
+10. docs/checklists/ai-errors.md
+11. docs/checklists/windows-errors.md
+12. docs/rules/proof-rules.md
+13. docs/rules/fallback-rules.md
+14. docs/rules/push-scope.md
+15. docs/research/index.md
+16. docs/features/index.md
+17. docs/records/rounds.md
 
 读取命令：
 
 ```
 cd /data/workspace/kcu-launcher-desktop
-for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/research/index.md docs/features/index.md docs/records/rounds.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
+for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/research/index.md docs/features/index.md docs/records/rounds.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
 ```
 
 ## 分区
@@ -50,6 +51,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 演示 | demos/round-004-remote.html | 公仓创建与 API 快照推送运行逻辑 |
 | 演示 | demos/round-006-closeout.html | 005 收口与 006 交付运行逻辑 |
 | 演示 | demos/round-007-normal-ui.html | 正常模式 UI 与轻量分流运行逻辑 |
+| 演示 | demos/round-008-mode-views.html | 模式视图登记与补证运行逻辑 |
 | 脚本 | scripts/push.sh | 推送入口，自动降级 |
 | 脚本 | scripts/api_push.py | Git Data API 全量树快照 |
 
@@ -75,6 +77,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 中间态扫描 | `! grep -rE '部分已证实' docs/research/ docs/features/ docs/records/ docs/decisions/` |
 | 重复引用扫描 | `! grep -rE '同上' docs/research/` |
 | 品牌元素扫描 | `! grep -rE 'FCL\|揉纸启动器' src/` |
+| 原文口径扫描 | `grep -n 'Introduced in' docs/research/06-server.md` |
 
 ## 未写入项
 
@@ -84,3 +87,4 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 - UI 设计稿品牌与字体授权：未取得。
 - 图标 ICO 与裁切版本：许可证与范围未确认，未生成。
 - 本项目 LICENSE：未定，未生成。
+- Notchian 服务端离线 UUID 行为、Mojang 官方 RCON 文档、slint 三许可全文：未证实。

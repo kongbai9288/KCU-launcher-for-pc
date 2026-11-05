@@ -59,9 +59,10 @@ Java Edition 1.21.11 生成 68 个键。下表为自动化与联机相关键。
 | 包类型 | 3 登录、2 执行命令、0 多包响应 | 已证实 | https://minecraft.wiki/w/RCON |
 | 认证成功 | 返回同 Request ID，Type 2 | 已证实 | https://minecraft.wiki/w/RCON |
 | 认证失败 | Request ID = -1 | 已证实 | https://minecraft.wiki/w/RCON |
-| 字节序 | 小端 | 未证实 | 001 轮二手线索，本轮未在原文核到 |
-| 引入版本 1.9-pre4 | 未核实 | 未证实 | 001 轮二手线索，本轮未在原文核到 |
-| 分片上限 | 未核实 | 未证实 | 001 轮二手线索，本轮未在原文核到 |
+| 字节序 | 小端（little-endian），与 Java Edition 协议相反 | 已证实 | https://minecraft.wiki/w/RCON → "Integers are little-endian, in contrast with the *Java Edition* protocol." |
+| 引入版本 | Java Edition Beta 1.9 Prerelease 4 | 已证实 | https://minecraft.wiki/w/RCON → "Introduced in Java Edition Beta 1.9 Prerelease 4" |
+| 分片上限 | S→C 每包 payload 4096 字节（total 4110）；C→S payload 1446（total 1460，页面标 outdated?） | 已证实 | https://minecraft.wiki/w/RCON |
+| 分片行为 | 命令输出可跨多个包，每包 4096 字节，末包更短 | 已证实 | https://minecraft.wiki/w/RCON |
 | Payload 编码 | ASCII | 已证实 | https://minecraft.wiki/w/RCON |
 | Mojang 官方 RCON 文档 | 未取得 | 未证实 | https://minecraft.wiki/w/RCON |
 
@@ -72,6 +73,28 @@ Java Edition 1.21.11 生成 68 个键。下表为自动化与联机相关键。
 | 001 轮 06-server.md:34 | broadcast-rcon-to-ops 默认 false | https://minecraft.wiki/w/RCON 的 false 是示例配置值，不是默认值 | 改为 true，锚点换为 https://minecraft.wiki/w/Server.properties |
 | 001 轮 06-server.md:43 | 2-byte pad | 原文拆为 Payload 的 NULL 结尾与 1-byte pad，尾部合计 2 个 NULL | 改为「NULL 结尾 + 1-byte NULL pad」 |
 | 001 轮 06-server.md:40,46,48 | 引入版本、字节序、分片上限定为已证实 | 本轮原文核不到对应句子 | 降级为未证实 |
+
+## 008 补证
+
+| 一手原文 | 值 | 四值 | 锚点 |
+| --- | --- | --- | --- |
+| Integers are little-endian, in contrast with the *Java Edition* protocol. | 小端 | 已证实 | https://minecraft.wiki/w/RCON |
+| Introduced in Java Edition Beta 1.9 Prerelease 4 | Beta 1.9 Prerelease 4 | 已证实 | https://minecraft.wiki/w/RCON |
+| The output of the command may be split over multiple packets, each containing 4096 bytes (less for the last packet). | S→C 分片 4096 | 已证实 | https://minecraft.wiki/w/RCON |
+| Maximum S->C packet payload length: 4096 (total: 4110) | 4110 | 已证实 | https://minecraft.wiki/w/RCON |
+| Maximum C->S packet payload length: 1446 (total: 1460) - outdated? | 页面自带 outdated? 标记 | 已证实（带页面存疑标记） | https://minecraft.wiki/w/RCON |
+| Responses are sent back with the same Request ID that you send. In the event of an auth failure ... request ID will be set to `-1`. | 认证失败 -1 | 已证实 | https://minecraft.wiki/w/RCON |
+
+口径：
+
+| 项 | 值 |
+| --- | --- |
+| 005 轮 62-64 行三项 | 008 轮取得一手原文，升级为已证实 |
+| 工具摘要 | 写为 "Java Edition 1.9 prerelease 4"，丢掉 Beta |
+| 采用值 | Java Edition Beta 1.9 Prerelease 4，取 EVIDENCE 原文 |
+| C→S 1446/1460 | 页面自带 outdated?，不写死为实现硬上限 |
+| Mojang 官方 RCON 文档 | 未取得，仍为未证实 |
+| minecraft.wiki 归属 | 社区文档，不等于 Mojang 官方原文 |
 
 ## 自动化
 

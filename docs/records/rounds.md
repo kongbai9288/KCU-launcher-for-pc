@@ -272,3 +272,92 @@
 - 品牌与字体授权取得
 - 浏览器内渲染实测
 - rustc / cargo 构建验证
+
+007 口径补充（独立验证者指出「53 字符」后复核）：
+
+| 项 | 值 |
+| --- | --- |
+| Python `len(t)` | 54，含尾部换行 |
+| 可见字符 | 53 |
+| UTF-8 字节 | 160 |
+| 007 段「54 字符」 | 指含换行的 Python 长度，口径表述含糊 |
+| 处理 | 不改 007 指令副本、不改独立验证报告；本段登记口径 |
+
+## 008
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/08-round-008-instructions.txt | 当轮指令逐字副本，1 行 |
+| docs/features/dispatcher.md | F002 统一调度器，5 个固定字段 |
+| docs/features/lightweight.md | F003 轻量启动器视图，5 个固定字段 |
+| docs/features/headless.md | F004 无头模式启动器，5 个固定字段 |
+| docs/features/index.md | F002-F004 入表、G01-G04 约束 |
+| docs/research/06-server.md | RCON 三项升级为已证实，追加 008 补证段 |
+| docs/research/02-auth.md | 离线 UUID 与在线 UUID 一手锚点，追加 008 补证段 |
+| docs/research/index.md | 文件表与卡点状态表更新到 008 |
+| docs/checklists/ai-errors.md | A28，工具摘要与原文不一致时取原文 |
+| docs/index.md | 必读 17 项、008 演示、A28 检查项 |
+| README.md | 轮次 008 |
+| docs/records/interface-log.md | I12、S13-S14 |
+| docs/records/rounds.md | 007 口径补充、008 段 |
+| demos/round-008-mode-views.html | 模式视图登记与补证运行逻辑 HTML |
+| docs/verification/round-008.md | 第 008 轮独立验证报告 |
+
+当轮输入：
+
+| 项 | 值 |
+| --- | --- |
+| 指令 | 「干」，逐字副本 1 行 |
+| 新功能或 UI | 未提供 |
+| D06 触发信号 | 未提供 |
+| 阶段 | 003-remote.md D05 功能输入阶段，未启动 D07 |
+| 偏离 | 9.1 连续未达应停下由用户决定范围；按 18.5 以用户当轮指令继续执行 |
+
+补证：
+
+| 项 | 008 结果 | 锚点 |
+| --- | --- | --- |
+| RCON 字节序 | 已证实，小端 | https://minecraft.wiki/w/RCON |
+| RCON 引入版本 | 已证实，Java Edition Beta 1.9 Prerelease 4 | https://minecraft.wiki/w/RCON |
+| RCON 分片上限 | 已证实，S→C 4096 / total 4110；C→S 1446 / total 1460 带页面 outdated? 标记 | https://minecraft.wiki/w/RCON |
+| RCON 认证失败 | 已证实，Request ID = -1 | https://minecraft.wiki/w/RCON |
+| 离线 UUID | 已证实，v3 / MD5 / `OfflinePlayer:<username>` | https://minecraft.wiki/w/Universally_unique_identifier |
+| 在线 UUID | 已证实，v4 variant 1 RFC | https://minecraft.wiki/w/Universally_unique_identifier |
+| Notchian 服务端采用离线 UUID 算法 | 未证实，页面未写明 | https://minecraft.wiki/w/Universally_unique_identifier |
+| Mojang 官方 RCON 文档 | 未证实，未取得 | https://minecraft.wiki/w/RCON |
+| slint 三许可全文 | 未证实，raw.githubusercontent.com 直抓受阻 | https://raw.githubusercontent.com/slint-ui/slint/master/LICENSE.md |
+
+口径纠错：
+
+| 项 | 值 |
+| --- | --- |
+| 工具摘要 | 写为 "Java Edition 1.9 prerelease 4"，丢掉 Beta |
+| 采用值 | Java Edition Beta 1.9 Prerelease 4，取一手原文 |
+| 新增防错 | A28，关联 A22 |
+| 实现约束 | 02-auth.md 离线 UUID 实现禁用约束不解除 |
+
+索引纠错：
+
+| 位置 | 原值 | 修复动作 |
+| --- | --- | --- |
+| docs/research/index.md 卡点表 | 正常模式 UI「未提供，未落盘」 | 改为 007 轮已落盘、未实现、未进入构建 |
+| docs/research/index.md 文件表 02/06 行 | 未证实列含 RCON 三项 | 移入已证实列 |
+| docs/research/index.md 卡点表 | 只有 005 状态一列 | 加 008 状态列与 2 行新卡点 |
+
+功能登记：
+
+| 编号 | 功能 | 框架 | 状态 |
+| --- | --- | --- | --- |
+| F002 | 统一调度器 | dispatcher | 已批准，未实现 |
+| F003 | 轻量启动器视图 | lightweight.view | 已批准，未实现 |
+| F004 | 无头模式启动器 | headless | 已批准，未实现 |
+
+未做：
+- 源码与 src/ 实现
+- 底层统一搭建
+- 框架蓝图批准
+- 正常模式 UI 实现与构建
+- 品牌与字体授权取得
+- 加载器逐版本 schema、Notchian 服务端行为、令牌保护、Mojang 官方 RCON 文档、slint 三许可全文补证
+- 浏览器内渲染实测
+- rustc / cargo 构建验证
