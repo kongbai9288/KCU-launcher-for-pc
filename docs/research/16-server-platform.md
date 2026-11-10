@@ -96,6 +96,7 @@
 | NB05 | 用户第 14 条「快速显示种子号（需要使用nbt功能）」 | 需同时读 NB01 与 NB02 两套字段 | 已证实 | docs/spec/12-server-features-input.txt 第 14 条 |
 | NB06 | viaNBT 与 Rust 集成方式 | 011 轮遗留 Q08 / VN05 | 未证实 | docs/research/15-input-survey.md VN05 |
 | NB07 | 旧版本 achievements 与 advancements 的兼容性 | 未取得 | 未证实 | NB03、NB04 |
+| NB08 | `WorldGenSettings.seed` 与 `Data.RandomSeed` 为路径记法 | 一手原文标签写作 `WorldGenSettings`、`seed`、`RandomSeed`，三者不连写；精确串 `WorldGenSettings.seed` / `Data.RandomSeed` 在本文件 NB01-NB02 原文中不存在 | 已证实 | https://zh.minecraft.wiki/w/Level.dat_old |
 
 ## 服务器图标、TPS、代理端、端口映射
 

@@ -59,7 +59,7 @@ F012 具体保护方案未批准，见 docs/rules/build-preconditions.md L4。
 | --- | --- |
 | 逐字原文 | docs/spec/12-server-features-input.txt，64 行，4970 字节 |
 | 编号功能 | 1-27，其中 26 缺号、1 与 25 与文字连写 |
-| `·` 条目 | 字符 35、独立行 34，分组 A / B 共 19 组索引 |
+| `·` 条目 | 字符 35、独立行 34，分组 A / B 共 26 行索引（GA1-GA18、GB1-GB8） |
 | 登记表 | docs/features/server-backlog.md |
 | 状态 | 全部已登记 / 未实现 / 未进入构建 |
 | 待拍板问题 | docs/records/open-questions.md，93 条 |

@@ -42,7 +42,7 @@
 | Q-C01 | 原版 Java 版无 `/talk`，只有 `/say`（权限等级 2）；第 16 条「自动加入上say或talk」中的 talk 指什么 | docs/research/16-server-platform.md CM01-CM05 | 已证实 | 笔误 / 某插件命令 / 自定义别名 |
 | Q-C02 | 第 5 条「输入 `/` 弹候选、输出不带 `/`」与服务端控制台命令一致；候选词表来源未定 | docs/research/16-server-platform.md CM03-CM06 | 未证实 | 内置词表 / 解析服务端帮助 / 用户自维护 |
 | Q-C03 | 第 10 条 op 锁定：服务端启动后把 ops.json 读进内存，命令变更时整体回写；运行期手改文件会被静默覆盖，文件监听拿不到权威状态 | docs/research/16-server-platform.md OP01-OP06 | 已证实（冲突成立） | 走 `/op` `/deop` / RCON / 停服改文件 |
-| Q-C04 | 第 14 条种子：新格式 `WorldGenSettings.seed`，旧格式 `Data.RandomSeed`，缺项默认 0；需两套读取 | docs/research/16-server-platform.md NB01-NB02 | 已证实 | 支持哪些 MC 版本段 |
+| Q-C04 | 第 14 条种子：新格式 `WorldGenSettings` 下的 `seed`，旧格式 `Data` 下的 `RandomSeed`，缺项默认 0；连写为路径记法，一手原文标签不连写；需两套读取 | docs/research/16-server-platform.md NB01-NB02、NB08 | 已证实 | 支持哪些 MC 版本段 |
 | Q-C05 | 第 14 条要求用 nbt 能力，viaNBT 是 Java 8 库，与 Rust 集成方式未定（011 轮 Q08） | docs/research/15-input-survey.md VN05 | 未证实 | JNI / 子进程 / 改用 Rust NBT crate |
 | Q-C06 | 第 18 条成就分析：进度存于 `world/players/advancements/<uuid>.json`，退出即写，读失败全丢；1.12.2 为 DataVersion 下限 | docs/research/16-server-platform.md NB03-NB04、NB07 | 已证实 | 最低支持 MC 版本 |
 | Q-C07 | 第 27 条 PNG logo：官方为 64×64 `server-icon.png`，放服务端工作目录，需重启加载；「自动调整像素」的目标尺寸与比例策略 | docs/research/16-server-platform.md SI01-SI03 | 已证实 | 确认 64×64 / 保持比例 / 是否自动重启 |

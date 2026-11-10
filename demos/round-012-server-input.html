@@ -145,7 +145,7 @@ th{color:var(--dim);font-weight:600}td{color:var(--txt)}
   <div class="node" data-k="3"><div class="n">04 / backend</div><div class="t">只读约束</div><div class="s">0 WRITE</div></div>
   <div class="node" data-k="4"><div class="n">05 / survey</div><div class="t">官方资料</div><div class="s">26 来源 / 2 受阻</div></div>
   <div class="node" data-k="5"><div class="n">06 / conflicts</div><div class="t">事实冲突</div><div class="s">/talk / ops / UPnP</div></div>
-  <div class="node" data-k="6"><div class="n">07 / backlog</div><div class="t">功能登记</div><div class="s">27 位 + 19 组</div></div>
+  <div class="node" data-k="6"><div class="n">07 / backlog</div><div class="t">功能登记</div><div class="s">27 位 + 26 组</div></div>
   <div class="node" data-k="7"><div class="n">08 / questions</div><div class="t">问题全集</div><div class="s">A-H / 93 条</div></div>
   <div class="node" data-k="8"><div class="n">09 / gate</div><div class="t">开工闸门</div><div class="s">Q-H01..H06</div></div>
   <div class="node" data-k="9"><div class="n">10 / s1s2</div><div class="t">指令两段</div><div class="s">并列登记</div></div>
@@ -175,7 +175,7 @@ th{color:var(--dim);font-weight:600}td{color:var(--txt)}
     "modrinth_environment_values": 10,
     "vanilla_talk_command": false,
     "ops_json_runtime_rewrite": true,
-    "seed_fields": ["WorldGenSettings.seed", "Data.RandomSeed"],
+    "seed_fields": ["WorldGenSettings/seed", "Data/RandomSeed"],
     "server_icon": "64x64 PNG",
     "open_questions": 93,
     "groups": ["A", "B", "C", "D", "E", "F", "G", "H"],
@@ -276,7 +276,7 @@ async function run(){
     return;
   }
   await step(()=>{active(5,'warn');line('facts','register','CM02_OP02_UP02','DEGRADE','detail=talk_not_vanilla ops_runtime_rewrite upnp_dns_risk');},140);
-  await step(()=>{active(6);line('features','write','server-backlog','OK','detail=27_slots 19_groups 13_duplicates_with_011');},120);
+  await step(()=>{active(6);line('features','write','server-backlog','OK','detail=27_slots 26_groups 13_duplicates_with_011');},120);
 
   if(questions === 'trim'){
     await step(()=>{active(7,'err');line('questions','trim','open-questions','FAIL','detail=user_requires_no_omission A51_violation');},140);

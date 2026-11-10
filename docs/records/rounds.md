@@ -769,7 +769,7 @@
 | docs/spec/12-server-features-input.txt | 用户输入逐字副本，64 行 4970 字节，cmp 一致 |
 | docs/spec/12-round-012-instructions.txt | 当轮指令逐字副本，1 行 |
 | docs/research/16-server-platform.md | 26 个来源、开服器官方资料与协议一手原文 |
-| docs/features/server-backlog.md | 开服器 27 个编号位、19 组 `·` 条目索引、与 011 的 13 组重复项 |
+| docs/features/server-backlog.md | 开服器 27 个编号位、26 行分组索引（GA1-GA18、GB1-GB8）、与 011 的 13 组重复项 |
 | docs/records/open-questions.md | 93 条待拍板问题全集，A-H 组，无删减 |
 | docs/decisions/012-server-input.md | D01-D16、S1/S2 两段语义、状态分层 |
 | docs/rules/build-preconditions.md | 012 新增 R01-R10、触发链条件 6 |
@@ -826,7 +826,7 @@
 | 原版命令 | `/say` 权限等级 2；原版无 `/talk`；控制台命令不带 `/` | 已证实 |
 | Java 版本 | Java 8 / 16 / 17 / 21 / 25 对应 MC 版本段 | 已证实 |
 | ops.json | 服务端启动时读入内存，命令变更时整体回写；运行期手改被静默覆盖 | 已证实 |
-| 种子 | 新 `WorldGenSettings.seed`、旧 `Data.RandomSeed` | 已证实 |
+| 种子 | 新 `WorldGenSettings` 下的 `seed`、旧 `Data` 下的 `RandomSeed`；连写为路径记法 | 已证实 |
 | 进度 | `world/players/advancements/<uuid>.json`，退出即写，读失败全丢 | 已证实 |
 | icon | 64×64 `server-icon.png`，需重启加载 | 已证实 |
 | UPnP | RFC 6886 记载 IGD 可被用于改网关 DNS；NAT-PMP 已被 PCP 取代 | 已证实 |
@@ -868,3 +868,40 @@
 - 插件源默认选择、CF server-only 字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证
 - 浏览器内渲染实测
 - rustc / cargo 构建验证
+
+012 验证者记录复核：
+
+| 编号 | 验证者记录 | 改动作者复跑 | 判定 |
+| --- | --- | --- | --- |
+| V01 | A31 未通过，5 个核查目标文件不含「未实现」 | `MISSING=[]`，11 个文件各含「未实现」2 次，`A31_PASS` | 验证者执行误差，断言未改 |
+| V02 | `·` 独立行 34 为同行首项累计算法口径 | `t.count('·')`=35，独立行 34，含字符行 35；非独立行仅第 27 行 `24.· Java 多版本管理...` | 验证者理解误差，011 轮同型口径已登记 |
+| V03 | 19 组 G 索引 grep 写法误差（事实无误） | 实跑 `grep -cE '^\| G[AB][0-9]+ \|'` = 26（GA1-GA18、GB1-GB8）；初稿多处写「19 组」 | **真错误**：已把 4 处「19 组」与 HTML 2 处 `19_groups` 改为 26 并写明分组行范围 |
+| V04 | `WorldGenSettings.seed` 精确串 grep 0 | 一手原文标签为 `WorldGenSettings` / `seed` / `RandomSeed`，三者不连写；连写为路径记法 | **表述精度问题**：已补 NB08，并把 open-questions.md Q-C04、rounds.md、HTML 的表述改为路径记法 |
+| V05 | 93 条 open-questions 全部未答复 | 与声明一致 | 属未解决四值项，非新增未通过项 |
+| V06 | 本地 `ddb03ec` 与远端 `fa19e5a` 哈希不同 | 112 blob 逐项 `git hash-object` 比对 ALL_MATCH True | 已失败（内容等价），与前几轮同型 |
+
+按 18.1 未改独立验证报告，本段登记复核结果。
+
+报告正文哈希口径复核：
+
+| 项 | 值 |
+| --- | --- |
+| 声明值 | `259af6dffd555f20e2865e7264ab0418fbb87d91` |
+| 声明块字节偏移 | 9842 |
+| 精确切分 `sha1(t[:9842])` | `ab405c5d4b08f5227694edb9a7dbe5964d495a99` |
+| 去掉声明块前 1 个换行 `sha1(t[:9841])` | `259af6dffd555f20e2865e7264ab0418fbb87d91`，与声明一致 |
+| 全文哈希 | `be1da183057af27542d782a9e439dbaa327f6db9` |
+| 判定 | 与 010、011 轮同型：声明值对应「追加声明块之前、去掉前置换行」的正文，属 1 字节口径差，口径成立 |
+| 变更内容哈希 | `142f1f9ddf318c0785fc2c7bf9b8b61ee636d29c`，固定终点 `d0188e0..ddb03ec` 复算一致 |
+
+修正落点（V03、V04 引起）：
+
+| 文件 | 原值 | 修复 |
+| --- | --- | --- |
+| demos/round-012-server-input.html | 2 处 `19 组` / `19_groups`、1 处 `WorldGenSettings.seed` / `Data.RandomSeed` | 改 26 与路径记法 |
+| docs/features/index.md | 「19 组索引」 | 改「26 行索引（GA1-GA18、GB1-GB8）」 |
+| docs/records/rounds.md | 落点表「19 组」、种子连写 | 改 26 行与路径记法 |
+| docs/records/open-questions.md Q-C04 | 种子连写 | 改路径记法并引 NB08 |
+| docs/research/16-server-platform.md | 无 NB08 | 补 NB08 说明精确串不存在 |
+
+独立验证结论：**部分通过**。两个哈希由独立验证者计算并写入声明块，改动作者未代算。
