@@ -61,6 +61,25 @@ X01-X04 落在 docs/spec/00-requirements.txt:171-172、docs/research/03-download
 | 环境 | 浏览器渲染、rustc/cargo | 受阻 |
 | 网络 | git HTTP 推送、6 个上游主机、未认证 /rate_limit、MCIM 仓库定位 | 受阻 |
 
+## 011 新增阻塞项
+
+| 编号 | 阻塞项 | 四值 | 来源 |
+| --- | --- | --- | --- |
+| Q01 | Win7 兼容路径未选（Tier 3 自建 std / VxKex / 旧版工具链 / 拆分产物） | 已证实（冲突成立） | docs/research/13-platform-api.md C01 |
+| Q02 | 多架构范围与 ARM64 取舍未定 | 已证实（部分冲突） | docs/research/13-platform-api.md C03 |
+| Q03 | Win7 与 ARM64 同时支持 | 已失败 | docs/research/13-platform-api.md C04 |
+| Q04 | 地域判定口径未定（物理位置或区域设置） | 未证实 | docs/research/13-platform-api.md P04-P07 |
+| Q05 | 文件管理开源骨干项目未选定 | 未证实 | docs/research/15-input-survey.md DS06 |
+| Q06 | ViaNBT 与 Rust 集成方式未定 | 未证实 | docs/research/15-input-survey.md VN05 |
+| Q07 | VxKex 兼容范围 | 未证实 | docs/research/13-platform-api.md RW11 |
+| Q08 | 后端仓只读 | 已证实（硬约束） | docs/research/15-input-survey.md BR01-BR02 |
+| Q09 | CF 凭据未提供，特殊版私仓未创建 | 未证实 | docs/decisions/011-feature-input.md D02-D03 |
+| Q10 | UI 稿品牌与字体授权 | 未证实 | docs/decisions/007-normal-ui.md |
+| Q11 | D06 触发信号 | 未证实 | docs/decisions/003-remote.md D06 |
+| Q12 | 005-blueprint.md 批准 | 未证实 | docs/decisions/005-blueprint.md |
+
+触发链新增条件 5：Q01-Q12 中标记为「进入构建前需用户拍板」的项全部落定。条件 1-5 全部满足前，`src/` 保持为空。
+
 ## 判定
 
 | 项 | 值 |

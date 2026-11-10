@@ -27,6 +27,9 @@
 | 10-upstream-state.md | 时间、上游版本、网络边界、工具链 | 时钟一致、7 个上游 tag、api.github.com 200、6 个官方文档 200 | 无 | github.com 与 6 个上游主机 403、docs.github.com 与 wiki.vg 抓取、rustc/cargo 缺失 |
 | 11-runtime.md | 底层运行时、裁剪、进程管理、本地库加载、单文件发布、玩家分支横评、多操作入口交互 | Cargo profile 默认值、DLL 搜索顺序与 LOAD_LIBRARY_SEARCH 标志、std::process::Command、CommandExt、WebView2 进程组、目标三元组、MSVC 三种部署 | CREATE_NO_WINDOW 具体值、std::process 超时 API、WebView2 内存占用关系、本项目单文件发布工具链、横评排名与开源状态、多操作入口具体形式 | 1 个 MSVC 部署首轮路径抓取被拒 |
 | 12-compliance.md | 合规条款、凭据保护、许可证全文、上游版本、阻塞项 | CurseForge 6 条 API 条款、Modrinth 4 条 API License、DPAPI 与 CredWriteW 原文、6 份许可证全文、slint 三许可全文、6 个上游 release tag | CF04-CF06、MCIM / BMCLAPI 条款、Modrinth 缓存限流条款、加载器 schema、Notchian 行为、Forge / NeoForge v99.99 tag | MCIM 仓库定位 2 次 404、未认证 /rate_limit 404 |
+| 13-platform-api.md | Win7 兼容、多架构、系统 API 真实签名 | VersionHelpers / GetNativeSystemInfo / GetUserGeoID / GetGeoInfoW / SYSGEOTYPE / GetGeoInfoEx / LOCALE_IGEOID / Rust Windows 目标 / Rust 1.78 变更 / Win7 Tier 3 目标 / SetDefaultDllDirectories 与 KB2533623 | wProcessorArchitecture 常量、Win7 物理位置 API、ARM64 Win7 目标、VxKex 兼容范围、Tier 3 可复现构建 | platform-support/windows.html 直抓 |
+| 14-batch-network.md | 批量请求通用法、聚合搜索、本地监听 | N+1 反模式 8 条、Modrinth 批量 projects/versions 与 search limit<=100、CurseForge SDK 批量 modIds 与 pageSize=20、回环绑定 | 多源下载取消语义、翻译源接口、批量 ID 上限、端口清单 | CF REST 端点页 |
+| 15-input-survey.md | 011 轮外部项目核实与只读仓 | 后端仓只读元数据、CopperGolemLauncher 许可证全文、PrismLauncher CMakeLists 存在性、ViaNBT / dsh / VxKex、开源许可页 5 字段 | CopperGolemLauncher 复用范围、ViaNBT 集成方式、文件管理骨干项目、陶瓦联机、atomgit | CF REST 端点页、CopperGolem latest release 404 |
 
 ## 来源类型
 
@@ -76,6 +79,35 @@
 | docs/spec/00-requirements.txt:230 每轮联网核实现有时间与上游版本状态 | docs/research/12-compliance.md | 6 个 release tag 已证实；2 个 v99.99 tag 已失败 |
 | docs/spec/00-requirements.txt:228 玩家分支启动器可取之处 | docs/research/12-compliance.md | 两个一手仓库许可证与 README 已证实；功能清单未证实 |
 | docs/spec/00-requirements.txt:249 合规优先于功能进度 | docs/rules/build-preconditions.md | 前置条件清单已落盘，待用户拍板 |
+
+## 011 卡点状态
+
+| 项 | 010 状态 | 011 状态 |
+| --- | --- | --- |
+| D06 信号 | 未提供 | 未提供，用户写明后续还会给要求 |
+| 005-blueprint.md | 未批准 | 未批准 |
+| X01-X04 | 已证实，待拍板 | 密钥共享方向已给出；CF03 / CF02 / CF01 仍待逐条拍板 |
+| 正常模式 UI 授权 | 未证实 | 未证实 |
+| slint 三许可全文 | 已证实 | 已证实 |
+| 加载器逐版本 schema | 未证实 | 未证实 |
+| Notchian 服务端行为 | 未证实 | 未证实 |
+| Mojang 官方 RCON 文档 | 未证实 | 未证实 |
+| 锚点格式 | 12 份文档统一 | 15 份文档统一，已证实 |
+| Win7 兼容 | 未登记 | 已证实为硬冲突，见 13-platform-api.md C01-C04 |
+| Win7 + ARM64 | 未登记 | 已失败 |
+| 地域判定口径 | 未登记 | 未证实，物理位置与区域设置语义不同 |
+| CF / Modrinth 服务条款 | 已证实 | 已证实 |
+| 后端仓 | 未登记 | 只读，4 个 GET，已证实 |
+
+## 011 新增调研项
+
+| 需求条目 | 文档 | 状态 |
+| --- | --- | --- |
+| docs/spec/11-round-011-instructions.txt 系统 API 真实签名、Win7 兼容、多架构 | docs/research/13-platform-api.md | 12 组一手原文；Win7 与 Rust Tier 1 冲突已证实；ARM64 与 Win7 交集已失败 |
+| docs/spec/11-round-011-instructions.txt 网络通用法、逐条目单发请求浪费 | docs/research/14-batch-network.md | N+1 反模式 8 条 + 4 个官方批量端点；禁止逐条目单发 |
+| docs/spec/11-features-input.txt 全量功能输入 | docs/features/backlog.md | 55 条编号 + 174 项文件管理清单逐字落盘 |
+| docs/spec/11-features-input.txt 第 46、54、6 条与开头段 | docs/research/15-input-survey.md | 外部项目许可证与只读仓已核 |
+| docs/spec/00-requirements.txt:230 每轮核上游版本 | docs/research/13-platform-api.md RW07 | Rust 1.99.1、HMCL v3.16.4 已证实 |
 
 ## 禁止项
 

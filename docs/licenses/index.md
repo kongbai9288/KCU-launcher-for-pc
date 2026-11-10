@@ -1,7 +1,7 @@
 # 第三方许可证原文索引
 
 检索日期：2026-11-05
-更新轮次：010
+更新轮次：011
 来源接口：`GET https://api.github.com/repos/{owner}/{repo}/license`、`GET https://api.github.com/repos/{owner}/{repo}/contents/{path}`，全部返回 200。
 
 ## 逐字副本
@@ -20,6 +20,7 @@
 | Forge-LICENSE.txt | MinecraftForge/MinecraftForge | NOASSERTION，头部写 LGPL 2.1 | 27733 | 9b5ee64703a133b | https://api.github.com/repos/MinecraftForge/MinecraftForge/contents/LICENSE.txt |
 | NeoForge-LICENSE.txt | neoforged/NeoForge | LGPL-2.1 | 24444 | 98e2b035a83f5f6 | https://api.github.com/repos/neoforged/NeoForge/contents/LICENSE.txt |
 | Quilt-LICENSE.txt | QuiltMC/quilt-loader | Apache-2.0 | 11357 | 92170cdc034b2ff | https://api.github.com/repos/QuiltMC/quilt-loader/contents/LICENSE |
+| CopperGolemLauncher-LICENSE | copper-lamp/CopperGolemLauncher | NOASSERTION，头部为 GNU General 条款 | 35834 | 97b9e831e4b309bd | https://api.github.com/repos/copper-lamp/CopperGolemLauncher/contents/LICENSE |
 
 ## slint 三许可全文
 
@@ -69,3 +70,5 @@
 | L05 | 商用、分发、改作列在 docs/research/09-licenses.md 登记，不在本目录推断。 |
 | L06 | Forge / MultiMC 的 NOASSERTION 以文件头部为准，不以 SPDX 缺失推断无许可证。 |
 | L07 | 服务条款与代码许可证分开登记，见 docs/research/12-compliance.md。 |
+| L08 | CopperGolemLauncher 的 `THIRD_PARTY_NOTICES` 存在但未取得全文，复用范围未证实，见 docs/research/15-input-survey.md CG09。 |
+| L09 | 插件独立许可证；插件加载后在开源许可页动态增加插件名、许可证、作者名、项目地址、修改后版本地址。 |

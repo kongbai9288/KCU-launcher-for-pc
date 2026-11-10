@@ -1,6 +1,6 @@
 # 远端推送范围
 
-轮次：007
+轮次：011
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
 
@@ -28,6 +28,9 @@
 | 构建产物 | target/、`*.pdb`、`*.rs.bk` |
 | 平台临时文件 | `Thumbs.db`、`.DS_Store` |
 | 图标派生图 | 未生成；许可证未定前不进入任何提交 |
+| 平台 API 凭据 | 用户当轮未提供；任何取值不进入本公仓、注释、提交说明、日志 |
+| 特殊版内容 | 单开私仓构建，不进入本公仓 |
+| 只读后端仓内容 | 端点、密钥、部署配置、README 正文不复制进本公仓 |
 
 ## 每轮动作
 
@@ -56,6 +59,24 @@
 | 主路径 | git HTTP push | 受阻，github.com 主机 403 policy_default_denied |
 | 二级降级 | `scripts/api_push.py` | Git Data API 全量树快照，写入 refs/heads/main |
 | 空仓库初始化 | `PUT /contents/README.md` | 空仓库 `POST /git/blobs` 返回 409 `Git Repository is empty.`，初始化后可用 |
+
+## 只读仓约束
+
+| 编号 | 内容 |
+| --- | --- |
+| R01 | 对用户后端仓只允许 `GET`；任何写请求触发零级停止。 |
+| R02 | 不读取该仓正文进公仓；不 fork、不改分支、不建 issue。 |
+| R03 | 本轮已核：4 个 `GET`、0 个写请求，见 docs/research/15-input-survey.md BR02。 |
+| R04 | 每轮重新声明本约束。 |
+
+## 特殊版
+
+| 项 | 值 |
+| --- | --- |
+| 形态 | 单开私仓 |
+| 触发 | 所有任务完成且反复检查未发现漏洞 |
+| 使用者 | 用户与其朋友 |
+| 正常版本 | 镜像或用户后端，用户后端仅境外场景可连 |
 
 ## 诊断行
 

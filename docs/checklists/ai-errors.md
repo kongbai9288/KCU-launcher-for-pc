@@ -42,6 +42,16 @@
 | A33 | 两个不同上游返回同名同 sha 的 tag 当成版本号（关联 A28） | `grep -n 'v99.99' docs/research/12-compliance.md`；结论标已失败 |
 | A34 | 许可证逐字副本重复落盘 | `sha1sum docs/licenses/*.txt docs/licenses/*.md` 逐项核对；同 sha 只留一份 |
 | A35 | 功能 md 的验证命令输出写推测值（关联 A15） | 每条 `grep -c` / `grep -n` 先实跑再写入 |
+| A36 | 逐条目单发网络请求（关联 14-batch-network.md N01） | `grep -n '每搜索一个模组' docs/spec/11-round-011-instructions.txt` |
+| A37 | 把 Windows 区域设置当成物理位置（关联 13-platform-api.md P01-P04） | `grep -n 'GEOID_NOT_AVAILABLE' docs/research/13-platform-api.md` |
+| A38 | 用 GetVersionEx 判定 OS 版本（关联 OS03） | `grep -n 'versionhelpers' docs/research/13-platform-api.md` |
+| A39 | 写死 API 基址、端口、图标路径、语言包路径（关联 K01-K07） | `grep -n 'K01' docs/research/14-batch-network.md` |
+| A40 | 把 Win10+ Rust 目标当成 Win7 可用（关联 RW01-RW04） | `grep -n 'require at least Windows 10' docs/research/13-platform-api.md` |
+| A41 | 对只读后端仓发写请求（关联 BR01-BR02） | `grep -n '只允许' docs/research/15-input-survey.md`；每轮核对请求方法 |
+| A42 | 把 id 具体值写进文档（关联 PL03、PL05） | `grep -n '未读取、未写入' docs/research/15-input-survey.md` |
+| A43 | 编号功能登记漏条（关联 backlog.md 55 条） | `grep -cE '^\| [0-9]+ \|' docs/features/backlog.md` |
+| A44 | 插件开源许可页缺 5 字段（关联 OL01） | `grep -n 'OL01' docs/research/15-input-survey.md` |
+| A45 | 拼接开源代码后不做源与产物对比（关联 OL05） | `grep -n 'OL05' docs/research/15-input-survey.md` |
 
 ## 输出结构
 

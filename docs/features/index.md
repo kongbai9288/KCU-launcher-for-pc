@@ -21,6 +21,16 @@ F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建，src/ 为空。
 F012 具体保护方案未批准，见 docs/rules/build-preconditions.md L4。
 
+## 011 轮功能输入
+
+| 项 | 值 |
+| --- | --- |
+| 逐字原文 | docs/spec/11-features-input.txt，268 行，17096 字节 |
+| 编号功能 | 1-55 连续，见 docs/features/backlog.md |
+| 文件管理清单 | 174 个条目，分组索引见 backlog.md |
+| 状态 | 全部已登记 / 未实现 / 未进入构建 |
+| 单份功能 md | 每实现一个功能时按 _template.md 单独写一份 |
+
 ## 计划登记项
 
 | 状态 | 值 |
@@ -39,5 +49,6 @@ F012 具体保护方案未批准，见 docs/rules/build-preconditions.md L4。
 | G04 | 未证实字段不写进实现，见 docs/research/index.md R03。 |
 | G05 | 12 份功能 md 均写明未实现与 src/ 为空，不写入构建状态。 |
 | G06 | F012 方案未批准前，F004 不进入 D07 L4 搭建，见 docs/rules/build-preconditions.md。 |
+| G07 | backlog.md 的 55 条编号与 174 个文件管理条目不写成已实现；单份功能 md 在实现时才生成。 |
 
 状态值：已批准 / 已实现 / 已验证 / 已合并 / 已进入构建 / 已部署 / 行为已确认。每份功能 md 只声明实际达到的一层。

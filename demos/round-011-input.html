@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KCU Launcher / 功能输入与硬冲突判定 / 011</title>
+<style>
+:root{
+  --bg:#0b0e14;--panel:#131824;--panel2:#1a2130;--line:#28324a;
+  --txt:#e6ecf5;--dim:#8b9ab3;--acc:#5ee0b4;--acc2:#6aa8ff;
+  --warn:#f5b95c;--err:#ff7a7a;--mut:#7d8aa3;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 12% -10%,#18233a 0%,var(--bg) 58%);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:18px}
+.wrap{max-width:1180px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;padding:6px 2px 18px;border-bottom:1px solid var(--line)}
+h1{font-size:19px;margin:0;letter-spacing:.5px;font-weight:650}
+.tag{font:12px var(--mono);color:var(--acc);border:1px solid #2c5b4c;border-radius:999px;padding:2px 10px;background:#10241e}
+.tag2{font:12px var(--mono);color:var(--err);border:1px solid #6b3030;border-radius:999px;padding:2px 10px;background:#2a1518}
+.meta{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-top:16px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--panel) 0%,#111623 100%);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{font-size:13px;margin:0 0 14px;color:var(--dim);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.field{margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--dim);margin-bottom:5px}
+select{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:13px var(--mono);outline:none}
+select:focus{border-color:var(--acc2)}
+.btns{display:flex;gap:9px;margin-top:16px}
+button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:13px/1.2 inherit;cursor:pointer}
+button.primary{background:linear-gradient(135deg,#2f7d68,#245f8f);border-color:#3f8f7e;font-weight:600}
+button:active{transform:translateY(1px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px}
+.stat .k{font-size:11px;color:var(--dim)}
+.stat .v{font:14px var(--mono);margin-top:3px;color:var(--acc)}
+#log{height:340px;overflow:auto;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.75 var(--mono);white-space:pre-wrap;word-break:break-all}
+.ln{color:#c9d6e8}.ln .d{color:var(--acc2)}.ln .r{color:var(--acc)}.ln .w{color:var(--warn)}.ln .e{color:var(--err)}.ln .m{color:var(--mut)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
+@media(max-width:980px){.flow{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;transition:.25s}
+.node .n{font:11px var(--mono);color:var(--mut)}
+.node .t{font-size:12px;margin:4px 0 5px;font-weight:600}
+.node .s{font-size:11px;color:var(--dim)}
+.node.on{border-color:var(--acc);box-shadow:0 0 0 1px #2f7d68,0 8px 26px rgba(46,125,104,.2);background:#12201e}
+.node.on .t{color:var(--acc)}
+.node.err{border-color:var(--err)}.node.err .t{color:var(--err)}
+.node.warn{border-color:var(--warn)}.node.warn .t{color:var(--warn)}
+.foot{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.foot{grid-template-columns:1fr}}
+pre{margin:0;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.7 var(--mono);color:#c9d6e8;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600}td{color:var(--txt)}
+.hint{color:var(--dim);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>KCU Launcher</h1>
+  <span class="tag">功能输入</span>
+  <span class="tag2">硬冲突</span>
+  <span class="meta" id="ts"></span>
+</header>
+
+<div class="grid">
+  <section class="card">
+    <h2>输入</h2>
+    <div class="field">
+      <label>开工预检</label>
+      <select id="preflight">
+        <option value="pass">22 项非空，时钟一致</option>
+        <option value="fail">必读文件缺失</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>认证</label>
+      <select id="auth">
+        <option value="ok">新凭据 GET /user 200</option>
+        <option value="bad">认证失败</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>用户后端仓</label>
+      <select id="backend">
+        <option value="get">仅 GET，内容不进公仓</option>
+        <option value="write">发写请求</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>功能输入副本</label>
+      <select id="verbatim">
+        <option value="ok">cmp 一致，55 条 + 174 项</option>
+        <option value="trunc">内容截断</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Win7 路径</label>
+      <select id="win7">
+        <option value="pending">登记冲突，待拍板</option>
+        <option value="force">按 Tier 1 直接构建</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>地域判定口径</label>
+      <select id="geo">
+        <option value="pending">登记语义差，待确认</option>
+        <option value="fake">区域设置冒充物理位置</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>网络请求</label>
+      <select id="network">
+        <option value="batch">批量 ids，每页 20</option>
+        <option value="nplus1">逐条目单发</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>D06 与蓝图</label>
+      <select id="d06">
+        <option value="none">未提供 / 未批准</option>
+        <option value="given">已触发且蓝图已批准</option>
+      </select>
+    </div>
+    <div class="btns">
+      <button class="primary" id="run">执行本轮</button>
+      <button id="reset">重置</button>
+    </div>
+    <div class="hint">诊断行格式：[KCU] &lt;域&gt; &lt;动作&gt; &lt;目标&gt; &lt;结果&gt; &lt;详情&gt;</div>
+  </section>
+
+  <section class="card">
+    <h2>状态</h2>
+    <div class="stats">
+      <div class="stat"><div class="k">功能条目</div><div class="v" id="s-func">—</div></div>
+      <div class="stat"><div class="k">硬冲突</div><div class="v" id="s-conf">—</div></div>
+      <div class="stat"><div class="k">进入构建</div><div class="v" id="s-build">—</div></div>
+      <div class="stat"><div class="k">诊断行</div><div class="v" id="s-cnt">0</div></div>
+    </div>
+    <div id="log"></div>
+  </section>
+</div>
+
+<div class="flow" id="flow">
+  <div class="node" data-k="0"><div class="n">01 / preflight</div><div class="t">开工预检</div><div class="s">时钟 + 22 必读</div></div>
+  <div class="node" data-k="1"><div class="n">02 / auth</div><div class="t">凭据认证</div><div class="s">GET /user 200</div></div>
+  <div class="node" data-k="2"><div class="n">03 / backend</div><div class="t">只读探测</div><div class="s">4 GET / 0 WRITE</div></div>
+  <div class="node" data-k="3"><div class="n">04 / verbatim</div><div class="t">输入逐字</div><div class="s">268 行 17096 字节</div></div>
+  <div class="node" data-k="4"><div class="n">05 / backlog</div><div class="t">功能登记</div><div class="s">55 + 174</div></div>
+  <div class="node" data-k="5"><div class="n">06 / sysapi</div><div class="t">系统 API</div><div class="s">VersionHelpers / GEOID</div></div>
+  <div class="node" data-k="6"><div class="n">07 / win7</div><div class="t">兼容冲突</div><div class="s">Tier 1 要求 Win10</div></div>
+  <div class="node" data-k="7"><div class="n">08 / geo</div><div class="t">地域语义</div><div class="s">区域设置 ≠ 物理位置</div></div>
+  <div class="node" data-k="8"><div class="n">09 / network</div><div class="t">批量通用法</div><div class="s">N+1 禁止</div></div>
+  <div class="node" data-k="9"><div class="n">10 / contract</div><div class="t">调度器输入</div><div class="s">声明页 + 语言包</div></div>
+  <div class="node" data-k="10"><div class="n">11 / precond</div><div class="t">前置清单</div><div class="s">Q01-Q12</div></div>
+  <div class="node" data-k="11"><div class="n">12 / stage</div><div class="t">阶段判定</div><div class="s">src/ 保持空</div></div>
+  <div class="node" data-k="12"><div class="n">13 / push</div><div class="t">扫描与推送</div><div class="s">远端 sha 比对</div></div>
+</div>
+
+<div class="foot">
+  <section class="card">
+    <h2>统一信封</h2>
+<pre>{
+  "request_id": "011-7c31",
+  "type": "request | response | event",
+  "target": "feature_input_and_conflicts",
+  "payload": {
+    "verbatim_input": "11-features-input.txt",
+    "numbered_features": 55,
+    "filemanager_items": 174,
+    "backend_readonly": "4 GET / 0 WRITE",
+    "sysapi": ["IsWindows7OrGreater", "GetNativeSystemInfo",
+               "GetUserGeoID", "GetGeoInfoW", "SetDefaultDllDirectories"],
+    "rust_win7": "tier3_win7-windows-msvc build-std",
+    "rust_tier1": "Windows 10+",
+    "arm64_win7": "failed",
+    "geo": "GEOID_NOT_AVAILABLE is not physical location",
+    "batch": ["Modrinth ids", "CurseForge modIds", "pageSize=20"],
+    "n_plus_1": "forbidden",
+    "d06": false,
+    "blueprint": "unapproved",
+    "src": "empty"
+  },
+  "error": null
+}</pre>
+  </section>
+  <section class="card">
+    <h2>四值与边界</h2>
+    <table>
+      <tr><th>项</th><th>值</th></tr>
+      <tr><td>逐字副本 cmp / SHA-1 双端一致</td><td>已证实</td></tr>
+      <tr><td>新凭据认证 200、后端仓 4 GET</td><td>已证实</td></tr>
+      <tr><td>12 组系统 API 一手原文</td><td>已证实</td></tr>
+      <tr><td>N+1 反模式 8 条 + 4 个批量端点</td><td>已证实</td></tr>
+      <tr><td>Win7 兼容与 Rust Tier 1 冲突</td><td>已证实</td></tr>
+      <tr><td>Win7 + ARM64 交集为空</td><td>已失败</td></tr>
+      <tr><td>地域判定口径、Win7 路径、架构范围</td><td>未证实</td></tr>
+      <tr><td>D06 / 蓝图批准 / X 拍板</td><td>未证实</td></tr>
+      <tr><td>CF REST 端点页、CopperGolem release</td><td>受阻</td></tr>
+      <tr><td>rustc / cargo / 浏览器渲染</td><td>受阻</td></tr>
+    </table>
+  </section>
+</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const nodes = [...document.querySelectorAll('.node')];
+let count = 0, timer = null;
+$('ts').textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function line(domain, action, target, result, detail){
+  count++; $('s-cnt').textContent = count;
+  const cls = result === 'OK' ? 'r' : (result === 'DEGRADE' ? 'w' : (result === 'FAIL' || result === 'BLOCKED' ? 'e' : 'm'));
+  const el = document.createElement('div');
+  el.className = 'ln';
+  el.innerHTML = '[KCU] <span class="d">'+esc(domain)+'</span> '+esc(action)+' '+esc(target)+' <span class="'+cls+'">'+esc(result)+'</span> <span class="m">'+esc(detail)+'</span>';
+  $('log').appendChild(el); $('log').scrollTop = $('log').scrollHeight;
+}
+function step(fn, ms){ return new Promise(r => { timer = setTimeout(() => { fn(); r(); }, ms); }); }
+function active(k, state){
+  nodes.forEach((n,i) => {
+    n.classList.toggle('on', i === k);
+    n.classList.toggle('err', i === k && state === 'err');
+    n.classList.toggle('warn', i === k && state === 'warn');
+  });
+}
+
+async function run(){
+  clearTimeout(timer);
+  $('log').innerHTML = ''; count = 0; $('s-cnt').textContent = '0';
+  $('s-func').textContent = '—'; $('s-conf').textContent = '—'; $('s-build').textContent = '—';
+
+  const preflight = $('preflight').value;
+  const auth = $('auth').value;
+  const backend = $('backend').value;
+  const verbatim = $('verbatim').value;
+  const win7 = $('win7').value;
+  const geo = $('geo').value;
+  const network = $('network').value;
+  const d06 = $('d06').value;
+
+  await step(()=>{active(0);line('core','start','round_011','OK','time=00:34:07CST clock=consistent docs=22');},120);
+  if(preflight === 'fail'){
+    await step(()=>{active(0,'err');line('preflight','read','docs/index.md','FAIL','detail=stop_round zero_level');},140);
+    return;
+  }
+  await step(()=>{active(0);line('preflight','read','22_files','OK','exit=0 no_credential no_explanatory no_midstate');},120);
+
+  if(auth === 'bad'){
+    await step(()=>{active(1,'err');line('auth','probe','GET /user','BLOCKED','detail=keep_unconfirmed no_fabricated_push');},140);
+    return;
+  }
+  await step(()=>{active(1);line('auth','probe','GET /user','OK','detail=200 login=kongbai9288 rate_remaining=5000');},120);
+
+  if(backend === 'write'){
+    await step(()=>{active(2,'err');line('backend','write','auto_deploy_repo','FAIL','detail=zero_level_stop R01_violation');},140);
+    return;
+  }
+  await step(()=>{active(2);line('backend','get','4_endpoints','OK','detail=4 GET 0 WRITE private=true branches=diag/main content_not_copied');},120);
+
+  if(verbatim === 'trunc'){
+    await step(()=>{active(3,'err');line('spec','write','11-features-input','FAIL','detail=A27_violation cmp_mismatch');},140);
+    return;
+  }
+  await step(()=>{active(3);line('spec','write','11-features-input','OK','detail=cmp=0 bytes=17096 lines=268 sha1=fd50385f');},120);
+  await step(()=>{active(4);$('s-func').textContent='55+174';line('features','write','backlog','OK','detail=numbered=1-55 contiguous bullets=174 src=empty');},120);
+
+  await step(()=>{active(5);line('sysapi','fetch','12_groups','OK','detail=versionhelpers getnativesysteminfo getusergeoid getgeoinfow sysgeotype');},120);
+
+  if(win7 === 'force'){
+    await step(()=>{active(6,'err');$('s-conf').textContent='违规';line('platform','force','tier1_win7','FAIL','detail=RW04_requires_Win10 A40_violation');},140);
+    return;
+  }
+  await step(()=>{active(6,'warn');$('s-conf').textContent='3 项';line('platform','register','C01_C04','DEGRADE','detail=win7_tier3_buildstd arm64_win7=failed user_decision_required');},140);
+
+  if(geo === 'fake'){
+    await step(()=>{active(7,'err');line('geo','fake','physical_location','FAIL','detail=A37_violation GEOID_NOT_AVAILABLE');},140);
+    return;
+  }
+  await step(()=>{active(7,'warn');line('geo','register','P01_P07','DEGRADE','detail=no_network_probe locale_setting_not_physical_position');},140);
+
+  if(network === 'nplus1'){
+    await step(()=>{active(8,'err');line('network','fanout','per_item_request','FAIL','detail=N01_forbidden A36_violation');},140);
+    return;
+  }
+  await step(()=>{active(8);line('network','batch','ids_and_page20','OK','detail=modrinth_ids cf_modIds pageSize=20 coalescing dedup');},120);
+  await step(()=>{active(9);line('dispatcher','write','startup_json','OK','detail=declaration_page integrity_check win7_notice language_json_and_font');},120);
+  await step(()=>{active(10);line('precond','write','Q01_Q12','OK','detail=condition_5_added no_cargo_no_buildrs');},120);
+
+  if(d06 === 'given'){
+    await step(()=>{active(11);$('s-build').textContent='允许';line('stage','build','core','OK','detail=D06_triggered blueprint_approved Q_resolved');},140);
+  } else {
+    await step(()=>{active(11,'warn');$('s-build').textContent='停止';line('stage','build','src','BLOCKED','detail=D06_not_triggered blueprint=unapproved Q_pending src=empty');},140);
+  }
+  await step(()=>{active(12);line('scan','precommit','repo','OK','detail=credential=0 wording=0 midstate=0 A36_A45=0');},120);
+  await step(()=>{active(12);line('remote','push','main','OK','detail=api_snapshot ALL_MATCH True');},130);
+}
+
+$('run').onclick = run;
+$('reset').onclick = () => {
+  clearTimeout(timer);
+  $('log').innerHTML = ''; count = 0; $('s-cnt').textContent = '0';
+  $('s-func').textContent = '—'; $('s-conf').textContent = '—'; $('s-build').textContent = '—';
+  nodes.forEach(n => n.classList.remove('on','err','warn'));
+};
+</script>
+</body>
+</html>

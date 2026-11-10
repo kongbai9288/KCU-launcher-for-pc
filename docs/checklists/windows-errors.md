@@ -34,3 +34,11 @@
 | W30 | DPAPI 机器标志 | 不设置 CRYPTPROTECT_LOCAL_MACHINE；该标志使本机任意用户可解密 |
 | W31 | CredWriteW 会话绑定 | 凭据关联当前令牌登录会话，令牌用户 SID 被禁用时失败；不假设跨登录会话可用 |
 | W32 | 凭据不落明文 | 凭据不进入日志、诊断包、配置快照、提交与远端 |
+| W33 | Win7 与 Rust Tier 1 | Rust 1.78 起 Windows Tier 1 目标要求 Win10；Win7 走 Tier 3 `*-win7-windows-msvc` 且需 build-std |
+| W34 | Win7 DLL 安全搜索 | SetDefaultDllDirectories 需 KB2533623，用 GetProcAddress 从 Kernel32.dll 动态取址 |
+| W35 | OS 版本判定 | 用 IsWindows7OrGreater；GetVersionEx 已弃用，未面向 Win8.1+ 时返回 6.2 |
+| W36 | 架构判定 | GetNativeSystemInfo 在 WOW64 与模拟架构下返回模拟值，不直接等同宿主架构 |
+| W37 | 多架构产物 | i686 / x86_64 / aarch64 候选；ARM64 Windows 最低 Win10，Win7 无 ARM64 |
+| W38 | 本地监听 | 绑定回环地址，防火墙入站仅允许 localhost；服务器 AI API 为用户指定例外 |
+| W39 | 位置判定 | 不走 IP 地理定位；GetUserGeoID 未设置时返回 GEOID_NOT_AVAILABLE，不等于物理位置 |
+| W40 | GetGeoInfoEx | 最低 Win10 1709，Win7 不可用；Win7 侧只用 GetUserGeoID / GetGeoInfoW |

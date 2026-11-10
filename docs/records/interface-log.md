@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：010
+更新轮次：011
 
 ## 前置索引
 
@@ -20,6 +20,9 @@
 | I12 | RCON 与 UUID 一手补证 | docs/research/06-server.md、docs/research/02-auth.md | 008 轮新增，见 008 新增来源 |
 | I13 | Cargo profile / Win32 DLL 搜索 / std::process / WebView2 进程组 / MSVC 部署 / 目标三元组 | docs/research/11-runtime.md | 009 轮新增，9 份一手原文；2 项未证实；1 项受阻 |
 | I14 | CurseForge / Modrinth API 条款、DPAPI / CredWriteW、6 份许可证全文、slint 三许可、上游版本状态 | docs/research/12-compliance.md | 010 轮新增，见 010 新增来源；X01-X04 冲突已证实 |
+| I15 | Win32 版本/架构/地理位置 API、Rust Windows 目标与 Win7 Tier 3、DLL 加载边界 | docs/research/13-platform-api.md | 011 轮新增，见 011 新增来源；C01-C04 冲突已证实 |
+| I16 | 批量端点、N+1 反模式、回环监听、配置集中 | docs/research/14-batch-network.md | 011 轮新增；CF REST 端点页受阻 |
+| I17 | 只读后端仓、CopperGolemLauncher、ViaNBT、dsh、VxKex、开源许可页 5 字段 | docs/research/15-input-survey.md | 011 轮新增；仅 4 个 GET |
 
 ## 连接约定
 
@@ -114,6 +117,44 @@
 | X04 | CF01 API Key 不可共享 | docs/spec/00-requirements.txt:171 密钥可选 | 已证实 |
 
 处置见 docs/rules/build-preconditions.md；未取得用户拍板前不生成下载模块代码。
+
+## 011 新增来源
+
+| 编号 | 来源 | 用途 | 状态码 |
+| --- | --- | --- | --- |
+| S38 | https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows7orgreater | 版本判定 | 200 |
+| S39 | https://learn.microsoft.com/zh-cn/windows/desktop/SysInfo/targeting-your-application-at-windows-8-1 | GetVersionEx 弃用 | 200 |
+| S40 | https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo | 架构判定 | 200 |
+| S41 | https://learn.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-getusergeoid | 本地地理位置 | 200 |
+| S42 | https://learn.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-getgeoinfow | GetGeoInfoW | 200 |
+| S43 | https://learn.microsoft.com/en-us/windows/win32/api/winnls/ne-winnls-sysgeotype | SYSGEOTYPE | 200 |
+| S44 | https://learn.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-getgeoinfoex | Win10 1709 限定 | 200 |
+| S45 | https://learn.microsoft.com/en-us/windows/win32/intl/locale-igeoid | LOCALE_IGEOID | 200 |
+| S46 | https://support.microsoft.com/zh-cn/windows/windows-位置服务和隐私 | 定位服务输入源 | 200 |
+| S47 | https://doc.rust-lang.org/rustc/platform-support.html | Windows 目标最低版本 | 200 |
+| S48 | https://doc.rust-lang.org/releases.html | Rust 1.78 目标变更 | 200 |
+| S49 | https://doc.rust-lang.net.cn/1.85.0/rustc/platform-support/win7-windows-msvc.html | Win7 Tier 3 目标 | 200 |
+| S50 | https://vxkex.com/ | VxKex | 200 |
+| S51 | https://vibgrate.com/anti-patterns/n-plus-one-network-calls | N+1 反模式通用法 | 200 |
+| S52 | https://docs.modrinth.com/api/operations/getprojects/ | 批量 projects | 200 |
+| S53 | https://docs.modrinth.com/api/operations/getversions/ | 批量 versions | 200 |
+| S54 | https://docs.modrinth.com/api/operations/searchprojects/ | 分页与 facets | 200 |
+| S55 | https://docs.curseforge.com/docs/game-integration/unreal/browsing-and-discovery | CF 批量 SDK 与 pageSize=20 | 200 |
+| S56 | https://pypi.org/project/curse-api/ | 第三方批量封装 | 200 |
+| S57 | https://docs.curseforge.com/rest-api/endpoint/POST_1_mods/ | CF REST 端点页 | 受阻 |
+| S58 | https://blog.g5cybersecurity.com/?p=178654/ | 回环绑定 | 200 |
+| S59 | https://api.github.com/repos/copper-lamp/CopperGolemLauncher/contents/LICENSE | 许可证全文 | 200 |
+| S60 | https://github.com/ViaVersion/ViaNBT | MIT / Java 8 / NBT | 200 |
+| S61 | https://awesome-dsh-plugin.com/p/chumoe/dsh-file-manager | dsh 文件管理插件 | 200 |
+| S62 | https://api.github.com/repos/kongbai9288/modmarket-backend 等 4 个端点 | 只读元数据 | 200，仅 GET |
+
+## 011 只读仓约束
+
+| 编号 | 内容 |
+| --- | --- |
+| RO01 | 对用户后端仓只允许 `GET`，本轮 4 个 `GET`、0 个写请求。 |
+| RO02 | 端点、密钥、部署配置、README 正文不复制进本公仓。 |
+| RO03 | 不 fork、不改分支、不建 issue、不触发自动部署。 |
 
 ## 版本弃用
 

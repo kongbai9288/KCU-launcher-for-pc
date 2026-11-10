@@ -610,3 +610,117 @@
 | 变更内容哈希 | `cb9229d974bd8709a6a01f43991e7731c24d1fec`，固定终点 `a7f948f..87f0ce6` 复算一致 |
 
 独立验证结论：**部分通过**。两个哈希由独立验证者计算并写入声明块，改动作者未代算。
+
+## 011
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/11-round-011-instructions.txt | 当轮指令逐字副本，剔除含凭据的整行，1 行 570 字节 |
+| docs/spec/11-features-input.txt | 用户输入文件逐字副本，268 行 17096 字节，cmp 一致 |
+| docs/research/13-platform-api.md | Win7 兼容、多架构、系统 API 真实签名与两处硬冲突 |
+| docs/research/14-batch-network.md | 批量请求通用法、官方批量端点、N+1 反模式、回环监听、配置集中 |
+| docs/research/15-input-survey.md | 后端仓只读探测、CopperGolemLauncher / PrismLauncher / ViaNBT / dsh / VxKex 核实、开源许可页 5 字段 |
+| docs/licenses/CopperGolemLauncher-LICENSE | 许可证全文 35834 字节 |
+| docs/features/backlog.md | 55 条编号功能 + 174 项文件管理清单分组索引 |
+| docs/decisions/011-feature-input.md | D01-D24 与 Q01-Q08 待拍板项 |
+| docs/rules/build-preconditions.md | 011 新增阻塞项 Q01-Q12 与触发链条件 5 |
+| docs/rules/push-scope.md | 只读仓 R01-R04、特殊版、3 类排除项 |
+| docs/checklists/ai-errors.md | A36-A45 |
+| docs/checklists/windows-errors.md | W33-W40 |
+| docs/research/index.md | 文件表 13/14/15、011 卡点状态与新增调研项 |
+| docs/features/index.md | 011 轮功能输入段、G07 |
+| docs/licenses/index.md | CopperGolemLauncher 行、L08-L09 |
+| docs/records/interface-log.md | I15-I17、S38-S62、011 只读仓约束 |
+| docs/index.md | 必读 21 项、011 分区与演示 |
+| README.md | 轮次 011 与事实更新 |
+| demos/round-011-input.html | 功能输入与阻塞项运行逻辑 HTML |
+| docs/verification/round-011.md | 第 011 轮独立验证报告 |
+
+当轮输入：
+
+| 项 | 值 |
+| --- | --- |
+| 指令 | 剔除凭据行后为 1 行 570 字节 |
+| 凭据 | 用户给出新 GitHub PAT，按第 16 节不讨论；带认证 `GET /user` 200 `login=kongbai9288`、`GET /rate_limit` 200 remaining 5000 |
+| 新功能输入 | `/data/inputs/功能.txt`，55 条编号连续 1-55、174 个 `·` 条目 |
+| 后续输入 | 用户写明「你先去完成这些任务，我再去写一个功能开服器」「过一会我会把要求也给你」 |
+| 阶段 | 003-remote.md D05 功能输入阶段，D06 未触发 |
+| 偏离 | 9.1 连续未达应停下；按 18.5 以用户当轮指令继续执行 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒时钟 | `Wed Nov 11 00:34:07 CST 2026` |
+| 网络时钟 | `Tue, 10 Nov 2026 16:34:08 GMT`，带认证 Date `16:34:08 GMT` |
+| 时间跳跃 | 010 轮收尾 `Thu Nov  5 22:36:09 CST 2026`，本轮开工 `Wed Nov 11 00:34:07 CST 2026`，间隔 6 天 2 小时，如实登记 |
+
+后端仓只读探测：
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| BR01 | 用户指令 | 只能读，部署了自动部署，写入后果严重 |
+| BR02 | 本轮请求 | 4 个 `GET`，0 个写请求 |
+| BR03 | 仓库 | `private=true`，默认分支 `main`，`pushed_at=2026-11-10T15:40:42Z` |
+| BR04 | description | Cloudflare Worker backend |
+| BR05 | 分支 | `diag` / `main` |
+| BR06 | 根条目 | 9 个 |
+| BR07 | README | 2523 字节，仅取大小 |
+| BR08 | 内容 | 未读取进公仓，未复制端点、密钥、部署配置 |
+
+硬冲突（按需求 :3 与 :249 否定，不强行实现）：
+
+| 编号 | 用户要求 | 一手事实 | 四值 |
+| --- | --- | --- | --- |
+| C01 | 从 Win7 开始兼容 | Rust 1.78 起 Windows Tier 1 目标要求 Win10；Win7 仅 Tier 3 `*-win7-windows-msvc` 且无预编译 std | 已证实 |
+| C02 | 32 位与 64 位 | `i686-pc-windows-msvc` 与 `x86_64-pc-windows-msvc` 均标注 Windows 10+ | 已证实 |
+| C03 | 多架构全都要 | Windows 侧 Rust 官方目标为 i686 / x86_64 / aarch64 | 已证实 |
+| C04 | Win7 + ARM64 | `aarch64-pc-windows-msvc` 最低 Win10，交集为空 | 已失败 |
+| P04 | 物理位置判定且不用网络探测 | Win7 可用的 `GetUserGeoID` 未设置时返回 `GEOID_NOT_AVAILABLE`，`LOCALE_IGEOID` 是区域设置；Windows 定位服务用 GPS/WiFi/蜂窝/IP | 未证实 |
+| P07 | 替代口径 | 按用户或系统区域设置判定需用户确认 | 未批准 |
+
+系统 API 一手补证：
+
+| 组 | 条数 | 关键事实 |
+| --- | --- | --- |
+| OS01-OS04 | 4 | `IsWindows7OrGreater` 最低 Win2000；`GetVersionEx` / `VerifyVersionInfo` 已弃用 |
+| AR01-AR05 | 5 | `GetNativeSystemInfo` 最低 WinXP，WOW64 与模拟架构下返回模拟值 |
+| GE01-GE11 | 11 | `GetGeoInfoEx` 最低 Win10 1709；`SYSGEOTYPE` 的 `GEO_ISO2` / `GEO_ISO3` |
+| RW01-RW12 | 12 | Rust 1.78 目标变更、Tier 3 Win7 目标、VxKex |
+| DL01-DL05 | 5 | Win7 需 KB2533623 与 `GetProcAddress` |
+
+网络通用法：
+
+| 组 | 条数 | 关键事实 |
+| --- | --- | --- |
+| N01-N08 | 8 | N+1 反模式：batch endpoints / request coalescing / aggregation read model / 去重 / 自检信号 |
+| M01-M07 | 7 | Modrinth `ids` 批量、`limit` 默认 10 上限 100、`offset` / `facets` |
+| C01-C08 | 8 | CurseForge SDK `Get Mods Info By Ids`、`modIds TArray`、`pageSize = 20` |
+| L01-L06 | 6 | 回环绑定、防火墙入站、服务器 AI API 例外 |
+| K01-K09 | 9 | 配置集中：API 基址、网址、端口、图标、语言包、保存路径 |
+
+修正记录：
+
+| 位置 | 原值 | 修复 |
+| --- | --- | --- |
+| docs/features/backlog.md 初稿 | 文件管理分组表写「条目数合计 174」 | 手填分组数合计 173，删除条目数列，改为「分组为索引，不逐组计数」，逐字清单以 spec 副本为准 |
+| docs/spec/11-round-011-instructions.txt | 用户首行含凭据 | 整行剔除，按第 16 节与 18.5 登记偏离 :133 |
+| docs/research/13-platform-api.md | `platform-support/windows.html` 直抓受阻 | 改用平台支持总页 P26，如实登记受阻 |
+| docs/research/index.md 011 段 | 表格行以「同上」开头，A24 命中 | 改为具体条目名，断言未改 |
+| docs/checklists/ai-errors.md A36 | 检查命令指向 11-features-input.txt，实跑 0 命中 | 改为指向 11-round-011-instructions.txt，实跑 1 命中 |
+| docs/checklists/ai-errors.md A43 | `grep -c '^| [0-9]'` 中 `|` 被当 alternation，且数字后缺空格 | 改为 `grep -cE '^\| [0-9]+ \|'`，实跑 55 |
+| docs/index.md 检查表 | 编号完整性命令同 A43 错误 | 同步修正，并新增逐条目单发扫描项 |
+| docs/research/15-input-survey.md | 一行写「已证实（输入）/ 未证实（实现）」混合四值 | 改为「已证实」，实现未定写入结果列 |
+
+未做：
+- 源码与 src/ 实现
+- 底层统一搭建
+- 框架蓝图批准
+- 正常模式 UI 实现与构建
+- 品牌与字体授权取得
+- X01-X04、Q01-Q12 用户拍板
+- 特殊版私仓创建
+- 后端仓任何写请求
+- MCIM / BMCLAPI 一手条款、Modrinth 缓存限流条款、加载器逐版本 schema、Notchian 服务端行为、Mojang 官方 RCON 文档补证
+- 浏览器内渲染实测
+- rustc / cargo 构建验证
