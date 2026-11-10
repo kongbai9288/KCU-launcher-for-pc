@@ -105,7 +105,7 @@
 | --- | --- | --- |
 | docs/spec/11-round-011-instructions.txt 系统 API 真实签名、Win7 兼容、多架构 | docs/research/13-platform-api.md | 12 组一手原文；Win7 与 Rust Tier 1 冲突已证实；ARM64 与 Win7 交集已失败 |
 | docs/spec/11-round-011-instructions.txt 网络通用法、逐条目单发请求浪费 | docs/research/14-batch-network.md | N+1 反模式 8 条 + 4 个官方批量端点；禁止逐条目单发 |
-| docs/spec/11-features-input.txt 全量功能输入 | docs/features/backlog.md | 55 条编号 + 174 项文件管理清单逐字落盘 |
+| docs/spec/11-features-input.txt 全量功能输入 | docs/features/backlog.md | 55 条编号 + 175 项文件管理清单逐字落盘 |
 | docs/spec/11-features-input.txt 第 46、54、6 条与开头段 | docs/research/15-input-survey.md | 外部项目许可证与只读仓已核 |
 | docs/spec/00-requirements.txt:230 每轮核上游版本 | docs/research/13-platform-api.md RW07 | Rust 1.99.1、HMCL v3.16.4 已证实 |
 

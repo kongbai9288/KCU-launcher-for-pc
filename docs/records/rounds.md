@@ -621,7 +621,7 @@
 | docs/research/14-batch-network.md | 批量请求通用法、官方批量端点、N+1 反模式、回环监听、配置集中 |
 | docs/research/15-input-survey.md | 后端仓只读探测、CopperGolemLauncher / PrismLauncher / ViaNBT / dsh / VxKex 核实、开源许可页 5 字段 |
 | docs/licenses/CopperGolemLauncher-LICENSE | 许可证全文 35834 字节 |
-| docs/features/backlog.md | 55 条编号功能 + 174 项文件管理清单分组索引 |
+| docs/features/backlog.md | 55 条编号功能 + 175 项文件管理清单分组索引 |
 | docs/decisions/011-feature-input.md | D01-D24 与 Q01-Q08 待拍板项 |
 | docs/rules/build-preconditions.md | 011 新增阻塞项 Q01-Q12 与触发链条件 5 |
 | docs/rules/push-scope.md | 只读仓 R01-R04、特殊版、3 类排除项 |
@@ -642,7 +642,7 @@
 | --- | --- |
 | 指令 | 剔除凭据行后为 1 行 570 字节 |
 | 凭据 | 用户给出新 GitHub PAT，按第 16 节不讨论；带认证 `GET /user` 200 `login=kongbai9288`、`GET /rate_limit` 200 remaining 5000 |
-| 新功能输入 | `/data/inputs/功能.txt`，55 条编号连续 1-55、174 个 `·` 条目 |
+| 新功能输入 | `/data/inputs/功能.txt`，55 条编号连续 1-55、175 个 `·` 条目 |
 | 后续输入 | 用户写明「你先去完成这些任务，我再去写一个功能开服器」「过一会我会把要求也给你」 |
 | 阶段 | 003-remote.md D05 功能输入阶段，D06 未触发 |
 | 偏离 | 9.1 连续未达应停下；按 18.5 以用户当轮指令继续执行 |
@@ -711,6 +711,43 @@
 | docs/checklists/ai-errors.md A43 | `grep -c '^| [0-9]'` 中 `|` 被当 alternation，且数字后缺空格 | 改为 `grep -cE '^\| [0-9]+ \|'`，实跑 55 |
 | docs/index.md 检查表 | 编号完整性命令同 A43 错误 | 同步修正，并新增逐条目单发扫描项 |
 | docs/research/15-input-survey.md | 一行写「已证实（输入）/ 未证实（实现）」混合四值 | 改为「已证实」，实现未定写入结果列 |
+
+011 验证者记录复核：
+
+| 编号 | 验证者记录 | 改动作者复跑 | 判定 |
+| --- | --- | --- | --- |
+| V01 | `·` 条目实跑 175 ≠ 声明 174 | `t.count('·')` = 175；以 `·` 开头的独立行 = 174；第 30 行引导句末尾同行含首个条目 `· 浏览文件和文件夹` | **真遗漏**：初稿按独立行少算 1 项；已把全仓 174 改为 175 并补计数口径 |
+| V02 | 15-input-survey.md「4 个 GET」实跑 grep 0 | `grep -c '4 个 GET'` = 0；`grep -c '4 个 \`GET\`'` = 1，字面量带反引号 | 验证者 grep 模式未含反引号，执行误差 |
+| V03 | A31 实跑 exit=1 | `MISSING=[]`，11 个文件各含「未实现」2 次，`A31_PASS` | 验证者执行误差，断言未改 |
+| V04 | 本地 `b936431` 与远端 `acd7a75` 哈希不同 | 104 blob 逐项 `git hash-object` 比对 ALL_MATCH True | 已失败（内容等价），与前几轮同型 |
+| V05 | Win7 + ARM64 交集为空、v99.99、CF REST 端点页、CopperGolem release | 与本轮声明一致 | 已失败 / 受阻，非新增未通过项 |
+
+按 18.1 未改独立验证报告，本段登记复核结果。
+
+报告正文哈希口径复核：
+
+| 项 | 值 |
+| --- | --- |
+| 声明值 | `b79e501e79820d742b3e81011287a76123aad0e7` |
+| 声明块字节偏移 | 10512 |
+| 精确切分 `sha1(t[:10512])` | `8d5d70403fd52e0f3f83b4ae9e0284d27335a945` |
+| 去掉声明块前 1 个换行 `sha1(t[:10511])` | `b79e501e79820d742b3e81011287a76123aad0e7`，与声明一致 |
+| 全文哈希 | `98c4c68ee91fddf66307b5abf11716f1c289f447` |
+| 判定 | 与 010 轮同型：声明值对应「追加声明块之前、去掉前置换行」的正文，口径成立，属 1 字节差 |
+| 变更内容哈希 | `339ac41c5ba557ee73b9011c1169a9a0b400c278`，固定终点 `63d2099..b936431` 复算一致 |
+
+修正落点（V01 引起）：
+
+| 文件 | 原值 | 修复 |
+| --- | --- | --- |
+| docs/features/backlog.md | 4 处 174 | 全部改 175，补计数口径段与验证表字段 |
+| demos/round-011-input.html | 5 处 174 | 全部改 175 |
+| docs/features/index.md | 2 处 174 | 全部改 175 |
+| README.md、docs/index.md、docs/research/index.md | 各 1 处 174 | 全部改 175 |
+| docs/records/rounds.md | 2 处 174 | 全部改 175；初稿修正记录中的 174 为历史描述，保留 |
+| docs/research/12-compliance.md:30 | `docs/spec/00-requirements.txt:174` | 需求文件行号，不改 |
+
+独立验证结论：**部分通过**。两个哈希由独立验证者计算并写入声明块，改动作者未代算。
 
 未做：
 - 源码与 src/ 实现

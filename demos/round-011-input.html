@@ -94,7 +94,7 @@ th{color:var(--dim);font-weight:600}td{color:var(--txt)}
     <div class="field">
       <label>功能输入副本</label>
       <select id="verbatim">
-        <option value="ok">cmp 一致，55 条 + 174 项</option>
+        <option value="ok">cmp 一致，55 条 + 175 项</option>
         <option value="trunc">内容截断</option>
       </select>
     </div>
@@ -150,7 +150,7 @@ th{color:var(--dim);font-weight:600}td{color:var(--txt)}
   <div class="node" data-k="1"><div class="n">02 / auth</div><div class="t">凭据认证</div><div class="s">GET /user 200</div></div>
   <div class="node" data-k="2"><div class="n">03 / backend</div><div class="t">只读探测</div><div class="s">4 GET / 0 WRITE</div></div>
   <div class="node" data-k="3"><div class="n">04 / verbatim</div><div class="t">输入逐字</div><div class="s">268 行 17096 字节</div></div>
-  <div class="node" data-k="4"><div class="n">05 / backlog</div><div class="t">功能登记</div><div class="s">55 + 174</div></div>
+  <div class="node" data-k="4"><div class="n">05 / backlog</div><div class="t">功能登记</div><div class="s">55 + 175</div></div>
   <div class="node" data-k="5"><div class="n">06 / sysapi</div><div class="t">系统 API</div><div class="s">VersionHelpers / GEOID</div></div>
   <div class="node" data-k="6"><div class="n">07 / win7</div><div class="t">兼容冲突</div><div class="s">Tier 1 要求 Win10</div></div>
   <div class="node" data-k="7"><div class="n">08 / geo</div><div class="t">地域语义</div><div class="s">区域设置 ≠ 物理位置</div></div>
@@ -171,7 +171,7 @@ th{color:var(--dim);font-weight:600}td{color:var(--txt)}
   "payload": {
     "verbatim_input": "11-features-input.txt",
     "numbered_features": 55,
-    "filemanager_items": 174,
+    "filemanager_items": 175,
     "backend_readonly": "4 GET / 0 WRITE",
     "sysapi": ["IsWindows7OrGreater", "GetNativeSystemInfo",
                "GetUserGeoID", "GetGeoInfoW", "SetDefaultDllDirectories"],
@@ -269,7 +269,7 @@ async function run(){
     return;
   }
   await step(()=>{active(3);line('spec','write','11-features-input','OK','detail=cmp=0 bytes=17096 lines=268 sha1=fd50385f');},120);
-  await step(()=>{active(4);$('s-func').textContent='55+174';line('features','write','backlog','OK','detail=numbered=1-55 contiguous bullets=174 src=empty');},120);
+  await step(()=>{active(4);$('s-func').textContent='55+175';line('features','write','backlog','OK','detail=numbered=1-55 contiguous bullets=175 src=empty');},120);
 
   await step(()=>{active(5);line('sysapi','fetch','12_groups','OK','detail=versionhelpers getnativesysteminfo getusergeoid getgeoinfow sysgeotype');},120);
 

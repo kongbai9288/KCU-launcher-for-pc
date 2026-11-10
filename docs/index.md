@@ -40,7 +40,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 分区 | 入口 | 职责 |
 | --- | --- | --- |
 | 需求规格 | docs/spec/00-requirements.txt | 需求原文 |
-| 011 功能输入 | docs/spec/11-features-input.txt | 55 条编号功能与 174 项文件管理清单逐字副本 |
+| 011 功能输入 | docs/spec/11-features-input.txt | 55 条编号功能与 175 项文件管理清单逐字副本 |
 | 调研 | docs/research/index.md | 外部事实、锚点、四值 |
 | 合规与阻塞项 | docs/research/12-compliance.md | API 条款、凭据保护、许可证全文、上游版本、X01-X07 |
 | 系统 API 与平台 | docs/research/13-platform-api.md | Win7、多架构、版本/架构/位置 API、Rust 目标冲突 |
