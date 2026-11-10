@@ -1,6 +1,6 @@
 # 远端推送范围
 
-轮次：011
+轮次：012
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
 

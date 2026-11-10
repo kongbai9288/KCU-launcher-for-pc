@@ -761,3 +761,110 @@
 - MCIM / BMCLAPI 一手条款、Modrinth 缓存限流条款、加载器逐版本 schema、Notchian 服务端行为、Mojang 官方 RCON 文档补证
 - 浏览器内渲染实测
 - rustc / cargo 构建验证
+
+## 012
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/12-server-features-input.txt | 用户输入逐字副本，64 行 4970 字节，cmp 一致 |
+| docs/spec/12-round-012-instructions.txt | 当轮指令逐字副本，1 行 |
+| docs/research/16-server-platform.md | 26 个来源、开服器官方资料与协议一手原文 |
+| docs/features/server-backlog.md | 开服器 27 个编号位、19 组 `·` 条目索引、与 011 的 13 组重复项 |
+| docs/records/open-questions.md | 93 条待拍板问题全集，A-H 组，无删减 |
+| docs/decisions/012-server-input.md | D01-D16、S1/S2 两段语义、状态分层 |
+| docs/rules/build-preconditions.md | 012 新增 R01-R10、触发链条件 6 |
+| docs/checklists/ai-errors.md | A46-A52 |
+| docs/checklists/windows-errors.md | W41-W45 |
+| docs/research/index.md | 文件表 16、012 卡点状态与新增调研项 |
+| docs/features/index.md | 012 段、G08-G09 |
+| docs/decisions/index.md | 补齐 008-012 条目 |
+| docs/records/interface-log.md | I18、S63-S88、012 只读仓约束 |
+| docs/index.md | 必读 29 项、012 分区与演示、7 项新检查 |
+| README.md、docs/rules/push-scope.md | 轮次 012 |
+| demos/round-012-server-input.html | 开服器输入与 93 条问题闸门运行逻辑 HTML |
+| docs/verification/round-012.md | 第 012 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Wed Nov 11 01:17:59 CST 2026` |
+| 011 轮收尾 | `Wed Nov 11 01:01:46 CST 2026` |
+| 间隔 | 16 分钟 |
+
+当轮指令两段语义：
+
+| 段 | 原文 | 登记 |
+| --- | --- | --- |
+| S1 | `在搜完所有的文档以后呢，就可以彻底开工了` | 记录为开工授权，未执行 |
+| S2 | `如果有一些问题你拿捏不了的，可以直接通过技术对话，然后全部告诉我不要保留，我先睡觉了，然后明天我会统一处理这些问题` | 本轮按 S2 交付 93 条问题全集 |
+
+两段并列登记，不替用户选其一，Q-B01 请求确认开工时点。按 :3 与 :249，未拍板项存在时停下；9.1 连续未达按 18.5 以用户当轮指令继续。
+
+输入结构：
+
+| 项 | 值 |
+| --- | --- |
+| 首行 | `开服器1.先检查有没有可以直接使用的java`，编号 1 与标题连写 |
+| 带点号编号 | 2-24、27，共 23 行 |
+| 无点号编号 | `25多实例同时运行的资源配额/调度` |
+| 缺号 | 26 |
+| `·` 字符 | 35 |
+| 独立 `·` 行 | 34 |
+| 同行首项 | 第 24 条引导句末尾同一行含首个 `·` 条目 |
+| 计数口径 | 与 011 轮同型，差 1 |
+
+官方资料结论：
+
+| 组 | 一手事实 | 四值 |
+| --- | --- | --- |
+| 插件源 | Hangar 由 PaperMC 团队创建；Ore 为 Sponge 官方；SpigotMC / BukkitDev 为社区；Modrinth 为多加载器索引 | 已证实 |
+| Hangar REST 官方文档 | robots 拒绝抓取，API 基址仅第三方转述 | 受阻 |
+| 服务端 mod | Modrinth `environment` facet 10 值含 `server_only` / `dedicated_server_only`；`client_side` / `server_side` 已弃用 | 已证实 |
+| CurseForge server-only 等价字段 | 官方 REST 端点页受阻，未找到等价字段 | 未证实 |
+| EULA | 官方页 `https://www.minecraft.net/en-us/eula`；`eula.txt` 首次启动生成 `eula=false`，改为 `eula=true` 否则立即退出 | 已证实 |
+| 原版命令 | `/say` 权限等级 2；原版无 `/talk`；控制台命令不带 `/` | 已证实 |
+| Java 版本 | Java 8 / 16 / 17 / 21 / 25 对应 MC 版本段 | 已证实 |
+| ops.json | 服务端启动时读入内存，命令变更时整体回写；运行期手改被静默覆盖 | 已证实 |
+| 种子 | 新 `WorldGenSettings.seed`、旧 `Data.RandomSeed` | 已证实 |
+| 进度 | `world/players/advancements/<uuid>.json`，退出即写，读失败全丢 | 已证实 |
+| icon | 64×64 `server-icon.png`，需重启加载 | 已证实 |
+| UPnP | RFC 6886 记载 IGD 可被用于改网关 DNS；NAT-PMP 已被 PCP 取代 | 已证实 |
+| mclo.gs | `POST https://api.mclo.gs/1/log`，10 MiB / 25000 行 | 已证实 |
+| mrpack | 路径穿越防护、哈希、下载域名白名单、`server-overrides` 覆盖层 | 已证实 |
+
+93 条问题分组：
+
+| 组 | 条数 | 内容 |
+| --- | --- | --- |
+| A | 6 | 输入文档结构：编号连写、缺 26、重复分节、计数口径 |
+| B | 12 | 既有规则冲突：开工时点、D06、蓝图、X、容器网段、境外源、重复项、凭据 |
+| C | 15 | 官方事实与用户描述不一致：`/talk`、op 锁定、种子双格式、icon、CF、EULA、Java、UPnP、代理、mclo.gs |
+| D | 18 | 设计口径：AI 权限模型、确认粒度、文件锁、5 秒状态、禁用方式、RCON 隧道、配额优先级 |
+| E | 12 | 合规与安全：CF 条款、Modrinth / MCIM / BMCLAPI / mclo.gs / 插件源条款、UI 授权、LICENSE |
+| F | 10 | 平台与工具链：Win7、多架构、ARM64、地域、rustc / cargo、浏览器、git HTTP |
+| G | 14 | 011 轮遗留未证实 / 已失败项 |
+| H | 6 | 开工闸门 Q-H01 至 Q-H06 |
+
+阶段判定：
+
+| 项 | 值 |
+| --- | --- |
+| 阶段 | 003-remote.md D05 功能输入阶段 |
+| D06 | 未触发 |
+| 005-blueprint.md | 未批准 |
+| `src/` | 空 |
+| 本轮源码 | 0 行 |
+
+未做：
+- 源码与 src/ 实现
+- 底层统一搭建
+- 框架蓝图批准
+- 正常模式 UI 实现与构建
+- 品牌与字体授权取得
+- X01-X04 与 Q-A 至 Q-H 用户拍板
+- 特殊版私仓创建
+- 后端仓任何写请求
+- 插件源默认选择、CF server-only 字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证
+- 浏览器内渲染实测
+- rustc / cargo 构建验证

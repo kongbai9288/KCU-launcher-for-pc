@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：011
+更新轮次：012
 
 ## 前置索引
 
@@ -23,6 +23,7 @@
 | I15 | Win32 版本/架构/地理位置 API、Rust Windows 目标与 Win7 Tier 3、DLL 加载边界 | docs/research/13-platform-api.md | 011 轮新增，见 011 新增来源；C01-C04 冲突已证实 |
 | I16 | 批量端点、N+1 反模式、回环监听、配置集中 | docs/research/14-batch-network.md | 011 轮新增；CF REST 端点页受阻 |
 | I17 | 只读后端仓、CopperGolemLauncher、ViaNBT、dsh、VxKex、开源许可页 5 字段 | docs/research/15-input-survey.md | 011 轮新增；仅 4 个 GET |
+| I18 | 开服器插件源、服务端 mod 声明、EULA、原版命令、Java 版本映射、ops.json、种子 NBT、server-icon、TPS、代理端、UPnP、mclo.gs | docs/research/16-server-platform.md | 012 轮新增；26 个来源，2 个受阻 |
 
 ## 连接约定
 
@@ -155,6 +156,44 @@
 | RO01 | 对用户后端仓只允许 `GET`，本轮 4 个 `GET`、0 个写请求。 |
 | RO02 | 端点、密钥、部署配置、README 正文不复制进本公仓。 |
 | RO03 | 不 fork、不改分支、不建 issue、不触发自动部署。 |
+
+## 012 新增来源
+
+| 编号 | 来源 | 用途 | 结果 |
+| --- | --- | --- | --- |
+| S63 | https://hangar.papermc.io/?page=0&platform=VELOCITY | Hangar 官方插件仓库 | 200 |
+| S64 | https://papermc.io/ | PaperMC / Hangar / Folia / Velocity | 200 |
+| S65 | https://www.eranio.com/docs/api/mp-hangar | Hangar API 基址第三方转述 | 200 |
+| S66 | https://hangar.papermc.io/api/v1 | Hangar 官方 API 文档 | 受阻，robots 拒绝 |
+| S67 | https://www.g-portal.com/wiki/en?p=4679 | 四类插件源分工 | 200 |
+| S68 | https://docs.papermc.io/misc/hangar-publishing | Hangar API token 与权限 | 200 |
+| S69 | https://docs.spongepowered.org/6.0.0/en/ore/routes/list-projects.html | Ore Web API | 200 |
+| S70 | https://docs.modrinth.com/api/operations/searchprojects/ | environment 10 值 | 200 |
+| S71 | https://docs.modrinth.com/api/operations/getproject/ | client_side / server_side 弃用 | 200 |
+| S72 | https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack | mrpack 格式与安全约束 | 200 |
+| S73 | https://xmcl.app/en/core/curseforge/SearchOptions | CF classId / categoryId / modLoaderType | 200 |
+| S74 | https://docs.curseforge.com/rest-api/endpoint/POST_1_mods/ | CF 官方 REST 端点页 | 受阻 |
+| S75 | https://www.minecraft.net/en-us/eula | 官方 EULA 页面 | 200 |
+| S76 | https://minecraft.wiki/w/Tutorial:Setting_up_a_Java_Edition_server | eula.txt、`java -jar --nogui`、`/op` | 200 |
+| S77 | https://minecraft.wiki/w/Commands/say | `/say` 与 `/talk` | 200 |
+| S78 | https://zh.minecraft.wiki/w/Tutorial:取得遊戲 | Java 版本映射 | 200 |
+| S79 | https://minecraft.wiki/w/Tutorial:Required_Java_versions | 英文 Java 版本口径 | 200 |
+| S80 | https://renode.space/blog/minecraft-ops-json-whitelist-json-explained | ops.json 运行期回写 | 200 |
+| S81 | https://zh.minecraft.wiki/w/Level.dat_old | 种子双格式 | 200 |
+| S82 | https://zh.minecraft.wiki/w/进度存储格式 | advancements 存储 | 200 |
+| S83 | https://api.mclo.gs/ | 日志上传端点 | 200 |
+| S84 | https://minecraft.wiki/w/Server_List | 64×64 server-icon.png | 200 |
+| S85 | https://www.spigotmc.org/wiki/server-icon/ | 图标重启加载 | 200 |
+| S86 | https://minecrafthub.io/articles/what-is-tps-in-minecraft | TPS / MSPT | 200 |
+| S87 | https://docs.papermc.io/velocity/comparisons-to-other-proxies/ | Velocity / BungeeCord 差异 | 200 |
+| S88 | https://rfc-editor.org/rfc/rfc6886 | NAT-PMP / PCP / UPnP IGD 风险 | 200 |
+
+## 012 只读仓约束
+
+| 编号 | 内容 |
+| --- | --- |
+| RO04 | 延续 011 轮 RO01-RO03；本轮对用户后端仓 0 个写请求。 |
+| RO05 | 012 轮新增的 FTP / SFTP、WebDAV / S3、mclo.gs 均为候选目标，凭据存放位置未定，见 docs/records/open-questions.md Q-D07。 |
 
 ## 版本弃用
 

@@ -42,3 +42,8 @@
 | W38 | 本地监听 | 绑定回环地址，防火墙入站仅允许 localhost；服务器 AI API 为用户指定例外 |
 | W39 | 位置判定 | 不走 IP 地理定位；GetUserGeoID 未设置时返回 GEOID_NOT_AVAILABLE，不等于物理位置 |
 | W40 | GetGeoInfoEx | 最低 Win10 1709，Win7 不可用；Win7 侧只用 GetUserGeoID / GetGeoInfoW |
+| W41 | eula.txt | 首次启动生成 eula=false；改为 eula=true 前服务端立即退出；官方页 https://www.minecraft.net/en-us/eula |
+| W42 | server-icon.png | 64×64 PNG，放服务端工作目录，需重启加载 |
+| W43 | ops.json 运行期写入 | 服务端启动时读入内存，命令变更时整体回写；运行期手改会被静默覆盖 |
+| W44 | Java 版本 | Java 8 / 16 / 17 / 21 / 25 对应 MC 版本段不同，按版本自动推荐 |
+| W45 | UPnP IGD | RFC 6886 记载可被用于改网关 DNS；NAT-PMP 已被 PCP 取代，默认开启与否待拍板 |

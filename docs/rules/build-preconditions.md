@@ -80,6 +80,23 @@ X01-X04 落在 docs/spec/00-requirements.txt:171-172、docs/research/03-download
 
 触发链新增条件 5：Q01-Q12 中标记为「进入构建前需用户拍板」的项全部落定。条件 1-5 全部满足前，`src/` 保持为空。
 
+## 012 新增阻塞项
+
+| 编号 | 阻塞项 | 四值 | 来源 |
+| --- | --- | --- | --- |
+| R01 | 开工时点：用户同轮给出「可以彻底开工」与「问题明天统一处理」 | 已证实（并列登记） | docs/decisions/012-server-input.md S1/S2 |
+| R02 | 待拍板问题全集 93 条，A-H 组 | 已证实 | docs/records/open-questions.md |
+| R03 | D06 信号、005-blueprint.md 批准、X01-X04 逐条拍板 | 未证实 | Q-H01 至 Q-H03 |
+| R04 | 插件源默认选择、CurseForge server-only 等价字段 | 未证实 | docs/research/16-server-platform.md HG11、MS06 |
+| R05 | `/talk` 来源、op 锁定途径、种子双格式、Java 镜像、UPnP 默认、mclo.gs 外传 | 未证实 | docs/research/16-server-platform.md |
+| R06 | AI API 容器网段与回环约束冲突 | 已证实（冲突成立） | Q-B05 |
+| R07 | 「境外用官方源」与地域判定口径冲突 | 已证实（冲突成立） | Q-B06 |
+| R08 | ops.json 运行期内存回写与文件监听冲突 | 已证实（冲突成立） | Q-C03 |
+| R09 | UPnP IGD 安全风险、mrpack 路径穿越、mclo.gs 日志外传 | 已证实 | Q-C13、Q-D14、Q-C15 |
+| R10 | 重复功能项合并口径 | 未证实 | Q-B08 |
+
+触发链新增条件 6：docs/records/open-questions.md 的 Q-H01 至 Q-H06 全部落定。条件 1-6 全部满足前，`src/` 保持为空，不生成 Cargo.toml、build.rs、target spec。
+
 ## 判定
 
 | 项 | 值 |

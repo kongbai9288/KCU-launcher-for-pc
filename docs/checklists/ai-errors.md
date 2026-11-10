@@ -52,6 +52,13 @@
 | A43 | 编号功能登记漏条（关联 backlog.md 55 条） | `grep -cE '^\| [0-9]+ \|' docs/features/backlog.md` |
 | A44 | 插件开源许可页缺 5 字段（关联 OL01） | `grep -n 'OL01' docs/research/15-input-survey.md` |
 | A45 | 拼接开源代码后不做源与产物对比（关联 OL05） | `grep -n 'OL05' docs/research/15-input-survey.md` |
+| A46 | 把 `/talk` 当原版命令（关联 CM02） | `grep -c '未出现' docs/research/16-server-platform.md` |
+| A47 | 运行期监听 ops.json 判定 op 变更（关联 OP02） | `grep -c 'writes the whole list back' docs/research/16-server-platform.md` |
+| A48 | 把区域设置或 GEOID 当物理位置（关联 A37） | `grep -c '不等于物理位置' docs/checklists/windows-errors.md` |
+| A49 | 把 mclo.gs 上传当本地导出（关联 MC03） | `grep -c '一键上传 mclo.gs' docs/features/server-backlog.md` |
+| A50 | mrpack 导入不做路径穿越校验（关联 MS07） | `grep -c 'exit the Minecraft instance directory' docs/research/16-server-platform.md` |
+| A51 | 待拍板问题漏条（关联 open-questions.md 93 条） | `grep -cE '^\| Q-[A-H][0-9]' docs/records/open-questions.md` |
+| A52 | 未答复 Q-H 组就写 src/（关联 :249） | `test -z "$(git ls-files src/)"` |
 
 ## 输出结构
 

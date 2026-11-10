@@ -30,6 +30,7 @@
 | 13-platform-api.md | Win7 兼容、多架构、系统 API 真实签名 | VersionHelpers / GetNativeSystemInfo / GetUserGeoID / GetGeoInfoW / SYSGEOTYPE / GetGeoInfoEx / LOCALE_IGEOID / Rust Windows 目标 / Rust 1.78 变更 / Win7 Tier 3 目标 / SetDefaultDllDirectories 与 KB2533623 | wProcessorArchitecture 常量、Win7 物理位置 API、ARM64 Win7 目标、VxKex 兼容范围、Tier 3 可复现构建 | platform-support/windows.html 直抓 |
 | 14-batch-network.md | 批量请求通用法、聚合搜索、本地监听 | N+1 反模式 8 条、Modrinth 批量 projects/versions 与 search limit<=100、CurseForge SDK 批量 modIds 与 pageSize=20、回环绑定 | 多源下载取消语义、翻译源接口、批量 ID 上限、端口清单 | CF REST 端点页 |
 | 15-input-survey.md | 011 轮外部项目核实与只读仓 | 后端仓只读元数据、CopperGolemLauncher 许可证全文、PrismLauncher CMakeLists 存在性、ViaNBT / dsh / VxKex、开源许可页 5 字段 | CopperGolemLauncher 复用范围、ViaNBT 集成方式、文件管理骨干项目、陶瓦联机、atomgit | CF REST 端点页、CopperGolem latest release 404 |
+| 16-server-platform.md | 012 轮开服器官方资料与协议 | Hangar / Ore / SpigotMC 插件源、Modrinth environment 10 值、mrpack 安全约束、EULA 与 eula.txt、`/say` 与 `/talk`、Java 8/16/17/21/25 映射、ops.json 运行期回写、种子双格式、进度存储、64×64 icon、TPS/MSPT、Velocity/BungeeCord、UPnP/NAT-PMP/PCP、mclo.gs | Hangar 官方 API 文档、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 日志外传条款、旧版 achievements | CF REST 端点页、Hangar API 页 robots 拒绝 |
 
 ## 来源类型
 
@@ -108,6 +109,31 @@
 | docs/spec/11-features-input.txt 全量功能输入 | docs/features/backlog.md | 55 条编号 + 175 项文件管理清单逐字落盘 |
 | docs/spec/11-features-input.txt 第 46、54、6 条与开头段 | docs/research/15-input-survey.md | 外部项目许可证与只读仓已核 |
 | docs/spec/00-requirements.txt:230 每轮核上游版本 | docs/research/13-platform-api.md RW07 | Rust 1.99.1、HMCL v3.16.4 已证实 |
+
+## 012 卡点状态
+
+| 项 | 011 状态 | 012 状态 |
+| --- | --- | --- |
+| D06 信号 | 未提供 | 未提供，用户仍给开服器输入 |
+| 005-blueprint.md | 未批准 | 未批准 |
+| X01-X04 | 待拍板 | 待拍板，本轮新增 CF 相关冲突 Q-E01 至 Q-E03 |
+| 正常模式 UI 授权 | 未证实 | 未证实 |
+| 加载器逐版本 schema | 未证实 | 未证实 |
+| Notchian 服务端行为 | 未证实 | 未证实 |
+| 锚点格式 | 15 份统一 | 16 份统一，已证实 |
+| 后端仓只读 | 4 个 GET | 012 轮 0 个写请求，约束延续 |
+| 插件服官方通道 | 未登记 | 候选 4 类已证实，默认源未选 |
+| 开工闸门 | 条件 1-5 | 条件 1-6，见 build-preconditions.md |
+| 待拍板问题 | 未建全集 | docs/records/open-questions.md 93 条 |
+
+## 012 新增调研项
+
+| 需求条目 | 文档 | 状态 |
+| --- | --- | --- |
+| docs/spec/12-server-features-input.txt 第 3 条插件服官方下载通道 | docs/research/16-server-platform.md HG01-HG11 | 4 类候选已证实；默认源未选 |
+| docs/spec/12-server-features-input.txt 第 3 条服务端 mod 声明 | docs/research/16-server-platform.md MS01-MS09 | Modrinth `environment` 10 值已证实；CF 等价字段未证实 |
+| docs/spec/12-round-012-instructions.txt「搜完所有的文档」 | docs/research/16-server-platform.md P54-P79 | 26 个来源，2 个受阻 |
+| docs/spec/12-round-012-instructions.txt「问题全部告诉我不要保留」 | docs/records/open-questions.md | 93 条，A-H 组 |
 
 ## 禁止项
 
