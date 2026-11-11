@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：012
+更新轮次：013
 
 ## 前置索引
 
@@ -24,6 +24,7 @@
 | I16 | 批量端点、N+1 反模式、回环监听、配置集中 | docs/research/14-batch-network.md | 011 轮新增；CF REST 端点页受阻 |
 | I17 | 只读后端仓、CopperGolemLauncher、ViaNBT、dsh、VxKex、开源许可页 5 字段 | docs/research/15-input-survey.md | 011 轮新增；仅 4 个 GET |
 | I18 | 开服器插件源、服务端 mod 声明、EULA、原版命令、Java 版本映射、ops.json、种子 NBT、server-icon、TPS、代理端、UPnP、mclo.gs | docs/research/16-server-platform.md | 012 轮新增；26 个来源，2 个受阻 |
+| I19 | 腾讯 rustup 镜像、rustc/cargo stable、L1 core 模块内部接口 | docs/decisions/013-build-start.md、src/core/ | 013 轮新增；镜像 200，官方分发主机 403 |
 
 ## 连接约定
 
@@ -194,6 +195,23 @@
 | --- | --- |
 | RO04 | 延续 011 轮 RO01-RO03；本轮对用户后端仓 0 个写请求。 |
 | RO05 | 012 轮新增的 FTP / SFTP、WebDAV / S3、mclo.gs 均为候选目标，凭据存放位置未定，见 docs/records/open-questions.md Q-D07。 |
+
+## 013 工具链来源
+
+| 编号 | 来源 | 用途 | 结果 |
+| --- | --- | --- | --- |
+| S89 | https://mirrors.cloud.tencent.com/rustup/dist/channel-rust-stable.toml | RUSTUP_DIST_SERVER | 200 |
+| S90 | https://mirrors.cloud.tencent.com/rustup/rustup/dist/x86_64-unknown-linux-gnu/rustup-init | rustup-init 二进制 | 200，21M |
+| S91 | https://mirrors.tencent.com/rustup/dist/channel-rust-stable.toml | 备用镜像 | 200 |
+| S92 | https://mirrors.aliyun.com/rustup/dist/channel-rust-stable.toml | 对照 | 403 |
+| S93 | https://static.rust-lang.org/dist/channel-rust-stable.toml | 官方分发主机 | 403 |
+| S94 | https://api.github.com/repos/rust-lang/rust/releases/latest | release 元数据 | 200 |
+
+| 编号 | 内容 |
+| --- | --- |
+| RO06 | 013 轮对后端仓 0 个写请求，约束延续 RO01-RO05。 |
+| RO07 | 工具链装在仓库外 `/data/workspace/.cargo-home` 与 `/data/workspace/.rustup-home`，不进公仓。 |
+| RO08 | CORRECTION：GitHub Actions 不向本地沙盒分发工具链；api.github.com 只取元数据；实际安装路径为腾讯 rustup 镜像。 |
 
 ## 版本弃用
 

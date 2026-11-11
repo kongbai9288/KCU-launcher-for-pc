@@ -58,7 +58,11 @@
 | A49 | 把 mclo.gs 上传当本地导出（关联 MC03） | `grep -c '一键上传 mclo.gs' docs/features/server-backlog.md` |
 | A50 | mrpack 导入不做路径穿越校验（关联 MS07） | `grep -c 'exit the Minecraft instance directory' docs/research/16-server-platform.md` |
 | A51 | 待拍板问题漏条（关联 open-questions.md 93 条） | `grep -cE '^\| Q-[A-H][0-9]' docs/records/open-questions.md` |
-| A52 | 未答复 Q-H 组就写 src/（关联 :249） | `test -z "$(git ls-files src/)"` |
+| A52 | 未答复 Q-H 组就写 src/（关联 :249） | 013 轮起改为 `test -n "$(git ls-files src/)"`，D06 已触发 |
+| A53 | 弹窗缺关闭路径（关联 013 H03） | `cargo test --offline every_catalog_popup` |
+| A54 | 单参数无法加入服务器（关联 013 U01） | `cargo test --offline single_arg` |
+| A55 | 双击服务器时用户权重不排第一（关联 013 U02） | `cargo test --offline user_choice_ranks_first` |
+| A56 | 流程结束残留未关弹窗（关联 013 H06） | `cargo test --offline no_popup_is_left_open` |
 
 ## 输出结构
 

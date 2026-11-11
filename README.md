@@ -11,22 +11,23 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 012 |
-| 当前阶段 | 功能输入阶段，未启动底层统一搭建 |
+| 当前轮次 | 013 |
+| 当前阶段 | D06 已触发、D07 已启用；第 1 层 core 已落地，其余 8 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html |
 | 轻量模式 UI | 独立极简视图，不复用正常模式 UI |
-| 功能登记 | docs/features/index.md，F001-F012 已批准未实现；011 输入 55 条 + 175 项见 backlog.md；012 开服器输入 27 个编号位见 server-backlog.md |
-| 待拍板问题 | docs/records/open-questions.md，93 条，A-H 组，全部未答复 |
+| 功能登记 | docs/features/index.md；F001-F012 已批准未实现；F013-01..09 core 九模块已实现、已验证 |
+| 开工依据 | 013 轮 F07/F08/F09；答复台账 docs/records/round-013-answers.md；决策 docs/decisions/013-build-start.md |
+| 待拍板问题 | 93 条已答复，细节按用户逻辑落地 |
+| 工具链 | rustc / cargo 1.99.1，腾讯 rustup 镜像；`cargo build --release --offline` 与 `cargo test --offline`（37 passed）实测通过 |
 | 一手补证 | RCON 与 UUID、底层运行时、合规条款、Win7 与多架构系统 API、批量请求通用法、开服器官方资料，见 docs/research/index.md |
 | 许可证原文 | docs/licenses/index.md，逐字副本 13 份 + slint 三许可全文 3 份 |
-| 需求 15 节待办 | 4 条已推进，见 docs/research/11-runtime.md、12-compliance.md、13-platform-api.md |
-| 搭建前置条件 | docs/rules/build-preconditions.md，条件 1-6 均未满足 |
-| 合规卡点 | X01-X04、Win7 兼容路径、ops.json 回写、UPnP / mclo.gs / mrpack 安全边界已证实，进入构建前需用户拍板 |
+| 搭建前置条件 | docs/rules/build-preconditions.md，条件 1-6 已满足到开工层；L1 已实现已验证 |
+| 合规卡点 | X01-X04 按 F10 以正常情况与用户逻辑落地；CF 下载模块不在 L1 范围 |
 | 后端仓 | 只读，仅 GET，内容不进公仓 |
-| 特殊版 | 单开私仓，所有任务完成且复核无漏洞后构建 |
-| 框架蓝图 | docs/decisions/005-blueprint.md，状态未批准 |
-| 许可证 | 未确定 |
+| 特殊版 | 先建私仓、用户同意后再放代码、用户手拉工具流（F63） |
+| 框架蓝图 | docs/decisions/005-blueprint.md，状态已批准（F09） |
+| 许可证 | F61 决定 GPLv3；LICENSE 文件未生成 |
 
 ## 目录
 
@@ -47,7 +48,8 @@
 | scripts/api_push.py | Git Data API 全量树快照 |
 | assets/icon/ | 启动器图标 |
 | assets/ui/ | 正常模式 UI 设计稿逐字副本与登记 |
-| src/ | 源码目录，当前为空 |
+| Cargo.toml | crate 配置，std only，profile 取值已核实 |
+| src/lib.rs、src/core/ | 013 轮 L1 core，9 个模块，37 个单元测试 |
 
 ## 四值
 

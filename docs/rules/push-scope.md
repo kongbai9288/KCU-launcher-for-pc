@@ -1,6 +1,6 @@
 # 远端推送范围
 
-轮次：012
+轮次：013
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
 
@@ -8,7 +8,8 @@
 
 | 类别 | 路径 |
 | --- | --- |
-| 代码 | src/ |
+| 代码 | src/、Cargo.toml、Cargo.lock |
+| 构建配置 | Cargo.toml profile 段；不含密钥、不含绝对路径、不含目标三元组硬编码 |
 | 脚本 | scripts/push.sh、scripts/api_push.py |
 | 事实性文档 | docs/spec/、docs/research/、docs/features/、docs/decisions/、docs/checklists/、docs/rules/、docs/records/、docs/verification/ |
 | 版本与接口记录 | docs/records/changelog.md、docs/records/interface-log.md、docs/records/rounds.md |

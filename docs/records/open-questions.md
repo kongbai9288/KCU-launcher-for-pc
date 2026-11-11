@@ -1,9 +1,9 @@
 # 待拍板问题全集
 
-轮次：012
-状态：全部未拍板，用户当轮指令「全部告诉我不要保留」「明天统一处理」
-用途：D06 触发、蓝图批准、D07 逐层搭建之前的唯一输入
-规则依据：docs/spec/00-requirements.txt:3、:249；docs/decisions/003-remote.md D05-D07；docs/rules/build-preconditions.md
+轮次：012 建立；013 轮答复
+状态：013 轮用户已答复（76 片段），逐字副本见 docs/spec/13-round-013-instructions.txt，映射台账见 docs/records/round-013-answers.md；标「按用户逻辑落地 / 你看着办」的项由实现层按用户逻辑处理，不再作为开工闸门
+用途：012 轮为 D06 触发前的唯一输入；013 轮起转为历史记录与实现约束
+规则依据：docs/spec/00-requirements.txt:3、:249；docs/decisions/003-remote.md D05-D07；docs/rules/build-preconditions.md；docs/decisions/013-build-start.md
 
 每条给出编号、问题、依据锚点、四值、需要的答复形式。四值：已证实 / 已失败 / 未证实 / 受阻。
 

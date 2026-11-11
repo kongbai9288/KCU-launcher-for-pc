@@ -905,3 +905,83 @@
 | docs/research/16-server-platform.md | 无 NB08 | 补 NB08 说明精确串不存在 |
 
 独立验证结论：**部分通过**。两个哈希由独立验证者计算并写入声明块，改动作者未代算。
+
+## 013
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/13-round-013-instructions.txt | 013 第一段逐字副本，1 行 2856 字节 |
+| docs/spec/13-round-013-instructions-part2.txt | 013 第二段逐字副本，1 行 318 字节 |
+| docs/records/round-013-answers.md | 76 片段逐字编号、24 条已落定决策、语义映射、不写死项、U01-U03 |
+| docs/decisions/013-build-start.md | D01-D08 阶段翻转、C01-C05 工具链纠正、P01-P08 平台落定、G 组默认、H01-H06 |
+| docs/decisions/005-blueprint.md | 状态 未批准 → 已批准，C01/C06 改 013 口径 |
+| docs/decisions/003-remote.md | 追加 D11，D08 改为 D07 已启用 |
+| docs/decisions/index.md | 追加 013，待确认段更新 |
+| docs/features/core-*.md | 9 份，字段固定五段：怎么运作 / 开放了什么 / 登记框架 / 用户使用逻辑 / 性能 |
+| docs/features/index.md | F013-01..09、013 core 层段、G10-G12 |
+| docs/rules/build-preconditions.md | 触发链 1-6 已满足到开工层、L1 已实现已验证、B05 |
+| docs/rules/push-scope.md | 允许 Cargo.toml / Cargo.lock / src/ |
+| docs/records/open-questions.md | 头部改 013 已答复 |
+| docs/index.md | 必读 38 项、013 分区、cargo 与弹窗检查、前置条件 013 值 |
+| README.md | 轮次 013、core 层状态、工具链、目录 |
+| Cargo.toml、src/lib.rs、src/core/*.rs | L1 core 9 模块，std only，37 个单元测试 |
+| demos/round-013-core.html | 编译、用户操作模拟、11 类弹窗关闭状态机 |
+| docs/verification/round-013.md | 第 013 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Thu Nov 12 00:30:49 CST 2026` |
+| 012 轮收尾 | `Thu Nov 11 01:41:12 CST 2026` |
+| 间隔 | 22 小时 49 分 |
+
+阶段翻转：
+
+| 项 | 012 | 013 |
+| --- | --- | --- |
+| D06 | 未触发 | 已触发 F07/F08 |
+| 005-blueprint.md | 未批准 | 已批准 F09 |
+| D07 | 未启动 | 已启用，落第 1 层 core |
+| 93 条问题 | 未答复 | 已答复 76 片段 |
+| src/ | 空 | 9 模块 + lib.rs + mod.rs |
+| rustc / cargo | 受阻 | 已装 1.99.1 |
+
+工具链实测：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `curl -sS -o /dev/null -w '%{http_code}' https://mirrors.cloud.tencent.com/rustup/dist/channel-rust-stable.toml` | 200 | 已证实 |
+| `curl -sS -o /dev/null -w '%{http_code}' https://mirrors.tencent.com/rustup/dist/channel-rust-stable.toml` | 200 | 已证实 |
+| `curl -sS -o /dev/null -w '%{http_code}' https://mirrors.aliyun.com/rustup/dist/channel-rust-stable.toml` | 403 | 受阻 |
+| `curl -sS -o /dev/null -w '%{http_code}' https://static.rust-lang.org/dist/channel-rust-stable.toml` | 403 | 受阻 |
+| `curl -sS -o /dev/null -w '%{http_code}' https://api.github.com/repos/rust-lang/rust/releases/latest` | 200 | 已证实 |
+| rustup-init `--profile minimal --default-toolchain stable --no-modify-path` | rustc 1.99.1 / cargo 1.99.1 | 已证实 |
+| `cargo build --release --offline` | Finished，rlib 442456 字节 | 已证实 |
+| `cargo test --offline` | 37 passed / 0 failed / 0 measured | 已证实 |
+
+C01-C05 纠正：用户 F73 说「通过 GitHub 行动拉对应的东西」并主动要求「如果我有理解错误那么你就纠正官方源」。实测 GitHub Actions 不向本地沙盒分发工具链；Rust 官方分发主机 static.rust-lang.org 在本环境 403；api.github.com 只能取 release 元数据；腾讯 rustup 镜像 200 且安装成功。纠正已写入 013-build-start.md，不伪造 CI 结果。
+
+H 组落地：
+
+| 要求 | 落点 | 实测 |
+| --- | --- | --- |
+| 验证用户正常操作逻辑 | src/core/userflow.rs `simulate` + FlowReport::ok | 5 个用例 |
+| 模拟用户操作 | 11 步 Step 轨迹 | `flow_trace_contains_close_step` |
+| 每个弹窗有关闭逻辑 | popup.rs catalog 11 类 + `missing_close_path` + `force_close_all` | 6 个用例，11/11 可关 |
+| 指定参数加入服务器 | args.rs `--server` / `--join-server` | `single_arg_joins_server` |
+| 双击服务器按权重选实例、用户权重第一 | instance.rs `select_instance` | 5 个用例 |
+| 不留未关弹窗 | `no_popup_is_left_open_after_any_path` 覆盖 3 条路径 | open_count=0 |
+
+013 与 012 的两段语义：012 的 S1「可以彻底开工」与 S2「明天答复后开工」并列登记；013 F07「现在都是你所说的明天了」判定按 S1 开工，Q-B01 关闭。按 18.5 用户当轮指令优先。
+
+未做：
+- L2 dispatcher 及以下 8 层
+- 特殊版私仓（F63 先建仓、同意后再放代码；缺仓库名，CF 方法未提供）
+- CF 下载模块、X01-X04 逐条处置
+- 正常模式 UI 实现与品牌替换
+- 本项目 LICENSE 文件
+- 特殊版凭据、后端仓任何写请求
+- 浏览器渲染与 GUI 点击端到端
+- rustc 交叉编译 Win7 / ARM64 目标产物
+- 插件源默认选择、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证

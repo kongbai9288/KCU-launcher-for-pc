@@ -46,4 +46,8 @@
 | W42 | server-icon.png | 64×64 PNG，放服务端工作目录，需重启加载 |
 | W43 | ops.json 运行期写入 | 服务端启动时读入内存，命令变更时整体回写；运行期手改会被静默覆盖 |
 | W44 | Java 版本 | Java 8 / 16 / 17 / 21 / 25 对应 MC 版本段不同，按版本自动推荐 |
-| W45 | UPnP IGD | RFC 6886 记载可被用于改网关 DNS；NAT-PMP 已被 PCP 取代，默认开启与否待拍板 |
+| W45 | UPnP IGD | RFC 6886 记载可被用于改网关 DNS；NAT-PMP 已被 PCP 取代；013 轮 F30 决定默认关 |
+| W46 | Win7 目标 | 013 轮 F64 定 Tier 3 + build-std；Rust 1.78 起 Tier 1 Windows 目标要求 Win10，不能混用 |
+| W47 | 多架构 | 013 轮 F65 全选 i686 / x86_64 / aarch64，F66 放弃 Win7 下 ARM64 |
+| W48 | 地域口径 | 013 轮 F67 物理位置 + 区域设置；F52/F53 为软策略、只用于下载选择、可手动覆盖、不与地区禁用复用 |
+| W49 | 工具链分发 | 腾讯 rustup 镜像 200；static.rust-lang.org 403；api.github.com 只取元数据；GitHub Actions 不向本地沙盒分发工具链 |

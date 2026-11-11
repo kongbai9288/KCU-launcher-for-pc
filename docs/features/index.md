@@ -16,10 +16,33 @@
 | F010 | 跨进程统一信封 | core.ipc | 已批准 | envelope.md |
 | F011 | UI 框架 | normal.ui | 已批准 | ui-framework.md |
 | F012 | 正版凭据保护 | core.credential | 已批准 | credential-guard.md |
+| F013-01 | 统一信封 | core.envelope | 已实现、已验证 | core-envelope.md |
+| F013-02 | 诊断行 | core.diagnostics | 已实现、已验证 | core-diagnostics.md |
+| F013-03 | 路径解析 | core.paths | 已实现、已验证 | core-paths.md |
+| F013-04 | 配置 | core.config | 已实现、已验证 | core-config.md |
+| F013-05 | 日志缓冲 | core.log | 已实现、已验证 | core-log.md |
+| F013-06 | 启动参数 | core.args | 已实现、已验证 | core-args.md |
+| F013-07 | 实例选择 | core.instance | 已实现、已验证 | core-instance.md |
+| F013-08 | 弹窗与关闭 | core.popup | 已实现、已验证 | core-popup.md |
+| F013-09 | 用户操作模拟 | core.userflow | 已实现、已验证 | core-userflow.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
-F002-F012 状态含义：需求条目已登记；未实现、未进入构建，src/ 为空。
+F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
 F012 具体保护方案未批准，见 docs/rules/build-preconditions.md L4。
+F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build --release --offline` 与 `cargo test --offline`（37 passed）实测通过；未进入上层组装、未部署、未做浏览器 / GUI 端到端。
+
+## 013 轮 core 层
+
+| 项 | 值 |
+| --- | --- |
+| 触发 | 003-remote.md D06（F07/F08）、005-blueprint.md 已批准（F09） |
+| 顺序 | D07 第 1 层，其余层未启动 |
+| 模块 | 9 个，src/core/ 下逐一登记 |
+| 单份功能 md | 9 份，字段固定五段 |
+| 弹窗关闭 | catalog 11 类全部可关，`assert` 级测试覆盖 |
+| 用户操作模拟 | simulate 覆盖双击选实例、用户权重第一、单参数直达、无残留弹窗 |
+| 工具链 | rustc / cargo 1.99.1，腾讯 rustup 镜像 |
+| 未进入 | dispatcher 及以下 8 层、UI 渲染、真实窗口点击 |
 
 ## 011 轮功能输入
 
@@ -51,7 +74,10 @@ F012 具体保护方案未批准，见 docs/rules/build-preconditions.md L4。
 | G06 | F012 方案未批准前，F004 不进入 D07 L4 搭建，见 docs/rules/build-preconditions.md。 |
 | G07 | backlog.md 的 55 条编号与 175 个文件管理条目不写成已实现；单份功能 md 在实现时才生成。 |
 | G08 | server-backlog.md 的 27 个编号位（缺 26）与 34 行 `·` 条目不写成已实现；单份功能 md 在实现时才生成。 |
-| G09 | 012 与 011 的 13 组重复项并列登记，合并口径待拍板，见 docs/features/server-backlog.md。 |
+| G09 | 012 与 011 的 13 组重复项并列登记；013 轮 F14 决定合并，见 docs/features/server-backlog.md。 |
+| G10 | F013 各 md 的性能栏未实测进程级数值时写「未实测」，不写推测值。 |
+| G11 | core 模块新增弹窗类型须进 `catalog()` 并通过 `missing_close_path()` 为空的检查。 |
+| G12 | `src/` 内注释不写功能目的说明；技术不变量写进 md 与本索引，不写进代码注释。 |
 
 ## 012 轮开服器输入
 

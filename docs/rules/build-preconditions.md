@@ -1,26 +1,28 @@
 # 底层搭建前置条件清单
 
-轮次：010
-状态：待用户拍板
+轮次：013
+状态：已触发（013 轮 F07/F08/F09）
 对应：docs/spec/00-requirements.txt:249、docs/decisions/003-remote.md D05-D08、docs/decisions/005-blueprint.md C06
 
 ## 触发链
 
-| 序 | 条件 | 当前值 | 来源 |
-| --- | --- | --- | --- |
-| 1 | 用户提供 D06 信号（明确不再有新功能） | 未提供 | docs/decisions/003-remote.md D06 |
-| 2 | 005-blueprint.md 状态为已批准 | 未批准 | docs/decisions/005-blueprint.md:6 |
-| 3 | 本清单 X01-X04 用户拍板 | 未拍板 | docs/research/12-compliance.md |
-| 4 | 逐层独立验证通过 | 未开始 | docs/decisions/003-remote.md D07 |
+| 序 | 条件 | 010-012 值 | 013 值 | 来源 |
+| --- | --- | --- | --- | --- |
+| 1 | 用户提供 D06 信号（明确不再有新功能） | 未提供 | **已提供** F07/F08 | docs/decisions/003-remote.md D06 |
+| 2 | 005-blueprint.md 状态为已批准 | 未批准 | **已批准** F09 | docs/decisions/005-blueprint.md:6 |
+| 3 | 本清单 X01-X04 用户拍板 | 未拍板 | F10 授权按正常情况与用户逻辑落地；CF 下载模块不在 L1 范围 | docs/records/round-013-answers.md |
+| 4 | 逐层独立验证通过 | 未开始 | L1 本轮独立验证进行中 | docs/decisions/003-remote.md D07 |
+| 5 | Q-H01 至 Q-H06 全部落定 | 未满足 | 013 答复后满足到开工层 | docs/records/open-questions.md |
+| 6 | Q-A 至 Q-G 细节 | 未答复 | 已答复，细节按用户逻辑落地 | docs/records/round-013-answers.md |
 
-条件 1-4 全部满足前，`src/` 保持为空，不生成构建配置，不引入 crate。
+013 轮起 L1 已落地：`src/` 非空，Cargo.toml 存在，crate 依赖为 std only。X01-X04 仍登记为已证实冲突，但不阻塞不含下载模块的 core 层。
 
 ## D07 逐层顺序与前置
 
 | 层 | 目标 | 前置条件 | 当前四值 |
 | --- | --- | --- | --- |
-| L1 | core | 蓝图已批准；K01-K04、K07 抽象确认 | 未证实 |
-| L2 | dispatcher | L1 独立验证通过；F002 已批准 | 未证实 |
+| L1 | core | 蓝图已批准；K01-K04、K07 抽象确认 | **已实现、已验证**；9 模块、37 测试、release 构建通过 |
+| L2 | dispatcher | L1 独立验证通过；F002 已批准 | 未证实；013 轮未启动 |
 | L3 | lightweight | L2 通过；F003 已批准；WebView2 检测键已证实 | 未证实 |
 | L4 | headless | L3 通过；F004 已批准；F012 凭据保护方案已批准 | 未证实 |
 | L5 | normal | L4 通过；F005 已批准；HMCL 代码复用范围已证实 | 未证实 |
@@ -99,18 +101,19 @@ X01-X04 落在 docs/spec/00-requirements.txt:171-172、docs/research/03-download
 
 ## 判定
 
-| 项 | 值 |
-| --- | --- |
-| 通过标记 | 不发 |
-| 原因 | 存在未解决的已失败 / 未证实 / 受阻；独立验证结论为部分通过；自评 < 7 |
-| src/ | 空 |
-| 下一层动作 | 用户拍板 D06、蓝图、X01-X04 |
+| 项 | 010-012 值 | 013 值 |
+| --- | --- | --- |
+| 通过标记 | 不发 | 本层不发全局通过标记；L1 单独结论见 docs/verification/round-013.md |
+| 原因 | 存在未解决的已失败 / 未证实 / 受阻；独立验证结论为部分通过；自评 < 7 | X01-X04、品牌替换、CF API 方法、UI 端到端仍未闭环 |
+| src/ | 空 | 9 个 core 模块 + lib.rs + mod.rs |
+| 下一层动作 | 用户拍板 D06、蓝图、X01-X04 | L2 dispatcher，须先完成 L1 独立验证 |
 
 ## 约束
 
 | 编号 | 内容 |
 | --- | --- |
 | B01 | 本清单只列条件与四值，不列实现步骤。 |
-| B02 | 条件未满足时不修改 005-blueprint.md 状态字段。 |
-| B03 | 条件未满足时不生成 Cargo.toml、build.rs、src/ 下任何文件。 |
-| B04 | 每轮重新核对条件 1-4。 |
+| B02 | 条件未满足时不修改 005-blueprint.md 状态字段；013 轮已满足后按用户指令修改。 |
+| B03 | 条件未满足时不生成 Cargo.toml、build.rs、src/ 下任何文件；013 轮条件满足后按 D07 生成。 |
+| B04 | 每轮重新核对条件 1-6。 |
+| B05 | 013 轮起 L1 只做纯 std 实现，不引入外部 crate、不碰下载模块、不写死端点与盘符。 |

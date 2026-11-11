@@ -18,9 +18,10 @@
 | D05 | 功能输入阶段 | 用户仍提供功能与 UI，期间只做调研、文档、演示、决策登记 |
 | D06 | 统一搭建触发条件 | 用户明确表示不再提供新功能 |
 | D07 | 统一搭建顺序 | core → dispatcher → lightweight → headless → normal → UI → 构建 → 部署，逐层进入构建前需前一层独立验证通过 |
-| D08 | 当前阶段 | 功能输入阶段，未启动 D07 |
+| D08 | 当前阶段 | 003-012 轮为功能输入阶段；013 轮起 D06 触发、D07 已启用，当前落在第一层 core |
 | D09 | 本地仓库 | /data/workspace/kcu-launcher-desktop，第 003 轮产生首个提交 |
 | D10 | 推送入口 | scripts/push.sh，远端 URL 由参数传入，代码内不写死 |
+| D11 | 013 轮触发依据 | docs/spec/13-round-013-instructions.txt F07/F08/F09；docs/decisions/013-build-start.md D01-D08 |
 
 ## 约束
 
