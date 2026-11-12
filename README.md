@@ -11,20 +11,22 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 015 |
-| 当前阶段 | D06 已触发、D07 已启用；第 1 层 core 与第 2 层 dispatcher 已落地，其余 7 层未启动 |
+| 当前轮次 | 016 |
+| 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
 | 轻量模式 UI | 独立极简视图，不复用正常模式 UI |
-| UI 整页演示闸门 | docs/rules/ui-demo.md；动 UI 的轮次须交付 `demos/ui-full-*.html`，本轮不触发 |
-| 功能登记 | docs/features/index.md；F001、F003-F012 已批准未实现；F002、F013-01..09、F014-01..03、F015-01..04 已实现、已验证 |
+| UI 整页演示闸门 | docs/rules/ui-demo.md；016 轮首次触发，已交付 `demos/ui-full-lightweight.html`，用户手感调整优先于实现 |
+| 功能登记 | docs/features/index.md；F001、F004-F012 已批准未实现；F002、F003、F013-01..09、F014-01..03、F015-01..04、F016-01..04 已实现、已验证 |
 | 开工依据 | 013 轮 F07/F08/F09；答复台账 docs/records/round-013-answers.md；015 决策 docs/decisions/015-build-continue.md |
 | 待拍板问题 | 93 条已答复，细节按用户逻辑落地 |
-| 工具链 | rustc / cargo 1.99.1，腾讯 rustup 镜像；`cargo build --release --offline` 与 `cargo test --offline`（103 passed）实测通过 |
+| 工具链 | rustc / cargo 1.99.1，腾讯 rustup 镜像；`cargo build --release --offline` 与 `cargo test --offline`（141 passed）实测通过 |
 | 一手补证 | RCON 与 UUID、底层运行时、合规条款、Win7 与多架构系统 API、批量请求通用法、开服器官方资料，见 docs/research/index.md |
 | 许可证原文 | docs/licenses/index.md，逐字副本 13 份 + slint 三许可全文 3 份 |
-| 搭建前置条件 | docs/rules/build-preconditions.md，条件 1-6 已满足到开工层；L1、L2 已实现已验证 |
+| 搭建前置条件 | docs/rules/build-preconditions.md，条件 1-6 已满足到开工层；L1、L2、L3 已实现已验证 |
 | L2 dispatcher | src/dispatcher/，task / mode / launcher + json 底座；模式判定、安全模式、正版凭据闸门、UI 分流、单参数进服、双击按权重选实例 |
+| L3 lightweight | src/lightweight/，login / download / loaders / view；三种登录、三级回退、批量请求每页 20、6 加载器、单主题、游戏运行期无常驻进程 |
+| 整页 UI 演示 | demos/ui-full-lightweight.html，016 轮首次触发；6 分区、5 状态、11 弹窗、手感调整区、离线可点；实现未进构建 |
 | 合规卡点 | X01-X04 按 F10 以正常情况与用户逻辑落地；CF 下载模块不在 L1/L2 范围 |
 | 缓存 / 异步 / 泄漏 | core.cache、core.asynk、core.leak 已实现已验证；CI 有界缓存与并发取消已配置 |
 | 工作流环境变量 | `.github/workflows/ci.yml` 设 `KCU_CF_API_KEY` 等 secrets / vars 占位，值由用户填写 |
@@ -56,7 +58,9 @@
 | Cargo.toml | crate 配置，std only，profile 取值已核实 |
 | src/lib.rs、src/core/ | L1 core，12 个模块 |
 | src/dispatcher/ | L2 dispatcher，5 个模块，47 项单元测试 |
-| 测试命令 | `cargo test --offline` 103 passed / 0 failed；`cargo build --release --offline` 通过 |
+| src/lightweight/ | L3 lightweight，5 个模块，38 项单元测试 |
+| demos/ui-full-lightweight.html | 整页 UI 演示，手感调整入口 |
+| 测试命令 | `cargo test --offline` 141 passed / 0 failed；`cargo build --release --offline` 通过 |
 | .github/workflows/ci.yml | CI 工作流，secrets / vars 占位、有界缓存、并发取消 |
 
 ## 四值

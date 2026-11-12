@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：015
+更新轮次：016
 
 ## 前置索引
 
@@ -251,6 +251,26 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | RO13 | 015 轮未调用任何远端服务接口，未新增外部 API；CF 具体调用方法仍按 F17 由用户在完成时提供。 |
 | RO14 | 整页 UI 演示闸门登记在 docs/rules/ui-demo.md；本轮不触发，未生成 ui-full 文件。 |
 | RO15 | Cargo.toml / Cargo.lock 未变，无新增 crate；`serde` / `tokio` / `async-std` 计数为 0。 |
+
+## 016 L3 lightweight 内部接口
+
+| 编号 | 接口 | 输入 | 输出 | 错误 |
+| --- | --- | --- | --- | --- |
+| I28 | `lightweight::login::LoginSession::{new,advance}` | AuthKind / StageAvailability / CancelToken / 连接码 | Result<LoginStage,LoginError> | Cancelled / Timeout / ZeroLevel |
+| I29 | `lightweight::download::Downloader::{new,batch,reset,cf_source_exposed}` | ProviderConfig / &[String] / CancelToken | BatchReply / () / bool | String |
+| I30 | `lightweight::loaders::LoaderRegistry::{register,install,version_json_fields,schema_patch}` | LoaderKind / CancelToken | bool / InstallOutcome / Vec / Option | 不写 schema |
+| I31 | `lightweight::view::LightweightView::{handle,flow,close_all_popups,envelope}` | ViewAction / AuthKind / CancelToken | ViewEvent / Vec<ViewEvent> / usize / Envelope | 不 panic |
+| I32 | `lightweight::view::WebView2Probe::{injected,unknown,external_available}` | bool / 无 | Self / bool | 无 |
+
+| 编号 | 内容 |
+| --- | --- |
+| RO16 | 016 轮对后端仓 0 个写请求，约束延续 RO01-RO15。 |
+| RO17 | 016 轮未调用任何远端服务接口，未新增外部 API；CF 具体调用方法仍按 F17 由用户在完成时提供；本层不暴露 CF 下载源。 |
+| RO18 | 批量请求按 011 D12：一次请求带多个 id、每页 20、core.cache 单飞；逐条目单发列为禁止项。 |
+| RO19 | WebView2 可用性由宿主注入，不写死检测键；该键仍未证实，真实运行时实测受阻。 |
+| RO20 | 加载器逐版本 schema 未证实，`version_json_fields` 恒空、`schema_patch` 恒 None；不生成 version json patch。 |
+| RO21 | UI 整页演示闸门 016 轮首次触发，整页演示与实现分开落盘，演示不进 `src/`。 |
+| RO22 | Cargo.toml / Cargo.lock 未变，无新增 crate；`serde` / `tokio` / `async-std` 计数为 0。 |
 
 ## 版本弃用
 

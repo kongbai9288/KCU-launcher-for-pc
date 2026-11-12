@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | F001 | 正常模式 UI 设计稿 | normal.ui | 已批准 | normal-ui.md |
 | F002 | 统一调度器 | dispatcher | 已实现、已验证 | dispatcher.md |
-| F003 | 轻量启动器视图 | lightweight.view | 已批准 | lightweight.md |
+| F003 | 轻量启动器视图 | lightweight.view | 已实现、已验证 | lightweight.md |
 | F004 | 无头模式启动器 | headless | 已批准 | headless.md |
 | F005 | 正常启动器 | normal | 已批准 | normal-launcher.md |
 | F006 | 手机连接 | normal.lan | 已批准 | lan.md |
@@ -32,6 +32,10 @@
 | F015-02 | LaunchTask 与任务集合 | dispatcher.task | 已实现、已验证 | dispatcher-task.md |
 | F015-03 | ModeSelector 与兜底分级 | dispatcher.mode | 已实现、已验证 | dispatcher-mode.md |
 | F015-04 | 统一调度主流程 | dispatcher.launcher | 已实现、已验证 | dispatcher-launcher.md |
+| F016-01 | 轻量登录与三级回退 | lightweight.login | 已实现、已验证 | lightweight-login.md |
+| F016-02 | Provider 与批量下载 | lightweight.download | 已实现、已验证 | lightweight-download.md |
+| F016-03 | 加载器注册与安装 | lightweight.loaders | 已实现、已验证 | lightweight-loaders.md |
+| F016-04 | 轻量极简视图状态 | lightweight.view | 已实现、已验证 | lightweight-view.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -91,6 +95,25 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G16 | 动 UI 的轮次须先交付整页 HTML 演示，规则见 docs/rules/ui-demo.md；运行逻辑演示不计入。 |
 | G17 | dispatcher 不引入 serde 与 async runtime；Cargo.lock 不新增条目。 |
 | G18 | 模式判定优先级固定：强制无头 > args > config > task > 自动判定；非法模式报错后用内置默认继续。 |
+| G19 | 轻量视图不加载 normal.ui 与 13 项重资产；整页演示单独交付，不复用设计稿。 |
+| G20 | 逐条目单发请求列为禁止项；一次请求带多个 id，每页 20，core.cache 单飞。 |
+| G21 | 未证实字段不写进实现：加载器 version json 注入字段为空、WebView2 检测键由宿主注入、CF 源本层不暴露。 |
+
+## 016 轮 L3 lightweight
+
+| 项 | 值 |
+| --- | --- |
+| 输入 | docs/spec/16-round-016-instructions.txt，逐字「干」4 字节 |
+| 决策 | docs/decisions/016-build-continue.md D01-D08、L01-L15、U01-U09 |
+| 模块 | src/lightweight/{login,download,loaders,view,mod}.rs |
+| 单份功能 md | 4 份 + F003 更新，字段固定五段 |
+| 测试 | `cargo test --offline` 141 passed / 0 failed；lightweight 占 38 项 |
+| 构建 | `cargo build --release --offline` 通过；Cargo.lock 未变 |
+| UI 闸门 | **已触发**，docs/rules/ui-demo.md 016 段 |
+| 整页演示 | demos/ui-full-lightweight.html，6 分区、5 状态、11 弹窗、离线可点、KCU 标识 |
+| 运行逻辑演示 | demos/round-016-lightweight.html，13 节点，不计入 G01 |
+| 手感回路 | 演示先落盘 → 用户按手感调整 → 先改演示 → 确认后才改实现 |
+| 未进入 | L4 headless 及以下 6 层、UI 实现、CF 下载模块、特殊版代码 |
 
 ## 015 轮 L2 dispatcher
 

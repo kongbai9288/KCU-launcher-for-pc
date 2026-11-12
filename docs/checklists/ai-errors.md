@@ -73,6 +73,11 @@
 | A64 | dispatcher 引入 serde 或 async runtime（关联 015 D06 L02） | `grep -c 'serde\|tokio\|async-std' Cargo.lock` 为 0；`cargo tree --offline` 只有 kcu-core |
 | A65 | 模式判定优先级写反或非法模式直接崩（关联 015 L05） | `cargo test --offline args_override_beats_config`、`invalid_mode_reports_and_falls_back_without_crashing` |
 | A66 | 连续失败不进安全模式、不导出诊断包，或 UI 模式残留未关弹窗（关联 015 L06/L09） | `cargo test --offline consecutive_failures_enter_safe_mode_then_export_bundle`、`normal_mode_registers_and_closes_every_popup` |
+| A67 | 动轻量视图却未交付整页 HTML 演示（关联 016 D02） | `test -f demos/ui-full-lightweight.html`；docs/rules/ui-demo.md 016 段 |
+| A68 | 轻量实现复用 normal.ui、设计稿、双主题实现或内嵌文件管理器（关联 016 L10/L11） | `cargo test --offline excluded_assets_cover_normal_ui_and_heavy_components`、`view_uses_single_theme`、`file_manager_is_system_panel_only` |
+| A69 | 逐条目单发请求或未做单飞缓存（关联 011 D12、016 L07） | `cargo test --offline one_request_for_ten_ids_not_ten`、`repeated_batch_is_single_flight` |
+| A70 | 写死加载器 version json 字段、WebView2 检测键或暴露 CF 源（关联 016 L05/L08/L09） | `cargo test --offline installed_loader_returns_record_without_schema_fields`、`webview2_availability_is_injected_not_hardcoded`、`curseforge_source_is_not_exposed` |
+| A71 | 游戏运行期残留常驻后台进程，或弹窗流程后未清零（关联 016 L13/L14） | `cargo test --offline game_runtime_has_no_resident_launcher`、`flow_ends_with_zero_open_popups` |
 
 ## 输出结构
 

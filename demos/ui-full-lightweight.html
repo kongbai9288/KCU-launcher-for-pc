@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KCU 轻量启动器 / 整页界面演示</title>
+<style>
+:root{
+  --bg:#0a0d13;--surface:#111722;--surface2:#171f2e;--surface3:#1d2738;
+  --line:#28344a;--line2:#34435e;--txt:#e8eef7;--dim:#93a2bb;--mut:#6e7d96;
+  --acc:#5ee0b4;--acc-dim:#2f7d68;--acc-soft:#102a23;--blue:#6aa8ff;--warn:#f5b95c;--err:#ff7a7a;
+  --r:12px;--gap:14px;--pad:18px;--fs:14px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","WenQuanYi Micro Hei","Microsoft YaHei",sans-serif
+}
+html[data-theme="light"]{
+  --bg:#f2f5fa;--surface:#ffffff;--surface2:#f7f9fd;--surface3:#eef3fa;
+  --line:#d9e1ee;--line2:#c6d2e4;--txt:#16202f;--dim:#5c6b83;--mut:#8492a8;
+  --acc:#0f8f6c;--acc-dim:#0c7357;--acc-soft:#e2f6ef;--blue:#2c6fd6;--warn:#b57a12;--err:#d34848
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:var(--fs)/1.6 var(--font);padding:20px;transition:background .25s,color .25s}
+.wrap{max-width:1080px;margin:0 auto}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line2);background:var(--surface2);border-radius:9px;padding:8px 13px;transition:.18s}
+button:hover{border-color:var(--acc);background:var(--acc-soft)}
+button.primary{background:var(--acc-dim);border-color:var(--acc);color:#fff;font-weight:600}
+button.primary:hover{filter:brightness(1.12)}
+button.ghost{background:transparent}
+button:disabled{opacity:.45;cursor:not-allowed}
+input[type=text]{background:var(--surface3);border:1px solid var(--line2);border-radius:8px;padding:8px 10px;width:100%;font-family:var(--mono)}
+select{background:var(--surface2);border:1px solid var(--line2);border-radius:8px;padding:7px 9px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--pad)}
+.mono{font-family:var(--mono)}.dim{color:var(--dim)}.mut{color:var(--mut)}.acc{color:var(--acc)}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.spread{justify-content:space-between}
+.stack{display:grid;gap:var(--gap)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+h1,h2,h3{margin:0}h1{font-size:18px;letter-spacing:.4px}h2{font-size:13px;color:var(--dim);font-weight:600;letter-spacing:1px;margin-bottom:12px}h3{font-size:14px}
+.pill{font:11px/1.4 var(--mono);border:1px solid var(--line2);border-radius:999px;padding:3px 10px;color:var(--dim);white-space:nowrap}
+.pill.ok{color:var(--acc);border-color:var(--acc-dim);background:var(--acc-soft)}
+.pill.warn{color:var(--warn);border-color:#6b5326}
+.pill.err{color:var(--err);border-color:#7d3535}
+
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.logo{width:42px;height:42px;flex:0 0 42px;border-radius:10px;background:linear-gradient(145deg,#1d3b34,#0e211d);display:grid;place-items:center;border:1px solid var(--acc-dim)}
+.brand{display:flex;flex-direction:column;gap:1px}
+.brand .sub{font-size:11px;color:var(--mut);font-family:var(--mono)}
+header .right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+.gate{background:var(--surface2);border:1px dashed var(--line2);border-radius:var(--r);padding:14px 16px;margin-bottom:16px}
+.gate h2{margin-bottom:8px}
+.gate .note{font-size:12px;color:var(--dim);margin-top:8px}
+.ctl{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim)}
+.ctl label{min-width:64px}
+
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);font-size:13px}
+.tab.on{background:var(--acc-soft);border-color:var(--acc);color:var(--acc);font-weight:600}
+.pane{display:none}.pane.on{display:block}
+
+.auth{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:620px){.auth{grid-template-columns:1fr}}
+.auth button{display:grid;gap:3px;text-align:left;padding:12px}
+.auth button .k{font-size:13px;font-weight:600}.auth button .v{font-size:11px;color:var(--mut);font-family:var(--mono)}
+.auth button.on{border-color:var(--acc);background:var(--acc-soft)}
+.auth button.on .k{color:var(--acc)}
+
+.flowline{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+@media(max-width:620px){.flowline{grid-template-columns:1fr}}
+.stage{border:1px solid var(--line);border-radius:9px;padding:10px;background:var(--surface2);font-size:12px}
+.stage .n{font:10px var(--mono);color:var(--mut)}.stage .t{font-weight:600;margin:3px 0}
+.stage.on{border-color:var(--acc);background:var(--acc-soft)}.stage.on .t{color:var(--acc)}
+.stage.skip{border-color:var(--warn)}.stage.skip .t{color:var(--warn)}
+.stage.fail{border-color:var(--err)}.stage.fail .t{color:var(--err)}
+
+.codebox{display:flex;align-items:center;gap:10px;background:var(--surface3);border:1px dashed var(--line2);border-radius:9px;padding:12px;margin-top:10px}
+.code{font:20px var(--mono);letter-spacing:3px;color:var(--acc)}
+.bar{height:7px;border-radius:99px;background:var(--surface3);overflow:hidden;border:1px solid var(--line)}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--blue));width:0;transition:width .3s}
+
+.loaders{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:620px){.loaders{grid-template-columns:repeat(2,1fr)}}
+.loader{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:var(--surface2);font-size:12px}
+.loader .dot{width:7px;height:7px;border-radius:99px;background:var(--mut)}
+.loader.ok .dot{background:var(--acc)}.loader.ok{border-color:var(--acc-dim)}
+
+#log{height:150px;overflow:auto;background:#070a10;border:1px solid var(--line);border-radius:9px;padding:10px;font:11px/1.75 var(--mono);color:#c9d6e8;white-space:pre-wrap;word-break:break-all}
+html[data-theme="light"] #log{background:#f4f7fc;color:#2b3a4f}
+.ln .d{color:var(--blue)}.ln .r{color:var(--acc)}.ln .w{color:var(--warn)}.ln .e{color:var(--err)}.ln .m{color:var(--mut)}
+
+.status{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+@media(max-width:620px){.status{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--surface2);border:1px solid var(--line);border-radius:9px;padding:10px}
+.stat .k{font-size:11px;color:var(--mut)}.stat .v{font:13px var(--mono);margin-top:3px;color:var(--acc)}
+
+.overlay{position:fixed;inset:0;background:rgba(4,7,12,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.overlay.on{display:flex}
+.dialog{width:min(440px,100%);background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.dialog .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dialog h3{font-size:15px}.dialog .body{font-size:13px;color:var(--dim);margin:10px 0 16px}
+.dialog .x{width:28px;height:28px;padding:0;border-radius:8px;font-size:16px;line-height:1}
+.dialog .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+#dialogs{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+#dialogs button{font-size:11px;padding:5px 9px}
+.empty{padding:22px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:9px;font-size:12px}
+.lock{opacity:.55;pointer-events:none}
+footer{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--mut);display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo" aria-hidden="true">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+      <path d="M13 2 L23 7.5 L23 18.5 L13 24 L3 18.5 L3 7.5 Z" fill="#5ee0b4" opacity=".18"/>
+      <path d="M13 2 L23 7.5 L13 13 L3 7.5 Z" fill="#5ee0b4"/>
+      <path d="M3 7.5 L13 13 L13 24 L3 18.5 Z" fill="#3fae8d"/>
+      <path d="M23 7.5 L13 13 L13 24 L23 18.5 Z" fill="#2b8a70"/>
+      <text x="7.2" y="11.3" font-size="6" font-family="monospace" fill="#0b1a15" font-weight="700">KCU</text>
+    </svg>
+  </div>
+  <div class="brand"><h1>KCU 轻量启动器</h1><span class="sub">LIGHTWEIGHT / 016 / 整页界面演示</span></div>
+  <div class="right">
+    <span class="pill ok">≤ 2 GiB 自动进入</span>
+    <span class="pill">单主题</span>
+    <span class="pill">无常驻进程</span>
+    <span class="pill" id="p-mode">模式：轻量</span>
+  </div>
+</header>
+
+<section class="gate">
+  <h2>手感调整区（演示层，可直接改）</h2>
+  <div class="row">
+    <div class="ctl"><label>主题预览</label>
+      <select id="g-theme"><option value="dark">深色（实现默认）</option><option value="light">浅色（预览）</option></select>
+    </div>
+    <div class="ctl"><label>间距</label>
+      <select id="g-gap"><option value="14">舒适</option><option value="9">紧凑</option><option value="20">宽松</option></select>
+    </div>
+    <div class="ctl"><label>字号</label>
+      <select id="g-fs"><option value="14">标准</option><option value="13">偏小</option><option value="15">偏大</option></select>
+    </div>
+    <div class="ctl"><label>圆角</label>
+      <select id="g-r"><option value="12">12</option><option value="6">6</option><option value="18">18</option></select>
+    </div>
+    <button class="ghost" id="g-reset">重置手感</button>
+  </div>
+  <div class="note">此处是给你按手感调的演示层，改动先落在演示，确认后才进实现。实现层按 007-normal-ui.md D04 默认<strong>单主题</strong>；浅色仅作预览，不写进轻量实现，除非你确认要加。整页不加载 normal.ui、设计稿、揉纸纹理、三栏拖拽、双主题实现与外部字体。</div>
+</section>
+
+<div class="tabs">
+  <button class="tab on" data-p="login">登录</button>
+  <button class="tab" data-p="download">下载</button>
+  <button class="tab" data-p="loaders">加载器</button>
+  <button class="tab" data-p="files">文件与日志</button>
+  <button class="tab" data-p="states">状态覆盖</button>
+  <button class="tab" data-p="dialogs">弹窗全集</button>
+</div>
+
+<section class="card pane on" id="pane-login">
+  <h2>三种登录方式 · 三级回退</h2>
+  <div class="auth" id="auth-grid">
+    <button data-auth="mojang"><span class="k">Mojang 正版</span><span class="v">mojang / 需凭据</span></button>
+    <button data-auth="offline" class="on"><span class="k">离线登录</span><span class="v">offline / 免浏览器</span></button>
+    <button data-auth="third_party"><span class="k">第三方登录</span><span class="v">third_party / 网页</span></button>
+  </div>
+
+  <div style="margin-top:16px" class="row spread">
+    <h3 style="font-size:13px">网页登录回退链</h3>
+    <span class="pill" id="p-stage">当前：未开始</span>
+  </div>
+  <div class="flowline" id="flowline">
+    <div class="stage" data-s="0"><div class="n">01 / 首选</div><div class="t">外置浏览器</div><div class="dim">系统默认浏览器</div></div>
+    <div class="stage" data-s="1"><div class="n">02 / 一级回退</div><div class="t">内置浏览器</div><div class="dim">轻量 WebView2</div></div>
+    <div class="stage" data-s="2"><div class="n">03 / 二级回退</div><div class="t">连接码</div><div class="dim">手机端完成登录</div></div>
+  </div>
+  <div class="row">
+    <button class="primary" id="b-login">开始登录</button>
+    <button id="b-fallback">模拟逐级失败</button>
+    <button id="b-pair">确认连接码</button>
+    <button class="ghost" id="b-login-reset">复位</button>
+  </div>
+
+  <div class="codebox" id="codebox" style="display:none">
+    <div><div class="mut" style="font-size:11px">连接码 · 手机打开后输入</div><div class="code" id="code">KCU-7F3A</div></div>
+    <div style="flex:1"><div class="bar"><i id="code-bar"></i></div><div class="mut mono" style="font-size:11px;margin-top:5px">轮询 300s · 可取消 · 超时零级报错</div></div>
+    <button id="b-copy">复制</button>
+  </div>
+
+  <div class="row" style="margin-top:16px">
+    <button class="primary" id="b-launch">启动游戏</button>
+    <span class="pill ok" id="p-launch">启动器待命</span>
+  </div>
+</section>
+
+<section class="card pane" id="pane-download">
+  <h2>基础下载 · 批量请求</h2>
+  <div class="grid2">
+    <div class="stack">
+      <div class="ctl"><label style="min-width:78px">下载源</label><select id="d-src"><option value="bmclapi">BMCLAPI（默认镜像）</option><option value="mojang">Mojang 官方</option></select></div>
+      <div class="ctl"><label style="min-width:78px">地域软策略</label><select id="d-region"><option value="auto">自动测速</option><option value="overseas">强制境外</option></select></div>
+      <label style="font-size:12px;color:var(--dim);display:flex;gap:8px;align-items:center"><input type="checkbox" id="d-speed" checked style="width:auto"> 镜像测速</label>
+      <label style="font-size:12px;color:var(--dim);display:flex;gap:8px;align-items:center"><input type="checkbox" id="d-key" style="width:auto"> 可选 API Key（由用户填写，不落源码）</label>
+      <div class="row"><button class="primary" id="d-run">批量拉取 10 个模组</button><button class="ghost" id="d-45">跑 45 个</button></div>
+    </div>
+    <div class="stack">
+      <div class="stat"><div class="k">每页</div><div class="v">20 条</div></div>
+      <div class="stat"><div class="k">请求方式</div><div class="v">一次带多个 id</div></div>
+      <div class="stat"><div class="k">逐条目单发</div><div class="v" style="color:var(--err)">禁止</div></div>
+      <div class="stat"><div class="k">CurseForge</div><div class="v">本层不暴露</div></div>
+    </div>
+  </div>
+  <div style="margin-top:14px" class="row spread"><span class="dim" style="font-size:12px">结果</span><span class="pill" id="d-result">未执行</span></div>
+  <div class="bar" style="margin-top:8px"><i id="d-bar"></i></div>
+  <div class="note" style="margin-top:10px;font-size:12px;color:var(--dim)">地域软策略只用于下载源选择，可强制覆盖，不与「特定地区禁用下载」复用；密钥可选、注入式。CF 具体调用方法仍等你完成时给。</div>
+</section>
+
+<section class="card pane" id="pane-loaders">
+  <h2>加载器安装</h2>
+  <div class="loaders" id="loader-grid"></div>
+  <div class="row" style="margin-top:14px"><button class="primary" id="l-all">全部安装</button><button class="ghost" id="l-reset">复位</button><span class="pill" id="l-count">0 / 6</span></div>
+  <div class="note" style="margin-top:10px;font-size:12px;color:var(--dim)">只登记标识与安装结果，不写死 version json 注入字段（加载器逐版本 schema 未证实）。</div>
+</section>
+
+<section class="card pane" id="pane-files">
+  <h2>文件管理 · 基础日志</h2>
+  <div class="grid2">
+    <div class="stack">
+      <button id="f-open">打开游戏目录</button>
+      <div class="empty">无内嵌文件管理器，只调用系统文件管理面板。</div>
+      <button id="f-toggle">展开 / 收起日志</button>
+      <div class="mut" style="font-size:11px">日志每 100 行分片，有界，不无限增长。</div>
+    </div>
+    <div class="stack">
+      <div class="row spread"><span class="dim" style="font-size:12px">[KCU] 诊断行</span><button class="ghost" id="f-clear" style="font-size:11px;padding:4px 9px">清空</button></div>
+      <div id="log"></div>
+    </div>
+  </div>
+</section>
+
+<section class="card pane" id="pane-states">
+  <h2>状态覆盖：空态 / 加载态 / 错误态 / 被锁态</h2>
+  <div class="row" style="margin-bottom:12px">
+    <button data-state="idle">空态</button><button data-state="loading">加载态</button>
+    <button data-state="error">错误态</button><button data-state="locked">被锁态</button><button data-state="ready" class="primary">就绪</button>
+  </div>
+  <div id="state-box"></div>
+  <div class="row spread" style="margin-top:12px"><span class="dim" style="font-size:12px">当前状态</span><span class="pill" id="s-pill">就绪</span></div>
+</section>
+
+<section class="card pane" id="pane-dialogs">
+  <h2>弹窗全集 · 每个都有关闭路径</h2>
+  <div class="row"><button class="primary" id="dlg-all">打开全部 11 个</button><button id="dlg-close">全部关闭</button><span class="pill" id="dlg-open">打开 0 / 关闭 0</span></div>
+  <div id="dialogs"></div>
+  <div class="note" style="margin-top:10px;font-size:12px;color:var(--dim)">按钮 / ESC / 取消 / 确认 / 超时 / 宿主 共 6 类关闭动作；流程结束 0 个未关弹窗。</div>
+</section>
+
+<div class="status">
+  <div class="stat"><div class="k">内存占用示意</div><div class="v" id="s-mem">未实测</div></div>
+  <div class="stat"><div class="k">后台进程</div><div class="v" id="s-proc">待启动</div></div>
+  <div class="stat"><div class="k">网络请求</div><div class="v" id="s-req">0</div></div>
+  <div class="stat"><div class="k">弹窗残留</div><div class="v" id="s-pop">0</div></div>
+</div>
+
+<footer>
+  <span>KCU Launcher · 整页 UI 演示 · 离线可点 · 本地字体栈 · 不复用 normal.ui</span>
+  <span id="ts"></span>
+</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="dialog" role="dialog" aria-modal="true">
+    <div class="top"><div><h3 id="dlg-title">标题</h3><span class="mut mono" style="font-size:11px" id="dlg-id">id</span></div><button class="x" id="dlg-x" aria-label="关闭">×</button></div>
+    <div class="body" id="dlg-body">内容</div>
+    <div class="acts"><button class="ghost" id="dlg-cancel">取消</button><button class="primary" id="dlg-ok">确认</button></div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const root = document.documentElement;
+let reqCount = 0, stage = -1, pendingCode = false, openDialogs = [], dlgIndex = 0;
+let state = 'ready', launchDone = false, installed = new Set();
+
+const DLG = [
+  ['privacy','隐私政策','首次进入需确认；可随时关闭，流程结束不残留。'],
+  ['declaration','声明页','轻量模式说明与授权边界。'],
+  ['eula','EULA','Minecraft EULA 在启动前写入。'],
+  ['dup-mod','重复模组','发现同名模组，保留或替换由你决定。'],
+  ['file-lock','文件锁提示','实例目录被占用时提示，不会强行写入。'],
+  ['guest','访客密码','联机访客口令输入，可取消。'],
+  ['notice','联网提示','联网下载前的可见提示。'],
+  ['duration','游玩时长','本次游玩时长记录。'],
+  ['error','错误','失败可见、可诊断、可回退，不崩溃。'],
+  ['ai-confirm','AI 请求确认','每次请求单独确认；本层不含 AI 容器接入。'],
+  ['extension','扩展安装','扩展安装确认，可关闭。'],
+];
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function line(domain,action,target,result,detail){
+  const el=document.createElement('div'); el.className='ln';
+  const cls = result==='OK'?'r':(result==='DEGRADE'?'w':(result==='FAIL'||result==='CANCELLED'||result==='TIMEOUT'?'e':'m'));
+  el.innerHTML='[KCU] <span class="d">'+esc(domain)+'</span> '+esc(action)+' '+esc(target)+' <span class="'+cls+'">'+esc(result)+'</span> <span class="m">'+esc(detail)+'</span>';
+  $('log').appendChild(el); $('log').scrollTop=$('log').scrollHeight;
+}
+function setPill(id,text,cls){const e=$(id);e.textContent=text;e.className='pill'+(cls?' '+cls:'');}
+
+$('ts').textContent = new Date().toLocaleString('zh-CN',{hour12:false});
+
+/* 手感调整（演示层） */
+function applyGate(){
+  root.dataset.theme=$('g-theme').value;
+  root.style.setProperty('--gap',$('g-gap').value+'px');
+  root.style.setProperty('--fs',$('g-fs').value+'px');
+  root.style.setProperty('--r',$('g-r').value+'px');
+  line('ui','adjust','handfeel','OK','detail=theme='+$('g-theme').value+' gap='+$('g-gap').value+' fs='+$('g-fs').value+' r='+$('g-r').value);
+}
+['g-theme','g-gap','g-fs','g-r'].forEach(id=>$(id).onchange=applyGate);
+$('g-reset').onclick=()=>{$('g-theme').value='dark';$('g-gap').value='14';$('g-fs').value='14';$('g-r').value='12';applyGate();};
+
+/* 分页 */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  $('pane-'+t.dataset.p).classList.add('on');
+  line('ui','tab','view','OK','detail='+t.dataset.p);
+});
+
+/* 登录 */
+let auth='offline';
+document.querySelectorAll('[data-auth]').forEach(b=>b.onclick=()=>{
+  auth=b.dataset.auth;document.querySelectorAll('[data-auth]').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  line('lightweight','select','login','OK','detail=auth='+auth);
+});
+function paintStage(){
+  document.querySelectorAll('.stage').forEach((e,i)=>{
+    e.classList.remove('on','skip','fail');
+    if(i<stage)e.classList.add('skip');
+    if(i===stage)e.classList.add(pendingCode?'on':'on');
+  });
+  const names=['外置浏览器','内置浏览器','连接码'];
+  setPill('p-stage',stage<0?'当前：未开始':'当前：'+names[stage],stage===2?'warn':'ok');
+  $('codebox').style.display = stage===2?'flex':'none';
+}
+$('b-login').onclick=()=>{
+  stage=0;pendingCode=false;paintStage();
+  line('lightweight','login','login','OK','detail=stage=external_browser auth='+auth);
+  if(auth==='offline'){stage=-1;paintStage();line('lightweight','login','login','OK','detail=offline_no_browser');}
+  else if(auth==='mojang'){line('dispatcher','auth','premium','DEGRADE','detail=credential_absent headless_only');}
+};
+$('b-fallback').onclick=()=>{
+  if(auth==='offline'){line('lightweight','fallback','login','OK','detail=offline_skips_browser');return;}
+  if(stage<0)stage=0;
+  if(stage===0){line('lightweight','fallback','login','DEGRADE','detail=external_to_embedded');stage=1;}
+  else if(stage===1){line('lightweight','fallback','login','DEGRADE','detail=embedded_to_pair_code');stage=2;pendingCode=true;}
+  else {line('lightweight','pair_code','login','TIMEOUT','detail=timeout=300s zero_level_error');document.querySelectorAll('.stage')[2].classList.add('fail');setPill('p-stage','全部失败 · 零级报错','err');return;}
+  paintStage();
+};
+$('b-pair').onclick=()=>{
+  if(stage!==2){line('lightweight','pair_code','login','DEGRADE','detail=pair_code_not_active');return;}
+  pendingCode=false;
+  line('lightweight','login','login','OK','detail=pair_code_confirmed stage=done');
+  setPill('p-stage','登录完成','ok');
+  $('code-bar').style.width='100%';
+};
+$('b-copy').onclick=()=>{line('lightweight','copy','pair_code','OK','detail='+$('code').textContent);setPill('p-stage','已复制连接码','ok');};
+$('b-login-reset').onclick=()=>{stage=-1;pendingCode=false;$('code-bar').style.width='0';paintStage();setPill('p-stage','当前：未开始','');};
+$('b-launch').onclick=()=>{
+  launchDone=true;
+  $('p-launch').textContent='启动器已退出 · 游戏运行中';$('p-launch').className='pill ok';
+  $('s-proc').textContent='无（游戏运行期）';
+  line('lightweight','launch','game','OK','detail=launcher_exited no_resident_process');
+};
+
+/* 下载 */
+function runBatch(n){
+  const pages=Math.ceil(n/20);reqCount+=pages;
+  $('d-result').textContent=n+' 个 id / '+pages+' 页 / '+reqCount+' 次请求';$('d-result').className='pill ok';
+  $('d-bar').style.width='100%';$('s-req').textContent=reqCount;
+  const src=$('d-src').value,region=$('d-region').value,pick=region==='overseas'?'mojang':src;
+  line('lightweight','batch','download','OK','detail='+n+'_ids pages='+pages+' requests='+pages+' source='+pick+' no_per_item_request');
+  line('lightweight','provider','config','OK','detail=speedtest='+$('d-speed').checked+' key='+$('d-key').checked+' region_only_for_download');
+}
+$('d-run').onclick=()=>runBatch(10);
+$('d-45').onclick=()=>runBatch(45);
+
+/* 加载器 */
+const LOADERS=[['fabric','Fabric'],['forge','Forge'],['neoforge','NeoForge'],['quilt','Quilt'],['liteloader','LiteLoader'],['optifine','OptiFine']];
+function paintLoaders(){
+  $('loader-grid').innerHTML=LOADERS.map(([k,n])=>'<div class="loader'+(installed.has(k)?' ok':'')+'" data-l="'+k+'"><span>'+n+'</span><span class="row" style="gap:6px"><span class="dot"></span><span class="mut mono" style="font-size:10px">'+(installed.has(k)?'已安装':'待安装')+'</span></span></div>').join('');
+  document.querySelectorAll('[data-l]').forEach(e=>e.onclick=()=>installOne(e.dataset.l));
+  $('l-count').textContent=installed.size+' / 6';
+}
+function installOne(k){installed.add(k);paintLoaders();line('lightweight','install','loader','OK','detail='+k+' no_version_json_patch');}
+$('l-all').onclick=()=>{LOADERS.forEach(([k])=>installed.add(k));paintLoaders();line('lightweight','register','loader','OK','detail=6_registered schema_patch=none');};
+$('l-reset').onclick=()=>{installed.clear();paintLoaders();line('lightweight','register','loader','OK','detail=reset');};
+paintLoaders();
+
+/* 文件与日志 */
+$('f-open').onclick=()=>line('lightweight','files','view','OK','detail=system_panel_only no_embedded_manager');
+$('f-toggle').onclick=()=>line('lightweight','log','view','OK','detail=toggle bounded_100_lines');
+$('f-clear').onclick=()=>{$('log').innerHTML='';line('lightweight','log','view','OK','detail=cleared');};
+
+/* 状态覆盖 */
+function paintState(){
+  const box=$('state-box');
+  const map={
+    idle:['<div class="empty">还没有选择登录方式，也没有下载任务。点「开始登录」即可继续。</div>',''],
+    loading:['<div class="card" style="text-align:center;padding:26px"><div class="bar" style="margin:0 auto 12px;max-width:280px"><i style="width:62%"></i></div><div class="dim">正在准备轻量视图…</div></div>','warn'],
+    error:['<div class="empty" style="border-color:var(--err);color:var(--err)">外置浏览器 / 内置浏览器 / 连接码全部失败。零级报错：明确提示修复，不崩溃，不静默。</div>','err'],
+    locked:['<div class="empty lock">实例目录被占用，界面已锁定；解锁或换目录后继续。</div>','warn'],
+    ready:['<div class="empty" style="border-color:var(--acc-dim);color:var(--acc)">就绪：三种登录、批量下载、加载器安装、基础日志都可用。</div>','ok']
+  };
+  box.innerHTML=map[state][0];setPill('s-pill',({idle:'空态',loading:'加载态',error:'错误态',locked:'被锁态',ready:'就绪'})[state],map[state][1]);
+  line('lightweight','state','view','OK','detail='+state);
+}
+document.querySelectorAll('[data-state]').forEach(b=>b.onclick=()=>{state=b.dataset.state;paintState();});
+paintState();
+
+/* 弹窗全集 */
+$('dialogs').innerHTML=DLG.map(([id,t])=>'<button data-d="'+id+'">'+t+'</button>').join('');
+function showDialog(i){
+  dlgIndex=i;const [id,t,body]=DLG[i];
+  $('dlg-title').textContent=t;$('dlg-id').textContent='id='+id;$('dlg-body').textContent=body;
+  $('overlay').classList.add('on');openDialogs.push(id);paintDlg();
+  line('lightweight','popup','open','OK','detail=id='+id);
+}
+function closeDialog(reason){
+  if(!$('overlay').classList.contains('on'))return;
+  const id=DLG[dlgIndex][0];$('overlay').classList.remove('on');
+  openDialogs=openDialogs.filter(x=>x!==id);paintDlg();
+  line('lightweight','popup','close','OK','detail=id='+id+' reason='+reason);
+}
+function paintDlg(){$('dlg-open').textContent='当前 '+openDialogs.length+' / 队列 '+openDialogs.length;$('s-pop').textContent=openDialogs.length;}
+$('dlg-x').onclick=()=>closeDialog('button');
+$('dlg-cancel').onclick=()=>closeDialog('cancel');
+$('dlg-ok').onclick=()=>closeDialog('confirm');
+$('overlay').onclick=e=>{if(e.target===$('overlay'))closeDialog('host');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDialog('escape');});
+document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>showDialog(DLG.findIndex(x=>x[0]===b.dataset.d)));
+$('dlg-all').onclick=()=>{DLG.forEach((_,i)=>openDialogs.push(DLG[i][0]));paintDlg();line('lightweight','popup','register','OK','detail=11_catalog all_closable');};
+$('dlg-close').onclick=()=>{const n=openDialogs.length;openDialogs=[];$('overlay').classList.remove('on');paintDlg();line('lightweight','popup','close_all','OK','detail=forced_closed='+n+' left=0');};
+
+/* 初始诊断 */
+line('ui','gate','round_016','OK','detail=ui_full_lightweight triggered offline no_external_assets');
+line('dispatcher','mode','select','OK','detail=low_memory_first_run lightweight');
+line('lightweight','view','theme','OK','detail=single implementation / preview_only_for_handfeel');
+paintStage();paintDlg();
+</script>
+</body>
+</html>

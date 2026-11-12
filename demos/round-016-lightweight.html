@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU Launcher / L3 lightweight / 016</title>
+<style>
+:root{--bg:#0b0e14;--panel:#131824;--panel2:#1a2130;--line:#28324a;--txt:#e6ecf5;--dim:#8b9ab3;--acc:#5ee0b4;--acc2:#6aa8ff;--warn:#f5b95c;--err:#ff7a7a;--mut:#7d8aa3;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1100px 650px at 10% -10%,#18233a,var(--bg) 60%);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+.wrap{max-width:1140px;margin:0 auto}header{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--line)}h1{font-size:19px;margin:0}
+.tag{font:12px var(--mono);color:var(--acc);border:1px solid #2c5b4c;border-radius:999px;padding:2px 10px;background:#10241e}.tag2{font:12px var(--mono);color:var(--warn);border:1px solid #6b5326;border-radius:999px;padding:2px 10px;background:#2a2214}
+.meta{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+.grid{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:16px}@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--panel),#111623);border:1px solid var(--line);border-radius:12px;padding:16px}.card h2{font-size:13px;margin:0 0 14px;color:var(--dim)}
+.field{margin-bottom:10px}label{display:block;font-size:12px;color:var(--dim);margin-bottom:4px}select{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:13px var(--mono)}
+.btns{display:flex;gap:9px;margin-top:14px}button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);cursor:pointer;font:13px/1.2 inherit}button.primary{background:linear-gradient(135deg,#2f7d68,#245f8f);border-color:#3f8f7e;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px}.stat .k{font-size:11px;color:var(--dim)}.stat .v{font:14px var(--mono);margin-top:3px;color:var(--acc)}
+#log{height:300px;overflow:auto;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.75 var(--mono);white-space:pre-wrap;word-break:break-all}
+.ln{color:#c9d6e8}.ln .d{color:var(--acc2)}.ln .r{color:var(--acc)}.ln .w{color:var(--warn)}.ln .e{color:var(--err)}.ln .m{color:var(--mut)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}@media(max-width:980px){.flow{grid-template-columns:repeat(3,1fr)}}@media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;transition:.25s}.node .n{font:11px var(--mono);color:var(--mut)}.node .t{font-size:12px;margin:4px 0 5px;font-weight:600}.node .s{font-size:11px;color:var(--dim)}
+.node.on{border-color:var(--acc);background:#12201e;box-shadow:0 0 0 1px #2f7d68}.node.on .t{color:var(--acc)}.node.err{border-color:var(--err)}.node.err .t{color:var(--err)}.node.warn{border-color:var(--warn)}.node.warn .t{color:var(--warn)}
+.foot{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:860px){.foot{grid-template-columns:1fr}}
+pre{margin:0;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.7 var(--mono);color:#c9d6e8;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--dim)}
+.note{margin-top:12px;padding:10px;border:1px dashed var(--line);border-radius:9px;font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body><div class="wrap">
+<header><h1>KCU Launcher</h1><span class="tag">L3 lightweight / 016</span><span class="tag2">运行逻辑演示</span><span class="meta" id="ts"></span></header>
+
+<div class="grid">
+<section class="card"><h2>输入</h2>
+<div class="field"><label>登录方式</label><select id="auth"><option value="offline">离线</option><option value="third_party">第三方</option><option value="mojang">Mojang 正版</option></select></div>
+<div class="field"><label>浏览器可用性</label><select id="avail"><option value="all">外置可用</option><option value="embedded">外置失败</option><option value="code">两级都失败</option><option value="timeout">连接码超时</option></select></div>
+<div class="field"><label>既有正版凭据</label><select id="cred"><option value="no">无</option><option value="yes">有</option></select></div>
+<div class="field"><label>批量拉取</label><select id="batch"><option value="10">10 个 id</option><option value="45">45 个 id</option><option value="0">空集合</option></select></div>
+<div class="field"><label>UI 闸门</label><select id="ui"><option value="on">动 UI（须整页演示）</option><option value="off">不动 UI</option></select></div>
+<div class="btns"><button class="primary" id="run">执行本轮</button><button id="reset">重置</button></div>
+<div class="note">016 轮动的是轻量极简视图，按 docs/rules/ui-demo.md 触发整页演示 `demos/ui-full-lightweight.html`；本文件是运行逻辑，不计入 G01。</div>
+</section>
+
+<section class="card"><h2>状态</h2>
+<div class="stats">
+<div class="stat"><div class="k">登录阶段</div><div class="v" id="s-stage">—</div></div>
+<div class="stat"><div class="k">请求数</div><div class="v" id="s-req">—</div></div>
+<div class="stat"><div class="k">弹窗残留</div><div class="v" id="s-pop">—</div></div>
+<div class="stat"><div class="k">诊断行</div><div class="v" id="s-cnt">0</div></div>
+</div>
+<div id="log"></div>
+</section></div>
+
+<div class="flow" id="flow">
+<div class="node" data-k="0"><div class="n">01 / input</div><div class="t">逐字指令</div><div class="s">干 / 4B</div></div>
+<div class="node" data-k="1"><div class="n">02 / gate</div><div class="t">UI 闸门判定</div><div class="s">整页演示触发</div></div>
+<div class="node" data-k="2"><div class="n">03 / view</div><div class="t">极简单主题</div><div class="s">排除 13 项</div></div>
+<div class="node" data-k="3"><div class="n">04 / login</div><div class="t">三种登录</div><div class="s">E01</div></div>
+<div class="node" data-k="4"><div class="n">05 / fallback</div><div class="t">三级回退</div><div class="s">外→内→码</div></div>
+<div class="node" data-k="5"><div class="n">06 / pair</div><div class="t">连接码轮询</div><div class="s">300s 超时</div></div>
+<div class="node" data-k="6"><div class="n">07 / batch</div><div class="t">批量请求</div><div class="s">每页 20 / 禁 N+1</div></div>
+<div class="node" data-k="7"><div class="n">08 / loaders</div><div class="t">加载器注册</div><div class="s">不写 schema</div></div>
+<div class="node" data-k="8"><div class="n">09 / files</div><div class="t">系统面板</div><div class="s">无内嵌管理器</div></div>
+<div class="node" data-k="9"><div class="n">10 / process</div><div class="t">无常驻进程</div><div class="s">拉起即退出</div></div>
+<div class="node" data-k="10"><div class="n">11 / popup</div><div class="t">弹窗全关闭</div><div class="s">0 残留</div></div>
+<div class="node" data-k="11"><div class="n">12 / test</div><div class="t">编译测试</div><div class="s">141 passed</div></div>
+<div class="node" data-k="12"><div class="n">13 / stage</div><div class="t">阶段判定</div><div class="s">L4 未启动</div></div>
+</div>
+
+<div class="foot">
+<section class="card"><h2>统一信封</h2><pre>{
+  "request_id": "kcu-00000010",
+  "type": "response",
+  "target": "lightweight",
+  "payload": {
+    "round": 16,
+    "layer": "L3 lightweight",
+    "modules_added": 5,
+    "tests_total": 141,
+    "tests_lightweight": 38,
+    "auth_kinds": 3,
+    "fallback_stages": 3,
+    "page_size": 20,
+    "excluded_assets": 13,
+    "theme": "single",
+    "resident_process": false,
+    "popups_open": 0,
+    "ui_full_demo": "demos/ui-full-lightweight.html",
+    "backend_write_requests": 0
+  },
+  "error": null
+}</pre></section>
+<section class="card"><h2>四值与边界</h2><table>
+<tr><th>项</th><th>值</th></tr>
+<tr><td>cargo test --offline 141 / 0</td><td>已证实</td></tr>
+<tr><td>lightweight 38 项（8/11/7/12）</td><td>已证实</td></tr>
+<tr><td>10 id 一次请求、45 id 三页三请求</td><td>已证实</td></tr>
+<tr><td>三级回退、连接码超时零级报错</td><td>已证实</td></tr>
+<tr><td>单主题、排除 13 项、无常驻进程</td><td>已证实</td></tr>
+<tr><td>整页 UI 演示离线可点、全状态、弹窗可关</td><td>已证实</td></tr>
+<tr><td>加载器 schema、CF 调用方法 X01-X04</td><td>未证实</td></tr>
+<tr><td>浏览器渲染、WebView2 实测、内存剖析</td><td>受阻</td></tr>
+<tr><td>L4 headless 及以下 6 层、UI 实现</td><td>未启动</td></tr>
+</table></section></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);const nodes=[...document.querySelectorAll('.node')];
+let count=0,timer=null;$('ts').textContent=new Date().toLocaleString('zh-CN',{hour12:false});
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function line(d,a,t,r,x){count++;$('s-cnt').textContent=count;const cls=r==='OK'?'r':(r==='DEGRADE'?'w':(r==='FAIL'||r==='TIMEOUT'||r==='CANCELLED'?'e':'m'));const e=document.createElement('div');e.className='ln';e.innerHTML='[KCU] <span class="d">'+esc(d)+'</span> '+esc(a)+' '+esc(t)+' <span class="'+cls+'">'+esc(r)+'</span> <span class="m">'+esc(x)+'</span>';$('log').appendChild(e);$('log').scrollTop=$('log').scrollHeight;}
+const step=(fn,ms)=>new Promise(r=>{timer=setTimeout(()=>{fn();r();},ms);});
+function active(k,s){nodes.forEach((n,i)=>{n.classList.toggle('on',i===k);n.classList.toggle('err',i===k&&s==='err');n.classList.toggle('warn',i===k&&s==='warn');});}
+
+async function run(){
+  clearTimeout(timer);$('log').innerHTML='';count=0;$('s-cnt').textContent='0';$('s-stage').textContent='—';$('s-req').textContent='—';$('s-pop').textContent='—';
+  const auth=$('auth').value,avail=$('avail').value,cred=$('cred').value,batch=parseInt($('batch').value,10),ui=$('ui').value;
+  await step(()=>{active(0);line('lightweight','start','round_016','OK','detail=gan 4B sha1=78dbbdab');},90);
+  if(ui==='off'){await step(()=>{active(1);line('ui','gate','round_016','OK','detail=not_triggered');},100);}
+  else{await step(()=>{active(1);line('ui','gate','ui_full_lightweight','OK','detail=triggered offline no_external_assets handfeel_loop');},100);}
+  await step(()=>{active(2);line('lightweight','view','theme','OK','detail=single excluded=13 no_dual_theme');},100);
+
+  let stage='done',result='OK';
+  if(auth==='offline'){stage='done';await step(()=>{active(3);line('lightweight','select','login','OK','detail=offline_no_browser');},100);}
+  else if(auth==='mojang'&&cred==='no'){stage='failed';result='DEGRADE';await step(()=>{active(3,'warn');line('dispatcher','auth','premium','DEGRADE','detail=credential_absent');},100);}
+  else{
+    await step(()=>{active(3);line('lightweight','select','login','OK','detail=auth='+auth);},100);
+    if(avail==='all'){stage='external_browser';await step(()=>{active(4);line('lightweight','login','login','OK','detail=external_browser');},100);}
+    else if(avail==='embedded'){stage='embedded_browser';await step(()=>{active(4,'warn');line('lightweight','fallback','login','DEGRADE','detail=external_to_embedded');},100);}
+    else if(avail==='code'){stage='pair_code';await step(()=>{active(4,'warn');line('lightweight','fallback','login','DEGRADE','detail=external_to_embedded');},90);await step(()=>{active(5,'warn');line('lightweight','fallback','login','DEGRADE','detail=embedded_to_pair_code KCU-7F3A');},100);await step(()=>{active(5);line('lightweight','pair_code','login','OK','detail=confirmed stage=done');},100);}
+    else{stage='failed';result='TIMEOUT';await step(()=>{active(4,'warn');line('lightweight','fallback','login','DEGRADE','detail=external_to_embedded');},90);await step(()=>{active(5,'warn');line('lightweight','fallback','login','DEGRADE','detail=embedded_to_pair_code');},100);await step(()=>{active(5,'err');line('lightweight','pair_code','login','TIMEOUT','detail=timeout=300s zero_level_error');},100);}
+  }
+  $('s-stage').textContent=stage;
+
+  const pages=batch===0?0:Math.ceil(batch/20);
+  await step(()=>{active(6);$('s-req').textContent=pages;line('lightweight','batch','download',pages?'OK':'OK','detail='+batch+'_ids pages='+pages+' requests='+pages+' no_per_item_request');},100);
+  await step(()=>{active(7);line('lightweight','register','loader','OK','detail=6_registered schema_patch=none');},100);
+  await step(()=>{active(8);line('lightweight','files','view','OK','detail=system_panel_only no_embedded_manager');},100);
+  await step(()=>{active(9);line('lightweight','launch','game','OK','detail=launcher_exited no_resident_process');},100);
+  await step(()=>{active(10);$('s-pop').textContent='0';line('lightweight','popup','close_all','OK','detail=11_catalog 0_open');},100);
+  await step(()=>{active(11);line('cargo','test','offline','OK','detail=141_passed 0_failed lightweight=38');},100);
+  await step(()=>{active(12);line('stage','check','D07','OK','detail=L3_done L4_headless_not_started');},100);
+  await step(()=>{line('lightweight','dispatch','launch','OK','detail=envelope request_id=kcu-00000010');},90);
+}
+$('run').onclick=run;
+$('reset').onclick=()=>{clearTimeout(timer);$('log').innerHTML='';count=0;$('s-cnt').textContent='0';$('s-stage').textContent='—';$('s-req').textContent='—';$('s-pop').textContent='—';nodes.forEach(n=>n.classList.remove('on','err','warn'));};
+</script>
+</body></html>

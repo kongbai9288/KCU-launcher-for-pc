@@ -1253,3 +1253,85 @@ UI 闸门：
 | 2 | `[KCU] remote push main OK files=166 via=git_data_api`，exit=0 | 远端逐 blob 比对 ALL_MATCH True |
 
 未重写历史、未强推、未改断言。
+
+## 016
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/16-round-016-instructions.txt | 逐字副本，1 行 4 字节，SHA-1 `78dbbdabbcac19f0e4442954bdc5b89d88255abd` |
+| docs/decisions/016-build-continue.md | D01-D08、L01-L15、U01-U09、验证与边界 |
+| docs/rules/ui-demo.md | 轮次状态表、016 触发记录 T01-T06、016 检查命令 |
+| src/lightweight/ | login.rs、download.rs、loaders.rs、view.rs、mod.rs |
+| src/lib.rs | 追加 lightweight 模块与 7 个公共类型导出 |
+| docs/features/lightweight.md | F003 状态改为已实现、已验证，五字段全量重写 |
+| docs/features/lightweight-login.md、lightweight-download.md、lightweight-loaders.md、lightweight-view.md | F016-01..04，字段固定五段 |
+| demos/ui-full-lightweight.html | **整页 UI 演示**，016 轮 UI 闸门首次触发的交付物 |
+| demos/round-016-lightweight.html | L3 运行逻辑演示，13 节点，非整页 UI |
+| 索引与记录 | features / decisions index、build-preconditions L3、ai-errors A67-A71、docs/index 61 项必读、README、interface-log I28-I32 / RO16-RO22、push-scope |
+| docs/verification/round-016.md | 第 016 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Thu Nov 12 23:59:18 CST 2026` |
+| 全量测试与 release 复验 | `Fri Nov 13 00:19:51 CST 2026`，141 passed / 0 failed，rlib 1353366 字节 |
+| 文档收口 | `Fri Nov 13 00:18:37 CST 2026` |
+
+用户当轮输入：逐字「干」，1 行 4 字节。按 015 轮「继续按原进度」与 003-remote.md D07，进入第 3 层 lightweight。UI 闸门按 docs/rules/ui-demo.md「轻量模式极简视图改动」判定为**已触发**，与「继续原进度」并列执行，未替用户省略演示。
+
+L3 落地：
+
+| 编号 | 项 | 实测 |
+| --- | --- | --- |
+| L01 | 5 个模块 | `git ls-files src/lightweight/ \| wc -l` = 5；Cargo.toml / Cargo.lock 未变 |
+| L02 | 三种登录 E01 | 8 项：离线免浏览器、外置成功、两级回退、连接码 300s 超时、无凭据禁正版、取消、诊断格式 |
+| L03 | 批量请求 E02/K07 | 12 项：10 id 一次请求、45 id 三页三请求、10 次重复批次只发 1 次、缓存 ≤32、地域软策略、密钥注入、CF 不暴露、取消 0 请求、空集合不请求、reset 清态 |
+| L04 | 加载器 E03 | 7 项：六种去重注册、重复可见、未装跳过、schema 字段为空、取消跳过 |
+| L05 | 极简视图 | 11 项：单主题、13 项排除、系统文件面板、无常驻进程、11 弹窗全关闭 0 残留、9 类动作全响应、WebView2 注入、日志有界、取消不崩 |
+| L06 | 整页 UI 演示 | 6 分区、5 状态、11 弹窗、手感调整区、离线可点、KCU 内联 SVG、无外部 CDN 与 FCL 字面量 |
+
+编译与测试：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `cargo test --offline` | 141 passed / 0 failed / 0 ignored / 0 measured，0.12s；doc-tests 0 | 已证实 |
+| `cargo test --offline lightweight::` | 38 passed（login 8 / download 12 / loaders 7 / view 11） | 已证实 |
+| `cargo build --release --offline` | 通过 | 已证实 |
+| `node -e` 遍历 demos/*.html | 16 份内联脚本语法通过 | 已证实 |
+
+首次 `cargo test` 遇增量编译缓存 `Stale file handle (os error 116)`，清理 `target/debug/incremental` 并以 `CARGO_INCREMENTAL=0` 复跑通过；失败回显保留，未静默跳过，未改测试断言。
+
+口径处置（两条硬约束的交点）：
+
+| 编号 | 冲突 | 处置 |
+| --- | --- | --- |
+| V01 | docs/rules/ui-demo.md C03 要求整页演示覆盖深浅主题切换 × 007-normal-ui.md D04 明确轻量模式排除浅色/深色双主题 | 演示层提供深浅**预览**并标注「实现默认单主题」；实现层 `Theme::Single` 不变。用户对演示的调整优先于当前实现（015 D04），是否加双主题由用户凭手感决定 |
+| V02 | build-preconditions.md L3 前置写「WebView2 检测键已证实」× 该键实际仍未证实 | 改为注入式 `WebView2Probe`，不写死检测键；前置条件行如实改为「仍未证实，本层绕过实现，真实键与运行时实测仍受阻」，未降标准凑通过 |
+
+阶段：D07 第 3 层 lightweight 已实现、已验证；整页 UI 演示已交付、手感回路进行中；第 4 层 headless 及以下 6 层未启动。
+
+未做：
+- UI 实现（整页演示确认后才进实现）
+- L4 headless 及以下 6 层
+- CF 下载模块、X01-X04 逐条处置、CF 具体调用方法
+- 特殊版代码（待用户明确同意，用户手拉工具流）
+- 本项目 LICENSE 文件
+- 后端仓任何写请求
+- 浏览器渲染实测、GUI 点击端到端、WebView2 运行时、进程级内存剖析
+- rustc 交叉编译 Win7 / ARM64 目标产物
+- 加载器逐版本 schema、WebView2 检测键、插件源默认、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证
+
+016 验证者记录复核：
+
+| 编号 | 验证者记录 | 改动作者复跑 | 判定 |
+| --- | --- | --- | --- |
+| V01 | 016 spec 文件在仓库内定位失败，SHA-1 不可复算，判未证实 | `ls -l`、`wc -lc`、`sha1sum docs/spec/16-round-016-instructions.txt` → 4 字节 1 行、`78dbbdabbcac19f0e4442954bdc5b89d88255abd`，与声明一致 | 验证者执行误差 |
+| V02 | download.rs 实测 12 项、view.rs 实测 11 项，与委托口径 11 / 12 不符 | `grep -c '#\[test\]'` → download=12、view=11、login=8、loaders=7，合计 38 不变；委托语把两项写反，已修 016 决策、docs/index.md、本段实测表、两份功能 md、features/index.md、README.md 与运行逻辑 HTML 中的分项串 | 委托语分项写反，已纠正；验证报告按 18.1 未改 |
+| V03 | `pub use` 实测 9 处，委托口径为 8 个公共导出 | `src/lib.rs` 顶层 `pub use lightweight::{...}` 实为 7 个类型；全文件共有 9 行 `pub use`（core / dispatcher / lightweight 合计）。验证者数的是全文件行数，委托语写的是单个模块导出数且数值写错 | 三口径差异，统一登记为 7 个类型导出；验证报告未改 |
+| V04 | 禁用词两字连写在 8 处文件命中，判未通过 | 全仓 `grep -rl` 命中 9 个文件：`.github/workflows/ci.yml` 与 `docs/index.md` 是扫描命令字面量（词表自我命中），3 份 spec 是用户原文，3 份旧验证报告是历史，验证者自身 `round-016.md` 是记录用词；项目扫描域 `src/ demos/ README.md docs/research/ docs/features/ docs/records/ docs/decisions/ scripts/` 复跑 `NO_EXPLANATORY` | 扫描域口径差异；未改检查命令、未降标准 |
+| V05 | 报告正文哈希 `e8471c6244dd36b214e1621fcaef202887f80f9a` | 声明块偏移 15392，`sha1(t[:15391])` 与该值一致，属「去掉声明块前多出的 1 个换行」口径，成立；全文 `db3da29767c72bdc67e68f75679c499c628f8f47` | 已证实 |
+| V06 | 变更内容哈希 | `git diff 853746e..6c76eb2 \| sha1sum` = `865df8bcb3743cc47b114d3bbbf4ce97f3195695`，与声明一致 | 已证实 |
+| V07 | 远端公开 GET | 验证者无认证只读 GET 确认 public / main / 远端头 `621c1b9`；改动作者稍后带认证推送后另记 | 受阻（限流下未逐 blob 独立复算） |
+
+独立验证结论：**部分通过**。两个哈希由独立验证者计算并写入声明块，改动作者未代算；验证者五项记录中 V01 / V04 为口径或执行误差，V02 / V03 为委托语数值偏差，均已在改动作者侧纠正并登记，验证报告按 18.1 未改。未解决四值项仍存在，不发通过标记。

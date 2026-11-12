@@ -1,7 +1,7 @@
 # 底层搭建前置条件清单
 
-轮次：015
-状态：已触发（013 轮 F07/F08/F09）；L1、L2 已实现已验证
+轮次：016
+状态：已触发（013 轮 F07/F08/F09）；L1、L2、L3 已实现已验证
 对应：docs/spec/00-requirements.txt:249、docs/decisions/003-remote.md D05-D08、docs/decisions/005-blueprint.md C06
 
 ## 触发链
@@ -23,7 +23,7 @@
 | --- | --- | --- | --- |
 | L1 | core | 蓝图已批准；K01-K04、K07 抽象确认 | **已实现、已验证**；013 的 9 模块 + 014 的 3 模块 = 12 模块、56 测试、release 构建通过 |
 | L2 | dispatcher | L1 独立验证通过；F002 已批准 | **已实现、已验证**；015 轮 5 模块、47 项测试、103 全量通过 |
-| L3 | lightweight | L2 通过；F003 已批准；WebView2 检测键已证实 | 未证实 |
+| L3 | lightweight | L2 通过；F003 已批准；WebView2 检测键**仍未证实** | **已实现、已验证**；016 轮 5 模块、38 项测试、141 全量；WebView2 可用性改由宿主注入，不写死检测键；真实键与运行时实测仍受阻 |
 | L4 | headless | L3 通过；F004 已批准；F012 凭据保护方案已批准 | 未证实 |
 | L5 | normal | L4 通过；F005 已批准；HMCL 代码复用范围已证实 | 未证实 |
 | L6 | UI | L5 通过；F011 已批准；UI 稿品牌与字体授权已取得 | 未证实 |
@@ -105,7 +105,7 @@ X01-X04 落在 docs/spec/00-requirements.txt:171-172、docs/research/03-download
 | --- | --- | --- |
 | 通过标记 | 不发 | 本层不发全局通过标记；L1 单独结论见 docs/verification/round-013.md |
 | 原因 | 存在未解决的已失败 / 未证实 / 受阻；独立验证结论为部分通过；自评 < 7 | X01-X04、品牌替换、CF API 方法、UI 端到端仍未闭环 |
-| src/ | 空 | 12 个 core 模块 + 5 个 dispatcher 模块 + lib.rs + 两个 mod.rs（015 轮补 L2） |
+| src/ | 空 | 12 个 core 模块 + 5 个 dispatcher 模块 + 5 个 lightweight 模块 + lib.rs + 三个 mod.rs（016 轮补 L3） |
 | 下一层动作 | 用户拍板 D06、蓝图、X01-X04 | L2 dispatcher，须先完成 L1 独立验证 |
 
 ## 约束

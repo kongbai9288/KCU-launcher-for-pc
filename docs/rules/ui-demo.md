@@ -5,7 +5,7 @@
 | 编号 | R-UI-01 |
 | 状态 | 已批准 |
 | 版本 | 0.0.0 |
-| 轮次 | 015 |
+| 轮次 | 015 建立；016 首次触发 |
 | 依据 | docs/spec/15-round-015-instructions.txt F02/F03；docs/decisions/015-build-continue.md D02-D04 |
 
 ## 触发
@@ -64,6 +64,31 @@
 | 主题 | `grep -c 'data-theme\|theme-toggle' demos/ui-full-*.html` > 0 |
 | 品牌隔离 | `! grep -rE 'FCL|揉纸启动器' demos/ui-full-*.html` |
 
-## 本轮状态
+## 轮次状态
 
-015 轮不触发，未生成 ui-full 演示。本轮 `demos/round-015-dispatcher.html` 是运行逻辑演示，不属于整页 UI 演示，不计入 G01。
+| 轮次 | 判定 | 交付物 |
+| --- | --- | --- |
+| 015 | 不触发（仅调度逻辑） | 无 ui-full 文件；`demos/round-015-dispatcher.html` 是运行逻辑演示，不计入 G01 |
+| 016 | **已触发**（L3 lightweight 极简视图） | `demos/ui-full-lightweight.html` |
+
+016 触发记录：
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| T01 | 依据 | docs/decisions/016-build-continue.md D02-D05 |
+| T02 | 交付物 | `demos/ui-full-lightweight.html`，整页、6 分区、5 状态、11 弹窗、离线可点、KCU 标识 |
+| T03 | 主题口径 | 演示层深浅预览供手感调整；实现层默认单主题（007 D04）。用户对演示的调整优先于实现 |
+| T04 | 手感回路 | 交付演示 → 用户按手感调整 → 先改演示 → 确认后改实现；本轮实现未进入构建 |
+| T05 | 运行逻辑演示 | `demos/round-016-lightweight.html` 不计入 G01 |
+| T06 | 轻量独立性 | 不复用 normal.ui、设计稿、揉纸纹理、双主题实现、三栏拖拽、日志抽屉 |
+
+016 轮检查命令：
+
+```
+test -f demos/ui-full-lightweight.html
+! grep -rE '<script[^>]+src=|<link[^>]+href="https?:' demos/ui-full-lightweight.html
+! grep -rE 'FCL|揉纸启动器' demos/ui-full-lightweight.html
+grep -c 'data-theme' demos/ui-full-lightweight.html
+grep -c 'close' demos/ui-full-lightweight.html
+node -e "const fs=require('fs');const m=fs.readFileSync('demos/ui-full-lightweight.html','utf8').match(/<script>([\s\S]*?)<\/script>/);new Function(m[1]);"
+```
