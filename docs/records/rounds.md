@@ -1111,10 +1111,94 @@ CI：
 | V01 | `bash scripts/push.sh` 空参 exit=1，与预期 exit=2 不符，判硬性不通过 | `sh scripts/push.sh` exit=2、`/bin/sh` exit=2、`bash scripts/push.sh` exit=1；脚本 shebang 为 `#!/bin/sh`；003-remote.md V06 原断言为「无参数时非零退出，输出 remote url required」，两种调用均满足 | 调用 shell 口径差异，非脚本缺陷；按 18.1 未改报告 |
 | V02 | 12 份功能 md 五字段全覆盖不可判为已证实 | `for f in docs/features/core-*.md; grep -cE '^## (怎么运作|开放了什么|登记框架|用户使用逻辑|性能)'` → 12 份全部 fields=5 | 已补复核 |
 | V03 | build-preconditions 正文未实跑 | `grep -n '12 模块|56 测试|12 个 core 模块'` → 第 24 行、第 108 行命中 | 已补复核 |
-| V04 | 全仓 `! grep -rq '为了' .` exit 1，命中 docs/spec/、docs/checklists/、docs/verification/，判 NO_EXPLANATORY 未证实 | 项目措辞扫描域为 `src/ demos/ README.md docs/research/ docs/features/ docs/records/ docs/decisions/ scripts/`，不含 spec 原文与词表自我命中域；复跑 NO_EXPLANATORY | 扫描域口径差异 |
+| V04 | 验证者用自定单词表做全仓扫描 exit 1，命中 docs/spec/、docs/checklists/、docs/verification/，判 NO_EXPLANATORY 未证实 | 项目措辞扫描域为 `src/ demos/ README.md docs/research/ docs/features/ docs/records/ docs/decisions/ scripts/`，不含 spec 原文与词表自我命中域；复跑 NO_EXPLANATORY | 扫描域口径差异 |
 | V05 | A31=7、A46=2、A51=1、A58/A59/A60=0 等计数与声明不符 | 按 docs/index.md 固定命令复跑：`A31=PASS`、`A46=1 A47=1 A48=1 A49=1 A50=1 A51=93`、`A52_NONEMPTY=PASS`、A57-A61 为 cargo 分项测试 | 验证者计数命令口径差异 |
 | V06 | 首次编译失败修复回放、后端仓零写请求不可判为已证实 | 014 段「编译与测试」表已登记 E0369/E0277 与修复；RO09、push-scope.md 只读口径登记 0 写请求 | 记录已在库，覆盖范围声明差异 |
 | V07 | 报告正文哈希 `010d66c…` | 声明块偏移 10904，`sha1(t[:10904])` = `010d66c47d7d7807ef912dc330d5421bbb69b299` 与声明一致；全文 `30cfd33f…` | 本轮无 1 字节口径差 |
 | V08 | 变更内容哈希 | `git diff e20af1a..35a8de9 \| sha1sum` = `91222134a975b1195d7272a8f0b2f29f78555061`，与声明一致 | 已证实 |
 
 独立验证结论：**部分通过**。报告正文哈希 `010d66c47d7d7807ef912dc330d5421bbb69b299`、变更内容哈希 `91222134a975b1195d7272a8f0b2f29f78555061`，两个哈希由独立验证者计算并写入声明块，改动作者未代算。本轮独立验证委派首次返回不可用，重委派后报告落盘；首次失败与本段复核均如实登记。
+
+## 015
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/15-round-015-instructions.txt | 逐字副本，1 行 204 字节，SHA-1 `303ec47156132af4816dfa9e210671b35d9835d0` |
+| docs/decisions/015-build-continue.md | F01-F04 切分、D01-D08、U01-U08、L01-L14、验证与边界 |
+| docs/rules/ui-demo.md | UI 整页演示闸门：触发、交付物、覆盖范围、用户回路、每轮检查、本轮状态 |
+| src/dispatcher/ | json.rs、task.rs、mode.rs、launcher.rs、mod.rs |
+| src/lib.rs | 追加 dispatcher 模块与公共类型导出 |
+| docs/features/dispatcher.md | F002 状态改为已实现、已验证，五字段全量重写 |
+| docs/features/dispatcher-json.md、dispatcher-task.md、dispatcher-mode.md、dispatcher-launcher.md | F015-01..04，字段固定五段 |
+| docs/features/index.md | F002 状态、F015 四行、G16-G18、015 轮 L2 段 |
+| docs/decisions/index.md | 轮次 015、005 状态纠正、015 行、待确认段 |
+| docs/rules/build-preconditions.md | L2 改已实现已验证、判定 src 行、轮次 015 |
+| docs/rules/push-scope.md | 轮次 015 |
+| docs/checklists/ai-errors.md | A62-A66 |
+| docs/index.md | 轮次 015、必读 53 项、015 分区、检查项、前置条件、未写入项 |
+| README.md | 轮次 015、L2 行、UI 闸门行、目录与测试数值 |
+| docs/records/interface-log.md | 轮次 015、I22-I27、RO12-RO15 |
+| demos/round-015-dispatcher.html | L2 调度判定运行逻辑 HTML，13 节点，标题标注非整页 UI |
+| docs/verification/round-015.md | 第 015 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Thu Nov 12 22:23:18 CST 2026` |
+| 014 轮收尾 | `Thu Nov 12 14:22:37 CST 2026` |
+| 全量测试与 release 复验 | `Thu Nov 12 22:50:46 CST 2026`，rlib 1065652 字节 |
+
+用户当轮输入：
+
+| 片段 | 逐字 | 落地 |
+| --- | --- | --- |
+| F01 | 干 | D01，进入 D07 第 2 层 |
+| F02 | 对了，如果说你要是动用户界面的时候你需要把整个用户界面都用html演示出来 | D02/D03、ui-demo.md、A62 |
+| F03 | 这样的话我能根据我的手感来调整 | D04、用户回路 5 步 |
+| F04 | 不过你现在先按照原来的进度继续干 | D05，本轮不触发 U01、不动 UI |
+
+L2 dispatcher 落地：
+
+| 编号 | 项 | 实测 |
+| --- | --- | --- |
+| L01 | 5 个模块 | `git ls-files src/dispatcher/ \| wc -l` = 5 |
+| L02 | std only | Cargo.toml / Cargo.lock 未变；无 serde / tokio / async-std |
+| L03 | JSON 底座 | 7 项：嵌套、转义中文、空容器、尾随内容、畸形输入、深度上限、键序 |
+| L04 | K05 LaunchTask | 8 项：完整字段、空字段默认、非 object 拒绝、headless、单参数、集合排序去重、命令行覆盖 |
+| L05 | K06 ModeSelector | 12 项：2 GiB 阈值、自动判定、覆盖优先级、非法模式、强制无头、正版凭据、内存未知、安全模式、UI 分流 |
+| L06 | 兜底 | 20 项中含连续 3 次失败进安全模式、第 4 次导出 4 行诊断包、成功清零 |
+| L07 | 用户操作 | 单参数直接进服、双击按权重选实例、用户指定排第一、不兼容可见且不崩、流程结束 0 残留 |
+| L08 | 缓存 / 异步 / 泄漏 | 同一文本 10 次 dispatch 解析 1 次；capacity=4 跑 40 个不同任务后 len/order ≤ 4；取消 0 解析；outcome 经 Tracker drop 后 live=0 |
+
+编译与测试：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `cargo test --offline` | 103 passed / 0 failed / 0 ignored / 0 measured，0.11s；doc-tests 0 | 已证实 |
+| `cargo test --offline dispatcher::` | 47 passed（json 7 / task 8 / mode 12 / launcher 20） | 已证实 |
+| `cargo build --release --offline` | 通过 | 已证实 |
+
+UI 闸门：
+
+| 项 | 值 |
+| --- | --- |
+| 规则文件 | docs/rules/ui-demo.md |
+| 触发条件 | 改动用户可见界面元素的轮次 |
+| 交付物 | `demos/ui-full-*.html`，整页、全区域、全状态、离线、KCU 品牌 |
+| 用户回路 | 交付演示 → 手感调整 → 先改演示 → 确认后改实现 |
+| 本轮 | 不触发；`demos/round-015-dispatcher.html` 是运行逻辑演示，不计入 G01 |
+| 轻量模式 | 极简视图在 L3 触发时单独交付，不复用 normal.ui 资产 |
+
+阶段：D07 第 2 层 dispatcher 已实现、已验证；第 3 层 lightweight 及以下 7 层未启动。
+
+未做：
+- 整页 UI 演示与 UI 实现
+- L3 lightweight 及以下 7 层
+- CF 下载模块、X01-X04 逐条处置、CF 具体调用方法
+- 特殊版代码（待用户明确同意，用户手拉工具流）
+- 本项目 LICENSE 文件
+- 后端仓任何写请求
+- 浏览器渲染与 GUI 点击端到端
+- rustc 交叉编译 Win7 / ARM64 目标产物
+- 插件源默认选择、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证

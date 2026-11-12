@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：014
+更新轮次：015
 
 ## 前置索引
 
@@ -233,6 +233,24 @@
 | RO11 | `env-presence` 步骤只输出 present / absent，不输出值。 |
 
 CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链」仍成立；014 轮把 GitHub Actions 用于 CI 内构建，工具链在 runner 上按腾讯 rustup 镜像安装，不向本地沙盒分发，两条口径不冲突。
+
+## 015 L2 dispatcher 内部接口
+
+| 编号 | 接口 | 输入 | 输出 | 错误 |
+| --- | --- | --- | --- | --- |
+| I22 | `dispatcher::json::parse` | &str | dispatcher.json.Json | 含字节位置的 String |
+| I23 | `dispatcher::task::LaunchTask::{from_json,from_str,from_args}` | Json / &str / &LaunchArgs | LaunchTask | String |
+| I24 | `dispatcher::task::TaskSet::{from_values,from_texts,pick}` | Json 集合 / 文本集合 / &LaunchArgs | TaskSet / LaunchTask | String |
+| I25 | `dispatcher::mode::ModeSelector::{select,safe}` | &ModeInput | Result<ModeSelection,String> / ModeSelection | 非法模式含来源 |
+| I26 | `dispatcher::launcher::Dispatcher::dispatch` | &DispatchInput, &CancelToken | LaunchOutcome | 错误进信封与诊断，不 panic |
+| I27 | `Dispatcher::{reset,flush_diagnostics}` | 无 | () / Vec<Vec<String>> | 无 |
+
+| 编号 | 内容 |
+| --- | --- |
+| RO12 | 015 轮对后端仓 0 个写请求，约束延续 RO01-RO10。 |
+| RO13 | 015 轮未调用任何远端服务接口，未新增外部 API；CF 具体调用方法仍按 F17 由用户在完成时提供。 |
+| RO14 | 整页 UI 演示闸门登记在 docs/rules/ui-demo.md；本轮不触发，未生成 ui-full 文件。 |
+| RO15 | Cargo.toml / Cargo.lock 未变，无新增 crate；`serde` / `tokio` / `async-std` 计数为 0。 |
 
 ## 版本弃用
 

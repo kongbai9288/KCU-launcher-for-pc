@@ -5,7 +5,7 @@
 | 编号 | 功能 | 框架 | 状态 | 文件 |
 | --- | --- | --- | --- | --- |
 | F001 | 正常模式 UI 设计稿 | normal.ui | 已批准 | normal-ui.md |
-| F002 | 统一调度器 | dispatcher | 已批准 | dispatcher.md |
+| F002 | 统一调度器 | dispatcher | 已实现、已验证 | dispatcher.md |
 | F003 | 轻量启动器视图 | lightweight.view | 已批准 | lightweight.md |
 | F004 | 无头模式启动器 | headless | 已批准 | headless.md |
 | F005 | 正常启动器 | normal | 已批准 | normal-launcher.md |
@@ -28,6 +28,10 @@
 | F014-01 | 有界缓存 | core.cache | 已实现、已验证 | core-cache.md |
 | F014-02 | 异步任务与多源竞速 | core.asynk | 已实现、已验证 | core-asynk.md |
 | F014-03 | 泄漏探测与弱引用注册表 | core.leak | 已实现、已验证 | core-leak.md |
+| F015-01 | JSON 解析底座 | dispatcher.json | 已实现、已验证 | dispatcher-json.md |
+| F015-02 | LaunchTask 与任务集合 | dispatcher.task | 已实现、已验证 | dispatcher-task.md |
+| F015-03 | ModeSelector 与兜底分级 | dispatcher.mode | 已实现、已验证 | dispatcher-mode.md |
+| F015-04 | 统一调度主流程 | dispatcher.launcher | 已实现、已验证 | dispatcher-launcher.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -84,6 +88,23 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G13 | F014 三模块均为 std only；不引入 async runtime、不新增 Cargo.lock 条目。 |
 | G14 | 缓存条目、order、inflight 三处都须在测试里有界或归零断言。 |
 | G15 | 异步任务须 cancel + join 双重收口；`TaskGroup::drop` 兜底不得删除。 |
+| G16 | 动 UI 的轮次须先交付整页 HTML 演示，规则见 docs/rules/ui-demo.md；运行逻辑演示不计入。 |
+| G17 | dispatcher 不引入 serde 与 async runtime；Cargo.lock 不新增条目。 |
+| G18 | 模式判定优先级固定：强制无头 > args > config > task > 自动判定；非法模式报错后用内置默认继续。 |
+
+## 015 轮 L2 dispatcher
+
+| 项 | 值 |
+| --- | --- |
+| 输入 | docs/spec/15-round-015-instructions.txt，4 片段 |
+| 决策 | docs/decisions/015-build-continue.md D01-D08、U01-U08 |
+| 模块 | src/dispatcher/{json,task,mode,launcher,mod}.rs |
+| 单份功能 md | 4 份 + F002 更新，字段固定五段 |
+| 测试 | `cargo test --offline` 103 passed / 0 failed；dispatcher 占 47 项 |
+| 构建 | `cargo build --release --offline` 通过 |
+| UI 闸门 | docs/rules/ui-demo.md，本轮不触发 |
+| 演示 | demos/round-015-dispatcher.html 为运行逻辑演示，不是整页 UI 演示 |
+| 未进入 | L3 lightweight 及以下、UI 实现、CF 下载模块、特殊版代码 |
 
 ## 014 轮 core 扩展
 

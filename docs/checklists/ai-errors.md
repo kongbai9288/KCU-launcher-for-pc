@@ -68,6 +68,11 @@
 | A59 | 多源下载一个完成后其余未取消、线程未 join（关联 011 第 30 条、014 D05） | `cargo test --offline race_returns_first_and_cancels_other_sources`、`drop_joins_without_explicit_shutdown` |
 | A60 | 活跃计数不归零或弱引用注册表未清理（关联 014 D06） | `cargo test --offline core::leak` |
 | A61 | 工作流出现凭据字面量（关联 014 D01） | `! grep -rE 'gh[p]_' .github/workflows/` |
+| A62 | 动 UI 的轮次未交付整页 HTML 演示（关联 015 D02） | `test -f demos/ui-full-*.html`（触发轮次）；规则 docs/rules/ui-demo.md |
+| A63 | 把运行逻辑演示当成整页 UI 演示（关联 015 D05/U07） | `grep -n '运行逻辑' demos/round-015-dispatcher.html`；ui-full 命名核对 |
+| A64 | dispatcher 引入 serde 或 async runtime（关联 015 D06 L02） | `grep -c 'serde\|tokio\|async-std' Cargo.lock` 为 0；`cargo tree --offline` 只有 kcu-core |
+| A65 | 模式判定优先级写反或非法模式直接崩（关联 015 L05） | `cargo test --offline args_override_beats_config`、`invalid_mode_reports_and_falls_back_without_crashing` |
+| A66 | 连续失败不进安全模式、不导出诊断包，或 UI 模式残留未关弹窗（关联 015 L06/L09） | `cargo test --offline consecutive_failures_enter_safe_mode_then_export_bundle`、`normal_mode_registers_and_closes_every_popup` |
 
 ## 输出结构
 

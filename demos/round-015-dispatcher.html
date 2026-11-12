@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KCU Launcher / dispatcher / 015</title>
+<style>
+:root{--bg:#0b0e14;--panel:#131824;--panel2:#1a2130;--line:#28324a;--txt:#e6ecf5;--dim:#8b9ab3;--acc:#5ee0b4;--acc2:#6aa8ff;--warn:#f5b95c;--err:#ff7a7a;--mut:#7d8aa3;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 12% -10%,#18233a 0%,var(--bg) 58%);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:18px}
+.wrap{max-width:1180px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;padding:6px 2px 18px;border-bottom:1px solid var(--line)}
+h1{font-size:19px;margin:0;letter-spacing:.5px;font-weight:650}
+.tag{font:12px var(--mono);color:var(--acc);border:1px solid #2c5b4c;border-radius:999px;padding:2px 10px;background:#10241e}
+.tag2{font:12px var(--mono);color:var(--warn);border:1px solid #6b5326;border-radius:999px;padding:2px 10px;background:#2a2214}
+.meta{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-top:16px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--panel) 0%,#111623 100%);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{font-size:13px;margin:0 0 14px;color:var(--dim);font-weight:600;letter-spacing:1px}
+.field{margin-bottom:10px}
+label{display:block;font-size:12px;color:var(--dim);margin-bottom:4px}
+select{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:13px var(--mono);outline:none}
+.btns{display:flex;gap:9px;margin-top:14px}
+button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:13px/1.2 inherit;cursor:pointer}
+button.primary{background:linear-gradient(135deg,#2f7d68,#245f8f);border-color:#3f8f7e;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px}
+.stat .k{font-size:11px;color:var(--dim)}.stat .v{font:14px var(--mono);margin-top:3px;color:var(--acc)}
+#log{height:320px;overflow:auto;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.75 var(--mono);white-space:pre-wrap;word-break:break-all}
+.ln{color:#c9d6e8}.ln .d{color:var(--acc2)}.ln .r{color:var(--acc)}.ln .w{color:var(--warn)}.ln .e{color:var(--err)}.ln .m{color:var(--mut)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
+@media(max-width:980px){.flow{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;transition:.25s}
+.node .n{font:11px var(--mono);color:var(--mut)}.node .t{font-size:12px;margin:4px 0 5px;font-weight:600}.node .s{font-size:11px;color:var(--dim)}
+.node.on{border-color:var(--acc);box-shadow:0 0 0 1px #2f7d68,0 8px 26px rgba(46,125,104,.2);background:#12201e}
+.node.on .t{color:var(--acc)}.node.err{border-color:var(--err)}.node.err .t{color:var(--err)}.node.warn{border-color:var(--warn)}.node.warn .t{color:var(--warn)}
+.foot{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.foot{grid-template-columns:1fr}}
+pre{margin:0;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.7 var(--mono);color:#c9d6e8;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--dim);font-weight:600}
+.bars{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:560px){.bars{grid-template-columns:1fr}}
+.b{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px;font:11px var(--mono);color:var(--dim)}
+.b.ok{border-color:#2c5b4c;color:var(--acc);background:#10241e}
+.note{margin-top:12px;padding:10px;border:1px dashed var(--line);border-radius:9px;font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>KCU Launcher</h1>
+  <span class="tag">L2 dispatcher / 015</span>
+  <span class="tag2">运行逻辑演示 · 非整页 UI</span>
+  <span class="meta" id="ts"></span>
+</header>
+
+<div class="grid">
+  <section class="card">
+    <h2>输入</h2>
+    <div class="field"><label>内存 / 首次启动</label><select id="mem"><option value="low_first">≤ 2 GiB 且首次</option><option value="high">8 GiB</option><option value="unknown">读数未知</option></select></div>
+    <div class="field"><label>config/launch.json</label><select id="cfg"><option value="none">无覆盖</option><option value="normal">mode=normal</option><option value="bad">非法 json</option><option value="turbo">非法 mode</option></select></div>
+    <div class="field"><label>命令行 / 入口</label><select id="entry"><option value="none">双击图标</option><option value="kcul">.kcul 无头</option><option value="arg">--server 单参数</option><option value="double">双击服务器 + 权重</option><option value="cancel">取消令牌</option></select></div>
+    <div class="field"><label>既有正版凭据</label><select id="cred"><option value="no">无</option><option value="yes">有</option></select></div>
+    <div class="field"><label>连续失败次数</label><select id="fail"><option value="0">0</option><option value="3">3（安全模式）</option><option value="4">4（诊断包）</option></select></div>
+    <div class="field"><label>UI 闸门</label><select id="ui"><option value="off">本轮不动 UI（不触发）</option><option value="on">动 UI（须整页演示）</option></select></div>
+    <div class="btns"><button class="primary" id="run">执行本轮</button><button id="reset">重置</button></div>
+    <div class="note">015 轮按 docs/rules/ui-demo.md 判定：改动用户界面的轮次须交付 `demos/ui-full-*.html` 整页演示供手感调整；本演示是调度运行逻辑，不计入该闸门。</div>
+  </section>
+
+  <section class="card">
+    <h2>状态</h2>
+    <div class="stats">
+      <div class="stat"><div class="k">模式</div><div class="v" id="s-mode">—</div></div>
+      <div class="stat"><div class="k">实例</div><div class="v" id="s-inst">—</div></div>
+      <div class="stat"><div class="k">弹窗残留</div><div class="v" id="s-pop">—</div></div>
+      <div class="stat"><div class="k">诊断行</div><div class="v" id="s-cnt">0</div></div>
+    </div>
+    <div id="log"></div>
+    <div class="bars" id="bars">
+      <div class="b" id="b-mode">mode: —</div><div class="b" id="b-ui">ui: —</div><div class="b" id="b-safe">safety: —</div>
+    </div>
+  </section>
+</div>
+
+<div class="flow" id="flow">
+  <div class="node" data-k="0"><div class="n">01 / input</div><div class="t">逐字指令</div><div class="s">4 片段 204B</div></div>
+  <div class="node" data-k="1"><div class="n">02 / gate</div><div class="t">UI 闸门判定</div><div class="s">本轮不触发</div></div>
+  <div class="node" data-k="2"><div class="n">03 / config</div><div class="t">解析覆盖配置</div><div class="s">launch.json</div></div>
+  <div class="node" data-k="3"><div class="n">04 / task</div><div class="t">任务解析</div><div class="s">json + 单飞缓存</div></div>
+  <div class="node" data-k="4"><div class="n">05 / set</div><div class="t">任务集合</div><div class="s">排序去重</div></div>
+  <div class="node" data-k="5"><div class="n">06 / merge</div><div class="t">命令行合并</div><div class="s">单参数进服</div></div>
+  <div class="node" data-k="6"><div class="n">07 / instance</div><div class="t">按权重选实例</div><div class="s">用户指定第一</div></div>
+  <div class="node" data-k="7"><div class="n">08 / mode</div><div class="t">模式判定</div><div class="s">K06</div></div>
+  <div class="node" data-k="8"><div class="n">09 / auth</div><div class="t">正版凭据闸门</div><div class="s">headless</div></div>
+  <div class="node" data-k="9"><div class="n">10 / ui</div><div class="t">UI 分流 + 弹窗</div><div class="s">仅 normal</div></div>
+  <div class="node" data-k="10"><div class="n">11 / safety</div><div class="t">安全模式</div><div class="s">诊断包</div></div>
+  <div class="node" data-k="11"><div class="n">12 / test</div><div class="t">编译测试</div><div class="s">103 passed</div></div>
+  <div class="node" data-k="12"><div class="n">13 / stage</div><div class="t">阶段判定</div><div class="s">L3 未启动</div></div>
+</div>
+
+<div class="foot">
+  <section class="card">
+    <h2>统一信封</h2>
+<pre>{
+  "request_id": "kcu-0000000f",
+  "type": "request | response | event",
+  "target": "dispatcher",
+  "payload": {
+    "round": 15,
+    "layer": "L2 dispatcher",
+    "modules_added": 5,
+    "tests_total": 103,
+    "tests_dispatcher": 47,
+    "tests_failed": 0,
+    "low_memory_bytes": 2147483648,
+    "failure_threshold": 3,
+    "cache_capacity": 16,
+    "parse_calls_repeated": 1,
+    "inflight": 0,
+    "popups_open": 0,
+    "ui_gate_triggered": false,
+    "ui_full_demo": "pending_ui_round",
+    "backend_write_requests": 0
+  },
+  "error": null
+}</pre>
+  </section>
+  <section class="card">
+    <h2>四值与边界</h2>
+    <table>
+      <tr><th>项</th><th>值</th></tr>
+      <tr><td>cargo test --offline 103 / 0</td><td>已证实</td></tr>
+      <tr><td>dispatcher 47 项（7/8/12/20）</td><td>已证实</td></tr>
+      <tr><td>release 构建、Cargo.lock 未变</td><td>已证实</td></tr>
+      <tr><td>重复任务解析 1 次、40 任务后 len ≤ 4</td><td>已证实</td></tr>
+      <tr><td>取消 0 解析、outcome live 归零</td><td>已证实</td></tr>
+      <tr><td>连续失败进安全模式并导出 4 行诊断包</td><td>已证实</td></tr>
+      <tr><td>UI 整页演示闸门登记、本轮不触发</td><td>已证实</td></tr>
+      <tr><td>整页 UI 演示、UI 实现、L3 及以下 7 层</td><td>未启动</td></tr>
+      <tr><td>CF 具体调用方法、X01-X04 逐条</td><td>未证实</td></tr>
+      <tr><td>GUI 点击端到端、浏览器渲染、Win7 交叉编译</td><td>受阻</td></tr>
+      <tr><td>git HTTP 推送、6 上游主机</td><td>受阻</td></tr>
+    </table>
+  </section>
+</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const nodes = [...document.querySelectorAll('.node')];
+let count = 0, timer = null;
+$('ts').textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function line(domain, action, target, result, detail){
+  count++; $('s-cnt').textContent = count;
+  const cls = result === 'OK' ? 'r' : (result === 'DEGRADE' ? 'w' : (result === 'FAIL' || result === 'BLOCKED' ? 'e' : 'm'));
+  const el = document.createElement('div'); el.className = 'ln';
+  el.innerHTML = '[KCU] <span class="d">'+esc(domain)+'</span> '+esc(action)+' '+esc(target)+' <span class="'+cls+'">'+esc(result)+'</span> <span class="m">'+esc(detail)+'</span>';
+  $('log').appendChild(el); $('log').scrollTop = $('log').scrollHeight;
+}
+function step(fn, ms){return new Promise(r=>{timer=setTimeout(()=>{fn();r();},ms);});}
+function active(k,state){nodes.forEach((n,i)=>{n.classList.toggle('on',i===k);n.classList.toggle('err',i===k&&state==='err');n.classList.toggle('warn',i===k&&state==='warn');});}
+function bar(id,text,ok){const e=$(id);e.textContent=text;e.classList.toggle('ok',ok===true);e.style.borderColor=ok===false?'var(--err)':'';e.style.color=ok===false?'var(--err)':'';}
+
+async function run(){
+  clearTimeout(timer);
+  $('log').innerHTML=''; count=0; $('s-cnt').textContent='0';
+  $('s-mode').textContent='—'; $('s-inst').textContent='—'; $('s-pop').textContent='—';
+  bar('b-mode','mode: —',null); bar('b-ui','ui: —',null); bar('b-safe','safety: —',null);
+  const mem=$('mem').value,cfg=$('cfg').value,entry=$('entry').value,cred=$('cred').value,fail=$('fail').value,ui=$('ui').value;
+
+  await step(()=>{active(0);line('dispatcher','start','round_015','OK','detail=4_fragments 204B sha1=303ec471');},100);
+
+  if(ui==='on'){
+    await step(()=>{active(1,'err');line('ui','gate','full_page_demo','BLOCKED','detail=ui-full-*.html required flow_stopped');},120);
+    return;
+  }
+  await step(()=>{active(1);line('ui','gate','round_015','OK','detail=not_triggered logic_demo_only');},100);
+
+  if(entry==='cancel'){
+    await step(()=>{active(2,'warn');line('dispatcher','dispatch','launch','CANCELLED','detail=token_cancelled parse=0');bar('b-mode','mode: CANCELLED',false);},120);
+    return;
+  }
+
+  let cfgMode=null, cfgBad=false, cfgInvalid=false;
+  if(cfg==='normal') cfgMode='normal';
+  if(cfg==='bad') cfgBad=true;
+  if(cfg==='turbo') cfgInvalid=true;
+  await step(()=>{active(2,cfgBad||cfgInvalid?'warn':null);line('dispatcher','parse','config/launch.json',cfgBad?'ERROR':'OK',cfgBad?'detail=bad_json':(cfgMode?'detail=mode=normal':'detail=absent'));},110);
+
+  let failed = cfgBad || cfgInvalid;
+  await step(()=>{active(3);line('cache','get_or_load','task','OK','detail=single_flight parse_calls=1 inflight=0');},110);
+  await step(()=>{active(4);line('dispatcher','taskset','sort_dedup','OK','detail=by_id stable');},100);
+
+  let join=false, instance='—';
+  if(entry==='arg') join=true;
+  if(entry==='double'){join=true;instance='b (user_choice=a -> a)';}
+  await step(()=>{active(5);line('dispatcher','merge','args','OK',join?'detail=cmd_overrides_task':'detail=no_override');},100);
+  await step(()=>{active(6);$('s-inst').textContent=instance;line('dispatcher','select','instance',instance==='—'?'SKIP':'OK','detail=weight+user_first');},110);
+
+  let mode='normal', reason='automatic', fallback='3', premium=true, uiLoaded=true;
+  if(entry==='kcul'){mode='headless';reason='forced_headless';fallback=cred==='yes'?'3':'1';premium=cred==='yes';uiLoaded=false;}
+  else if(cfgMode==='normal'){mode='normal';reason='explicit_override';}
+  else if(mem==='low_first'){mode='lightweight';reason='low_memory_first_run';uiLoaded=false;}
+  else if(mem==='unknown'){mode='normal';reason='memory_unknown_degrade';fallback='2';}
+  if(cfgInvalid){await step(()=>{active(7,'warn');line('dispatcher','mode','selector','ERROR','detail=invalid_mode_from_config fallback_builtin_defaults');},110);}
+  if(fail!=='0'){mode='safe';reason='consecutive_failures';fallback='2';premium=false;uiLoaded=false;}
+
+  await step(()=>{active(7);$('s-mode').textContent=mode;bar('b-mode','mode: '+mode+' / '+reason,true);line('dispatcher','mode','select','OK','detail='+reason+' fallback='+fallback);},120);
+  await step(()=>{active(8,premium?null:'warn');line('dispatcher','auth','premium',premium?'OK':'DEGRADE',premium?'detail=allowed':'detail=credential_absent');},100);
+  await step(()=>{active(9);bar('b-ui','ui: '+(uiLoaded?'normal loaded':'skipped'),true);line('dispatcher','ui','frame',uiLoaded?'OK':'DEGRADE',uiLoaded?'detail=popups_registered':'detail=skipped mode='+mode);},110);
+  await step(()=>{active(9);$('s-pop').textContent='0';line('dispatcher','popup','close_all','OK','detail=11_catalog 0_open');},100);
+
+  if(fail==='3'||fail==='4'){
+    await step(()=>{active(10,'warn');bar('b-safe','safety: safe_mode',false);line('dispatcher','safety','enter','OK','detail=builtin_defaults threshold=3');},110);
+    if(fail==='4') await step(()=>{active(10);line('dispatcher','bundle','export','OK','detail=logs+config+runtime+modules 4_lines');},110);
+  } else {
+    await step(()=>{active(10);bar('b-safe','safety: normal',true);line('dispatcher','safety','check','OK','detail=failures=0');},110);
+  }
+
+  await step(()=>{active(11);line('cargo','test','offline','OK','detail=103_passed 0_failed dispatcher=47');},110);
+  await step(()=>{active(12);line('stage','check','D07','OK','detail=L2_done L3_lightweight_not_started');},110);
+  await step(()=>{line('dispatcher','dispatch','launch','OK','detail=envelope request_id=kcu-0000000f');},100);
+}
+
+$('run').onclick=run;
+$('reset').onclick=()=>{
+  clearTimeout(timer);
+  $('log').innerHTML=''; count=0; $('s-cnt').textContent='0';
+  $('s-mode').textContent='—'; $('s-inst').textContent='—'; $('s-pop').textContent='—';
+  nodes.forEach(n=>n.classList.remove('on','err','warn'));
+  bar('b-mode','mode: —',null); bar('b-ui','ui: —',null); bar('b-safe','safety: —',null);
+};
+</script>
+</body>
+</html>

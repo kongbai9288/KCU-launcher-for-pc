@@ -1,4 +1,5 @@
 pub mod core;
+pub mod dispatcher;
 
 pub use core::envelope::{Envelope, Kind};
 pub use core::diagnostics::diag_line;
@@ -7,3 +8,4 @@ pub use core::userflow::{simulate, Step, FlowReport};
 pub use core::cache::Cache;
 pub use core::asynk::{CancelToken, TaskGroup, RaceResult, race};
 pub use core::leak::{Tracker, Tracked, WeakRegistry};
+pub use dispatcher::{Dispatcher, DispatchInput, LaunchOutcome, LaunchTask, Mode, ModeSelector, TaskSet};
