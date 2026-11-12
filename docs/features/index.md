@@ -25,6 +25,9 @@
 | F013-07 | 实例选择 | core.instance | 已实现、已验证 | core-instance.md |
 | F013-08 | 弹窗与关闭 | core.popup | 已实现、已验证 | core-popup.md |
 | F013-09 | 用户操作模拟 | core.userflow | 已实现、已验证 | core-userflow.md |
+| F014-01 | 有界缓存 | core.cache | 已实现、已验证 | core-cache.md |
+| F014-02 | 异步任务与多源竞速 | core.asynk | 已实现、已验证 | core-asynk.md |
+| F014-03 | 泄漏探测与弱引用注册表 | core.leak | 已实现、已验证 | core-leak.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -78,6 +81,24 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G10 | F013 各 md 的性能栏未实测进程级数值时写「未实测」，不写推测值。 |
 | G11 | core 模块新增弹窗类型须进 `catalog()` 并通过 `missing_close_path()` 为空的检查。 |
 | G12 | `src/` 内注释不写功能目的说明；技术不变量写进 md 与本索引，不写进代码注释。 |
+| G13 | F014 三模块均为 std only；不引入 async runtime、不新增 Cargo.lock 条目。 |
+| G14 | 缓存条目、order、inflight 三处都须在测试里有界或归零断言。 |
+| G15 | 异步任务须 cancel + join 双重收口；`TaskGroup::drop` 兜底不得删除。 |
+
+## 014 轮 core 扩展
+
+| 项 | 值 |
+| --- | --- |
+| 输入 | docs/spec/14-round-014-instructions.txt，7 片段 |
+| 决策 | docs/decisions/014-build-continue.md D01-D08 |
+| 模块 | core.cache / core.asynk / core.leak |
+| 单份功能 md | 3 份，字段固定五段 |
+| 测试 | `cargo test --offline` 56 passed / 0 failed；新增 19 项 |
+| 构建 | `cargo build --release --offline` rlib 610080 字节 |
+| 工作流 | `.github/workflows/ci.yml`，secrets 占位、有界缓存、并发取消、并行 job |
+| 私仓 | `kongbai9288/KCU-launcher-special`，private，仅 README 占位 |
+| UI 稿 | 降级为样板与交互参考，KCU 品牌重新实现 |
+| 未进入 | L2 dispatcher 及以下 8 层、UI 实现、CF 下载模块、特殊版代码 |
 
 ## 012 轮开服器输入
 

@@ -1,7 +1,7 @@
 # 文档索引
 
 检索日期：2026-11-12
-更新轮次：013
+更新轮次：014
 
 ## 每轮开工必读顺序
 
@@ -43,12 +43,18 @@
 36. src/core/mod.rs
 37. docs/features/core-userflow.md
 38. docs/features/core-popup.md
+39. docs/spec/14-round-014-instructions.txt
+40. docs/decisions/014-build-continue.md
+41. .github/workflows/ci.yml
+42. docs/features/core-cache.md
+43. docs/features/core-asynk.md
+44. docs/features/core-leak.md
 
 读取命令：
 
 ```
 cd /data/workspace/kcu-launcher-desktop
-for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/spec/09-round-009-instructions.txt docs/spec/10-round-010-instructions.txt docs/spec/11-round-011-instructions.txt docs/spec/11-features-input.txt docs/spec/12-round-012-instructions.txt docs/spec/12-server-features-input.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/rules/build-preconditions.md docs/research/index.md docs/features/index.md docs/records/rounds.md docs/records/open-questions.md docs/features/backlog.md docs/features/server-backlog.md docs/research/16-server-platform.md docs/decisions/012-server-input.md docs/spec/13-round-013-instructions.txt docs/spec/13-round-013-instructions-part2.txt docs/records/round-013-answers.md docs/decisions/013-build-start.md Cargo.toml src/lib.rs src/core/mod.rs docs/features/core-userflow.md docs/features/core-popup.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
+for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/spec/09-round-009-instructions.txt docs/spec/10-round-010-instructions.txt docs/spec/11-round-011-instructions.txt docs/spec/11-features-input.txt docs/spec/12-round-012-instructions.txt docs/spec/12-server-features-input.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/rules/build-preconditions.md docs/research/index.md docs/features/index.md docs/records/rounds.md docs/records/open-questions.md docs/features/backlog.md docs/features/server-backlog.md docs/research/16-server-platform.md docs/decisions/012-server-input.md docs/spec/13-round-013-instructions.txt docs/spec/13-round-013-instructions-part2.txt docs/records/round-013-answers.md docs/decisions/013-build-start.md Cargo.toml src/lib.rs src/core/mod.rs docs/features/core-userflow.md docs/features/core-popup.md docs/spec/14-round-014-instructions.txt docs/decisions/014-build-continue.md .github/workflows/ci.yml docs/features/core-cache.md docs/features/core-asynk.md docs/features/core-leak.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
 ```
 
 ## 分区
@@ -62,8 +68,11 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 013 答复台账 | docs/records/round-013-answers.md | 76 片段逐字编号、语义映射、不写死项 |
 | 013 开工决策 | docs/decisions/013-build-start.md | D06/D07、工具链纠正、G 组默认、H 组硬要求 |
 | Rust crate | Cargo.toml | std only，profile 默认值已核实 |
-| L1 core 源码 | src/ | 9 个模块，37 个单元测试 |
-| L1 功能登记 | docs/features/core-*.md | 9 份，字段固定五段 |
+| L1 core 源码 | src/ | 12 个模块，56 个单元测试 |
+| L1 功能登记 | docs/features/core-*.md | 12 份，字段固定五段 |
+| 014 决策 | docs/decisions/014-build-continue.md | 私仓、secrets 占位、样板化 UX、缓存异步泄漏防护 |
+| CI 工作流 | .github/workflows/ci.yml | secrets / vars 占位、有界缓存、并发取消、并行 job |
+| 特殊版私仓 | kongbai9288/KCU-launcher-special | private，仅 README 占位，代码待用户同意 |
 | 调研 | docs/research/index.md | 外部事实、锚点、四值 |
 | 合规与阻塞项 | docs/research/12-compliance.md | API 条款、凭据保护、许可证全文、上游版本、X01-X07 |
 | 系统 API 与平台 | docs/research/13-platform-api.md | Win7、多架构、版本/架构/位置 API、Rust 目标冲突 |
@@ -92,6 +101,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 演示 | demos/round-011-input.html | 功能输入与硬冲突判定运行逻辑 |
 | 演示 | demos/round-012-server-input.html | 开服器输入与 93 条问题闸门运行逻辑 |
 | 演示 | demos/round-013-core.html | core 编译、用户操作模拟、11 类弹窗关闭逻辑 |
+| 演示 | demos/round-014-cache-async.html | 缓存单飞、多源竞速取消、泄漏归零、工作流占位 |
 | 脚本 | scripts/push.sh | 推送入口，自动降级 |
 | 脚本 | scripts/api_push.py | Git Data API 全量树快照 |
 
@@ -105,7 +115,8 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
 | 用户后端仓 | 只读，仅 GET，内容不进公仓 |
-| 特殊版 | 单开私仓，所有任务完成且复核无漏洞后构建 |
+| 特殊版 | `kongbai9288/KCU-launcher-special`，private，014 轮已建仓，仅 README 占位 |
+| 特殊版放代码条件 | 用户明确同意后，用户手拉工具流 |
 
 ## 每轮开工前检查
 
@@ -130,9 +141,14 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | ops.json 回写扫描 | `grep -c 'writes the whole list back' docs/research/16-server-platform.md` |
 | src/ 空扫描（013 轮前） | `test -z "$(git ls-files src/)"`，013 轮起改为非空断言 |
 | Rust 构建 | `cargo build --release --offline` |
-| Rust 测试 | `cargo test --offline`，当前 37 passed / 0 failed |
+| Rust 测试 | `cargo test --offline`，当前 56 passed / 0 failed |
 | 弹窗关闭路径 | `cargo test --offline core::popup`，11 类全部可关 |
 | 用户操作模拟 | `cargo test --offline core::userflow`，双击 / 指定 / 单参数 / 无残留 |
+| 缓存有界与单飞 | `cargo test --offline core::cache`，8 passed，order ≤ capacity |
+| 异步取消与回收 | `cargo test --offline core::asynk`，6 passed，live=0 |
+| 泄漏归零 | `cargo test --offline core::leak`，5 passed |
+| 工作流凭据 | `! grep -rE 'gh[p]_' .github/workflows/`，只写 secrets 引用 |
+| 工作流语法 | `python3 -c "import yaml;yaml.safe_load(open('.github/workflows/ci.yml'))"` |
 | 代码注释 | `! grep -rE '为了|目的是|方便用户|让用户能够|这样用户' src/` |
 
 ## 搭建前置条件
@@ -147,7 +163,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 地域判定口径 | 未定 | 物理位置 + 区域设置，软策略、只用于下载选择 F67/F52/F53 |
 | 待拍板问题 93 条 | 未答复 | 已答复，细节按用户逻辑落地 |
 | 开工时点 S1/S2 | 并列登记 | F07 判定「现在就是明天」，按 S1 开工 |
-| src/ | 空 | L1 core 9 模块已落地 |
+| src/ | 空 | L1 core 12 模块已落地（013 的 9 个 + 014 的 3 个） |
 | 工具链 | rustc/cargo 受阻 | rustc / cargo 1.99.1，腾讯 rustup 镜像 |
 
 详见 docs/rules/build-preconditions.md 条件 1-6 与 docs/decisions/013-build-start.md。
@@ -155,13 +171,13 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 ## 未写入项
 
 - L2 dispatcher 及以下 8 层：未启动。
-- 正常模式 UI 实现：设计稿已落盘，未实现、未进入构建。
-- UI 设计稿品牌与字体：F60 决定替换，尚未执行。
+- 正常模式 UI 实现：014 轮定为样板参考、KCU 品牌重新实现，未进入构建。
+- UI 设计稿品牌与字体：E09 卡点关闭，设计稿不直接复用。
 - 图标 ICO 与裁切版本：未生成。
 - 本项目 LICENSE：F61 决定 GPLv3，文件未生成。
-- 特殊版私仓：F63 决定先建仓、同意后再放代码，尚未创建。
+- 特殊版私仓：已建仓，代码待用户明确同意后放入。
 - 后端仓任何写请求：0。
-- CF API 方法：F17 由用户在完成时提供。
+- CF API 方法：workflow 设 secrets 占位，值由用户填写；具体调用方法 F17 由用户在完成时提供。
 - 插件源默认选择、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 日志外传条款：未证实。
 - 浏览器内渲染实测、GUI 点击端到端、rustc 交叉编译 Win7 目标：受阻。
 - 011 遗留未证实项与 012 的 G 组默认：见 docs/decisions/013-build-start.md。

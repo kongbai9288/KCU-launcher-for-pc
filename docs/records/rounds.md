@@ -997,3 +997,109 @@ H 组落地：
 | V05 | 变更内容哈希 | `git diff a31aa6a..a8715ba \| sha1sum` = `51c7a69bc5d3b072fc63a25369046c2acde51394`，与声明一致 | 已证实 |
 
 独立验证结论：**部分通过**。报告正文哈希 `85fae9eb9d84daed2f5547d2d5b61ade8e7ec465`（去前置换行口径）、变更内容哈希 `51c7a69bc5d3b072fc63a25369046c2acde51394`，两个哈希由独立验证者计算并写入声明块，改动作者未代算。
+
+## 014
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/14-round-014-instructions.txt | 逐字副本，1 行 410 字节，SHA-1 `8f72a8dae1e3e55903c3f1f620687216b6d79a02` |
+| docs/decisions/014-build-continue.md | F01-F07 切分、D01-D08、U01-U10、T01-T06、端点占位、私仓事实、本轮边界 |
+| docs/decisions/007-normal-ui.md | D09-D14，设计稿降级为样板、E09 卡点关闭 |
+| docs/decisions/index.md | 追加 014，待确认段更新品牌、私仓、凭据、缓存异步 |
+| .github/workflows/ci.yml | secrets / vars 占位、腾讯 rustup 镜像、actions/cache 有界、concurrency 取消、core 与 scan 并行 job |
+| src/core/cache.rs、asynk.rs、leak.rs、mod.rs、lib.rs | 3 个新模块 + 导出 |
+| docs/features/core-cache.md、core-asynk.md、core-leak.md | 3 份，字段固定五段 |
+| docs/features/index.md | F014-01..03、014 core 扩展段、G13-G15 |
+| docs/rules/push-scope.md | 轮次 014、允许 `.github/workflows/`、特殊版段改已建仓 |
+| docs/rules/build-preconditions.md | L1 改 12 模块 / 56 测试、判定 src 行 |
+| docs/checklists/ai-errors.md | A57-A61 |
+| docs/index.md | 必读 44 项、014 分区、检查项、前置条件与未写入项 |
+| README.md | 轮次 014、core 规模、CI、私仓、工作流占位 |
+| docs/records/interface-log.md | 014 端点与私仓来源 |
+| demos/round-014-cache-async.html | 缓存单飞、多源竞速、泄漏归零、工作流占位状态机 |
+| docs/verification/round-014.md | 第 014 轮独立验证报告 |
+| docs/decisions/013-build-start.md:86 | 措辞规范化：原句含「为了干什么」命中 014 轮扩展后的措辞扫描词表，改为「不写功能目的说明」，断言含义不变 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Thu Nov 12 13:09:17 CST 2026` |
+| 013 轮收尾 | `Thu Nov 12 12:45:25 CST 2026` |
+| 私仓创建 | `Thu Nov 12 13:11:24 CST 2026` |
+| 编译与测试完成 | `Thu Nov 12 13:24:05 CST 2026` |
+
+用户当轮输入：
+
+| 片段 | 逐字 | 落地 |
+| --- | --- | --- |
+| F01 | 第1个你到时候在工作流设一个环境变量，我自己去填写就行 | D01、ci.yml |
+| F02 | 特殊版的话你自己去建立 | D02、私仓 |
+| F03 | 品牌的话我本来这个也是给你打样板的 | D03 |
+| F04 | 因为功能和这一个已经有好多区别了 | D03 |
+| F05 | 你只要记住一点，就是让用户好受，非常舒服就行（这需要你有对功能的理解程度，自由发挥） | D03、D08 |
+| F06 | 对了，缓存异步都要处理 | D04、D05 |
+| F07 | 小心点内存泄露 | D06 |
+
+私仓 API 实测：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `GET /user` | 200 login=kongbai9288 | 已证实 |
+| `GET /rate_limit` | 200 remaining=4996 | 已证实 |
+| `GET /user/repos?per_page=100&type=owner` | 200，23 仓，无同名 | 已证实 |
+| `POST /user/repos` `private:true` | 201，private=True | 已证实 |
+| `PUT /contents/README.md` | 201，`cd7fc97` | 已证实 |
+| `GET /git/ref/heads/main` | 200，`cd7fc97` | 已证实 |
+
+编译与测试：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| 首次 `cargo test --offline` | `E0369` / `E0277`：`RaceResult<u32>` 缺 `PartialEq` / `Debug` | 已失败 |
+| 修复：`#[derive(Debug, Clone, PartialEq, Eq)]` | 复跑通过 | 已证实 |
+| `cargo test --offline` | 56 passed / 0 failed / 0 ignored / 0 measured，0.10s | 已证实 |
+| `cargo build --release --offline` | rlib 610080 字节 | 已证实 |
+| `cargo test --offline core::cache` | 8 passed | 已证实 |
+| `cargo test --offline core::asynk` | 6 passed | 已证实 |
+| `cargo test --offline core::leak` | 5 passed | 已证实 |
+
+缓存 / 异步 / 泄漏落地：
+
+| 项 | 落点 | 实测 |
+| --- | --- | --- |
+| 容量有界 | cache `insert_locked` 淘汰 | len ≤ 2、evicted ≥ 4 |
+| TTL 过期重取 | cache `purge_locked` | ttl 15ms 后重新加载 |
+| 单飞去重 | cache `inflight: Weak<Flight<V>>` + Condvar | 8 线程同 key 只加载 1 次 |
+| order 不膨胀 | cache `retain` + HashSet 去重 | 500 次插入后 order ≤ 3 |
+| inflight 无悬挂 | Weak + remove | inflight_count=0 |
+| 多源竞速取消 | asynk `race` | index=0、value=11、live=0 |
+| 线程 join 回收 | TaskGroup shutdown / Drop | joined=5、drop 兜底 4 个全执行 |
+| 无环归零 | leak Weak<Node> + Tracker | live 2 → 0、strong_count=1 |
+| 弱引用注册表 | WeakRegistry purge | purge=1、len=0 |
+
+CI：
+
+| 项 | 值 |
+| --- | --- |
+| 凭据占位 | `KCU_CF_API_KEY: ${{ secrets.KCU_CF_API_KEY }}`，值不进仓库 |
+| 端点占位 | `KCU_MIRROR_BASE` / `KCU_BACKEND_BASE` / `KCU_LANG_PACK_BASE` / `KCU_DOWNLOAD_REGION` 走 vars |
+| 工具链 | `RUSTUP_DIST_SERVER` / `RUSTUP_UPDATE_ROOT` 指向腾讯 rustup 镜像 |
+| 缓存 | `actions/cache@v4`，key 绑定 `Cargo.lock` 哈希，restore-keys 回退 |
+| 并发 | `concurrency.cancel-in-progress: true`；core 与 scan 两个 job 并行 |
+| 值保护 | `env-presence` 只输出 present / absent |
+
+阶段：014 轮仍是 D07 第 1 层 core 扩展，L2 dispatcher 及以下 8 层未启动。013 轮遗留的「特殊版私仓未创建」「UI 品牌授权卡点」「CF 凭据落点」三项由本轮关闭；CF 具体调用方法仍按 F17 由用户在完成时提供。
+
+用户当轮「让用户好受，非常舒服」「自由发挥」按 18.5 用户当轮指令优先，落为 D08 的 U01-U10 可测条目，未替用户补写新功能文档。
+
+未做：
+- L2 dispatcher 及以下 8 层
+- 特殊版代码（待用户明确同意，用户手拉工具流）
+- CF 下载模块、X01-X04 逐条处置、CF 具体调用方法
+- 正常模式 UI 实现与 KCU 品牌重做
+- 本项目 LICENSE 文件
+- 后端仓任何写请求
+- 浏览器渲染与 GUI 点击端到端
+- rustc 交叉编译 Win7 / ARM64 目标产物
+- 插件源默认选择、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证

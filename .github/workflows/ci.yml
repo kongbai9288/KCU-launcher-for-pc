@@ -1,0 +1,71 @@
+name: kcu-ci
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kcu-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KCU_CF_API_KEY: ${{ secrets.KCU_CF_API_KEY }}
+  KCU_MIRROR_BASE: ${{ vars.KCU_MIRROR_BASE }}
+  KCU_BACKEND_BASE: ${{ vars.KCU_BACKEND_BASE }}
+  KCU_LANG_PACK_BASE: ${{ vars.KCU_LANG_PACK_BASE }}
+  KCU_DOWNLOAD_REGION: ${{ vars.KCU_DOWNLOAD_REGION }}
+  RUSTUP_DIST_SERVER: https://mirrors.cloud.tencent.com/rustup
+  RUSTUP_UPDATE_ROOT: https://mirrors.cloud.tencent.com/rustup/rustup
+  CARGO_TERM_COLOR: never
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: toolchain
+        run: |
+          curl -sSfL --max-time 120 -o /tmp/kcu-rustup-init "$RUSTUP_UPDATE_ROOT/dist/x86_64-unknown-linux-gnu/rustup-init"
+          chmod +x /tmp/kcu-rustup-init
+          /tmp/kcu-rustup-init -y --profile minimal --default-toolchain stable --no-modify-path
+      - name: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: kcu-cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            kcu-cargo-${{ runner.os }}-
+      - name: build
+        run: |
+          export PATH="$HOME/.cargo/bin:$PATH"
+          cargo build --release --offline
+      - name: test
+        run: |
+          export PATH="$HOME/.cargo/bin:$PATH"
+          cargo test --offline
+      - name: env-presence
+        run: |
+          if [ -n "$KCU_CF_API_KEY" ]; then echo "KCU_CF_API_KEY=present"; else echo "KCU_CF_API_KEY=absent"; fi
+
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: credential
+        run: |
+          if grep -rqE 'gh[p]_' .; then echo "CREDENTIAL_FOUND"; exit 1; else echo "NO_CREDENTIAL"; fi
+      - name: wording
+        run: |
+          if grep -rE '为了|目的是|方便用户|让用户能够|这样用户' src/; then echo "EXPLANATORY_FOUND"; exit 1; else echo "NO_EXPLANATORY"; fi
+      - name: hardcode
+        run: |
+          if grep -rE 'https?://|C:\\|x-api-key' src/; then echo "HARDCODE_FOUND"; exit 1; else echo "NO_HARDCODE"; fi

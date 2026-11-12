@@ -1,8 +1,9 @@
 # 远端推送范围
 
-轮次：013
+轮次：014
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
+特殊版：`kongbai9288/KCU-launcher-special`，private，分支 main，仅 README 占位。
 
 ## 允许推送
 
@@ -10,6 +11,7 @@
 | --- | --- |
 | 代码 | src/、Cargo.toml、Cargo.lock |
 | 构建配置 | Cargo.toml profile 段；不含密钥、不含绝对路径、不含目标三元组硬编码 |
+| CI 工作流 | `.github/workflows/ci.yml`，secrets 与 vars 只写引用，不写值 |
 | 脚本 | scripts/push.sh、scripts/api_push.py |
 | 事实性文档 | docs/spec/、docs/research/、docs/features/、docs/decisions/、docs/checklists/、docs/rules/、docs/records/、docs/verification/ |
 | 版本与接口记录 | docs/records/changelog.md、docs/records/interface-log.md、docs/records/rounds.md |
@@ -74,10 +76,14 @@
 
 | 项 | 值 |
 | --- | --- |
-| 形态 | 单开私仓 |
+| 形态 | 单开私仓，已创建 |
+| 地址 | `kongbai9288/KCU-launcher-special`，private，main，HEAD `cd7fc97` |
+| 当前内容 | README 占位，仅事实表；无代码、无凭据、无后端仓内容 |
+| 放代码条件 | 用户明确同意后；用户手拉工具流 |
 | 触发 | 所有任务完成且反复检查未发现漏洞 |
 | 使用者 | 用户与其朋友 |
 | 正常版本 | 镜像或用户后端，用户后端仅境外场景可连 |
+| 凭据 | workflow secrets 占位，值由用户填写 |
 
 ## 诊断行
 

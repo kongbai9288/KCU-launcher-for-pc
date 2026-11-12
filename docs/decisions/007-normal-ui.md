@@ -49,3 +49,16 @@
 | V06 | `grep -c 'nav-item' assets/ui/normal-mode-v3.html` | 10 个导航标签 |
 | V07 | `按 docs/checklists/ai-errors.md A23 执行` | exit 0 |
 | V08 | `node -e "new Function(script)"` demos/round-007-normal-ui.html | exit 0 |
+
+## 014 轮口径更新
+
+| 编号 | 项 | 007 值 | 014 值 |
+| --- | --- | --- | --- |
+| D09 | 设计稿定位 | 正常模式 UI 稿，授权未取得前停资产层 | 样板与交互参考，F03/F04/F05 |
+| D10 | 品牌处理 | C06 不替换 KCU 标识、不进安装包 | 不直接复用该稿；KCU 品牌重新实现；E09 卡点关闭 |
+| D11 | 资产保留 | 逐字副本保留 | 逐字副本保留在 assets/ui/，逐字核对不变 |
+| D12 | 实现验收 | 授权取得后进入构建 | 014-build-continue.md D08 的 U01-U10 |
+| D13 | 轻量模式 | D03-D05 排除 normal.ui | 不变，low-end 不加载重资产 |
+| D14 | C09 | 「不修改 005-blueprint.md 的未批准状态」 | 013 轮用户已批准蓝图，本条历史约束保留，不再作为闸门 |
+
+依据：docs/spec/14-round-014-instructions.txt F03/F04/F05；docs/decisions/014-build-continue.md D03、D08。

@@ -63,6 +63,11 @@
 | A54 | 单参数无法加入服务器（关联 013 U01） | `cargo test --offline single_arg` |
 | A55 | 双击服务器时用户权重不排第一（关联 013 U02） | `cargo test --offline user_choice_ranks_first` |
 | A56 | 流程结束残留未关弹窗（关联 013 H06） | `cargo test --offline no_popup_is_left_open` |
+| A57 | 缓存无容量上限或 order 无限增长（关联 014 D04/D06） | `cargo test --offline capacity_bounds_entry_count`、`order_stays_bounded_after_many_inserts` |
+| A58 | 同 key 并发重复加载（关联 011 聚合请求、014 D04） | `cargo test --offline single_flight_loads_once` |
+| A59 | 多源下载一个完成后其余未取消、线程未 join（关联 011 第 30 条、014 D05） | `cargo test --offline race_returns_first_and_cancels_other_sources`、`drop_joins_without_explicit_shutdown` |
+| A60 | 活跃计数不归零或弱引用注册表未清理（关联 014 D06） | `cargo test --offline core::leak` |
+| A61 | 工作流出现凭据字面量（关联 014 D01） | `! grep -rE 'gh[p]_' .github/workflows/` |
 
 ## 输出结构
 

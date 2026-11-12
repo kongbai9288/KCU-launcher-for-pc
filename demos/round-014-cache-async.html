@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KCU Launcher / 缓存 异步 泄漏 / 014</title>
+<style>
+:root{
+  --bg:#0b0e14;--panel:#131824;--panel2:#1a2130;--line:#28324a;
+  --txt:#e6ecf5;--dim:#8b9ab3;--acc:#5ee0b4;--acc2:#6aa8ff;
+  --warn:#f5b95c;--err:#ff7a7a;--mut:#7d8aa3;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 12% -10%,#18233a 0%,var(--bg) 58%);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:18px}
+.wrap{max-width:1180px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;padding:6px 2px 18px;border-bottom:1px solid var(--line)}
+h1{font-size:19px;margin:0;letter-spacing:.5px;font-weight:650}
+.tag{font:12px var(--mono);color:var(--acc);border:1px solid #2c5b4c;border-radius:999px;padding:2px 10px;background:#10241e}
+.tag2{font:12px var(--mono);color:var(--warn);border:1px solid #6b5326;border-radius:999px;padding:2px 10px;background:#2a2214}
+.meta{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-top:16px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--panel) 0%,#111623 100%);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{font-size:13px;margin:0 0 14px;color:var(--dim);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.field{margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--dim);margin-bottom:5px}
+select{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:13px var(--mono);outline:none}
+select:focus{border-color:var(--acc2)}
+.btns{display:flex;gap:9px;margin-top:16px}
+button{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:13px/1.2 inherit;cursor:pointer}
+button.primary{background:linear-gradient(135deg,#2f7d68,#245f8f);border-color:#3f8f7e;font-weight:600}
+button:active{transform:translateY(1px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px}
+.stat .k{font-size:11px;color:var(--dim)}
+.stat .v{font:14px var(--mono);margin-top:3px;color:var(--acc)}
+#log{height:330px;overflow:auto;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.75 var(--mono);white-space:pre-wrap;word-break:break-all}
+.ln{color:#c9d6e8}.ln .d{color:var(--acc2)}.ln .r{color:var(--acc)}.ln .w{color:var(--warn)}.ln .e{color:var(--err)}.ln .m{color:var(--mut)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px}
+@media(max-width:980px){.flow{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;transition:.25s}
+.node .n{font:11px var(--mono);color:var(--mut)}
+.node .t{font-size:12px;margin:4px 0 5px;font-weight:600}
+.node .s{font-size:11px;color:var(--dim)}
+.node.on{border-color:var(--acc);box-shadow:0 0 0 1px #2f7d68,0 8px 26px rgba(46,125,104,.2);background:#12201e}
+.node.on .t{color:var(--acc)}
+.node.err{border-color:var(--err)}.node.err .t{color:var(--err)}
+.node.warn{border-color:var(--warn)}.node.warn .t{color:var(--warn)}
+.foot{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.foot{grid-template-columns:1fr}}
+pre{margin:0;background:#080b11;border:1px solid var(--line);border-radius:9px;padding:12px;font:12px/1.7 var(--mono);color:#c9d6e8;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600}td{color:var(--txt)}
+.bars{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:560px){.bars{grid-template-columns:1fr}}
+.b{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px;font:11px var(--mono);color:var(--dim)}
+.b.ok{border-color:#2c5b4c;color:var(--acc);background:#10241e}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>KCU Launcher</h1>
+  <span class="tag">L1 core / 014</span>
+  <span class="tag2">缓存 异步 泄漏</span>
+  <span class="meta" id="ts"></span>
+</header>
+
+<div class="grid">
+  <section class="card">
+    <h2>输入</h2>
+    <div class="field">
+      <label>同 key 并发加载</label>
+      <select id="cache">
+        <option value="single">单飞去重 / 8 线程只加载 1 次</option>
+        <option value="dup">无单飞 / 重复发请求</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>缓存容量</label>
+      <select id="bound">
+        <option value="bounded">有界 capacity=2 / order 去重</option>
+        <option value="unbounded">无界</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>多源下载</label>
+      <select id="async">
+        <option value="race">竞速 + 取消其余 + join</option>
+        <option value="nocancel">不取消、不回收</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>对象释放</label>
+      <select id="leak">
+        <option value="zero">Weak / Tracker 归零</option>
+        <option value="cycle">Arc 环残留</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>工作流凭据</label>
+      <select id="secret">
+        <option value="placeholder">secrets 引用占位</option>
+        <option value="literal">写入字面量</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>特殊版后端的写请求</label>
+      <select id="backend">
+        <option value="get">0 个写请求</option>
+        <option value="write">发写请求</option>
+      </select>
+    </div>
+    <div class="btns">
+      <button class="primary" id="run">执行本轮</button>
+      <button id="reset">重置</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>状态</h2>
+    <div class="stats">
+      <div class="stat"><div class="k">测试</div><div class="v" id="s-test">—</div></div>
+      <div class="stat"><div class="k">loader 调用</div><div class="v" id="s-load">—</div></div>
+      <div class="stat"><div class="k">活跃线程</div><div class="v" id="s-live">—</div></div>
+      <div class="stat"><div class="k">诊断行</div><div class="v" id="s-cnt">0</div></div>
+    </div>
+    <div id="log"></div>
+    <div class="bars" id="bars">
+      <div class="b" id="b-cache">cache: —</div>
+      <div class="b" id="b-asynk">asynk: —</div>
+      <div class="b" id="b-leak">leak: —</div>
+    </div>
+  </section>
+</div>
+
+<div class="flow" id="flow">
+  <div class="node" data-k="0"><div class="n">01 / input</div><div class="t">逐字指令</div><div class="s">7 片段</div></div>
+  <div class="node" data-k="1"><div class="n">02 / private</div><div class="t">私仓建仓</div><div class="s">private 201</div></div>
+  <div class="node" data-k="2"><div class="n">03 / workflow</div><div class="t">环境变量占位</div><div class="s">secrets / vars</div></div>
+  <div class="node" data-k="3"><div class="n">04 / ci-cache</div><div class="t">CI 有界缓存</div><div class="s">key=Cargo.lock</div></div>
+  <div class="node" data-k="4"><div class="n">05 / build</div><div class="t">编译</div><div class="s">release OK</div></div>
+  <div class="node" data-k="5"><div class="n">06 / test</div><div class="t">测试</div><div class="s">56 passed</div></div>
+  <div class="node" data-k="6"><div class="n">07 / cache</div><div class="t">单飞与淘汰</div><div class="s">ttl + capacity</div></div>
+  <div class="node" data-k="7"><div class="n">08 / race</div><div class="t">多源竞速</div><div class="s">cancel + join</div></div>
+  <div class="node" data-k="8"><div class="n">09 / leak</div><div class="t">泄漏归零</div><div class="s">Weak + Tracker</div></div>
+  <div class="node" data-k="9"><div class="n">10 / ux</div><div class="t">U01-U10</div><div class="s">可测条目</div></div>
+  <div class="node" data-k="10"><div class="n">11 / scan</div><div class="t">双扫描</div><div class="s">凭据 / 措辞</div></div>
+  <div class="node" data-k="11"><div class="n">12 / push</div><div class="t">推送比对</div><div class="s">ALL_MATCH</div></div>
+  <div class="node" data-k="12"><div class="n">13 / stage</div><div class="t">阶段判定</div><div class="s">L1 扩展</div></div>
+</div>
+
+<div class="foot">
+  <section class="card">
+    <h2>统一信封</h2>
+<pre>{
+  "request_id": "014-b2e9",
+  "type": "request | response | event",
+  "target": "core.cache / core.asynk / core.leak",
+  "payload": {
+    "round": 14,
+    "layer": "L1 core",
+    "modules_total": 12,
+    "modules_added": 3,
+    "tests_total": 56,
+    "tests_failed": 0,
+    "release_rlib_bytes": 610080,
+    "cache_capacity": 2,
+    "cache_ttl_ms": 15,
+    "single_flight_calls": 1,
+    "order_bounded": true,
+    "inflight_weak": true,
+    "race_index": 0,
+    "race_live_after_join": 0,
+    "leak_live_after_drop": 0,
+    "workflow_secret": "reference_only",
+    "special_repo_private": true,
+    "special_repo_code": "pending_user_approval",
+    "backend_write_requests": 0
+  },
+  "error": null
+}</pre>
+  </section>
+  <section class="card">
+    <h2>四值与边界</h2>
+    <table>
+      <tr><th>项</th><th>值</th></tr>
+      <tr><td>cargo test --offline 56 / 0</td><td>已证实</td></tr>
+      <tr><td>cache 8 / asynk 6 / leak 5 passed</td><td>已证实</td></tr>
+      <tr><td>单飞 8 线程只加载 1 次、order ≤ capacity</td><td>已证实</td></tr>
+      <tr><td>多源竞速 index=0、live=0、Drop 兜底 join</td><td>已证实</td></tr>
+      <tr><td>Weak 打破环、live 2 → 0</td><td>已证实</td></tr>
+      <tr><td>私仓 201 private、README 201、ref 200</td><td>已证实</td></tr>
+      <tr><td>工作流 secrets 占位、零凭据字面量</td><td>已证实</td></tr>
+      <tr><td>首次编译 E0369 / E0277 缺派生</td><td>已失败（已修复）</td></tr>
+      <tr><td>CF 具体调用方法、X01-X04 逐条</td><td>未证实</td></tr>
+      <tr><td>GUI 点击端到端、浏览器渲染、Win7 交叉编译</td><td>受阻</td></tr>
+      <tr><td>L2 dispatcher 及以下 8 层</td><td>未启动</td></tr>
+    </table>
+  </section>
+</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const nodes = [...document.querySelectorAll('.node')];
+let count = 0, timer = null;
+$('ts').textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function line(domain, action, target, result, detail){
+  count++; $('s-cnt').textContent = count;
+  const cls = result === 'OK' ? 'r' : (result === 'DEGRADE' ? 'w' : (result === 'FAIL' || result === 'BLOCKED' ? 'e' : 'm'));
+  const el = document.createElement('div');
+  el.className = 'ln';
+  el.innerHTML = '[KCU] <span class="d">'+esc(domain)+'</span> '+esc(action)+' '+esc(target)+' <span class="'+cls+'">'+esc(result)+'</span> <span class="m">'+esc(detail)+'</span>';
+  $('log').appendChild(el); $('log').scrollTop = $('log').scrollHeight;
+}
+function step(fn, ms){ return new Promise(r => { timer = setTimeout(() => { fn(); r(); }, ms); }); }
+function active(k, state){
+  nodes.forEach((n,i) => {
+    n.classList.toggle('on', i === k);
+    n.classList.toggle('err', i === k && state === 'err');
+    n.classList.toggle('warn', i === k && state === 'warn');
+  });
+}
+function bar(id, text, ok){
+  const e = $(id); e.textContent = text; e.classList.toggle('ok', ok === true);
+  e.style.borderColor = ok === false ? 'var(--err)' : '';
+  e.style.color = ok === false ? 'var(--err)' : '';
+}
+
+async function run(){
+  clearTimeout(timer);
+  $('log').innerHTML = ''; count = 0; $('s-cnt').textContent = '0';
+  $('s-test').textContent = '—'; $('s-load').textContent = '—'; $('s-live').textContent = '—';
+  bar('b-cache','cache: —',null); bar('b-asynk','asynk: —',null); bar('b-leak','leak: —',null);
+
+  const cache = $('cache').value, bound = $('bound').value;
+  const asynk = $('async').value, leak = $('leak').value;
+  const secret = $('secret').value, backend = $('backend').value;
+
+  await step(()=>{active(0);line('core','start','round_014','OK','detail=7_fragments 410B');},110);
+
+  if(backend === 'write'){
+    await step(()=>{active(0,'err');line('backend','write','auto_deploy_repo','FAIL','detail=zero_level_stop');},130);
+    return;
+  }
+  await step(()=>{active(0);line('backend','get','readonly','OK','detail=0_write_requests');},100);
+
+  await step(()=>{active(1);line('remote','create','KCU-launcher-special','OK','detail=201 private=true head=cd7fc97');},110);
+  await step(()=>{active(1);line('remote','init','README.md','OK','detail=201 placeholder_only code=pending');},110);
+
+  if(secret === 'literal'){
+    await step(()=>{active(2,'err');line('workflow','scan','ci.yml','FAIL','detail=credential_literal zero_level_stop');},130);
+    return;
+  }
+  await step(()=>{active(2);line('workflow','env','KCU_CF_API_KEY','OK','detail=secrets_reference value=user_filled');},110);
+  await step(()=>{active(3);line('ci','cache','actions/cache@v4','OK','detail=key=hashFiles(Cargo.lock) bounded');},110);
+  await step(()=>{active(4);line('cargo','build','release_offline','OK','detail=rlib=610080B deps=std_only');},110);
+  await step(()=>{active(5);$('s-test').textContent='56 / 0';line('cargo','test','offline','OK','detail=56_passed 0_failed 0.10s');},110);
+
+  if(cache === 'dup'){
+    await step(()=>{active(6,'err');$('s-load').textContent='8';bar('b-cache','cache: 8 次重复加载',false);line('cache','assert','single_flight','FAIL','detail=8_calls N_plus_1 flow_stopped');},130);
+    return;
+  }
+  if(bound === 'unbounded'){
+    await step(()=>{active(6,'err');bar('b-cache','cache: order 无限增长',false);line('cache','assert','order_bounded','FAIL','detail=order_unbounded flow_stopped');},130);
+    return;
+  }
+  await step(()=>{active(6);$('s-load').textContent='1';bar('b-cache','cache: 单飞 1 次 / order ≤ 2',true);line('cache','get_or_load','mod-a','OK','detail=8_waiters calls=1 ttl=15ms inflight_weak=true');},140);
+
+  if(asynk === 'nocancel'){
+    await step(()=>{active(7,'err');$('s-live').textContent='2';bar('b-asynk','asynk: 线程未回收',false);line('asynk','race','multi_source','FAIL','detail=no_cancel no_join flow_stopped');},130);
+    return;
+  }
+  await step(()=>{active(7);$('s-live').textContent='0';bar('b-asynk','asynk: index=0 / live=0',true);line('asynk','race','multi_source','OK','detail=index=0 value=11 cancel_others join_all');},140);
+
+  if(leak === 'cycle'){
+    await step(()=>{active(8,'err');bar('b-leak','leak: live=2 残留',false);line('leak','assert','live_after_drop','FAIL','detail=arc_cycle flow_stopped');},130);
+    return;
+  }
+  await step(()=>{active(8);bar('b-leak','leak: live 2 → 0',true);line('leak','drop','tracked','OK','detail=strong_count=1 weak_link purge=1 live=0');},130);
+
+  await step(()=>{active(9);line('ux','check','U01_U10','OK','detail=popup_close user_weight single_arg no_residual');},110);
+  await step(()=>{active(10);line('scan','precommit','repo','OK','detail=credential=0 explanatory=0 midstate=0');},110);
+  await step(()=>{active(11);line('remote','push','main','OK','detail=api_snapshot ALL_MATCH True');},120);
+  await step(()=>{active(12);line('stage','check','D07','OK','detail=L1_core_extended L2_not_started');},110);
+}
+
+$('run').onclick = run;
+$('reset').onclick = () => {
+  clearTimeout(timer);
+  $('log').innerHTML = ''; count = 0; $('s-cnt').textContent = '0';
+  $('s-test').textContent = '—'; $('s-load').textContent = '—'; $('s-live').textContent = '—';
+  nodes.forEach(n => n.classList.remove('on','err','warn'));
+  bar('b-cache','cache: —',null); bar('b-asynk','asynk: —',null); bar('b-leak','leak: —',null);
+};
+</script>
+</body>
+</html>

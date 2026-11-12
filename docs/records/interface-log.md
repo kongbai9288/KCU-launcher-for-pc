@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：013
+更新轮次：014
 
 ## 前置索引
 
@@ -212,6 +212,27 @@
 | RO06 | 013 轮对后端仓 0 个写请求，约束延续 RO01-RO05。 |
 | RO07 | 工具链装在仓库外 `/data/workspace/.cargo-home` 与 `/data/workspace/.rustup-home`，不进公仓。 |
 | RO08 | CORRECTION：GitHub Actions 不向本地沙盒分发工具链；api.github.com 只取元数据；实际安装路径为腾讯 rustup 镜像。 |
+
+## 014 端点、私仓与 CI 来源
+
+| 编号 | 来源 | 用途 | 结果 |
+| --- | --- | --- | --- |
+| S95 | https://api.github.com/user | 认证核对 | 200 login=kongbai9288 |
+| S96 | https://api.github.com/user/repos | 同名仓检查 | 200，23 仓，无同名 |
+| S97 | https://api.github.com/user/repos（POST，private:true） | 特殊版私仓创建 | 201，private=True |
+| S98 | https://api.github.com/repos/kongbai9288/KCU-launcher-special/contents/README.md（PUT） | 私仓初始化 | 201，`cd7fc97` |
+| S99 | https://mirrors.cloud.tencent.com/rustup | CI `RUSTUP_DIST_SERVER` | 013 轮实测 200 |
+| S100 | https://mirrors.cloud.tencent.com/rustup/rustup | CI `RUSTUP_UPDATE_ROOT` | 013 轮实测 200 |
+
+| 编号 | 内容 |
+| --- | --- |
+| I20 | 014 轮工作流环境变量占位：`KCU_CF_API_KEY`（secrets）、`KCU_MIRROR_BASE` / `KCU_BACKEND_BASE` / `KCU_LANG_PACK_BASE` / `KCU_DOWNLOAD_REGION`（vars）。值由用户填写，仓库零字面量。 |
+| I21 | 014 轮 core 内部接口：`Cache::get_or_load`、`TaskGroup::spawn/shutdown`、`race`、`Tracker::track`、`WeakRegistry::insert/get/purge`，见 docs/features/core-*.md。 |
+| RO09 | 014 轮对后端仓 0 个写请求，约束延续 RO01-RO08。 |
+| RO10 | 私仓仅 README 占位；代码、凭据、后端仓内容均未放入。 |
+| RO11 | `env-presence` 步骤只输出 present / absent，不输出值。 |
+
+CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链」仍成立；014 轮把 GitHub Actions 用于 CI 内构建，工具链在 runner 上按腾讯 rustup 镜像安装，不向本地沙盒分发，两条口径不冲突。
 
 ## 版本弃用
 
