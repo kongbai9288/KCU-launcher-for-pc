@@ -1232,3 +1232,16 @@ UI 闸门：
 - 浏览器渲染与 GUI 点击端到端
 - rustc 交叉编译 Win7 / ARM64 目标产物
 - 插件源默认选择、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证
+
+015 最终状态（验证报告提交后）：
+
+| 项 | 值 | 四值 |
+| --- | --- | --- |
+| 本地 HEAD | `e2ad165`，166 tracked，工作区干净 | 已证实 |
+| 远端 HEAD | `9900d97`，message 为 015 验证报告与复核记录 | 已证实 |
+| 远端逐 blob 比对 | REMOTE 166 / LOCAL 166 / MISSING 0 / EXTRA 0 / MISMATCH 0 / ALL_MATCH True | 已证实 |
+| 打包 | `/data/workspace/kcu-launcher-desktop.zip`，779K，含 round-015.md 与 src/dispatcher/launcher.rs | 已证实 |
+| 全仓凭据与 .git/config | `NO_CREDENTIAL` / `NO_TOKEN_IN_CONFIG` | 已证实 |
+| 后端仓 | 0 个写请求 | 已证实 |
+
+上表「本地与远端」记录 015 主体推送后的时点（远端 `9733a09`、165 文件）；本段记录验证报告推送后的时点（远端 `9900d97`、166 文件）。两个时点各自成立，未改写历史。变更内容哈希口径固定为基线 `0f900a0` 终点 `757bea6`，不受本段追加影响。
