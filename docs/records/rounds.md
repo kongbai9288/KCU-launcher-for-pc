@@ -1018,7 +1018,7 @@ H 组落地：
 | docs/records/interface-log.md | 014 端点与私仓来源 |
 | demos/round-014-cache-async.html | 缓存单飞、多源竞速、泄漏归零、工作流占位状态机 |
 | docs/verification/round-014.md | 第 014 轮独立验证报告 |
-| docs/decisions/013-build-start.md:86 | 措辞规范化：原句含「为了干什么」命中 014 轮扩展后的措辞扫描词表，改为「不写功能目的说明」，断言含义不变 |
+| docs/decisions/013-build-start.md:86 | 措辞规范化：原句含功能目的措辞，命中 014 轮扩展后的扫描词表，改为「不写功能目的说明」，断言含义不变 |
 
 时间：
 
