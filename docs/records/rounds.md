@@ -1103,3 +1103,18 @@ CI：
 - 浏览器渲染与 GUI 点击端到端
 - rustc 交叉编译 Win7 / ARM64 目标产物
 - 插件源默认选择、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证
+
+014 验证者记录复核：
+
+| 编号 | 验证者记录 | 改动作者复跑 | 判定 |
+| --- | --- | --- | --- |
+| V01 | `bash scripts/push.sh` 空参 exit=1，与预期 exit=2 不符，判硬性不通过 | `sh scripts/push.sh` exit=2、`/bin/sh` exit=2、`bash scripts/push.sh` exit=1；脚本 shebang 为 `#!/bin/sh`；003-remote.md V06 原断言为「无参数时非零退出，输出 remote url required」，两种调用均满足 | 调用 shell 口径差异，非脚本缺陷；按 18.1 未改报告 |
+| V02 | 12 份功能 md 五字段全覆盖不可判为已证实 | `for f in docs/features/core-*.md; grep -cE '^## (怎么运作|开放了什么|登记框架|用户使用逻辑|性能)'` → 12 份全部 fields=5 | 已补复核 |
+| V03 | build-preconditions 正文未实跑 | `grep -n '12 模块|56 测试|12 个 core 模块'` → 第 24 行、第 108 行命中 | 已补复核 |
+| V04 | 全仓 `! grep -rq '为了' .` exit 1，命中 docs/spec/、docs/checklists/、docs/verification/，判 NO_EXPLANATORY 未证实 | 项目措辞扫描域为 `src/ demos/ README.md docs/research/ docs/features/ docs/records/ docs/decisions/ scripts/`，不含 spec 原文与词表自我命中域；复跑 NO_EXPLANATORY | 扫描域口径差异 |
+| V05 | A31=7、A46=2、A51=1、A58/A59/A60=0 等计数与声明不符 | 按 docs/index.md 固定命令复跑：`A31=PASS`、`A46=1 A47=1 A48=1 A49=1 A50=1 A51=93`、`A52_NONEMPTY=PASS`、A57-A61 为 cargo 分项测试 | 验证者计数命令口径差异 |
+| V06 | 首次编译失败修复回放、后端仓零写请求不可判为已证实 | 014 段「编译与测试」表已登记 E0369/E0277 与修复；RO09、push-scope.md 只读口径登记 0 写请求 | 记录已在库，覆盖范围声明差异 |
+| V07 | 报告正文哈希 `010d66c…` | 声明块偏移 10904，`sha1(t[:10904])` = `010d66c47d7d7807ef912dc330d5421bbb69b299` 与声明一致；全文 `30cfd33f…` | 本轮无 1 字节口径差 |
+| V08 | 变更内容哈希 | `git diff e20af1a..35a8de9 \| sha1sum` = `91222134a975b1195d7272a8f0b2f29f78555061`，与声明一致 | 已证实 |
+
+独立验证结论：**部分通过**。报告正文哈希 `010d66c47d7d7807ef912dc330d5421bbb69b299`、变更内容哈希 `91222134a975b1195d7272a8f0b2f29f78555061`，两个哈希由独立验证者计算并写入声明块，改动作者未代算。本轮独立验证委派首次返回不可用，重委派后报告落盘；首次失败与本段复核均如实登记。
