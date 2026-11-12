@@ -1190,6 +1190,17 @@ UI 闸门：
 | 本轮 | 不触发；`demos/round-015-dispatcher.html` 是运行逻辑演示，不计入 G01 |
 | 轻量模式 | 极简视图在 L3 触发时单独交付，不复用 normal.ui 资产 |
 
+本地与远端：
+
+| 项 | 值 | 四值 |
+| --- | --- | --- |
+| 本地 HEAD | `7d27d25`，165 tracked，src/dispatcher/ 5 文件 | 已证实 |
+| 远端 HEAD | `b7a28e5`，parent `b1ed2fe`，message 为 015 主体 | 已证实 |
+| 远端逐 blob 比对 | REMOTE 165 / LOCAL 165 / MISSING 0 / EXTRA 0 / MISMATCH 0 / ALL_MATCH True | 已证实 |
+| 重复调用 api_push.py | 第二次 `PATCH refs/heads/main` 返回 422 `Update is not a fast forward` | 已失败（无影响） |
+
+422 处置：首次调用已完成 165 个 blob 与 ref 更新，第二次调用基于旧 parent 再建 commit 触发非快进拒绝。未重写历史、未强推、未改断言；远端内容与本地一致，保留失败回显，不静默跳过。
+
 阶段：D07 第 2 层 dispatcher 已实现、已验证；第 3 层 lightweight 及以下 7 层未启动。
 
 未做：
