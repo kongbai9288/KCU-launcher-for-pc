@@ -1,6 +1,6 @@
 # 远端推送范围
 
-轮次：020
+轮次：022
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
 特殊版：`kongbai9288/KCU-launcher-special`，private，分支 main，仅 README 占位。
@@ -22,6 +22,10 @@
 | 020 设计契约 | docs/design/，槽位 / 推荐 / 状态 / 上层候选 / 交接基线 |
 | 020 调研 | docs/research/17-plugin-settings-survey.md |
 | 改造脚本 | scripts/round020_ui.py、scripts/round020_views.py |
+| 021 改造脚本 | scripts/round021_ui.py、scripts/round021_js.py |
+| 021 调研与设计 | docs/research/18-server-list-autodiscovery.md、docs/design/server-list-logic.md、docs/design/ui-product-copy.md |
+| 022 改造脚本 | scripts/round022_async.py、scripts/round022_docs.py、scripts/round022_index.py |
+| 022 调研与设计 | docs/research/19-async-probe-budget.md、docs/design/async-probe-policy.md |
 | 发行物声明 | THIRD-PARTY-NOTICES.md |
 | 仓库配置 | README.md、.gitignore、LICENSE、第三方声明 |
 

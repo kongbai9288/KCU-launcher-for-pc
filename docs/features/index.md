@@ -47,6 +47,12 @@
 | F020-04 | 服务器状态设置 | ui.demo / settings.status | 已实现、已验证（演示层） | server-status-settings.md |
 | F020-05 | 上层实现第三方候选登记 | legal.notices | 已实现、已验证（演示层） | upper-layer-thirdparty.md |
 | F020-06 | 可交接底层基线 | docs.design / handoff | 已实现、已验证（演示层） | handoff-baseline.md |
+| F021-01 | 服务器自动连接与缓存权重 | ui.demo / servers | 已实现、已验证（演示层） | server-autoconnect.md |
+| F021-02 | 游戏内服务器列表自动分析 | ui.demo / servers.scan | 已实现、已验证（演示层） | servers-dat-analysis.md |
+| F021-03 | 双击进服与实例范围绑定 | ui.demo / servers.join | 已实现、已验证（演示层） | server-join-binding.md |
+| F021-04 | 产品界面去工程化 | ui.demo / copy | 已实现、已验证（演示层） | ui-product-copy.md |
+| F022-01 | 异步探测与设备连接范围 | ui.demo / servers.probe | 已实现、已验证（演示层） | server-async-probe.md |
+| F022-02 | 失败历史分类与权重排序 | ui.demo / servers.rank | 已实现、已验证（演示层） | server-failure-history.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -122,6 +128,12 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G32 | 设置与关于固定在锁定槽位，插件与更新包不可改写。 |
 | G33 | 推荐位与服务器状态的自定义项全部落在设置。 |
 | G34 | 上层实现采用第三方代码，逐项取得 LICENSE 全文后才引入依赖。 |
+| G35 | 添加服务器后自动连接，结果缓存为排序权重；锁定置顶、连不上沉底。 |
+| G36 | 服务器显示照游戏内，不另做状态配色与文案。 |
+| G37 | 产品界面不写工程叙事；内部证据页不进导航与总览。 |
+| G38 | 自动连接异步、并发有上限、队列有界、可取消；总额卡在设备档位内。 |
+| G39 | 新加服务器一定连一次但不扩总额度；范围外保留上次结果、不发请求。 |
+| G40 | 无成功案例且测过的不主动重连、按缓存权重排中段；曾成功但本轮失败沉底；锁定不受影响。 |
 
 ## 018 轮纸质 UX 界面
 

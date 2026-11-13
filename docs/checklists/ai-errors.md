@@ -96,6 +96,13 @@
 | A87 | 推荐位只写 6 处、服务器状态只写字段不写设置项（关联 020 D10-D11） | 10 位目录与 6 类状态逐项核对；设置 ID 列完整 |
 | A88 | 上层第三方代码写成已进入构建（关联 020 D13） | 12 组候选全部标「候选 · 未进构建」；`src/` 与 Cargo.lock 无变化 |
 | A89 | 新对话丢上下文（关联 020 D14） | `docs/design/handoff.md` 6 步与 H01-H08 不可变边界；关于页交接卡片 |
+| A90 | 把内部工程叙事写进产品界面（关联 021 D01） | `grep -c 'class="setid"'` = 0；`grep -c 'data-internal="1"'` = 4；产品导航无槽位 ID / 交接基线 / 候选状态 |
+| A91 | 把服务器状态做成用户配 SLP 参数（关联 021 D09） | 设置分组名「服务器与连接」；无探测方式 / 超时 / 状态文案颜色；改为自动连接、排序、读取游戏内列表、双击进服 |
+| A92 | 锁定项被连接失败下沉（关联 021 D05 / 用户逻辑） | `35-servers-locked.png` 中锁定项保持靠前；`srvRank` 中 lock 返回 0 |
+| A93 | 同步遍历全部服务器状态（关联 022 D01） | `srvProbe` 用 worker-pull 异步队列；`srvSync` 已移除；`grep -c 'srvSync'` = 0 |
+| A94 | 服务器越多连接数越涨（关联 022 D02-D04） | `DEVICE` 档位表 limit / concurrency 双上限；新服仍占同一份额度，`buildPlan` 用 slice(0,limit) |
+| A95 | 把无成功记录的服务器沉底或反复重连（关联 022 D06） | `neverSuccess` 分组不进 probe 计划；`srvRank` 给 300 档中段；`37-servers-history.png` 可见 |
+| A96 | 取消后仍写新结果（关联 022 A04） | `applyResult` 前检查 `PROBE.cancelled`；取消后 inflight 归零、队列清空 |
 
 ## 输出结构
 

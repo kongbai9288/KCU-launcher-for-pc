@@ -97,12 +97,29 @@
 90. docs/features/server-status-settings.md
 91. docs/features/upper-layer-thirdparty.md
 92. docs/features/handoff-baseline.md
+93. docs/spec/21-round-021-instructions.txt
+94. docs/decisions/021-server-autoconnect.md
+95. docs/research/18-server-list-autodiscovery.md
+96. docs/design/server-list-logic.md
+97. docs/design/ui-product-copy.md
+98. docs/features/server-autoconnect.md
+99. docs/features/servers-dat-analysis.md
+100. docs/features/server-join-binding.md
+101. docs/features/ui-product-copy.md
+102. docs/spec/22-round-022-instructions.txt
+103. docs/decisions/022-async-budget.md
+104. docs/research/19-async-probe-budget.md
+105. docs/design/async-probe-policy.md
+106. docs/features/server-async-probe.md
+107. docs/features/server-failure-history.md
+108. docs/verification/round-022.md
+109. scripts/round022_async.py
 
 读取命令：
 
 ```
 cd /data/workspace/kcu-launcher-desktop
-for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/spec/09-round-009-instructions.txt docs/spec/10-round-010-instructions.txt docs/spec/11-round-011-instructions.txt docs/spec/11-features-input.txt docs/spec/12-round-012-instructions.txt docs/spec/12-server-features-input.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/rules/build-preconditions.md docs/research/index.md docs/features/index.md docs/records/rounds.md docs/records/open-questions.md docs/features/backlog.md docs/features/server-backlog.md docs/research/16-server-platform.md docs/decisions/012-server-input.md docs/spec/13-round-013-instructions.txt docs/spec/13-round-013-instructions-part2.txt docs/records/round-013-answers.md docs/decisions/013-build-start.md Cargo.toml src/lib.rs src/core/mod.rs docs/features/core-userflow.md docs/features/core-popup.md docs/spec/14-round-014-instructions.txt docs/decisions/014-build-continue.md .github/workflows/ci.yml docs/features/core-cache.md docs/features/core-asynk.md docs/features/core-leak.md docs/spec/15-round-015-instructions.txt docs/decisions/015-build-continue.md docs/rules/ui-demo.md src/dispatcher/mod.rs docs/features/dispatcher.md docs/features/dispatcher-json.md docs/features/dispatcher-task.md docs/features/dispatcher-mode.md docs/features/dispatcher-launcher.md docs/spec/16-round-016-instructions.txt docs/decisions/016-build-continue.md src/lightweight/mod.rs docs/features/lightweight.md docs/features/lightweight-login.md docs/features/lightweight-download.md docs/features/lightweight-loaders.md docs/features/lightweight-view.md docs/spec/17-round-017-instructions.txt docs/decisions/017-visual-preview.md demos/preview/index.md docs/features/ui-visual-catalog.md scripts/render_ui.py docs/spec/18-round-018-instructions.txt docs/decisions/018-paper-ux.md demos/preview/index.md docs/features/ui-paper-ux.md demos/ui-full-kcu-paper.html docs/spec/19-round-019-instructions.txt docs/decisions/019-ux-logic-lucide.md docs/design/ux-logic-matrix.md docs/features/ux-logic-completion.md docs/features/lucide-icon-system.md docs/features/third-party-licenses-about.md THIRD-PARTY-NOTICES.md docs/spec/20-round-020-instructions.txt docs/decisions/020-nav-slots-settings.md docs/research/17-plugin-settings-survey.md docs/design/nav-slot-contract.md docs/design/recommendation-catalog.md docs/design/server-status.md docs/design/upper-layer-stack.md docs/design/handoff.md docs/features/nav-slot-lock.md docs/features/settings-groups.md docs/features/recommendation-catalog.md docs/features/server-status-settings.md docs/features/upper-layer-thirdparty.md docs/features/handoff-baseline.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
+for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/spec/09-round-009-instructions.txt docs/spec/10-round-010-instructions.txt docs/spec/11-round-011-instructions.txt docs/spec/11-features-input.txt docs/spec/12-round-012-instructions.txt docs/spec/12-server-features-input.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/rules/build-preconditions.md docs/research/index.md docs/features/index.md docs/records/rounds.md docs/records/open-questions.md docs/features/backlog.md docs/features/server-backlog.md docs/research/16-server-platform.md docs/decisions/012-server-input.md docs/spec/13-round-013-instructions.txt docs/spec/13-round-013-instructions-part2.txt docs/records/round-013-answers.md docs/decisions/013-build-start.md Cargo.toml src/lib.rs src/core/mod.rs docs/features/core-userflow.md docs/features/core-popup.md docs/spec/14-round-014-instructions.txt docs/decisions/014-build-continue.md .github/workflows/ci.yml docs/features/core-cache.md docs/features/core-asynk.md docs/features/core-leak.md docs/spec/15-round-015-instructions.txt docs/decisions/015-build-continue.md docs/rules/ui-demo.md src/dispatcher/mod.rs docs/features/dispatcher.md docs/features/dispatcher-json.md docs/features/dispatcher-task.md docs/features/dispatcher-mode.md docs/features/dispatcher-launcher.md docs/spec/16-round-016-instructions.txt docs/decisions/016-build-continue.md src/lightweight/mod.rs docs/features/lightweight.md docs/features/lightweight-login.md docs/features/lightweight-download.md docs/features/lightweight-loaders.md docs/features/lightweight-view.md docs/spec/17-round-017-instructions.txt docs/decisions/017-visual-preview.md demos/preview/index.md docs/features/ui-visual-catalog.md scripts/render_ui.py docs/spec/18-round-018-instructions.txt docs/decisions/018-paper-ux.md demos/preview/index.md docs/features/ui-paper-ux.md demos/ui-full-kcu-paper.html docs/spec/19-round-019-instructions.txt docs/decisions/019-ux-logic-lucide.md docs/design/ux-logic-matrix.md docs/features/ux-logic-completion.md docs/features/lucide-icon-system.md docs/features/third-party-licenses-about.md THIRD-PARTY-NOTICES.md docs/spec/20-round-020-instructions.txt docs/decisions/020-nav-slots-settings.md docs/research/17-plugin-settings-survey.md docs/design/nav-slot-contract.md docs/design/recommendation-catalog.md docs/design/server-status.md docs/design/upper-layer-stack.md docs/design/handoff.md docs/features/nav-slot-lock.md docs/features/settings-groups.md docs/features/recommendation-catalog.md docs/features/server-status-settings.md docs/features/upper-layer-thirdparty.md docs/features/handoff-baseline.md docs/spec/21-round-021-instructions.txt docs/decisions/021-server-autoconnect.md docs/research/18-server-list-autodiscovery.md docs/design/server-list-logic.md docs/design/ui-product-copy.md docs/features/server-autoconnect.md docs/features/servers-dat-analysis.md docs/features/server-join-binding.md docs/features/ui-product-copy.md docs/spec/22-round-022-instructions.txt docs/decisions/022-async-budget.md docs/research/19-async-probe-budget.md docs/design/async-probe-policy.md docs/features/server-async-probe.md docs/features/server-failure-history.md docs/verification/round-022.md scripts/round022_async.py; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
 ```
 
 ## 分区
@@ -129,16 +146,18 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 018 决策 | docs/decisions/018-paper-ux.md | 纸质质感重做、UX/流程形态区分、W01/W02、S01-S20、E01-E05 |
 | UX 整页演示 | demos/ui-full-kcu-paper.html | 1440×900 桌面窗口、20 视图、纸质两套主题、离线可点 |
 | 作废演示 | demos/ui-full-kcu-v2.html | 017 风格取错，保留文件不复用 |
-| 界面预览 | demos/preview/ | 37 张视图 PNG + 00-overview.png 总览 + index.md |
+| 界面预览 | demos/preview/ | 37 张产品视图 PNG + 4 张内部证据图 + 00-overview.png 总览 + index.md |
 | 渲染脚本 | scripts/render_ui.py | 本地 chromium 截图与拼图，每视图强制重载，0 次远端请求 |
 | 020 决策 | docs/decisions/020-nav-slots-settings.md | 导航瘦身、锁定槽位、设置归拢、推荐目录、上层第三方、交接基线 |
 | 020 调研 | docs/research/17-plugin-settings-survey.md | 12 一手 + 4 公开资料 + 3 受阻，完整 URL 锚点 |
+| 021 设计 | docs/design/ | server-list-logic、ui-product-copy；020 的 server-status 页面口径已被 021 取代 |
+| 022 设计 | docs/design/ | async-probe-policy；取代 021 的同步遍历口径 |
 | 020 设计 | docs/design/ | nav-slot-contract、recommendation-catalog、server-status、upper-layer-stack、handoff |
 | 019 决策 | docs/decisions/019-ux-logic-lucide.md | 使用逻辑骨架、lucide、第三方许可、自评迭代 |
 | 使用逻辑矩阵 | docs/design/ux-logic-matrix.md | U01–U20 × L01–L12、缓存分层、刷新触发、推荐位 |
 | 图标资产 | assets/icons/ | lucide 88 枚一手 SVG 与 manifest |
 | 发行物声明 | THIRD-PARTY-NOTICES.md | 关于页同一份清单 |
-| UI 闸门规则 | docs/rules/ui-demo.md | 020 增 G16-G18：槽位锁定、设置归拢、上层候选，手感回路进行中 |
+| UI 闸门规则 | docs/rules/ui-demo.md | 022 增 G22：异步预算与失败历史的用户可见口径 |
 | 014 决策 | docs/decisions/014-build-continue.md | 私仓、secrets 占位、样板化 UX、缓存异步泄漏防护 |
 | CI 工作流 | .github/workflows/ci.yml | secrets / vars 占位、有界缓存、并发取消、并行 job |
 | 特殊版私仓 | kongbai9288/KCU-launcher-special | private，仅 README 占位，代码待用户同意 |
@@ -174,7 +193,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 演示 | demos/round-015-dispatcher.html | L2 调度判定、模式分流、安全模式、用户操作模拟；运行逻辑演示，非整页 UI |
 | 整页 UI 演示 | demos/ui-full-lightweight.html | 016 轮触发：轻量极简整页、6 分区、5 状态、11 弹窗、手感调整区、离线可点 |
 | 演示 | demos/round-016-lightweight.html | L3 三级回退、批量请求、无常驻进程；运行逻辑演示，非整页 UI |
-| 界面预览总览 | demos/preview/00-overview.png | 020 轮 37 个纸质视图缩略拼图（4×10），直接看界面长相 |
+| 界面预览总览 | demos/preview/00-overview.png | 022 轮 37 个产品视图缩略拼图，直接看界面长相 |
 | 界面预览单图 | demos/preview/01-20 | 首页、深色纸质、公告中心、公告详情、更新、引导、实例、网格、下载、模组、登录、日志、抽屉、设置、关于、弹窗、轻量、异常、收起、右键 |
 | 脚本 | scripts/push.sh | 推送入口，自动降级 |
 | 脚本 | scripts/api_push.py | Git Data API 全量树快照 |
@@ -219,9 +238,11 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | dispatcher 分项 | `cargo test --offline dispatcher::`，47 passed（json 7 / task 8 / mode 12 / launcher 20） |
 | lightweight 分项 | `cargo test --offline lightweight::`，38 passed（login 8 / download 12 / loaders 7 / view 11） |
 | dispatcher / lightweight 依赖 | `grep -c 'serde\|tokio\|async-std' Cargo.lock` 为 0 |
-| UI 闸门触发 | 019 轮已触发；`test -f demos/ui-full-kcu-paper.html`；`test -f demos/preview/00-overview.png`；`ls demos/preview/*.png \| wc -l` = 38 |
+| UI 闸门触发 | 019 轮已触发；`test -f demos/ui-full-kcu-paper.html`；`test -f demos/preview/00-overview.png`；`ls demos/preview/*.png \| wc -l` = 42 |
 | 图标与使用逻辑 | `grep -c '<symbol'` = 88；`grep -c 'class="logicbar"'` = 26；`grep -c '<section class="view'` = 26；对照 ux-logic-matrix.md C01-C20 |
-| 020 槽位与设置 | `grep -c 'slot-core'` = 1；`grep -o 'data-tab=' \| wc -l` = 9；`grep -o 'data-pane=' \| wc -l` = 9 |
+| 021 产品文案 | `grep -c 'class="setid"'` = 0；`grep -c 'data-internal="1"'` = 4；`grep -o 'data-gotab="' \| wc -l` = 3；对照 docs/design/ui-product-copy.md P09 |
+| 021 服务器逻辑 | `grep -c 'srv-row'` > 0；`21-servers.png` / `34-servers-join.png` / `35-servers-locked.png` 可见 |
+| 022 异步与连接范围 | `grep -c 'budget-cell'` = 4；`python3 scripts/p09_scan.py` = P09_HITS 0；`36-servers-budget.png` / `37-servers-history.png` 可见 |
 | 第三方许可 | `test -f THIRD-PARTY-NOTICES.md`；关于页一级入口与七列表可见 |
 | 风格与位置 | 对照 018 视觉 token 表逐值核验；`! grep -rE 'FCL\|揉纸启动器\|https?://' demos/ui-full-kcu-paper.html` |
 | 交付形态 | UX HTML `demos/ui-full-*.html` 与流程 HTML `demos/round-0XX-*.html` 分开命名 |
@@ -257,7 +278,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 ## 未写入项
 
 - L2 dispatcher、L3 lightweight：已实现、已验证；L4 headless 及以下 6 层未启动。
-- 整页 UX 演示：016 轻量版；017 v2 作废；018 纸质版；019 扩到 28 视图；020 扩到 26 区块 / 37 截图视图、26 逻辑条、导航锁定槽位、设置九分组、推荐位总览、上层候选、交接基线；用户按手感调整后先改演示与截图、确认后才改实现。
+- 整页 UX 演示：016 轻量版；017 v2 作废；018 纸质版；019 28 视图；020 37 视图；021 去工程化、服务器页重做；022 异步探测与设备连接范围、失败历史分类，37 张产品视图 + 4 张内部证据图；用户按手感调整后先改演示与截图、确认后才改实现。
 - 轻量 UI 实现：未进入构建；演示层深浅主题预览不写进单主题实现。
 - 正常模式 UI 实现：014 轮定为样板参考、KCU 品牌重新实现，未进入构建。
 - UI 设计稿品牌与字体：E09 卡点关闭，设计稿不直接复用。

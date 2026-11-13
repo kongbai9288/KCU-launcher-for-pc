@@ -1,17 +1,18 @@
-# 界面预览图索引（020 · 37 视图）
+# 界面预览图索引（022 · 37 个产品视图）
 
 | 项 | 值 |
 | --- | --- |
-| 轮次 | 020 |
-| 来源 | `demos/ui-full-kcu-paper.html`，按 `#view=` 切换，26 个独立区块 + 别名派生 = 37 张截图 |
+| 轮次 | 022 |
+| 来源 | `demos/ui-full-kcu-paper.html`，按 `#view=` 切换，26 个独立区块，37 张产品截图 + 4 张内部证据图 |
 | 形态 | **UX HTML**：1440×900 桌面窗口，标题栏 / 导航 / 工具条 / 卡片 / 表格 / 弹窗 / 抽屉 / 状态栏 |
 | 风格 | 米纸色板、衬线标题、折痕高光、细噪点、小圆角、细描边、半透明卡片；深色纸质主题独立一套 |
 | 图标 | lucide 88 枚一手 SVG 内联 sprite，ISC + Feather 派生 MIT，无 CDN |
 | 使用逻辑 | 26 个区块各有逻辑条：已缓存时间、命中 / 未命中、刷新、强制刷新、状态 |
-| 020 信息架构 | 一级导航 9 项；设置与关于锁定在同一 `slot-core` 容器；插件区 `slot-plugin` 独立；工具条按视图收敛 |
+| 022 信息架构 | 一级导航 9 项；设置与关于固定在底部；扩展区独立；产品界面不出现工程叙事；服务器页加连接范围卡、范围外 / 暂不重试标签 |
 | 渲染 | `python3 scripts/render_ui.py`，本地 chromium，每场景强制重载，离线 |
-| 总览 | `00-overview.png`，4 列 10 行，1462×2702 |
+| 总览 | `00-overview.png`，只收 37 个产品视图，4 列 10 行，1462×2702 |
 | 打包 | `/data/workspace/ui-previews.zip`，含本目录全部 PNG |
+| 内部证据 | `34-slots.png` / `35-recommendations.png` / `36-handoff.png` / `37-upperstack.png` 为设计证据，不进产品导航、不进总览 |
 
 | 文件 | 视图 | 看什么 |
 | --- | --- | --- |
@@ -36,7 +37,7 @@
 | 18-error.png | 异常与边界六态 | 空 / 加载 / 错误 / 被锁 / 安全模式 / 离线 |
 | 19-narrow.png | 侧栏收起态 | 导航折叠为图标条 |
 | 20-context.png | 右键菜单 | 纸感上下文菜单 |
-| 21-servers.png | 服务器推荐位 | 推荐卡、权重口径、测速缓存、二次确认 |
+| 21-servers.png | 服务器列表 | 自动连接结果、MC 风格 MOTD / 人数 / ping 条 / 版本、锁定置顶、失败沉底 |
 | 22-licenses.png | 第三方许可七列表 | 16 组组件、分组筛选、ISC 原文摘录 |
 | 23-sync.png | 数据与缓存总控 | 设置内二级页：四层缓存、容量条、命中率 |
 | 24-refresh.png | 刷新机制 R1–R5 | 五种触发、失败回退缓存不空白 |
@@ -45,16 +46,16 @@
 | 27-serverhost.png | 开服器 | 一键开服、EULA 启动前写入、UPnP 默认关 |
 | 28-headless.png | 无头模式 | 统一信封、任务优先级、无 UI |
 | 29-settings-recommend.png | 设置 · 推荐与排序 | 推荐总控、10 位表、权重自定义 |
-| 30-settings-status.png | 设置 · 服务器状态 | SLP 字段、6 类状态、显示位置、变更历史 |
+| 30-settings-status.png | 设置 · 服务器与连接 | 自动连接、排序、读取游戏内列表、双击进服 |
+| 34-servers-join.png | 双击进服 | 实例绑定弹窗与三个按钮 |
+| 35-servers-locked.png | 连不上沉底 | 锁定项保持靠前，失败项排最后 |
+| 36-servers-budget.png | 设备连接范围 | 标准档 4 台 / 3 路，预算四格、范围外标签 |
+| 37-servers-history.png | 轻量档与失败历史 | 2 台 / 2 路，无成功记录按权重排中段 |
 | 31-settings-plugins.png | 设置 · 插件与更新 | 插件清单、插件化更新、回滚模拟 |
 | 32-settings-cache.png | 设置 · 缓存与刷新 | 四层 TTL、普通 / 强制刷新、失败回退 |
 | 33-settings-ai.png | 设置 · AI 容器接口 | 地址自填、权限、失败分类 |
-| 34-slots.png | 插件槽位与锁定 | 槽位注册表、冲突拒绝、清单校验 |
-| 35-recommendations.png | 推荐位总览 | 10 处推荐位的内容 / 权重 / 覆盖 / 缓存 / 设置 ID |
-| 36-handoff.png | 底层交接基线 | 新对话 6 步、已完成层、不可变边界 |
-| 37-upperstack.png | 上层实现候选 | 12 组第三方库、许可证、全文状态、复制状态 |
 
-流程 HTML（`demos/round-0XX-*.html`）与 UX HTML 分开：前者是步骤节点与状态机，只说明逻辑；后者是用户实际看到的界面。动 UI 的轮次主交付必须是 UX HTML + PNG 预览。
+流程 HTML（`demos/round-0XX-*.html`）与 UX HTML 分开：前者是步骤节点与状态机，只说明逻辑；后者是用户实际看到的界面。动 UI 的轮次主交付必须是 UX HTML + PNG 预览。021 起产品界面不写工程叙事，规则见 `docs/design/ui-product-copy.md`。
 
 纸质样板只取质感，位置重新组织；KCU 品牌内联 SVG，无外部字体与远端脚本。第三方许可见 `THIRD-PARTY-NOTICES.md` 与 22-licenses.png、37-upperstack.png。
 

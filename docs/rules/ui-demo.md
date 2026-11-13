@@ -187,3 +187,44 @@ ls demos/preview/*.png | wc -l
 ```
 
 020 手感回路：PNG 总览 → 用户按图提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 与 Cargo.lock 无变化。
+
+## 021 增补
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| G19 | 产品文案 | 界面不出现槽位 ID、稳定设置 ID、锁定徽章、构建状态、交接基线、诊断号等工程叙事；规则见 docs/design/ui-product-copy.md |
+| G20 | 内部证据隔离 | 四个内部设计证据区块标 `data-internal="1"`，不进产品导航、不进总览拼图 |
+| G21 | 总览 | 只收产品视图；021 为 35 张，4 张内部证据图单独落盘不进总览 |
+
+021 检查命令：
+
+```
+grep -c 'class="setid"' demos/ui-full-kcu-paper.html
+grep -c 'data-internal="1"' demos/ui-full-kcu-paper.html
+grep -c 'data-gotab' demos/ui-full-kcu-paper.html
+test -f demos/preview/21-servers.png
+test -f demos/preview/34-servers-join.png
+test -f demos/preview/35-servers-locked.png
+python3 scripts/render_ui.py
+```
+
+021 手感回路不变：先看图 → 提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 与 Cargo.lock 无变化。
+
+## 022 增补
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| G22 | 异步预算与失败历史 | 动服务器界面的轮次必须给出连接范围可见口径（本次可连 / 同时连接 / 在飞·队列 / 本次不连 / 停止）与失败历史标签（范围外、暂不重试、连不上）；截图至少含标准档与轻量档各一张 |
+
+022 检查命令：
+
+```
+grep -c 'budget-cell' demos/ui-full-kcu-paper.html
+grep -c 'srvProbe' demos/ui-full-kcu-paper.html
+test -f demos/preview/36-servers-budget.png
+test -f demos/preview/37-servers-history.png
+python3 scripts/p09_scan.py
+python3 scripts/render_ui.py
+```
+
+022 手感回路不变：先看图 → 提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 与 Cargo.lock 无变化。

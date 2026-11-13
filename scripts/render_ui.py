@@ -27,13 +27,13 @@ SCENES = [
     ("12-logs", "logs", "运行日志"),
     ("13-logs-drawer", "logs-drawer", "日志抽屉"),
     ("14-settings", "settings", "设置 · 纸感表单"),
-    ("15-about", "about", "关于与界面口径"),
+    ("15-about", "about", "关于与外观"),
     ("16-popups", "popups", "弹窗全集 11 类"),
     ("17-lightweight", "lightweight", "轻量模式极简视图"),
     ("18-error", "error", "异常与边界六态"),
     ("19-narrow", "narrow", "侧栏收起态"),
     ("20-context", "context", "右键菜单"),
-    ("21-servers", "servers", "服务器推荐位与权重"),
+    ("21-servers", "servers", "服务器列表 · 自动连接与连接范围"),
     ("22-licenses", "licenses", "第三方许可七列表"),
     ("23-sync", "sync", "四层缓存与刷新总控"),
     ("24-refresh", "refresh", "R1-R5 刷新触发"),
@@ -42,14 +42,14 @@ SCENES = [
     ("27-serverhost", "serverhost", "开服器与控制台"),
     ("28-headless", "headless", "无头模式统一信封"),
     ("29-settings-recommend", "settings&tab=recommend", "设置 · 推荐与排序 10 位"),
-    ("30-settings-status", "settings&tab=status", "设置 · 服务器状态 SLP"),
+    ("30-settings-status", "settings&tab=status", "设置 · 服务器与连接"),
     ("31-settings-plugins", "settings&tab=plugins", "设置 · 插件与插件化更新"),
     ("32-settings-cache", "settings&tab=cache", "设置 · 四层缓存与刷新"),
     ("33-settings-ai", "settings&tab=ai", "设置 · AI 容器接口"),
-    ("34-slots", "slots", "插件槽位与核心锁定"),
-    ("35-recommendations", "recommendations", "推荐位总览 10 处"),
-    ("36-handoff", "handoff", "新对话可交接底层基线"),
-    ("37-upperstack", "upperstack", "上层实现第三方候选 12 组"),
+    ("34-servers-join", "server-join", "双击进服 · 实例绑定弹窗"),
+    ("35-servers-locked", "servers-locked", "连不上沉底 · 锁定保持靠前"),
+    ("36-servers-budget", "servers-budget", "设备连接范围 · 异步队列"),
+    ("37-servers-history", "servers-history", "轻量档 · 无成功记录按权重排序"),
 ]
 
 W, H = 1440, 900
@@ -67,9 +67,21 @@ def font(size):
     return ImageFont.load_default()
 
 
+INTERNAL = [
+    ("34-slots", "slots"),
+    ("35-recommendations", "recommendations"),
+    ("36-handoff", "handoff"),
+    ("37-upperstack", "upperstack"),
+]
+
+
 def shots():
-    for old in OUT.glob("[0-9][0-9]-*.png"):
-        old.unlink()
+    for _name, _scene, _title in SCENES:
+        old = OUT / (_name + ".png")
+        if old.exists():
+            old.unlink()
+    if (OUT / "00-overview.png").exists():
+        (OUT / "00-overview.png").unlink()
     results = []
     with sync_playwright() as p:
         browser = p.chromium.launch(
@@ -81,11 +93,16 @@ def shots():
         for i, (name, scene, _title) in enumerate(SCENES):
             page.goto(HTML.as_uri() + "?r=" + str(i) + "#view=" + scene, wait_until="load")
             page.evaluate("document.fonts.ready")
-            page.wait_for_timeout(300)
+            page.wait_for_timeout(1200 if name in ("36-servers-budget", "37-servers-history") else 300)
             path = OUT / (name + ".png")
             page.screenshot(path=str(path))
             results.append((name, path))
             print("[KCU] shot", name, path.stat().st_size)
+        for name, scene in INTERNAL:
+            page.goto(HTML.as_uri() + "?r=i" + name + "#view=" + scene, wait_until="load")
+            page.wait_for_timeout(220)
+            page.screenshot(path=str(OUT / (name + ".png")))
+            print("[KCU] internal", name)
         browser.close()
     return results
 
@@ -119,7 +136,7 @@ def overview(results):
 def main():
     results = shots()
     overview(results)
-    assert len(list(OUT.glob("[0-9][0-9]-*.png"))) == len(SCENES) + 1
+    assert len(list(OUT.glob("[0-9][0-9]-*.png"))) == len(SCENES) + 1 + len(INTERNAL)
     print("[KCU] render_ui OK shots=" + str(len(SCENES)))
     return 0
 

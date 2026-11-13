@@ -1754,3 +1754,176 @@ L3 落地：
 | E05 | `scripts/api_push.py` 串行 POST 257 个 blob，两次调用均被网关 502 打断，远端 ref 仍停在 019 的 `6a3f220`，`ALL_MATCH False`（REMOTE 231 / LOCAL 257 / MISSING 26 / MISMATCH 71） | 脚本改为：一次 `GET /git/trees/{parent_tree}?recursive=1` 收集远端已有 blob SHA 集合；本地 `git hash-object` 命中集合即复用，不再 POST；只对新增 / 变化文件并发 8 线程创建；单次 500 自动重试一次。改动后重新推送并复核 |
 
 变更内容哈希口径仍为 `4abdfc9..f985f07`（020 主体），不含本复核段、E04 修复与 E05 脚本优化提交；验证报告哈希声明不受后续提交影响。`scripts/api_push.py` 优化属推送链路工程修复，不改 020 交付范围，`src/` 与 Cargo.lock 仍无变化。
+
+## 021
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/21-round-021-instructions.txt | 逐字副本，1 行 1003 字节，SHA-1 `ec86aa376a193eb5701de49b2f2bd464599189b5` |
+| docs/decisions/021-server-autoconnect.md | D01-D11、R01-R07 / C01-C08、界面证据、验证与边界 |
+| docs/research/18-server-list-autodiscovery.md | 9 个一手来源 + 8 组公开资料 + 用户描述逐条对照 + J01-J07 |
+| docs/design/ | server-list-logic.md、ui-product-copy.md；nav-slot-contract N01-N03；server-status 取代说明 |
+| docs/design/ux-logic-matrix.md | U24 修订、U26、021 自评 7.6 → 8.7 → 9.4、C21-C24 |
+| demos/ui-full-kcu-paper.html | 26 区块，服务器页整体重做、设置分组改写、关于页精简、导航与文案去工程化、4 区块标 data-internal |
+| demos/preview/ | 35 张产品视图 + 4 张内部证据图 + `00-overview.png` + 重写 index.md |
+| docs/features/ | server-autoconnect.md、servers-dat-analysis.md、server-join-binding.md、ui-product-copy.md |
+| 索引与规则 | decisions / features / research index、ai-errors A90-A92、ui-demo G19-G21 与 021 行、docs/index 101 项必读、README、interface-log I57-I61 / RO57-RO66、push-scope |
+| docs/verification/round-021.md | 第 021 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Sat Nov 14 00:29:46 CST 2026` |
+| 统一调研 | `00:30`–`00:33` |
+| UI 去工程化与服务器页重做 | `00:36`–`00:44` |
+| 35 视图渲染与内部证据图保留 | `00:45`–`00:52` |
+| 文档收口 | `Sat Nov 14 00:56 CST 2026` 前后 |
+
+用户当轮要求与处置：
+
+| 编号 | 要求 | 处置 |
+| --- | --- | --- |
+| V01 | 对外开放的应用，强调这些是废话 | 产品界面移除槽位 ID、稳定设置 ID、锁定徽章、交接基线、候选构建状态、诊断号；工程结论只落 docs/；内部证据页标 data-internal 不进导航与总览；最终回复不再念内部汇报话术 |
+| V02 | 服务器状态准确说是设置好后自动尝试连接、缓存作权重推荐 | 添加后自动连、打开列表自动同步、结果缓存为排序权重，驱动首页推荐卡与服务器列表 |
+| V03 | 用户锁定的按权重放到前面，连不上放下面，锁定不受影响 | 锁定置顶且连不上不动；连不上的沉底；星标可切锁定并立即重排 |
+| V04 | 我的世界会在目录里放专门看服务器连接的文件，可以自动分析 | 只读 `servers.dat`（未压缩 NBT）；可见 / 隐藏 / 快速进入三类来源；不写回 |
+| V05 | 双击进服，按上次使用实例与上次用这个服的实例范围绑定，锁定优先 | 进服弹窗列上次用该服的实例、上次全局实例、兼容范围、自动选定；换实例 / 取消 / 进入 / × / ESC |
+| V06 | 显示按 MC 显示逻辑与发现逻辑 | 64×64 图标、玩家命名、两行 MOTD 转义、人数、ping 五档、版本名、LAN 底部；不另做状态配色文案 |
+| V07 | 社区有事例，不用逐条强调设计 | 查到 PCL2 延迟测试与服务器列表改进、HMCL/PCL2/BakaXL 自存列表、社区工具生成 servers.dat；第三方启动器一般不读官方 servers.dat，KCU 多做一层 |
+
+自评迭代：
+
+| 轮次 | 自评 | 发现的不足 | 补入 |
+| --- | --- | --- | --- |
+| 迭代 1 | 7.6 | 只换服务器页文案，界面仍到处是工程叙事；关于页还有工程卡片；弹窗有 id= | P01-P09 规则、四类清理、总览只收产品视图 |
+| 迭代 2 | 8.7 | 排序与双击进服做完，但没查 servers.dat 一手结构、没查社区事例；设置残留 SLP 参数思维 | 9 一手 + 8 公开资料、三类来源、设置四组用户语言 |
+| 迭代 3 | 9.4 | 补齐并出 36 张 PNG + 4 内部证据图；剩余为未实现客户端与未证实上游项 | U24 修订、U26、C21-C24，收口 |
+
+本轮真实缺陷与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E01 | 新 JS 用 `const SRV` 与 019 遗留的旧 `const SRV` 重名，`new Function` 报 Identifier already declared | 新数组改名 `SERVERS`，show 别名同步改，语法通过 |
+| E02 | 关于页上层候选表被删后 `$('upperBody')` 为 null 会抛异常 | 改为条件渲染 `if($('upperBody'))` |
+| E03 | 关于页「界面口径」四条仍是设计说明；弹窗有 `id=join_s1`；逻辑条写「命中 / 未命中」 | 界面口径改「外观」四个可用控件；`#mdId` 隐藏；逻辑条改「上次更新 / 已就绪 / 待刷新 / 重新获取」 |
+| E04 | 工具条在服务器页仍显示列表网格 / 新建实例 | hideActs 加 servers；锁定容器去虚线框与空白标题 |
+| E05 | 收口脚本里一条无效断言 `#mdId{` 导致首次运行异常、文件未落盘 | 去掉该断言重跑，前四项替换与关于页改造全部生效 |
+
+统一调研来源：
+
+| 来源 | 事实 |
+| --- | --- |
+| https://minecraft.wiki/w/Server_list_storage_format | servers.dat 未压缩 NBT 结构与字段 |
+| https://zh.minecraft.wiki/w/服务器列表存储格式 | 可见 / 隐藏两份列表，可见列表游戏主动同步，隐藏最多 16 个 |
+| https://minecraft.wiki/w/Servers.dat_format | 不存直连 IP 与 LAN |
+| https://minecraft.wiki/w/Server_list | 原版四元素、ping 五档、LAN 底部、顺序可调 |
+| https://minecraft.wiki/w/Java_Edition_protocol/Server_List_Ping | SLP 1.7+ 流程与 JSON 字段 |
+| https://zh.minecraft.wiki/w/Java版网络协议/服务器列表查询 | description / players / favicon 解析细则 |
+| https://wikivg.booky.dev/NBT | servers.dat 永远未压缩 |
+| 8 组公开资料 | MOTD 不可信、打开列表 ping 每个服、社区启动器做法与版本改进 |
+
+验证：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `python3 scripts/render_ui.py` | `render_ui OK shots=35`，40 张 PNG | 已证实 |
+| `grep -c '<section class="view'` / `grep -c 'class="logicbar"'` | 26 / 26 | 已证实 |
+| `grep -c '<symbol'` / `grep -o 'data-tab=' \| wc -l` | 88 / 9 | 已证实 |
+| `grep -c 'class="setid"'` / `grep -c 'data-internal="1"'` | 0 / 4 | 已证实 |
+| `node -e` 内联脚本 / `compile` 三个脚本 | 通过 | 已证实 |
+| `! grep -rqE 'gh[p]_' .` | NO_CREDENTIAL | 已证实 |
+| `CARGO_INCREMENTAL=0 cargo test --offline` | 141 passed / 0 failed | 已证实 |
+| `git diff 170b69d..HEAD -- src/ Cargo.lock` | 空 | 已证实 |
+| 必读 101 项存在非空 | REQUIRED=101 MISSING=0 | 已证实 |
+| 真实 TCP 连接、真实 servers.dat 解析、浏览器内实际双击 | 未实测 | 受阻 |
+| 用户按 35 张产品视图给手感反馈 | 未发生 | 未证实 |
+
+阶段：D07 第 3 层 lightweight 已实现、已验证；021 轮只动演示层、设计层与文档，`src/` 与 Cargo.lock 无变化；L4 headless 及以下 6 层未启动。UI 实现按闸门等用户确认演示后进。
+
+未做：
+- UI 实现、真实 SLP 客户端、NBT 解析器、双击进服实现
+- L4 headless 及以下 6 层、插件注册表与插件化更新实现、第三方依赖引入
+- CF F17 调用方法、X01-X04 逐条处置、特殊版代码、本项目 LICENSE
+- 后端仓任何写请求
+- 浏览器内交互实测（截图为静态帧）、GUI 端到端、交叉编译
+- 1.20.5 / 1.21 是否改过 servers.dat 文件名或结构（未取得一手证据）
+
+## 022
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/22-round-022-instructions.txt | 逐字副本，1 行 265 字节，SHA-1 `1a99d1a137ad246fa50c9e66958d3792dc54ec2f` |
+| docs/decisions/022-async-budget.md | D01-D11、与 021 差异表、Q01-Q03 待确认口径、界面证据 |
+| docs/research/19-async-probe-budget.md | 12 个完整 URL 锚点、用户描述逐条对照、J01-J07、Q01-Q04 口径说明 |
+| docs/design/ | async-probe-policy.md；server-list-logic.md 加 022 补充 N01-N05；ux-logic-matrix 加 U27 / C25-C29 / 022 自评 9.4 |
+| demos/ui-full-kcu-paper.html | 服务器 JS 整段换成异步探测；加连接范围卡、设置设备连接范围分组、失败历史标签、动态计数、标准 / 轻量档 |
+| demos/preview/ | 37 张产品视图 + 4 张内部证据图 + 00-overview.png + index.md |
+| docs/features/ | server-async-probe.md、server-failure-history.md |
+| 索引与规则 | decisions / features / research index、ai-errors A93-A96、ui-demo G22、docs/index 109 项必读、README、interface-log I62-I66 / RO67-RO74、push-scope |
+| scripts/ | round022_async.py、round022_docs.py、round022_index.py、render_ui.py 两个新场景与长等待 |
+| docs/verification/round-022.md | 第 022 轮独立验证报告 |
+
+用户当轮要求与处置：
+
+| 编号 | 要求 | 处置 |
+| --- | --- | --- |
+| V01 | 注意异步 | 同步 `srvSync` 删除；worker-pull 有界队列、并发上限、单台 deadline、增量渲染、停止按钮 |
+| V02 | 超出一定范围的也不会去连接 | 按权重取前 N 台进计划；范围外不发请求、保留上次结果、按缓存权重排 200 档 |
+| V03 | 新的不会受影响，但保持在设备连接范围内防设备爆炸 | 新加服务器强制排队首且不受 N 裁剪，占同一份额度挤掉权重最低一台；总量仍等于 N；档位表标准 4/3、轻量 2/2、无界面 0 |
+| V04 | 之前测过不可以用且没有成功连接案例的按权重中去排序 | `ever` / `tried` 分类：无成功记录不主动重连、按缓存权重排 300 档中段；曾成功本轮失败 900 档沉底；锁定 0 档不动 |
+
+自评迭代：
+
+| 轮次 | 自评 | 发现的不足 | 补入 |
+| --- | --- | --- | --- |
+| 迭代 1 | 7.8 | 只加异步没限总台数；新服直接扩量；失败历史没分类 | 档位表、slice(0,N)、新服占同一份额度、ever / tried 分类 |
+| 迭代 2 | 8.8 | 范围外与无成功记录视觉上排最后；锁定离线服被探测成在线；逻辑条计数写死 | 排序改 200 / 300 档；s4 保持 offlineMark；逻辑条动态计数 |
+| 迭代 3 | 9.4 | 补齐 12 来源、37 张产品视图、设置自定义项与停止入口；剩余为真实客户端未实现与 Q01-Q03 待确认 | Q 口径说明、U27、C25-C29，收口 |
+
+本轮真实缺陷与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E01 | 初版 `srvRank` 把无成功记录放 500 档，视觉上落到列表最后，与「按权重中去排序」不符 | 改为 300 档；范围外改 200 档，形成「可用 → 范围外 → 无成功记录 → 彻底失败」中段顺序 |
+| E02 | 锁定且离线的 s4 被异步探测 `applyResult` 改成在线，违背「锁定连不上也不动」 | s4 加 `offlineMark:true`，探测后仍离线且置顶 |
+| E03 | 逻辑条「4 台连得上 / 1 台连不上」写死，与 8 台数据不符 | `renderSrv` 动态统计并更新 lb-hit / lb-miss / lb-state |
+| E04 | 「设备连接范围」标题在右栏被工具按钮挤成两行 | 标题改「连接范围」并加 white-space:nowrap |
+| E05 | 两个新截图场景异步探测需 120–270ms，固定 300ms 等待不够稳定 | render_ui.py 对 36 / 37 场景等待 1200ms |
+
+统一调研来源：
+
+| 来源 | 事实 |
+| --- | --- |
+| https://docs.rs/rust-mc-status/2.0.0/rust_mc_status/client/struct.McClient.html | ping_many 并行、max_parallel 控资源、失败不阻塞 |
+| https://pkg.go.dev/github.com/LinusTebbe/mc-prober | 每次探测接 context deadline，策略归调用方 |
+| https://deepwiki.com/mcobs/ObsMCLauncher/7.1-server-list-management | 启动器并行 ping、5s 超时、IsOnline 瞬时 / LastPingTime |
+| https://optimi.com/en/guides/dependency-resilience | 超时是容量控制、最大并发 + 有界队列、bulkhead |
+| https://blog.habsi.net/backpressure-explained-designing-systems-that-dont-collapse-under-load/ | 显式上限、观测在飞 / 队列 / 拒绝率 |
+| 另 7 组公开资料 | 连接池等待队列、浏览器 6 连接、200 台 40 路、5000 台 15 并发、3–6 路甜点、Little's Law |
+
+验证：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `python3 scripts/render_ui.py` | `render_ui OK shots=37`，42 张 PNG | 已证实 |
+| `node -e` 内联脚本 / `compile` 四个脚本 | 通过 | 已证实 |
+| `python3 scripts/p09_scan.py` | `P09_HITS 0` | 已证实 |
+| `grep -c 'srvSync'` | 0 | 已证实 |
+| `grep -c 'budget-cell'` | 4 | 已证实 |
+| `! grep -rqE 'gh[p]_' .` | NO_CREDENTIAL | 已证实 |
+| `CARGO_INCREMENTAL=0 cargo test --offline` | 141 passed / 0 failed | 已证实 |
+| `git diff 3c87d21..HEAD -- src/ Cargo.lock` | 空 | 已证实 |
+| 必读 109 项存在非空 | REQUIRED=109 MISSING=0 | 已证实 |
+| 真实 TCP 并发、真实超时取消、真实内存剖析、浏览器内实际点击 | 未实测 | 受阻 |
+| Q01-Q03 口径确认、用户按 37 张图给手感反馈 | 未发生 | 未证实 |
+
+阶段：D07 第 3 层 lightweight 已实现、已验证；022 轮只动演示层、设计层与文档，`src/` 与 Cargo.lock 无变化；L4 headless 及以下 6 层未启动。UI 实现按闸门等用户确认演示后进。
+
+未做：
+- UI 实现、真实 SLP 客户端、NBT 解析器、双击进服实现、真实并发池与取消令牌
+- L4 headless 及以下 6 层、插件注册表与插件化更新实现、第三方依赖引入
+- CF F17 调用方法、X01-X04 逐条处置、特殊版代码、本项目 LICENSE
+- 后端仓任何写请求
+- 浏览器内交互实测（截图为静态帧）、GUI 端到端、交叉编译
+- 1.20.5 / 1.21 是否改过 servers.dat 文件名或结构（未取得一手证据）

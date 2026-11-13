@@ -151,3 +151,17 @@
 | --- | --- | --- |
 | 插件槽位、设置架构、插件化更新、服务器状态、上层候选许可 | docs/research/17-plugin-settings-survey.md | 12 一手 + 4 公开资料 + 3 受阻，全部完整 URL 锚点 |
 | 结论 J01-J06 | docs/research/17-plugin-settings-survey.md | 只供设计层使用，020 轮 `src/` 无变化 |
+
+## 021 服务器列表自动发现
+
+| 项 | 文档 | 状态 |
+| --- | --- | --- |
+| servers.dat NBT 结构、可见 / 隐藏两份列表、原版四元素与 ping 分档、SLP 字段、社区启动器事例 | docs/research/18-server-list-autodiscovery.md | 9 一手来源 + 8 组公开资料，完整 URL 锚点 |
+| 结论 J01-J07 | docs/research/18-server-list-autodiscovery.md | 只供设计层；020 的 server-status.md 页面口径已被取代 |
+
+## 022 异步探测与连接预算
+
+| 项 | 文档 | 状态 |
+| --- | --- | --- |
+| 并行探测 API、context deadline、启动器异步 ping、背压 / 有界队列 / 连接池上限 / 失败不毁整批 | docs/research/19-async-probe-budget.md | 12 个完整 URL 锚点，J01-J07 结论 |
+| Q01-Q04 口径说明 | docs/research/19-async-probe-budget.md | 自主拍板，待用户确认，只落 docs/ |
