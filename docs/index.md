@@ -1,7 +1,7 @@
 # 文档索引
 
 检索日期：2026-11-12
-更新轮次：016
+更新轮次：017
 
 ## 每轮开工必读顺序
 
@@ -66,12 +66,17 @@
 59. docs/features/lightweight-download.md
 60. docs/features/lightweight-loaders.md
 61. docs/features/lightweight-view.md
+62. docs/spec/17-round-017-instructions.txt
+63. docs/decisions/017-visual-preview.md
+64. demos/preview/index.md
+65. docs/features/ui-visual-catalog.md
+66. scripts/render_ui.py
 
 读取命令：
 
 ```
 cd /data/workspace/kcu-launcher-desktop
-for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/spec/09-round-009-instructions.txt docs/spec/10-round-010-instructions.txt docs/spec/11-round-011-instructions.txt docs/spec/11-features-input.txt docs/spec/12-round-012-instructions.txt docs/spec/12-server-features-input.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/rules/build-preconditions.md docs/research/index.md docs/features/index.md docs/records/rounds.md docs/records/open-questions.md docs/features/backlog.md docs/features/server-backlog.md docs/research/16-server-platform.md docs/decisions/012-server-input.md docs/spec/13-round-013-instructions.txt docs/spec/13-round-013-instructions-part2.txt docs/records/round-013-answers.md docs/decisions/013-build-start.md Cargo.toml src/lib.rs src/core/mod.rs docs/features/core-userflow.md docs/features/core-popup.md docs/spec/14-round-014-instructions.txt docs/decisions/014-build-continue.md .github/workflows/ci.yml docs/features/core-cache.md docs/features/core-asynk.md docs/features/core-leak.md docs/spec/15-round-015-instructions.txt docs/decisions/015-build-continue.md docs/rules/ui-demo.md src/dispatcher/mod.rs docs/features/dispatcher.md docs/features/dispatcher-json.md docs/features/dispatcher-task.md docs/features/dispatcher-mode.md docs/features/dispatcher-launcher.md docs/spec/16-round-016-instructions.txt docs/decisions/016-build-continue.md src/lightweight/mod.rs docs/features/lightweight.md docs/features/lightweight-login.md docs/features/lightweight-download.md docs/features/lightweight-loaders.md docs/features/lightweight-view.md; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
+for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt docs/spec/02-round-002-instructions.txt docs/spec/03-round-003-instructions.txt docs/spec/04-round-004-instructions.txt docs/spec/05-round-005-instructions.txt docs/spec/06-round-006-instructions.txt docs/spec/07-round-007-instructions.txt docs/spec/08-round-008-instructions.txt docs/spec/09-round-009-instructions.txt docs/spec/10-round-010-instructions.txt docs/spec/11-round-011-instructions.txt docs/spec/11-features-input.txt docs/spec/12-round-012-instructions.txt docs/spec/12-server-features-input.txt docs/checklists/ai-errors.md docs/checklists/windows-errors.md docs/rules/proof-rules.md docs/rules/fallback-rules.md docs/rules/push-scope.md docs/rules/build-preconditions.md docs/research/index.md docs/features/index.md docs/records/rounds.md docs/records/open-questions.md docs/features/backlog.md docs/features/server-backlog.md docs/research/16-server-platform.md docs/decisions/012-server-input.md docs/spec/13-round-013-instructions.txt docs/spec/13-round-013-instructions-part2.txt docs/records/round-013-answers.md docs/decisions/013-build-start.md Cargo.toml src/lib.rs src/core/mod.rs docs/features/core-userflow.md docs/features/core-popup.md docs/spec/14-round-014-instructions.txt docs/decisions/014-build-continue.md .github/workflows/ci.yml docs/features/core-cache.md docs/features/core-asynk.md docs/features/core-leak.md docs/spec/15-round-015-instructions.txt docs/decisions/015-build-continue.md docs/rules/ui-demo.md src/dispatcher/mod.rs docs/features/dispatcher.md docs/features/dispatcher-json.md docs/features/dispatcher-task.md docs/features/dispatcher-mode.md docs/features/dispatcher-launcher.md docs/spec/16-round-016-instructions.txt docs/decisions/016-build-continue.md src/lightweight/mod.rs docs/features/lightweight.md docs/features/lightweight-login.md docs/features/lightweight-download.md docs/features/lightweight-loaders.md docs/features/lightweight-view.md docs/spec/17-round-017-instructions.txt docs/decisions/017-visual-preview.md demos/preview/index.md docs/features/ui-visual-catalog.md scripts/render_ui.py; do printf '%s %s\n' "$f" "$(wc -l < "$f")"; done
 ```
 
 ## 分区
@@ -94,7 +99,11 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | L3 功能登记 | docs/features/lightweight*.md | 5 份，字段固定五段 |
 | 015 决策 | docs/decisions/015-build-continue.md | UI 整页演示闸门、L2 开工、L01-L14 |
 | 016 决策 | docs/decisions/016-build-continue.md | L3 落地、UI 整页演示首次触发、主题口径处置 |
-| UI 闸门规则 | docs/rules/ui-demo.md | 016 轮首次触发，已交付整页演示，手感回路进行中 |
+| 017 决策 | docs/decisions/017-visual-preview.md | PNG 预览闸门、风格与位置边界、公告族补齐、S01-S15 |
+| 整页演示 v2 | demos/ui-full-kcu-v2.html | 15 场景、布局重排、离线可点、KCU 内联 SVG |
+| 界面预览 | demos/preview/ | 15 张场景 PNG + 00-overview.png 总览 + index.md |
+| 渲染脚本 | scripts/render_ui.py | 本地 chromium 截图与拼图，0 次远端请求 |
+| UI 闸门规则 | docs/rules/ui-demo.md | 016 首次触发；017 增 G07-G10 与 PNG 闸门，手感回路进行中 |
 | 014 决策 | docs/decisions/014-build-continue.md | 私仓、secrets 占位、样板化 UX、缓存异步泄漏防护 |
 | CI 工作流 | .github/workflows/ci.yml | secrets / vars 占位、有界缓存、并发取消、并行 job |
 | 特殊版私仓 | kongbai9288/KCU-launcher-special | private，仅 README 占位，代码待用户同意 |
@@ -130,6 +139,8 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | 演示 | demos/round-015-dispatcher.html | L2 调度判定、模式分流、安全模式、用户操作模拟；运行逻辑演示，非整页 UI |
 | 整页 UI 演示 | demos/ui-full-lightweight.html | 016 轮触发：轻量极简整页、6 分区、5 状态、11 弹窗、手感调整区、离线可点 |
 | 演示 | demos/round-016-lightweight.html | L3 三级回退、批量请求、无常驻进程；运行逻辑演示，非整页 UI |
+| 界面预览总览 | demos/preview/00-overview.png | 017 轮 15 个场景缩略拼图，直接看界面长相 |
+| 界面预览单图 | demos/preview/01-15 | 首页、公告中心、公告详情、引导、更新、实例、下载、登录、设置、日志、异常、关于、弹窗、轻量、浅色 |
 | 脚本 | scripts/push.sh | 推送入口，自动降级 |
 | 脚本 | scripts/api_push.py | Git Data API 全量树快照 |
 
@@ -173,7 +184,9 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 | dispatcher 分项 | `cargo test --offline dispatcher::`，47 passed（json 7 / task 8 / mode 12 / launcher 20） |
 | lightweight 分项 | `cargo test --offline lightweight::`，38 passed（login 8 / download 12 / loaders 7 / view 11） |
 | dispatcher / lightweight 依赖 | `grep -c 'serde\|tokio\|async-std' Cargo.lock` 为 0 |
-| UI 闸门触发 | 016 轮已触发；`test -f demos/ui-full-lightweight.html`；`! grep -rE 'FCL\|揉纸启动器\|https?://' demos/ui-full-lightweight.html` |
+| UI 闸门触发 | 017 轮已触发；`test -f demos/ui-full-kcu-v2.html`；`test -f demos/preview/00-overview.png`；`ls demos/preview/*.png \| wc -l` = 16 |
+| 风格与位置 | `! grep -rE 'FCL\|揉纸启动器\|https?://' demos/ui-full-kcu-v2.html`；布局按 017 D04 核对 |
+| 场景覆盖 | 对照 docs/decisions/017-visual-preview.md S01-S15 逐项点图 |
 | 排除项 | `cargo test --offline excluded_assets_cover_normal_ui_and_heavy_components` |
 | 批量请求 | `cargo test --offline one_request_for_ten_ids_not_ten` |
 | 弹窗关闭路径 | `cargo test --offline core::popup`，11 类全部可关 |
@@ -205,7 +218,7 @@ for f in docs/spec/00-requirements.txt docs/spec/01-round-001-instructions.txt d
 ## 未写入项
 
 - L2 dispatcher、L3 lightweight：已实现、已验证；L4 headless 及以下 6 层未启动。
-- 整页 UI 演示：016 轮已交付 `demos/ui-full-lightweight.html`；用户按手感调整后先改演示、确认后才改实现。
+- 整页 UI 演示：016 轮交付轻量版；017 轮交付 `demos/ui-full-kcu-v2.html` 与 15 张 PNG 预览，位置重排、公告族补齐；用户按手感调整后先改演示与截图、确认后才改实现。
 - 轻量 UI 实现：未进入构建；演示层深浅主题预览不写进单主题实现。
 - 正常模式 UI 实现：014 轮定为样板参考、KCU 品牌重新实现，未进入构建。
 - UI 设计稿品牌与字体：E09 卡点关闭，设计稿不直接复用。

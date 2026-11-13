@@ -78,6 +78,10 @@
 | A69 | 逐条目单发请求或未做单飞缓存（关联 011 D12、016 L07） | `cargo test --offline one_request_for_ten_ids_not_ten`、`repeated_batch_is_single_flight` |
 | A70 | 写死加载器 version json 字段、WebView2 检测键或暴露 CF 源（关联 016 L05/L08/L09） | `cargo test --offline installed_loader_returns_record_without_schema_fields`、`webview2_availability_is_injected_not_hardcoded`、`curseforge_source_is_not_exposed` |
 | A71 | 游戏运行期残留常驻后台进程，或弹窗流程后未清零（关联 016 L13/L14） | `cargo test --offline game_runtime_has_no_resident_launcher`、`flow_ends_with_zero_open_popups` |
+| A72 | 动 UI 却只交 md/HTML、未交 PNG 预览与总览（关联 017 D01/G07） | `test -f demos/preview/00-overview.png`；`ls demos/preview/*.png \| wc -l` |
+| A73 | 照搬样板三栏拖拽、组件位置或复用 FCL 品牌（关联 017 D03-D05） | `! grep -rE 'FCL\|揉纸启动器\|https?://' demos/ui-full-kcu-v2.html`；布局按 D04 核对 |
+| A74 | 漏公告中心、公告详情、更新提示、首次启动引导等界面（关联 017 D06/D07） | 对照 docs/decisions/017-visual-preview.md S01-S15 逐项点图 |
+| A75 | 场景切换残留上一个弹窗，导致多张截图内容相同（关联 017 实测） | `dismissOverlay()` 在 `show()` 开头；逐张核对 `demos/preview/*.png` 不重复 |
 
 ## 输出结构
 

@@ -1335,3 +1335,104 @@ L3 落地：
 | V07 | 远端公开 GET | 验证者无认证只读 GET 确认 public / main / 远端头 `621c1b9`；改动作者稍后带认证推送后另记 | 受阻（限流下未逐 blob 独立复算） |
 
 独立验证结论：**部分通过**。两个哈希由独立验证者计算并写入声明块，改动作者未代算；验证者五项记录中 V01 / V04 为口径或执行误差，V02 / V03 为委托语数值偏差，均已在改动作者侧纠正并登记，验证报告按 18.1 未改。未解决四值项仍存在，不发通过标记。
+
+## 017
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/17-round-017-instructions.txt | 逐字副本，1 行 259 字节，SHA-1 `b543d734232094498072f3f468a7499a9bd43ce1` |
+| docs/decisions/017-visual-preview.md | D01-D10、S01-S15、验证与边界 |
+| docs/rules/ui-demo.md | 轮次状态表 017 行、G07-G10、017 检查命令、手感回路 |
+| docs/rules/push-scope.md | 脚本允许清单加入 `scripts/render_ui.py` |
+| demos/ui-full-kcu-v2.html | 整页界面演示 v2，15 场景，布局重排，离线可点 |
+| demos/preview/ | 15 张场景 PNG + `00-overview.png` + `index.md` |
+| scripts/render_ui.py | 本地 chromium 渲染与 PIL 拼图 |
+| docs/features/ui-visual-catalog.md | F017-01，字段固定五段 |
+| 索引与记录 | features / decisions index、ai-errors A72-A75、docs/index 66 项必读、README、interface-log I33-I36 / RO23-RO28 |
+| docs/verification/round-017.md | 第 017 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Fri Nov 13 11:51:17 CST 2026` |
+| 渲染链路探测 | `11:52`，playwright 无内置浏览器，改用系统 chromium 156 成功 |
+| 首次 15 场景渲染 | `11:56` |
+| 修复后重渲染与打包 | `11:58:48` |
+| 文档收口 | `Fri Nov 13 12:02:09 CST 2026` |
+
+用户当轮三点反馈与处置：
+
+| 编号 | 反馈 | 处置 |
+| --- | --- | --- |
+| V01 | 提交物看不到用户界面长什么样 | 新增 PNG 预览闸门：本地 chromium 按场景截图 1440×900，PIL 拼 3×5 总览图；对话里直接交图 |
+| V02 | 之前只是要那个风格，不代表位置都要按那个位置放 | 017 D03/D04：只取配色、圆角、描边、卡片层次、轻噪点；布局重排为顶部条 + 精简导航 + 卡片流 + 底部状态条，不采用三栏拖拽与组件位置照搬 |
+| V03 | 得多思考，公告什么的也得让我看看长什么样 | 主动补齐 15 个场景；公告族含公告中心、详情弹窗、首页横幅、版本更新提示、维护公告、活动公告，见 S01-S15 |
+
+渲染链路：
+
+| 项 | 值 | 四值 |
+| --- | --- | --- |
+| `python3 -c import playwright/PIL` | 均可用 | 已证实 |
+| playwright 默认浏览器 | 缺 `chrome-headless-shell`，`BrowserType.launch` 报错 | 已失败 |
+| 改用 `executable_path=/usr/local/bin/chromium` | chromium 156.0.8069.0 截图成功 | 已证实 |
+| `python3 scripts/render_ui.py` | `render_ui OK shots=15`，16 张 PNG | 已证实 |
+| `demos/preview/00-overview.png` | 1444×1776，770376 字节 | 已证实 |
+| `/data/workspace/ui-previews.zip` | 3.8M，含全部预览图 | 已证实 |
+
+本轮真实缺陷与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E01 | 首次总览里 12 个场景显示同一个弹窗，场景切换未清 overlay | 在 `show()` 开头加 `dismissOverlay()`，弹窗类场景（`notice-detail` / `update`）先关再开；重渲染后逐张核对内容不同；立 A75 |
+| E02 | 弹窗遮罩 0.74 过暗，背景界面轮廓看不清 | 调到 0.62 后重渲染，弹窗与背景都可见 |
+| E03 | 下载、日志、公告详情初始内容偏空，截图信息量不足 | 初始化预填 4 行文件进度、8 行 `[KCU]` 诊断、首条公告正文 |
+
+验证：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `CARGO_INCREMENTAL=0 cargo test --offline` | 141 passed / 0 failed（src 未变） | 已证实 |
+| `node -e` 遍历 demos/*.html | 17 份内联脚本语法通过 | 已证实 |
+| `! grep -rE 'https?://\|FCL\|揉纸启动器' demos/ui-full-kcu-v2.html` | exit 0 | 已证实 |
+| `! grep -rqE 'gh[p]_' .` | NO_CREDENTIAL | 已证实 |
+| `git diff 6d09a10..HEAD -- src/` | 空 | 已证实 |
+| 用户在手机端查看预览并给手感反馈 | 未发生 | 未证实 |
+
+阶段：D07 第 3 层 lightweight 已实现、已验证；017 轮只动演示层与文档，`src/` 无变化；L4 headless 及以下 6 层未启动。UI 实现仍按 D08 等用户确认演示后进。
+
+未做：
+- UI 实现（PNG 总览确认后才进实现）
+- L4 headless 及以下 6 层
+- CF 下载模块、X01-X04 逐条处置、CF 具体调用方法
+- 特殊版代码（待用户明确同意，用户手拉工具流）
+- 本项目 LICENSE 文件
+- 后端仓任何写请求
+- 浏览器内交互实测（截图为静态帧，交互需用户本地点开整页 HTML）
+- 加载器逐版本 schema、WebView2 检测键、插件源默认、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证
+
+017 验证者记录复核：
+
+| 编号 | 验证者记录 | 改动作者复跑 | 判定 |
+| --- | --- | --- | --- |
+| V01 | `class="scene"` 实测 11 处，判「非 15 个独立区块」 | `grep -c '<section class="scene'` = 12；`class="scene"` 精确 11（另有 1 个 `class="scene on"`）；`class="scene` 宽匹配 24（含 12 个 `class="scene-tag"`）。真实结构：**12 个独立 section + 3 个派生视图**（notice-detail 复用 notices + 弹窗、update 复用 home + 弹窗、home-light 复用 home + 浅色主题）= 15 张截图 | 委托语把「15 张截图视图」写成「15 个独立区块」，数值口径纠正；验证报告按 18.1 未改 |
+| V02 | `dismissOverlay` 实测 2 处 | 定义 1 处 + `show()` 调用 1 处，合计 2 | 正常实现，委托语未给数量 |
+| V03 | `demos/preview/` 17 项，与「16 张 PNG」不符 | `ls demos/preview/*.png \| wc -l` = 16；目录 17 项含 `index.md` | 口径差异 |
+| V04 | `preview/index.md` 32 行，与委托语「16 行」不符 | `wc -l` = 32 | 委托语数值写错，登记纠正 |
+| V05 | `ui-visual-catalog.md` 六标题，与「五标题」不符 | 6 个 `##`：怎么运作 / 开放了什么 / 登记框架 / 用户使用逻辑 / 性能 / 验证 | 五固定字段 + 既有模板的「验证」段，其余功能 md 同构；口径差异 |
+| V06 | `render_ui.py` 本轮未实跑，仅静态与产物证据 | 改动作者 11:56 / 11:58 / 12:04 三次实跑，输出 `render_ui OK shots=15`，16 张 PNG 与总览尺寸已核 | 改动作者已证实，验证者侧受阻 |
+| V07 | 渲染 0 次远端请求无进程级抓包 | 脚本只 `page.goto(file://...)`，无 HTTP 客户端；进程级抓包未做 | 未证实（未升级为已证实） |
+| V08 | 域外四值词汇与「同上」命中未清理 | 命中落在 `.github/workflows/ci.yml`、`docs/index.md` 词表字面量、3 份 spec 用户原文、旧验证报告；项目扫描域复跑 `NO_EXPLANATORY` / `NO_MIDSTATE` / `NO_REPEAT` | 扫描域口径，未改命令、未降标准 |
+| V09 | 用户手感反馈回路未闭环 | 真实：手机端查看与反馈尚未发生 | 未证实，保留 |
+| V10 | UI 实现未进构建 | 017 D10 范围决定，等用户确认演示 | 未证实，保留 |
+
+哈希复核：
+
+| 项 | 值 | 判定 |
+| --- | --- | --- |
+| 报告正文 SHA-1 声明 | `d88b1b80f7b3b285379e195e6b45ed983e294f50` | 声明块偏移 22012，`sha1(t[:22012])` 与之完全一致；本轮无「多出 1 个换行」偏差 |
+| 全文 SHA-1 | `9e85b09beb9a2b5777cd851a084c798f41fe2f71` | 含声明块，与正文哈希不同属预期 |
+| 变更内容 SHA-1 声明 | `67c300d889242791785e945c67a2bc0ff00af907` | `git diff 6d09a10..b3b27c5 \| sha1sum` 复算一致 |
+| 凭据与措辞 | `NO_CREDENTIAL` / `NO_EXPLANATORY` | 已证实 |
+
+独立验证结论：**部分通过**。两个哈希由独立验证者计算并写入声明块，改动作者未代算。验证者 10 项记录中 V01 / V03 / V04 / V05 为委托语数值与口径偏差，V02 / V06 / V07 / V08 为执行与扫描域口径，V09 / V10 为真实未解决项；改动作者侧已纠正委托语数值并登记，验证报告按 18.1 未改。未解决四值项仍存在，不发通过标记。

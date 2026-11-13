@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：016
+更新轮次：017
 
 ## 前置索引
 
@@ -271,6 +271,24 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | RO20 | 加载器逐版本 schema 未证实，`version_json_fields` 恒空、`schema_patch` 恒 None；不生成 version json patch。 |
 | RO21 | UI 整页演示闸门 016 轮首次触发，整页演示与实现分开落盘，演示不进 `src/`。 |
 | RO22 | Cargo.toml / Cargo.lock 未变，无新增 crate；`serde` / `tokio` / `async-std` 计数为 0。 |
+
+## 017 界面视觉预览
+
+| 编号 | 接口 | 输入 | 输出 | 错误 |
+| --- | --- | --- | --- | --- |
+| I33 | `#scene=<name>` URL 路由 | 15 个场景名 | 对应场景画面 | 未知名回落 home |
+| I34 | `show(name)` / `dismissOverlay()` | 场景名 / 无 | 可见区块、导航高亮、弹窗清理 | 无 |
+| I35 | `openDlg` / `closeDlg` | 标题 / 正文 / id / 关闭动作 | 弹窗画面与 `[KCU]` 诊断行 | 无 |
+| I36 | `python3 scripts/render_ui.py` | 无 | 16 张 PNG | 非零退出 |
+
+| 编号 | 内容 |
+| --- | --- |
+| RO23 | 017 轮对后端仓 0 个写请求，约束延续 RO01-RO22。 |
+| RO24 | 截图由本地 chromium 156 渲染，字体走本地 Noto / WenQuanYi；0 次远端请求，未调用任何 API。 |
+| RO25 | 公告中心、公告详情、更新提示、维护/活动公告均为演示层，未进入 `src/`；公告族规则见 017 D06/D07。 |
+| RO26 | 风格取自样板（配色、圆角、描边、卡片层次、轻噪点），位置重新组织；未复制样板代码、FCL 品牌与外部字体。 |
+| RO27 | `src/` 本轮无变化；`cargo test --offline` 仍为 141 passed / 0 failed；Cargo.lock 未变。 |
+| RO28 | PNG 预览闸门写入 docs/rules/ui-demo.md G07-G10；每轮动 UI 须复跑 `scripts/render_ui.py`。 |
 
 ## 版本弃用
 

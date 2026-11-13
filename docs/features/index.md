@@ -36,6 +36,7 @@
 | F016-02 | Provider 与批量下载 | lightweight.download | 已实现、已验证 | lightweight-download.md |
 | F016-03 | 加载器注册与安装 | lightweight.loaders | 已实现、已验证 | lightweight-loaders.md |
 | F016-04 | 轻量极简视图状态 | lightweight.view | 已实现、已验证 | lightweight-view.md |
+| F017-01 | 界面视觉全集与预览 | ui.demo | 已实现、已验证（演示层） | ui-visual-catalog.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -98,6 +99,24 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G19 | 轻量视图不加载 normal.ui 与 13 项重资产；整页演示单独交付，不复用设计稿。 |
 | G20 | 逐条目单发请求列为禁止项；一次请求带多个 id，每页 20，core.cache 单飞。 |
 | G21 | 未证实字段不写进实现：加载器 version json 注入字段为空、WebView2 检测键由宿主注入、CF 源本层不暴露。 |
+| G22 | 动 UI 的轮次须交 PNG 预览与总览拼图，HTML 单文件不再作为唯一可见交付。 |
+| G23 | 样板只取配色、圆角、描边、卡片层次；位置重新组织，不照搬三栏拖拽与组件位置。 |
+| G24 | 公告中心、详情、更新提示、首次启动引导等界面主动出图，不待用户逐项点名。 |
+| G25 | 场景切换清弹窗残留；弹窗类场景单独渲染；流程结束 0 未关弹窗。 |
+
+## 017 轮界面视觉预览
+
+| 项 | 值 |
+| --- | --- |
+| 输入 | docs/spec/17-round-017-instructions.txt，1 行 259 字节 |
+| 决策 | docs/decisions/017-visual-preview.md D01-D10、S01-S15 |
+| 整页演示 | demos/ui-full-kcu-v2.html，15 场景，布局重排，离线可点 |
+| 预览 | demos/preview/ 16 张 PNG，含 00-overview.png 总览 |
+| 渲染脚本 | scripts/render_ui.py，本地 chromium，0 次远端请求 |
+| 预览索引 | demos/preview/index.md |
+| 规则 | docs/rules/ui-demo.md G07-G10、轮次状态表 017 行 |
+| 源码 | `src/` 本轮无变化；演示与实现分开落盘 |
+| 手感回路 | 先看图 → 提意见 → 先改演示与截图 → 确认后才改实现 |
 
 ## 016 轮 L3 lightweight
 

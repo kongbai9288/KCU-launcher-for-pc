@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark" data-density="comfy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU Launcher · 整页界面演示 v2 · 布局重排</title>
+<style>
+:root{
+  --bg:#0a0e15;--bg2:#0d121c;--surface:#131a26;--surface2:#182131;--surface3:#1e293c;
+  --line:#26344a;--line2:#33456180;--txt:#e9eff8;--dim:#94a5bf;--mut:#6d7c95;
+  --acc:#5ee0b4;--acc2:#3fae8d;--acc-soft:#102a23;--blue:#6aa8ff;--blue-soft:#14243c;
+  --warn:#f5b95c;--warn-soft:#2b2314;--err:#ff7a7a;--err-soft:#2c181c;--purple:#b79bff;
+  --r:14px;--gap:16px;--pad:18px;--fs:14px;
+  --font:"WenQuanYi Micro Hei","Noto Sans CJK SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+  --shadow:0 18px 50px rgba(0,0,0,.34);
+}
+html[data-theme="light"]{
+  --bg:#eef2f8;--bg2:#f5f8fc;--surface:#ffffff;--surface2:#f4f7fc;--surface3:#eaf0f8;
+  --line:#dce4f0;--line2:#c9d6e8;--txt:#172233;--dim:#5a6b84;--mut:#8493aa;
+  --acc:#0f8f6c;--acc2:#0c7357;--acc-soft:#e0f5ed;--blue:#2c6fd6;--blue-soft:#e5eefc;
+  --warn:#a9760f;--warn-soft:#fbf2de;--err:#cc4444;--err-soft:#fbe9e9;--purple:#7158c9;
+  --shadow:0 18px 44px rgba(30,50,80,.14);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:var(--fs)/1.6 var(--font);overflow:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.028;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:5px 5px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:8px 13px;transition:.18s;white-space:nowrap}
+button:hover{border-color:var(--acc);background:var(--acc-soft)}
+button.primary{background:var(--acc2);border-color:var(--acc);color:#04140f;font-weight:700}
+html[data-theme="light"] button.primary{color:#fff}
+button.primary:hover{filter:brightness(1.12)}
+button.ghost{background:transparent}
+button.tiny{padding:4px 9px;font-size:11px;border-radius:8px}
+button:disabled{opacity:.45;cursor:not-allowed}
+input[type=text],select{background:var(--surface3);border:1px solid var(--line);border-radius:9px;padding:8px 11px}
+input[type=text]{width:100%}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--pad);box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+.mono{font-family:var(--mono)}.dim{color:var(--dim)}.mut{color:var(--mut)}.acc{color:var(--acc)}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.spread{justify-content:space-between}
+.stack{display:grid;gap:var(--gap)}
+h1,h2,h3,h4{margin:0}h1{font-size:17px;letter-spacing:.5px}h2{font-size:15px}h3{font-size:13px;color:var(--dim);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px}h4{font-size:13px}
+.pill{font:11px/1.5 var(--mono);border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--dim);white-space:nowrap}
+.pill.ok{color:var(--acc);border-color:var(--acc2);background:var(--acc-soft)}
+.pill.warn{color:var(--warn);border-color:var(--warn);background:var(--warn-soft)}
+.pill.err{color:var(--err);border-color:var(--err);background:var(--err-soft)}
+.pill.info{color:var(--blue);border-color:var(--blue);background:var(--blue-soft)}
+
+/* 布局：顶部条 + 精简导航 + 卡片流主区 + 底部状态条；不采用三栏拖拽 */
+.app{height:100vh;display:grid;grid-template-rows:60px 1fr 38px;background:linear-gradient(160deg,var(--bg2),var(--bg) 55%)}
+header{display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid var(--line);background:var(--surface)}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(145deg,#1d3b34,#0e211d);display:grid;place-items:center;border:1px solid var(--acc2);flex:0 0 36px}
+.brand{display:flex;flex-direction:column;line-height:1.25}.brand .sub{font:10px var(--mono);color:var(--mut);letter-spacing:1px}
+.search{margin-left:18px;flex:0 1 300px;position:relative}
+.search input{padding-left:30px;background:var(--surface2)}
+.search .ico{position:absolute;left:10px;top:8px;color:var(--mut)}
+header .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bell{position:relative}.bell .dot{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;border-radius:99px;background:var(--err);color:#fff;font:10px/16px var(--mono);text-align:center;padding:0 3px}
+
+.shell{display:grid;grid-template-columns:184px 1fr;min-height:0}
+nav{border-right:1px solid var(--line);background:var(--surface);padding:14px 10px;display:flex;flex-direction:column;gap:4px;overflow:auto}
+.nav-i{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;color:var(--dim);font-size:13px;cursor:pointer;border:1px solid transparent}
+.nav-i:hover{background:var(--surface2);color:var(--txt)}
+.nav-i.on{background:var(--acc-soft);border-color:var(--acc2);color:var(--acc);font-weight:600}
+.nav-i .ic{width:18px;text-align:center;font-size:14px}
+nav .sep{height:1px;background:var(--line);margin:10px 4px}
+nav .foot{margin-top:auto;font:10px var(--mono);color:var(--mut);padding:8px 11px;line-height:1.7}
+main{overflow:auto;padding:20px 22px}
+.scene{display:none;animation:fade .22s ease}
+.scene.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.grid{display:grid;gap:var(--gap)}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+.page-head{display:flex;align-items:flex-end;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.page-head .t{font-size:19px;font-weight:700}.page-head .s{font-size:12px;color:var(--dim)}
+footer{display:flex;align-items:center;gap:16px;padding:0 20px;border-top:1px solid var(--line);background:var(--surface);font:11px var(--mono);color:var(--mut)}
+footer .st{margin-left:auto;display:flex;gap:16px}
+
+.hero{background:linear-gradient(120deg,#14352c,#122033 70%);border:1px solid var(--acc2);border-radius:var(--r);padding:22px;display:flex;gap:18px;align-items:center;position:relative;overflow:hidden}
+html[data-theme="light"] .hero{background:linear-gradient(120deg,#dff5ec,#e6eefc 70%)}
+.hero .big{font-size:22px;font-weight:700;letter-spacing:.4px}
+.hero .cube{width:74px;height:74px;flex:0 0 74px}
+.stat{background:var(--surface2);border:1px solid var(--line);border-radius:11px;padding:12px}
+.stat .k{font-size:11px;color:var(--mut)}.stat .v{font:15px var(--mono);color:var(--acc);margin-top:2px}
+.instance{border:1px solid var(--line);border-radius:12px;background:var(--surface2);padding:14px;display:grid;gap:9px;transition:.18s}
+.instance:hover{border-color:var(--acc);transform:translateY(-2px)}
+.instance .nm{font-weight:700;font-size:15px}.instance .meta{font:11px var(--mono);color:var(--mut)}
+.instance .bar{height:6px;border-radius:99px;background:var(--surface3);overflow:hidden}.instance .bar i{display:block;height:100%;background:var(--acc2)}
+
+.notice-item{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:start;padding:13px;border:1px solid var(--line);border-radius:11px;background:var(--surface2);cursor:pointer}
+.notice-item:hover{border-color:var(--acc)}
+.notice-item.unread{background:var(--acc-soft);border-color:var(--acc2)}
+.notice-item .ic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:18px;background:var(--surface3)}
+.notice-item .tt{font-weight:600;font-size:14px}.notice-item .ds{font-size:12px;color:var(--dim);margin-top:2px}
+.notice-item .tm{font:10px var(--mono);color:var(--mut);white-space:nowrap}
+.tag{font:10px var(--mono);border-radius:5px;padding:1px 6px;border:1px solid var(--line);color:var(--dim)}
+.tag.pin{color:var(--warn);border-color:var(--warn)}.tag.upd{color:var(--blue);border-color:var(--blue)}.tag.evt{color:var(--purple);border-color:var(--purple)}.tag.mt{color:var(--err);border-color:var(--err)}
+
+.list{display:grid;gap:8px}
+.row-item{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface2)}
+.row-item.on{border-color:var(--acc);background:var(--acc-soft)}
+.row-item .rb{width:16px;height:16px;border-radius:50%;border:2px solid var(--mut)}
+.row-item.on .rb{border-color:var(--acc);background:var(--acc);box-shadow:inset 0 0 0 3px var(--surface)}
+.row-item .g{margin-left:auto;font:10px var(--mono);color:var(--mut)}
+
+.overlay{position:fixed;inset:0;background:rgba(4,7,12,.62);display:none;align-items:center;justify-content:center;padding:22px;z-index:60}
+html[data-theme="light"] .overlay{background:rgba(30,45,70,.36)}
+.overlay.on{display:flex}
+.dialog{width:min(560px,100%);max-height:86vh;overflow:auto;background:var(--surface);border:1px solid var(--line2);border-radius:16px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.dialog .top{display:flex;gap:10px;align-items:flex-start;padding:18px 18px 12px;border-bottom:1px solid var(--line)}
+.dialog .top h2{font-size:16px}.dialog .x{margin-left:auto;width:30px;height:30px;padding:0;border-radius:9px;font-size:17px}
+.dialog .body{padding:16px 18px;font-size:13px;color:var(--dim);line-height:1.85}
+.dialog .body p{margin:0 0 10px}.dialog .acts{display:flex;gap:8px;justify-content:flex-end;padding:12px 18px 18px;flex-wrap:wrap}
+.attach{border:1px dashed var(--line);border-radius:9px;padding:10px;background:var(--surface2);font:11px var(--mono)}
+
+.step{display:flex;gap:12px;align-items:center}.step .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--surface3);font:12px var(--mono);color:var(--mut);flex:0 0 28px}
+.step.on .n{background:var(--acc2);color:#04140f;font-weight:700}.step.done .n{background:var(--acc-soft);color:var(--acc);border:1px solid var(--acc2)}
+.progress{height:8px;border-radius:99px;background:var(--surface3);overflow:hidden;border:1px solid var(--line)}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--blue));transition:width .3s}
+.file-row{display:grid;grid-template-columns:1fr 110px 74px;gap:10px;align-items:center;font-size:12px}
+.banner{border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:10px;padding:11px 14px;background:var(--surface2);display:flex;gap:12px;align-items:center}
+.banner.warn{border-left-color:var(--warn)}.banner.err{border-left-color:var(--err)}.banner.info{border-left-color:var(--blue)}
+.empty{padding:30px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:11px;font-size:13px}
+.lock{opacity:.55;pointer-events:none}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;font-size:13px;align-items:center}
+.kv .k{color:var(--dim)}
+#toast{position:fixed;right:20px;bottom:54px;display:grid;gap:8px;z-index:80}
+.toast{background:var(--surface);border:1px solid var(--acc2);border-radius:10px;padding:10px 14px;box-shadow:var(--shadow);font-size:12px;min-width:220px}
+.scene-tag{font:10px var(--mono);color:var(--mut);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 26 26" fill="none">
+      <path d="M13 2 L23 7.5 L23 18.5 L13 24 L3 18.5 L3 7.5 Z" fill="#5ee0b4" opacity=".16"/>
+      <path d="M13 2 L23 7.5 L13 13 L3 7.5 Z" fill="#5ee0b4"/>
+      <path d="M3 7.5 L13 13 L13 24 L3 18.5 Z" fill="#3fae8d"/>
+      <path d="M23 7.5 L13 13 L13 24 L23 18.5 Z" fill="#2b8a70"/>
+      <text x="7.2" y="11.3" font-size="6" font-family="monospace" fill="#0b1a15" font-weight="700">KCU</text>
+    </svg>
+  </div>
+  <div class="brand"><h1>KCU Launcher</h1><span class="sub">DESKTOP · v0.0.0 · 界面演示 v2</span></div>
+  <div class="search"><span class="ico">⌕</span><input type="text" placeholder="搜实例、模组、服务器、设置…"></div>
+  <div class="right">
+    <button class="ghost bell" id="bell" title="公告">🔔<span class="dot">3</span></button>
+    <button class="ghost tiny" id="themeBtn">◐ 主题</button>
+    <button class="ghost tiny" data-scene-btn="settings">⚙</button>
+    <span class="pill ok" id="modePill">正常模式</span>
+  </div>
+</header>
+
+<div class="shell">
+<nav>
+  <div class="nav-i on" data-scene-btn="home"><span class="ic">⌂</span>首页</div>
+  <div class="nav-i" data-scene-btn="instances"><span class="ic">▦</span>实例与服务器</div>
+  <div class="nav-i" data-scene-btn="download"><span class="ic">⇩</span>下载</div>
+  <div class="nav-i" data-scene-btn="login"><span class="ic">◉</span>账号登录</div>
+  <div class="nav-i" data-scene-btn="notices"><span class="ic">✉</span>公告中心 <span class="pill err" style="margin-left:auto;padding:0 6px">3</span></div>
+  <div class="nav-i" data-scene-btn="logs"><span class="ic">≡</span>日志与诊断</div>
+  <div class="sep"></div>
+  <div class="nav-i" data-scene-btn="settings"><span class="ic">⚙</span>设置</div>
+  <div class="nav-i" data-scene-btn="about"><span class="ic">ⓘ</span>关于</div>
+  <div class="sep"></div>
+  <div class="nav-i" data-scene-btn="onboarding"><span class="ic">✦</span>首次启动引导</div>
+  <div class="nav-i" data-scene-btn="popups"><span class="ic">▤</span>弹窗全集</div>
+  <div class="nav-i" data-scene-btn="lightweight"><span class="ic">▷</span>轻量模式</div>
+  <div class="nav-i" data-scene-btn="error"><span class="ic">!</span>异常状态</div>
+  <div class="foot">布局重排版<br>风格取自样板<br>位置重新组织<br>离线可点 · KCU</div>
+</nav>
+
+<main>
+
+<!-- 首页 -->
+<section class="scene on" data-scene="home">
+  <div class="page-head"><span class="t">早上好，指挥官</span><span class="s">上次游玩 2 天前 · 3 条未读公告 · 1 个实例可更新</span><span class="scene-tag">home</span></div>
+  <div class="grid" style="grid-template-columns:1.4fr 1fr">
+    <div class="stack">
+      <div class="hero">
+        <svg class="cube" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+          <path d="M13 2 L23 7.5 L23 18.5 L13 24 L3 18.5 L3 7.5 Z" fill="#5ee0b4" opacity=".2"/>
+          <path d="M13 2 L23 7.5 L13 13 L3 7.5 Z" fill="#5ee0b4"/>
+          <path d="M3 7.5 L13 13 L13 24 L3 18.5 Z" fill="#3fae8d"/>
+          <path d="M23 7.5 L13 13 L13 24 L23 18.5 Z" fill="#2b8a70"/>
+          <text x="7.2" y="11.3" font-size="6" font-family="monospace" fill="#0b1a15" font-weight="700">KCU</text>
+        </svg>
+        <div style="flex:1">
+          <div class="big">生存季 · 1.21.4</div>
+          <div class="dim" style="font-size:13px;margin:5px 0 12px">Fabric 0.16.10 · 已装 42 个模组 · 上次启动正常</div>
+          <div class="row"><button class="primary" id="launchBtn">▶ 启动游戏</button><button class="ghost" data-scene-btn="instances">切换实例</button><button class="ghost" data-scene-btn="download">检查更新</button></div>
+        </div>
+      </div>
+      <div class="banner info" id="homeBanner"><span style="font-size:18px">📣</span><div style="flex:1"><div style="font-weight:600">KCU 0.0.1 预览公告</div><div class="dim" style="font-size:12px">新增批量下载与公告中心，点击查看全部 3 条</div></div><button class="tiny" data-scene-btn="notices">查看公告</button><button class="ghost tiny" id="bannerX">×</button></div>
+      <div class="card">
+        <h3>快捷入口</h3>
+        <div class="grid g4">
+          <button data-scene-btn="instances">▦ 实例管理</button><button data-scene-btn="download">⇩ 模组下载</button>
+          <button data-scene-btn="logs">≡ 日志诊断</button><button data-scene-btn="settings">⚙ 偏好设置</button>
+        </div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card"><h3>运行状态</h3>
+        <div class="grid g2">
+          <div class="stat"><div class="k">内存占用</div><div class="v">未实测</div></div>
+          <div class="stat"><div class="k">后台进程</div><div class="v" id="stProc">待启动</div></div>
+          <div class="stat"><div class="k">网络请求</div><div class="v" id="stReq">0</div></div>
+          <div class="stat"><div class="k">弹窗残留</div><div class="v">0</div></div>
+        </div>
+      </div>
+      <div class="card"><h3>最近公告</h3><div class="stack" id="homeNotices"></div></div>
+      <div class="card"><h3>手感调整</h3>
+        <div class="row"><select id="gDensity"><option value="comfy">舒适间距</option><option value="tight">紧凑</option><option value="loose">宽松</option></select><select id="gFs"><option value="14">标准字号</option><option value="13">偏小</option><option value="15">偏大</option></select><select id="gR"><option value="14">圆角 14</option><option value="8">圆角 8</option><option value="20">圆角 20</option></select></div>
+        <div class="mut" style="font-size:11px;margin-top:9px">这里改的是演示层；确认后才进实现。布局为 KCU 重排版，位置不照抄样板。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 公告中心 -->
+<section class="scene" data-scene="notices">
+  <div class="page-head"><span class="t">公告中心</span><span class="s">3 条未读 · 共 6 条 · 置顶优先</span><span class="scene-tag">notices</span></div>
+  <div class="row" style="margin-bottom:14px"><button class="primary tiny" data-filter="all">全部</button><button class="tiny" data-filter="pin">置顶</button><button class="tiny" data-filter="upd">版本更新</button><button class="tiny" data-filter="evt">活动</button><button class="tiny" data-filter="mt">维护</button><button class="ghost tiny" id="readAll">全部标为已读</button><span class="pill" id="unreadPill">未读 3</span></div>
+  <div class="grid" style="grid-template-columns:1.3fr 1fr">
+    <div class="stack" id="noticeList"></div>
+    <div class="stack">
+      <div class="card"><h3>公告详情预览</h3><div id="noticePreview" class="dim" style="font-size:13px">点左侧任意一条公告，这里显示正文、附件与操作。</div><div class="row" style="margin-top:12px"><button class="primary tiny" id="openDetail">打开详情弹窗</button></div></div>
+      <div class="card"><h3>公告规则</h3><div class="stack" style="font-size:12px;color:var(--dim)">
+        <div class="banner">未读高亮、已读降噪，不自动弹窗打断操作</div>
+        <div class="banner info">维护公告只在相关功能入口提示，不全局拦截</div>
+        <div class="banner warn">每条都有「不再提示」与关闭路径，流程结束 0 残留</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 实例与服务器 -->
+<section class="scene" data-scene="instances">
+  <div class="page-head"><span class="t">实例与服务器</span><span class="s">双击服务器按权重选实例 · 用户指定排第一</span><span class="scene-tag">instances</span></div>
+  <div class="grid g3" id="instanceGrid"></div>
+  <div class="card" style="margin-top:16px"><h3>服务器列表（双击直接进服）</h3><div class="list" id="serverList"></div>
+    <div class="mut" style="font-size:11px;margin-top:10px">一个参数也能直接进服；双击服务器时若用户已指定实例，权重最高，不兼容时可见提示而不崩。</div>
+  </div>
+</section>
+
+<!-- 下载 -->
+<section class="scene" data-scene="download">
+  <div class="page-head"><span class="t">下载中心</span><span class="s">一次请求带多个 id · 每页 20 · 单飞去重</span><span class="scene-tag">download</span></div>
+  <div class="grid g2">
+    <div class="card"><h3>批量任务</h3>
+      <div class="row" style="margin-bottom:12px"><button class="primary" id="dRun">拉取 10 个模组</button><button id="d45">跑 45 个</button><button class="ghost" id="dCancel">取消</button><span class="pill ok" id="dPill">未执行</span></div>
+      <div class="progress"><i id="dBar" style="width:0"></i></div>
+      <div class="stack" style="margin-top:14px" id="dFiles"></div>
+    </div>
+    <div class="stack">
+      <div class="card"><h3>下载源与软策略</h3>
+        <div class="kv"><span class="k">默认源</span><select><option>BMCLAPI 国内镜像</option><option>Mojang 官方</option></select>
+        <span class="k">地域判定</span><select><option>自动测速</option><option>强制境外（仅影响下载选择）</option></select>
+        <span class="k">API Key</span><input type="text" placeholder="由用户填写 / 工作流 secrets 注入"></div>
+        <div class="mut" style="font-size:11px;margin-top:10px">地域是可覆盖的软策略，只用于下载源选择，不与地区禁用复用。</div>
+      </div>
+      <div class="card"><h3>请求统计</h3><div class="grid g2"><div class="stat"><div class="k">本次请求</div><div class="v" id="dReq">0</div></div><div class="stat"><div class="k">逐条目单发</div><div class="v" style="color:var(--err)">禁止</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 登录 -->
+<section class="scene" data-scene="login">
+  <div class="page-head"><span class="t">账号登录</span><span class="s">三种方式 · 外置 → 内置 → 连接码</span><span class="scene-tag">login</span></div>
+  <div class="grid g2">
+    <div class="card"><h3>选择登录方式</h3><div class="stack" id="authList"></div></div>
+    <div class="card"><h3>回退链状态</h3><div class="stack" id="loginFlow"></div>
+      <div class="row" style="margin-top:12px"><button class="primary" id="loginStart">开始登录</button><button id="loginFail">模拟逐级失败</button><button class="ghost" id="loginReset">复位</button></div>
+      <div id="pairBox" style="display:none;margin-top:14px" class="attach">连接码 <b style="font:18px var(--mono);color:var(--acc);letter-spacing:3px">KCU-7F3A</b><br><span class="mut">手机端完成 · 300s 超时可取消</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 日志 -->
+<section class="scene" data-scene="logs">
+  <div class="page-head"><span class="t">日志与诊断</span><span class="s">每 100 行分片 · 诊断包可导出</span><span class="scene-tag">logs</span></div>
+  <div class="card"><div class="row spread" style="margin-bottom:10px"><h3 style="margin:0">[KCU] 实时行</h3><div class="row"><button class="tiny" id="logClear">清空</button><button class="primary tiny" id="logExport">导出诊断包</button></div></div>
+    <div id="logBox" style="height:330px;overflow:auto;background:#070a10;border:1px solid var(--line);border-radius:10px;padding:12px;font:12px/1.8 var(--mono);color:#c9d6e8;white-space:pre-wrap"></div>
+  </div>
+  <div class="mut" style="font-size:11px;margin-top:10px">连续失败 3 次进安全模式，第 4 次导出 4 行诊断包；日志默认脱敏，可手动关闭脱敏。</div>
+</section>
+
+<!-- 设置 -->
+<section class="scene" data-scene="settings">
+  <div class="page-head"><span class="t">设置</span><span class="s">快速配置默认中文 · 高级项可展开</span><span class="scene-tag">settings</span></div>
+  <div class="grid g2">
+    <div class="card"><h3>常规</h3><div class="kv">
+      <span class="k">界面语言</span><select><option>简体中文</option><option>English</option></select>
+      <span class="k">主题</span><select><option>深色（默认）</option><option>浅色</option><option>跟随系统</option></select>
+      <span class="k">数据目录</span><input type="text" value="C:\KCU" readonly>
+      <span class="k">启动时</span><select><option>记住上次实例</option><option>显示首页</option></select>
+      <span class="k">公告</span><select><option>有未读时在铃铛提示</option><option>静默</option></select>
+    </div></div>
+    <div class="card"><h3>下载与网络</h3><div class="kv">
+      <span class="k">每页条数</span><input type="text" value="20" readonly>
+      <span class="k">镜像测速</span><select><option>开启</option><option>关闭</option></select>
+      <span class="k">缓存容量</span><input type="text" value="32 条 / TTL 30s" readonly>
+      <span class="k">失败重试</span><select><option>自动 2 次</option><option>手动</option></select>
+      <span class="k">AI 接口</span><input type="text" placeholder="用户自填，KCU 不预设">
+    </div></div>
+    <div class="card"><h3>游戏与实例</h3><div class="kv">
+      <span class="k">EULA</span><select><option>启动前写入</option></select>
+      <span class="k">UPnP</span><select><option>默认关闭</option></select>
+      <span class="k">崩溃后</span><select><option>自动重启</option></select>
+      <span class="k">旧版 jar</span><select><option>写 lockfile 禁用</option></select>
+    </div></div>
+    <div class="card"><h3>隐私</h3><div class="kv">
+      <span class="k">日志上传</span><select><option>默认脱敏（可手动关）</option></select>
+      <span class="k">保留期</span><input type="text" value="30 天" readonly>
+      <span class="k">凭据保护</span><input type="text" value="待方案批准" readonly>
+      <span class="k">文件管理</span><input type="text" value="系统面板" readonly>
+    </div></div>
+  </div>
+</section>
+
+<!-- 关于 -->
+<section class="scene" data-scene="about">
+  <div class="page-head"><span class="t">关于 KCU</span><span class="s">版本、许可证与开源致谢</span><span class="scene-tag">about</span></div>
+  <div class="grid g2">
+    <div class="card"><h3>版本信息</h3><div class="kv">
+      <span class="k">版本</span><span class="mono">0.0.0 · 演示构建</span>
+      <span class="k">平台</span><span>Windows 桌面（Win7 兼容方案待定）</span>
+      <span class="k">架构</span><span class="mono">i686 / x86_64 / aarch64</span>
+      <span class="k">本项目许可证</span><span class="pill warn">LICENSE 未生成</span>
+      <span class="k">样板稿</span><span>仅风格参考，不复制代码与品牌</span>
+    </div></div>
+    <div class="card"><h3>界面口径</h3><div class="stack" style="font-size:13px;color:var(--dim)">
+      <div class="banner">配色、圆角、描边与卡片层次取自样板</div>
+      <div class="banner info">顶部条 + 精简导航 + 卡片流 + 底部状态条，位置重新组织</div>
+      <div class="banner warn">不采用三栏拖拽、不复用样板品牌与外部字体</div>
+      <div class="banner err">轻量模式独立极简视图，与本页不共用组件</div>
+    </div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>开源致谢（文档层登记，未复制代码）</h3><div class="row" id="creditRow"></div></div>
+</section>
+
+<!-- 首次启动引导 -->
+<section class="scene" data-scene="onboarding">
+  <div class="page-head"><span class="t">首次启动</span><span class="s">4 步向导 · 每步可返回、可关闭</span><span class="scene-tag">onboarding</span></div>
+  <div class="card" style="max-width:760px">
+    <div class="row" style="margin-bottom:18px" id="obSteps"></div>
+    <div id="obBody"></div>
+    <div class="row spread" style="margin-top:20px"><button class="ghost" id="obClose">跳过引导</button><div class="row"><button id="obPrev">上一步</button><button class="primary" id="obNext">下一步</button></div></div>
+  </div>
+</section>
+
+<!-- 弹窗全集 -->
+<section class="scene" data-scene="popups">
+  <div class="page-head"><span class="t">弹窗全集</span><span class="s">11 类 · 每类有关闭路径 · 流程结束 0 残留</span><span class="scene-tag">popups</span></div>
+  <div class="card"><div class="row" style="margin-bottom:12px"><button class="primary" id="popAll">全部登记</button><button id="popClose">全部关闭</button><span class="pill" id="popCnt">打开 0</span></div><div class="grid g4" id="popGrid"></div></div>
+  <div class="mut" style="font-size:11px;margin-top:10px">按钮 / ESC / 取消 / 确认 / 超时 / 宿主 6 类关闭动作，与代码层 popup 目录一一对应。</div>
+</section>
+
+<!-- 轻量模式 -->
+<section class="scene" data-scene="lightweight">
+  <div class="page-head"><span class="t">轻量模式极简视图</span><span class="s">≤2GiB 首次启动自动进入 · 单主题 · 无常驻进程</span><span class="scene-tag">lightweight</span></div>
+  <div class="grid g2">
+    <div class="card"><h3>极简窗口</h3>
+      <div class="stack">
+        <div class="banner info">KCU 轻量启动器 · 单主题 · 无重资产</div>
+        <div class="row"><button class="primary" style="flex:1">离线登录</button><button style="flex:1">第三方登录</button><button style="flex:1">Mojang</button></div>
+        <div class="row"><button style="flex:1">打开游戏目录</button><button style="flex:1">基础日志</button></div>
+        <div class="row"><button class="primary" style="flex:1">▶ 启动游戏</button></div>
+        <div class="mut" style="font-size:11px">游戏运行期启动器退出，后台无常驻进程；不加载本页任何组件与资产。</div>
+      </div>
+    </div>
+    <div class="card"><h3>与正常模式的边界</h3><div class="stack" style="font-size:12px;color:var(--dim)">
+      <div class="banner">排除 13 项：三栏拖拽、双主题实现、纹理、日志抽屉、衣柜、工具箱…</div>
+      <div class="banner info">保留：三种登录、三级回退、批量下载、基础日志、系统文件面板</div>
+      <div class="banner warn">低端机优先：不加载 WebView2 重资产，除非登录需要</div>
+    </div></div>
+  </div>
+</section>
+
+<!-- 异常状态 -->
+<section class="scene" data-scene="error">
+  <div class="page-head"><span class="t">异常与边界状态</span><span class="s">空态 / 加载态 / 错误态 / 被锁态 / 安全模式</span><span class="scene-tag">error</span></div>
+  <div class="grid g2">
+    <div class="card"><h3>空态</h3><div class="empty">还没有实例。新建一个，或从服务器列表双击直接进服。</div></div>
+    <div class="card"><h3>加载态</h3><div class="progress" style="margin:16px 0"><i style="width:62%"></i></div><div class="dim" style="font-size:12px">正在准备实例，可取消，取消后 0 副作用。</div></div>
+    <div class="card"><h3>错误态</h3><div class="empty" style="border-color:var(--err);color:var(--err)">外置 / 内置 / 连接码全部失败。零级报错：明确修复建议，不崩溃、不静默。</div></div>
+    <div class="card"><h3>被锁态</h3><div class="empty lock">实例目录被占用，界面已锁定；OS 级防护 + lockfile。</div></div>
+    <div class="card"><h3>安全模式</h3><div class="banner warn">连续失败 3 次进入：忽略自定义配置、禁 UI 与正版，导出 4 行诊断包。</div></div>
+    <div class="card"><h3>离线态</h3><div class="banner info">无网络：已缓存列表可见，下载入口提示离线，不反复发请求。</div></div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<footer>
+  <span>KCU Launcher · 界面演示 v2 · 布局重排 · 风格取自样板</span>
+  <div class="st"><span id="ftTheme">深色</span><span id="ftScene">home</span><span>弹窗 0</span><span>后端仓 0 写请求</span><span id="ftTime"></span></div>
+</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="dialog" role="dialog" aria-modal="true">
+    <div class="top"><div><h2 id="dlgTitle">标题</h2><span class="mut mono" style="font-size:11px" id="dlgId">id</span></div><button class="x" id="dlgX" aria-label="关闭">×</button></div>
+    <div class="body" id="dlgBody"></div>
+    <div class="acts" id="dlgActs"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const root=document.documentElement;
+let scene='home', theme='dark', dlgOpen=false, unread=3, reqCount=0;
+
+const NOTICES=[
+ {id:'n1',tag:'pin',tagT:'置顶',ic:'📌',t:'KCU Launcher 项目说明',d:'三种模式、公开仓库与功能边界，第一次使用建议先看',tm:'11-13 09:20',unread:true,
+  body:'<p>KCU Launcher 分三种模式：正常、轻量、无头。正常模式提供完整界面；轻量模式面向低配机器，越简单越好；无头模式不加载任何界面。</p><p>文档、功能登记与每轮验证都在公开仓库。界面演示先给你按手感调整，确认后才进实现。</p><div class="attach">附件：项目说明.pdf · 版本：v0.0.0 · 可「不再提示」</div>'},
+ {id:'n2',tag:'upd',tagT:'版本更新',ic:'🆙',t:'0.0.1 预览：批量下载与公告中心',d:'一次请求带多个 id，每页 20 条；公告支持置顶与分类',tm:'11-13 08:40',unread:true,
+  body:'<p>新增批量请求：列表页一次取一页，详情走批量 ID 端点，逐条目单发已列为禁止项。</p><p>公告中心新增置顶、版本更新、活动、维护四类，未读高亮，不自动弹窗打断操作。</p><div class="attach">更新日志：14 项 · 兼容 1.21.4 · 可「稍后更新」</div>'},
+ {id:'n3',tag:'mt',tagT:'维护',ic:'🛠',t:'镜像源维护窗口',d:'本周日 02:00-03:00 部分国内镜像可能变慢',tm:'11-12 21:05',unread:true,
+  body:'<p>维护窗口内下载源会自动测速切换；已缓存内容不受影响。</p><p>维护公告只在下载入口出现，不全局拦截，也不会阻止你继续使用本地实例。</p>'},
+ {id:'n4',tag:'evt',tagT:'活动',ic:'🎮',t:'生存季 · 推荐整合包',d:'Fabric 0.16.10 + 42 个模组，已通过兼容性检查',tm:'11-11 16:30',unread:false,
+  body:'<p>推荐整合包可在实例页一键导入，导入时做路径穿越防护。</p><p>下载域名白名单机制按你的要求先不做，留待以后高度自定义。</p>'},
+ {id:'n5',tag:'upd',tagT:'版本更新',ic:'🆙',t:'加载器版本库更新',d:'六种加载器标识已登记，暂不写死 version json 字段',tm:'11-10 10:12',unread:false,
+  body:'<p>加载器逐版本 schema 未取得一手原文，界面只展示标识与安装结果，不生成 version json patch。</p>'},
+ {id:'n6',tag:'evt',tagT:'活动',ic:'🎮',t:'服务器列表权重说明',d:'双击服务器按权重选实例，用户指定永远排第一',tm:'11-09 14:00',unread:false,
+  body:'<p>双击服务器时若用户指定了实例，直接采用；未指定时按版本兼容度与习惯权重排序。</p><p>不兼容选择会可见提示，不会静默失败或崩溃。</p>'},
+];
+const POPUPS=[
+ ['privacy','隐私政策','首次进入需确认，可随时关闭，流程结束不残留。'],
+ ['declaration','声明页','模式说明与授权边界，轻量模式不复用本页。'],
+ ['eula','EULA','Minecraft EULA 在启动前写入，可查看原文。'],
+ ['dup-mod','重复模组','发现同名模组，保留或替换由你决定。'],
+ ['file-lock','文件锁提示','实例目录被占用时提示，OS 级防护 + lockfile。'],
+ ['guest','访客密码','联机访客口令输入，可取消。'],
+ ['notice','联网提示','联网下载前的可见提示，维护公告只在此处出现。'],
+ ['duration','游玩时长','本次游玩时长记录，可关闭。'],
+ ['error','错误','失败可见、可诊断、可回退，不崩溃。'],
+ ['ai-confirm','AI 请求确认','每次请求单独确认；接口由用户自填。'],
+ ['extension','扩展安装','扩展安装确认，可关闭。'],
+];
+const INSTANCES=[
+ ['生存季 · 1.21.4','Fabric 0.16.10 · 42 mods','86%','正常'],
+ ['纯原版 · 1.21.4','Vanilla · 0 mods','100%','正常'],
+ ['旧存档 · 1.20.1','Forge 47.2.0 · 18 mods','42%','可更新'],
+ ['测试服 · 1.21.1','NeoForge · 7 mods','12%','被锁'],
+];
+const SERVERS=[['陶瓦联机 · 主服','1.21.4','用户指定：生存季','已指定'],['朋友的小服','1.21.1','按权重：测试服','自动'],['快照服','1.21.4','按权重：生存季','自动']];
+const CREDITS=['HMCL（文档调研）','Prism Launcher','Modrinth','CurseForge','Fabric / Forge / NeoForge / Quilt','BMCLAPI / MCIM','authlib-injector','wry / tao','Rust std'];
+const AUTH=[['offline','离线登录','offline · 免浏览器 · 低配首选'],['third_party','第三方登录','third_party · 网页登录'],['mojang','Mojang 正版','mojang · 需凭据']];
+const OB=[
+ ['欢迎','<h2>欢迎使用 KCU Launcher</h2><p class="dim">这个引导只有 4 步，随时可以跳过。所有设置之后都能改。</p><div class="banner info">界面位置按使用逻辑重排，风格取自样板，不照搬三栏。</div>'],
+ ['选择模式','<h2>你想怎么用</h2><div class="stack" style="margin-top:12px"><div class="row-item on"><span class="rb"></span><div><b>正常模式</b><div class="dim" style="font-size:12px">完整界面、公告、实例管理</div></div><span class="g">推荐</span></div><div class="row-item"><span class="rb"></span><div><b>轻量模式</b><div class="dim" style="font-size:12px">≤2GiB 首次启动自动进入，极简单主题</div></div><span class="g">低配</span></div><div class="row-item"><span class="rb"></span><div><b>无头模式</b><div class="dim" style="font-size:12px">不加载任何界面，供服务器/脚本使用</div></div><span class="g">高级</span></div></div>'],
+ ['数据位置','<h2>数据放在哪</h2><p class="dim">默认 C:\\KCU。实例、日志、缓存都在这里，可直接打开系统文件面板查看。</p><div class="kv" style="margin-top:12px"><span class="k">数据目录</span><input type="text" value="C:\\KCU" readonly><span class="k">文件夹锁</span><select><option>OS 级防护 + lockfile</option></select><span class="k">关窗保存</span><select><option>保存进度</option></select></div>'],
+ ['完成','<h2>准备好了</h2><p class="dim">首次启动会显示 3 条公告，都在铃铛里，不会弹窗打断你。现在可以启动游戏，或先去公告中心看看。</p><div class="row" style="margin-top:14px"><button class="primary">▶ 启动游戏</button><button>查看公告</button></div>']
+];
+let obStep=0;
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function log(d,a,t,r,x){
+  const e=document.createElement('div');
+  const cls=r==='OK'?'var(--acc)':(r==='DEGRADE'?'var(--warn)':(r==='FAIL'||r==='TIMEOUT'||r==='CANCELLED'?'var(--err)':'var(--mut)'));
+  e.innerHTML='<span style="color:var(--blue)">[KCU] '+esc(d)+'</span> '+esc(a)+' '+esc(t)+' <span style="color:'+cls+'">'+esc(r)+'</span> <span class="mut">'+esc(x)+'</span>';
+  const box=$('logBox'); if(box){box.appendChild(e);box.scrollTop=box.scrollHeight;}
+}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;$('toast').appendChild(e);setTimeout(()=>e.remove(),2600);}
+function setTheme(v){theme=v;root.dataset.theme=v;$('ftTheme').textContent=v==='dark'?'深色':'浅色';}
+function dismissOverlay(){
+  $('overlay').classList.remove('on');dlgOpen=false;
+}
+function show(s){
+  if(s!=='notice-detail'&&s!=='update'){dismissOverlay();}
+  scene=s;document.querySelectorAll('.scene').forEach(x=>x.classList.toggle('on',x.dataset.scene===s));
+  document.querySelectorAll('[data-scene-btn]').forEach(x=>x.classList.toggle('on',x.dataset.sceneBtn===s));
+  $('ftScene').textContent=s;
+  history.replaceState(null,'','#scene='+s);
+  if(s==='home-light'){setTheme('light');show('home');return;}
+  if(s==='notice-detail'){show('notices');openDlg('公告详情 · KCU 0.0.1 预览',NOTICES[1].body,'n2');return;}
+  if(s==='update'){show('home');openDlg('发现新版本 0.0.1','<p>批量下载、公告中心、界面重排版已就绪。</p><div class="attach">更新日志 14 项 · 可「稍后」或「立即更新」</div>','update');return;}
+  if(s==='onboarding'){renderOb();}
+  if(s==='popups'){renderPops();}
+  if(s==='notices'){renderNotices();}
+}
+function route(){
+  const s=(location.hash.match(/scene=([a-z0-9-]+)/)||[])[1]||'home';
+  if(s==='light'){setTheme('light');}
+  show(s);
+}
+document.querySelectorAll('[data-scene-btn]').forEach(b=>b.onclick=()=>show(b.dataset.sceneBtn));
+$('bell').onclick=()=>show('notices');
+$('themeBtn').onclick=()=>setTheme(theme==='dark'?'light':'dark');
+$('bannerX').onclick=()=>{$('homeBanner').style.display='none';log('ui','banner','close','OK','detail=home');};
+
+/* 公告 */
+let curNotice=NOTICES[0], filter='all';
+function renderNotices(){
+  const list=NOTICES.filter(n=>filter==='all'||n.tag===filter);
+  $('noticeList').innerHTML=list.map(n=>`<div class="notice-item ${n.unread?'unread':''}" data-n="${n.id}">
+    <div class="ic">${n.ic}</div><div><div class="tt">${esc(n.t)} <span class="tag ${n.tag}">${n.tagT}</span></div><div class="ds">${esc(n.d)}</div></div>
+    <div style="text-align:right"><div class="tm">${n.tm}</div>${n.unread?'<span class="pill err" style="margin-top:6px">未读</span>':'<span class="pill" style="margin-top:6px">已读</span>'}</div></div>`).join('');
+  document.querySelectorAll('[data-n]').forEach(e=>e.onclick=()=>{
+    curNotice=NOTICES.find(x=>x.id===e.dataset.n);curNotice.unread=false;unread=Math.max(0,unread-1);
+    $('unreadPill').textContent='未读 '+unread;
+    $('noticePreview').innerHTML='<div style="font-weight:700;color:var(--txt);margin-bottom:8px">'+esc(curNotice.t)+'</div>'+curNotice.body;
+    renderNotices();log('ui','notice','open','OK','detail='+curNotice.id);
+  });
+  $('unreadPill').textContent='未读 '+unread;
+}
+document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;renderNotices();});
+$('readAll').onclick=()=>{NOTICES.forEach(n=>n.unread=false);unread=0;renderNotices();toast('全部公告已标为已读');};
+$('openDetail').onclick=()=>openDlg('公告详情 · '+curNotice.t,curNotice.body,curNotice.id);
+function renderHomeNotices(){
+  $('homeNotices').innerHTML=NOTICES.slice(0,3).map(n=>`<div class="row" style="gap:9px"><span>${n.ic}</span><div style="flex:1"><div style="font-size:12px;font-weight:600">${esc(n.t)}</div><div class="mut" style="font-size:10px">${n.tm} · ${n.tagT}</div></div>${n.unread?'<span class="pill err">新</span>':''}</div>`).join('');
+}
+
+/* 弹窗 */
+function openDlg(title,body,id,acts){
+  $('dlgTitle').textContent=title;$('dlgId').textContent='id='+id;$('dlgBody').innerHTML=body;
+  $('dlgActs').innerHTML=acts||'<button class="ghost" id="dlgNo">不再提示</button><button id="dlgCancel">稍后</button><button class="primary" id="dlgOk">知道了</button>';
+  $('dlgNo').onclick=()=>closeDlg('no_prompt');$('dlgCancel').onclick=()=>closeDlg('cancel');$('dlgOk').onclick=()=>closeDlg('confirm');
+  $('overlay').classList.add('on');dlgOpen=true;
+}
+function closeDlg(r){if(!dlgOpen)return;$('overlay').classList.remove('on');dlgOpen=false;log('ui','popup','close','OK','detail='+r);}
+$('dlgX').onclick=()=>closeDlg('button');
+$('overlay').onclick=e=>{if(e.target===$('overlay'))closeDlg('host');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDlg('escape');});
+
+/* 实例 */
+$('instanceGrid').innerHTML=INSTANCES.map((x,i)=>`<div class="instance"><div class="row spread"><span class="nm">${esc(x[0])}</span><span class="pill ${x[3]==='正常'?'ok':(x[3]==='被锁'?'err':'warn')}">${x[3]}</span></div><div class="meta">${esc(x[1])}</div><div class="bar"><i style="width:${x[2]}"></i></div><div class="row"><button class="primary tiny" style="flex:1">启动</button><button class="tiny">设置</button><button class="ghost tiny">⋯</button></div></div>`).join('');
+$('serverList').innerHTML=SERVERS.map(x=>`<div class="row-item"><span style="font-size:16px">🌐</span><div style="flex:1"><b>${esc(x[0])}</b><div class="mut" style="font-size:11px">${esc(x[1])} · ${esc(x[2])}</div></div><span class="pill ${x[3]==='已指定'?'ok':''}">${x[3]}</span><button class="tiny">进入</button></div>`).join('');
+$('creditRow').innerHTML=CREDITS.map(x=>'<span class="pill">'+esc(x)+'</span>').join('');
+
+/* 下载 */
+function runBatch(n){
+  const pages=Math.ceil(n/20);reqCount+=pages;$('dReq').textContent=reqCount;$('stReq').textContent=reqCount;
+  $('dPill').textContent=n+' 个 id / '+pages+' 页 / '+reqCount+' 次请求';$('dPill').className='pill ok';
+  $('dBar').style.width='100%';
+  const names=['sodium','iris','lithium','fabric-api','modmenu','jei','xaeros-map','soul-fire-d','cloth-config','roughly-enough'];
+  $('dFiles').innerHTML=Array.from({length:Math.min(n,8)},(_,i)=>`<div class="file-row"><span>${esc(names[i%names.length])}</span><div class="progress"><i style="width:100%"></i></div><span class="pill ok">完成</span></div>`).join('');
+  log('lightweight','batch','download','OK','detail='+n+'_ids pages='+pages+' requests='+pages+' no_per_item_request');
+  toast('批量完成：'+n+' 个 id，'+pages+' 次请求');
+}
+$('dRun').onclick=()=>runBatch(10);$('d45').onclick=()=>runBatch(45);
+$('dCancel').onclick=()=>{$('dBar').style.width='0';$('dPill').textContent='已取消 · 0 副作用';$('dPill').className='pill warn';log('lightweight','batch','cancel','CANCELLED','detail=token_cancelled 0_work');};
+
+/* 登录 */
+let auth='offline',stage=-1;
+function renderAuth(){
+  $('authList').innerHTML=AUTH.map(([k,t,d])=>`<div class="row-item ${auth===k?'on':''}" data-a="${k}"><span class="rb"></span><div style="flex:1"><b>${t}</b><div class="mut" style="font-size:11px">${d}</div></div></div>`).join('');
+  document.querySelectorAll('[data-a]').forEach(e=>e.onclick=()=>{auth=e.dataset.a;renderAuth();log('lightweight','select','login','OK','detail='+auth);});
+}
+function renderFlow(){
+  const names=['外置浏览器','内置浏览器','连接码'];
+  $('loginFlow').innerHTML=names.map((n,i)=>`<div class="row-item ${stage===i?'on':''}"><span class="pill">0${i+1}</span><div style="flex:1"><b>${n}</b><div class="mut" style="font-size:11px">${stage>i?'已跳过':(stage===i?'当前阶段':'待用')}</div></div><span class="pill ${stage>i?'warn':(stage===i?'ok':'')}">${stage>i?'降级':(stage===i?'进行中':'待命')}</span></div>`).join('');
+  $('pairBox').style.display=stage===2?'block':'none';
+  $('pairBox').innerHTML='连接码 <b style="font:18px var(--mono);color:var(--acc);letter-spacing:3px">KCU-7F3A</b><br><span class="mut">手机端完成 · 300s 超时可取消</span>';
+}
+$('loginStart').onclick=()=>{stage=auth==='offline'?-1:0;renderFlow();log('lightweight','login','login','OK',auth==='offline'?'detail=offline_no_browser':'detail=external_browser');};
+$('loginFail').onclick=()=>{if(auth==='offline'){toast('离线登录不需要浏览器');return;}stage=Math.min(2,stage+1);renderFlow();log('lightweight','fallback','login','DEGRADE','detail=stage='+stage);if(stage===2)toast('已切到连接码');};
+$('loginReset').onclick=()=>{stage=-1;renderFlow();};
+
+/* 日志 */
+$('logClear').onclick=()=>{$('logBox').innerHTML='';};
+$('logExport').onclick=()=>{log('dispatcher','export','bundle','OK','detail=4_lines safe_mode');toast('诊断包已导出（4 行）');};
+$('launchBtn').onclick=()=>{$('stProc').textContent='游戏运行中';toast('已启动 · 正在拉起游戏进程');log('dispatcher','launch','game','OK','detail=instance=生存季');};
+
+/* 手感 */
+function applyGate(){
+  const d=$('gDensity').value,f=$('gFs').value,r=$('gR').value;
+  root.dataset.density=d;
+  root.style.setProperty('--gap',d==='tight'?'10px':(d==='loose'?'22px':'16px'));
+  root.style.setProperty('--fs',f+'px');root.style.setProperty('--r',r+'px');
+  log('ui','adjust','handfeel','OK','detail=density='+d+' fs='+f+' r='+r);
+}
+['gDensity','gFs','gR'].forEach(id=>$(id).onchange=applyGate);
+
+/* 引导 */
+function renderOb(){
+  $('obSteps').innerHTML=OB.map((x,i)=>`<div class="step ${i===obStep?'on':(i<obStep?'done':'')}"><span class="n">${i+1}</span><span style="font-size:12px">${x[0]}</span></div>`).join('');
+  $('obBody').innerHTML=OB[obStep][1];$('obPrev').disabled=obStep===0;
+  $('obNext').textContent=obStep===OB.length-1?'完成':'下一步';
+}
+$('obNext').onclick=()=>{if(obStep<OB.length-1){obStep++;renderOb();}else{toast('引导完成');show('home');}};
+$('obPrev').onclick=()=>{if(obStep>0){obStep--;renderOb();}};
+$('obClose').onclick=()=>{toast('已跳过引导');show('home');};
+
+/* 弹窗全集 */
+let popState={};
+function renderPops(){
+  $('popGrid').innerHTML=POPUPS.map(([id,t,d])=>`<div class="card flat" style="padding:12px"><div class="row spread"><b style="font-size:12px">${t}</b><span class="pill ${popState[id]?'err':'ok'}">${popState[id]?'打开':'已关'}</span></div><div class="mut" style="font-size:11px;margin:6px 0 10px">${d}</div><button class="tiny" data-p="${id}" style="width:100%">${popState[id]?'关闭':'打开预览'}</button></div>`).join('');
+  document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.p,p=POPUPS.find(x=>x[0]===id);
+    if(popState[id]){popState[id]=false;closeDlg('button');}
+    else{popState[id]=true;openDlg(p[1],'<p>'+p[2]+'</p><div class="attach">id='+id+' · 关闭路径：按钮 / ESC / 取消 / 确认 / 宿主</div>',id);}
+    renderPops();
+  });
+  $('popCnt').textContent='打开 '+Object.values(popState).filter(Boolean).length;
+}
+$('popAll').onclick=()=>{POPUPS.forEach(p=>popState[p[0]]=true);renderPops();toast('11 类弹窗全部登记');};
+$('popClose').onclick=()=>{popState={};closeDlg('close_all');renderPops();toast('全部关闭 · 0 残留');};
+
+/* 初始 */
+$('ftTime').textContent=new Date().toLocaleString('zh-CN',{hour12:false});
+renderHomeNotices();renderNotices();renderAuth();renderFlow();renderOb();renderPops();
+$('noticePreview').innerHTML='<div style="font-weight:700;color:var(--txt);margin-bottom:8px">'+esc(NOTICES[0].t)+'</div>'+NOTICES[0].body;
+const seedNames=['sodium','iris','fabric-api','modmenu'];
+$('dFiles').innerHTML=seedNames.map((n,i)=>'<div class="file-row"><span>'+n+'</span><div class="progress"><i style="width:'+(i===3?'62':'100')+'%"></i></div><span class="pill '+(i===3?'info':'ok')+'">'+(i===3?'下载中':'完成')+'</span></div>').join('');
+$('dBar').style.width='84%';$('dPill').textContent='4 个文件 · 1 页 · 1 次请求';$('dPill').className='pill ok';
+for(const [d,a,t,r,x] of [
+ ['ui','boot','ui_full_kcu_v2','OK','detail=layout_reworked style_from_sample'],
+ ['ui','scene','count','OK','detail=15_scenes notices_included offline_no_external_assets'],
+ ['dispatcher','mode','select','OK','detail=normal ui_loaded=true'],
+ ['lightweight','batch','download','OK','detail=10_ids pages=1 requests=1 no_per_item_request'],
+ ['lightweight','cache','single_flight','OK','detail=10_repeats 1_network_call inflight=0'],
+ ['dispatcher','auth','premium','DEGRADE','detail=credential_absent fallback=1'],
+ ['ui','popup','close_all','OK','detail=11_catalog 0_open'],
+ ['dispatcher','export','bundle','OK','detail=4_lines safe_mode'],
+]) log(d,a,t,r,x);
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 | 编号 | R-UI-01 |
 | 状态 | 已批准 |
 | 版本 | 0.0.0 |
-| 轮次 | 015 建立；016 首次触发 |
+| 轮次 | 015 建立；016 首次触发；017 增加 PNG 预览闸门 |
 | 依据 | docs/spec/15-round-015-instructions.txt F02/F03；docs/decisions/015-build-continue.md D02-D04 |
 
 ## 触发
@@ -70,6 +70,7 @@
 | --- | --- | --- |
 | 015 | 不触发（仅调度逻辑） | 无 ui-full 文件；`demos/round-015-dispatcher.html` 是运行逻辑演示，不计入 G01 |
 | 016 | **已触发**（L3 lightweight 极简视图） | `demos/ui-full-lightweight.html` |
+| 017 | **已触发**（正常模式界面重排 + 公告族补齐） | `demos/ui-full-kcu-v2.html`、`demos/preview/00-overview.png` + 15 张场景 PNG |
 
 016 触发记录：
 
@@ -92,3 +93,27 @@ grep -c 'data-theme' demos/ui-full-lightweight.html
 grep -c 'close' demos/ui-full-lightweight.html
 node -e "const fs=require('fs');const m=fs.readFileSync('demos/ui-full-lightweight.html','utf8').match(/<script>([\s\S]*?)<\/script>/);new Function(m[1]);"
 ```
+
+## 017 增补
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| G07 | 提交形态 | 动 UI 的轮次须交 PNG 预览与 `00-overview.png` 总览；HTML 单文件仍按 G01-G06 交付 |
+| G08 | 渲染 | `python3 scripts/render_ui.py`，本地 chromium 按 `#scene=` 截图，全程离线 |
+| G09 | 风格与位置 | 样板只取配色、圆角、描边、卡片层次、轻噪点；位置重新组织，不采用三栏拖拽与组件照搬 |
+| G10 | 主动补齐 | 公告中心、公告详情、更新提示、首次启动引导、维护/活动公告等界面一并出图，不待用户逐项点名 |
+
+017 场景清单 S01-S15 见 docs/decisions/017-visual-preview.md；每张图的说明见 demos/preview/index.md。
+
+017 轮检查命令：
+
+```
+test -f demos/ui-full-kcu-v2.html
+test -f demos/preview/00-overview.png
+ls demos/preview/*.png | wc -l
+! grep -rE 'https?://|FCL|揉纸启动器' demos/ui-full-kcu-v2.html
+node -e "const fs=require('fs');const m=fs.readFileSync('demos/ui-full-kcu-v2.html','utf8').match(/<script>([\s\S]*?)<\/script>/);new Function(m[1]);"
+grep -c '<section class="scene' demos/ui-full-kcu-v2.html
+```
+
+017 手感回路：PNG 总览 → 用户按图提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 无变化。
