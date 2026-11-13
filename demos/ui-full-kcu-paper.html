@@ -267,6 +267,30 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 .win[data-theme="dark"] .cap-bar{background:rgba(255,255,255,.12)}
 .cap-bar i{display:block;height:100%;background:var(--accent)}
 
+
+
+.set-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.set-tabs .chip{cursor:pointer;font-size:11px}
+.set-tabs .chip.on{font-weight:600}
+.tabpane{display:none}
+.tabpane.on{display:block}
+.setid{font-size:10px;color:var(--ink-3);display:block;margin-top:2px;letter-spacing:.2px}
+.slot-core{background:var(--sel);border:1px dashed var(--accent);border-radius:var(--r-md);padding:8px 10px;margin:0 6px 6px}
+.slot-core .sh{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--accent);font-weight:600;letter-spacing:.3px;margin-bottom:5px}
+.slot-core .nav-item{height:32px;font-size:12px}
+.slot-plugin{margin:0 6px 6px;padding:7px 10px;border:1px solid var(--line);border-radius:var(--r-md)}
+.slot-plugin .sh{font-size:10px;color:var(--ink-3);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.slot-plugin .nav-item{height:30px;font-size:12px}
+.lock-b{font-size:9px;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:0 5px;margin-left:auto;white-space:nowrap}
+.win.narrow .slot-core .sh,.win.narrow .slot-plugin .sh{font-size:0}
+.win.narrow .lock-b{display:none}
+.rec-tb{width:100%;border-collapse:collapse;font-size:11px}
+.rec-tb th{text-align:left;color:var(--ink-3);font-weight:500;padding:7px 8px;border-bottom:1px solid var(--line);background:var(--card-2)}
+.rec-tb td{padding:7px 8px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.status-dot{width:9px;height:9px;border-radius:99px;display:inline-block;margin-right:6px;background:var(--ink-3)}
+.status-dot.ok{background:#6E9E72}.status-dot.mt{background:#C79A4E}.status-dot.off{background:#9A968C}.status-dot.err{background:#B8543F}
+.mini{font-size:10px;color:var(--ink-3)}
+
 </style>
 </head>
 <body>
@@ -560,23 +584,24 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
     <nav class="nav" id="nav">
       <button class="nav-item active" data-v="home"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-house"></use></svg></span><span class="lb">首页</span></button>
       <button class="nav-item" data-v="notices"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-mail"></use></svg></span><span class="lb">公告中心</span><span class="cnt">3</span></button>
-      <button class="nav-item" data-v="instances"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-layout-grid"></use></svg></span><span class="lb">实例与服务器</span><span class="cnt">7</span></button>
+      <button class="nav-item" data-v="instances"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-layout-grid"></use></svg></span><span class="lb">实例与版本</span><span class="cnt">7</span></button>
+      <button class="nav-item" data-v="servers"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-server"></use></svg></span><span class="lb">服务器</span></button>
       <button class="nav-item" data-v="download"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-download"></use></svg></span><span class="lb">下载中心</span></button>
       <button class="nav-item" data-v="mods"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-boxes"></use></svg></span><span class="lb">模组管理</span><span class="cnt">110</span></button>
       <button class="nav-item" data-v="login"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-user-round"></use></svg></span><span class="lb">账号登录</span></button>
+      <button class="nav-item" data-v="serverhost"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-terminal"></use></svg></span><span class="lb">开服器</span></button>
       <button class="nav-item" data-v="logs"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-scroll-text"></use></svg></span><span class="lb">日志诊断</span></button>
       <div class="nav-sep"></div>
-              <button class="nav-item" data-v="servers"><svg class="li" aria-hidden="true"><use href="#i-server"></use></svg><span class="lb">服务器与推荐</span></button>
-        <button class="nav-item" data-v="serverhost"><svg class="li" aria-hidden="true"><use href="#i-terminal"></use></svg><span class="lb">开服器</span></button>
-        <button class="nav-item" data-v="ai"><svg class="li" aria-hidden="true"><use href="#i-sparkles"></use></svg><span class="lb">AI 接口</span></button>
-        <button class="nav-item" data-v="headless"><svg class="li" aria-hidden="true"><use href="#i-command"></use></svg><span class="lb">无头模式</span></button>
-        <button class="nav-item" data-v="sync"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg><span class="lb">数据与缓存</span></button>
-        <button class="nav-item" data-v="licenses"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg><span class="lb">第三方许可</span><span class="cnt">16</span></button>
-        <button class="nav-item" data-v="refresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg><span class="lb">刷新机制</span></button>
-        <button class="nav-item" data-v="states"><svg class="li" aria-hidden="true"><use href="#i-activity"></use></svg><span class="lb">状态与降级</span></button>
-        <button class="nav-item" data-v="settings"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-settings"></use></svg></span><span class="lb">设置</span></button>
-      <button class="nav-item" data-v="about"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-info"></use></svg></span><span class="lb">关于</span></button>
+      <div class="slot-plugin"><div class="sh"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg> 插件区 · slot:plugin.*</div>
+        <button class="nav-item" data-v="slots"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-layout-grid"></use></svg></span><span class="lb">推荐插件</span><span class="cnt">2</span></button>
+        <button class="nav-item" data-v="states"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-activity"></use></svg></span><span class="lb">状态面板</span></button>
+      </div>
       <div class="nav-foot">
+        <div class="slot-core"><div class="sh"><svg class="li" aria-hidden="true"><use href="#i-lock-keyhole"></use></svg> 核心槽位 · 锁定 · 插件不可占用</div>
+          <button class="nav-item" data-v="settings"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-settings"></use></svg></span><span class="lb">设置</span><span class="lock-b">locked</span></button>
+          <button class="nav-item" data-v="about"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-info"></use></svg></span><span class="lb">关于</span><span class="lock-b">locked</span></button>
+        </div>
+        <button class="nav-item" data-v="recommendations"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-star"></use></svg></span><span class="lb">推荐位总览</span></button>
         <button class="nav-item" data-v="popups"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-clipboard-list"></use></svg></span><span class="lb">弹窗全集</span></button>
         <button class="nav-item" data-v="lightweight"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg></span><span class="lb">轻量模式</span></button>
         <button class="nav-item" id="btnCollapse"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-chevrons-left"></use></svg></span><span class="lb">收起侧栏</span></button>
@@ -762,32 +787,8 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       <!-- 设置 -->
       <section class="view" data-view="settings">
           <div class="logicbar" data-lb="settings"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
-        <div class="grid g2">
-          <div class="set-card"><div class="hd">常规</div><div class="kv">
-            <span class="k">界面语言</span><select class="sel"><option>简体中文</option><option>English</option></select>
-            <span class="k">主题</span><select class="sel"><option>纸质浅色（默认）</option><option>深色纸质</option><option>跟随系统</option></select>
-            <span class="k">数据目录</span><input class="txt" value="C:\KCU" readonly>
-            <span class="k">公告</span><select class="sel"><option>未读时铃铛提示</option><option>静默</option></select>
-          </div></div>
-          <div class="set-card"><div class="hd">下载与网络</div><div class="kv">
-            <span class="k">每页条数</span><input class="txt" value="20" readonly>
-            <span class="k">镜像测速</span><select class="sel"><option>开启</option><option>关闭</option></select>
-            <span class="k">缓存容量</span><input class="txt" value="32 条 / TTL 30s" readonly>
-            <span class="k">AI 接口</span><input class="txt" placeholder="用户自填">
-          </div></div>
-          <div class="set-card"><div class="hd">游戏与实例</div><div class="kv">
-            <span class="k">EULA</span><select class="sel"><option>启动前写入</option></select>
-            <span class="k">UPnP</span><select class="sel"><option>默认关闭</option></select>
-            <span class="k">崩溃后</span><select class="sel"><option>自动重启</option></select>
-            <span class="k">旧版 jar</span><select class="sel"><option>写 lockfile 禁用</option></select>
-          </div></div>
-          <div class="set-card"><div class="hd">隐私</div><div class="kv">
-            <span class="k">日志上传</span><select class="sel"><option>默认脱敏（可手动关）</option></select>
-            <span class="k">保留期</span><input class="txt" value="30 天" readonly>
-            <span class="k">文件管理</span><input class="txt" value="系统面板" readonly>
-            <span class="k">凭据保护</span><input class="txt" value="待方案批准" readonly>
-          </div></div>
-        </div>
+        <div class="panel" style="margin-bottom:12px"><div class="panel-head"><div class="panel-title">设置</div><div class="panel-sub">9 个分组 · 每项有稳定 ID · 写后即时生效 · 可搜索 / @modified / 单项重置</div><div class="panel-tools"><span class="badge ok">slot:core.locked.settings</span><span class="badge up"><svg class="li" aria-hidden="true"><use href="#i-lock-keyhole"></use></svg> 插件不可覆盖</span></div></div><div class="set-tabs"><span class="chip on" data-tab="general">常规</span><span class="chip" data-tab="download">下载与镜像</span><span class="chip" data-tab="cache">缓存与刷新</span><span class="chip" data-tab="recommend">推荐与排序</span><span class="chip" data-tab="status">服务器状态</span><span class="chip" data-tab="ai">AI 容器接口</span><span class="chip" data-tab="plugins">插件与更新</span><span class="chip" data-tab="privacy">隐私与诊断</span><span class="chip" data-tab="experimental">实验性</span><span class="chip" id="tabModified">@modified 3</span><span class="chip" id="tabReset">恢复默认</span></div></div>
+<div class="tabpane on" data-pane="general"><div class="grid g2"><div class="set-card"><div class="hd">常规</div><div class="kv"><span class="k">界面语言</span><span><select class="sel"><option>简体中文</option><option>English</option></select><span class="setid">core.ui.language</span></span><span class="k">主题</span><span><select class="sel"><option>纸质浅色（默认）</option><option>深色纸质</option><option>跟随系统</option></select><span class="setid">core.ui.theme</span></span><span class="k">数据目录</span><span><input class="txt" value="C:\KCU" readonly><span class="setid">core.paths.data_dir</span></span><span class="k">公告提示</span><span><select class="sel"><option>未读时铃铛提示</option><option>静默</option></select><span class="setid">core.notices.badge</span></span></div></div><div class="set-card"><div class="hd">启动与实例</div><div class="kv"><span class="k">EULA</span><span><select class="sel"><option>启动前写入</option></select><span class="setid">core.server.eula_timing</span></span><span class="k">崩溃后</span><span><select class="sel"><option>按日志自动重启</option></select><span class="setid">core.server.crash_restart</span></span><span class="k">旧版 jar</span><span><select class="sel"><option>写 lockfile 禁用</option></select><span class="setid">core.instance.legacy_lock</span></span><span class="k">用户指定</span><span><select class="sel"><option>永远排第一</option></select><span class="setid">core.rank.user_first</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">设置项约定</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div>每项有稳定 ID、默认值、作用范围；写后即时生效，失败保留旧值并可见报错。</div><div><span class="badge up">@modified 3</span> 只看改过的项；齿轮可复制 ID / 重置单项。</div><div>插件可在设置内追加自己的分组，不能改写 <b>core.*</b> 项。</div></div></div></div></div><div class="tabpane" data-pane="download"><div class="grid g2"><div class="set-card"><div class="hd">下载与网络</div><div class="kv"><span class="k">每页条数</span><span><input class="txt" value="20" readonly><span class="setid">core.net.page_size</span></span><span class="k">批量请求</span><span><select class="sel"><option>一次带多个 id</option><option>逐条目单发（禁止）</option></select><span class="setid">core.net.batch</span></span><span class="k">并发上限</span><span><input class="txt" value="3" readonly><span class="setid">core.net.concurrency</span></span><span class="k">单飞去重</span><span><select class="sel"><option>开启</option></select><span class="setid">core.net.single_flight</span></span></div></div><div class="set-card"><div class="hd">镜像与地域</div><div class="kv"><span class="k">镜像测速</span><span><select class="sel"><option>开启</option><option>关闭</option></select><span class="setid">core.net.mirror_speedtest</span></span><span class="k">地域软策略</span><span><select class="sel"><option>区域设置 + 物理位置</option></select><span class="setid">core.net.region_policy</span></span><span class="k">强制境外</span><span><select class="sel"><option>允许用户自行指定</option></select><span class="setid">core.net.region_override</span></span><span class="k">用途边界</span><span><span class="badge off">仅下载选择，不复用为地区禁用</span><span class="setid">core.net.region_scope</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">自定义项</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div>测速源列表、每页条数、超时、重试上限、失败后镜像顺序均可自定义。</div><div>下载域名白名单机制按既有决定先不启用，留高度自定义。</div><div><button class="btn tiny" data-v="recommendations">查看推荐位总览</button> <button class="btn tiny" data-v="refresh">查看刷新机制</button></div></div></div></div></div><div class="tabpane" data-pane="cache"><div class="grid g2"><div class="set-card"><div class="hd">四层缓存</div><div class="kv"><span class="k">C1 内存</span><span><input class="txt" value="32 条 / TTL 30s" readonly><span class="setid">core.cache.memory</span></span><span class="k">C2 磁盘</span><span><input class="txt" value="有界目录 / 24h" readonly><span class="setid">core.cache.disk</span></span><span class="k">C3 网络</span><span><input class="txt" value="按源 / 60s" readonly><span class="setid">core.cache.network</span></span><span class="k">C4 预取</span><span><input class="txt" value="8 条 / 会话内" readonly><span class="setid">core.cache.prefetch</span></span></div></div><div class="set-card"><div class="hd">刷新</div><div class="kv"><span class="k">普通刷新</span><span><select class="sel"><option>取增量，不清缓存</option></select><span class="setid">core.refresh.soft</span></span><span class="k">强制刷新</span><span><select class="sel"><option>清层重取全量</option></select><span class="setid">core.refresh.hard</span></span><span class="k">事件推送</span><span><select class="sel"><option>开启，不弹窗不抢焦点</option></select><span class="setid">core.refresh.observer</span></span><span class="k">失败回退</span><span><select class="sel"><option>保留上次缓存，不空白</option></select><span class="setid">core.refresh.fallback</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">操作</div><div class="panel-tools"><button class="btn tiny" data-v="sync">打开四层总控</button></div></div><div class="row"><button class="btn tiny" id="setCacheExpired">仅清过期</button><button class="btn tiny" id="setCacheAll">全清（二次确认）</button><span class="badge up">命中率 88%</span><span class="badge ok">inflight 0</span></div><div class="mut" style="font-size:11px;margin-top:9px">时间戳统一「N 秒前 / N 分钟前 / HH:MM」；取消后 0 副作用扩散。</div></div></div></div><div class="tabpane" data-pane="recommend"><div class="grid g2"><div class="set-card"><div class="hd">推荐总控</div><div class="kv"><span class="k">推荐总开关</span><span><select class="sel"><option>开启</option><option>关闭</option></select><span class="setid">core.rec.enabled</span></span><span class="k">权重可自定义</span><span><select class="sel"><option>允许调数值与顺序</option></select><span class="setid">core.rec.weights_editable</span></span><span class="k">用户指定</span><span><select class="sel"><option>永远排第一</option></select><span class="setid">core.rec.user_first</span></span><span class="k">不感兴趣</span><span><select class="sel"><option>降权，不隐藏</option></select><span class="setid">core.rec.dismiss</span></span></div></div><div class="set-card"><div class="hd">来源与刷新</div><div class="kv"><span class="k">推荐来源</span><span><select class="sel"><option>本地 + 官方 + 插件</option></select><span class="setid">core.rec.sources</span></span><span class="k">刷新方式</span><span><select class="sel"><option>事件驱动 + 定时软刷新</option></select><span class="setid">core.rec.refresh</span></span><span class="k">缓存</span><span><input class="txt" value="5min / 容量有界" readonly><span class="setid">core.rec.cache</span></span><span class="k">排序口径</span><span><span class="badge up">10 个推荐位统一</span><span class="setid">core.rec.rank_table</span></span></div></div></div><div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">10 个推荐位</div><div class="panel-sub">每个都可单独开关、调权重、看来源</div><div class="panel-tools"><button class="btn tiny" data-v="recommendations">总览页</button></div></div><table class="rec-tb"><thead><tr><th>位置</th><th>内容</th><th>默认权重</th><th>状态</th></tr></thead><tbody><tr><td>首页启动卡</td><td>上次实例 / 最近 3 个</td><td>最近使用 > 推荐</td><td><span class="badge ok">开</span></td></tr><tr><td>首页推荐服务器</td><td>兼容 + 习惯</td><td>用户指定 > 兼容度 > 延迟</td><td><span class="badge ok">开</span></td></tr><tr><td>版本页</td><td>稳定版</td><td>稳定 > 快照</td><td><span class="badge ok">开</span></td></tr><tr><td>下载页</td><td>缺失依赖 / 可更新</td><td>缺依赖优先</td><td><span class="badge ok">开</span></td></tr><tr><td>模组页</td><td>可更新 / 缺依赖</td><td>缺失优先</td><td><span class="badge ok">开</span></td></tr><tr><td>公告中心</td><td>置顶</td><td>置顶 > 时间</td><td><span class="badge ok">开</span></td></tr><tr><td>加载器</td><td>与实例兼容</td><td>兼容度 > 热度</td><td><span class="badge ok">开</span></td></tr><tr><td>Java</td><td>稳定版本</td><td>稳定 > 预览</td><td><span class="badge ok">开</span></td></tr><tr><td>镜像源</td><td>测速结果</td><td>延迟 > 可用性</td><td><span class="badge ok">开</span></td></tr><tr><td>插件</td><td>已装且启用</td><td>用户评分 > 更新日</td><td><span class="badge ok">开</span></td></tr></tbody></table></div></div><div class="tabpane" data-pane="status"><div class="grid g2"><div class="set-card"><div class="hd">状态来源</div><div class="kv"><span class="k">探测方式</span><span><select class="sel"><option>SLP 状态查询 + 手动覆盖</option><option>仅手动</option><option>插件提供</option></select><span class="setid">core.status.source</span></span><span class="k">探测间隔</span><span><input class="txt" value="60s" readonly><span class="setid">core.status.interval</span></span><span class="k">超时</span><span><input class="txt" value="3s" readonly><span class="setid">core.status.timeout</span></span><span class="k">状态缓存</span><span><input class="txt" value="60s / 失败标灰" readonly><span class="setid">core.status.cache</span></span></div></div><div class="set-card"><div class="hd">状态类型</div><div class="kv"><span class="k">在线</span><span><span class="status-dot ok"></span><span class="mini">SLP 有响应</span><span class="setid">core.status.online</span></span><span class="k">维护中</span><span><span class="status-dot mt"></span><span class="mini">MOTD 可改</span><span class="setid">core.status.maintenance</span></span><span class="k">离线 / 满员 / 私有</span><span><span class="status-dot off"></span><span class="mini">可自定义文案</span><span class="setid">core.status.custom</span></span><span class="k">自定义</span><span><input class="txt" placeholder="自定义文案与颜色"><span class="setid">core.status.label</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">显示位置与变更历史</div></div><div class="row"><span class="chip on">首页推荐卡</span><span class="chip on">服务器列表</span><span class="chip">状态栏</span><span class="chip">右键菜单</span></div><div class="attach" style="margin-top:9px">[KCU] status srv-01 OK detail=slp 42ms players=3/20<br>[KCU] status srv-02 DEGRADE detail=timeout fallback=last_60s<br>[KCU] status srv-01 OK detail=manual maintenance</div><div class="mut" style="font-size:11px;margin-top:8px">SLP 字段：version.name / protocol、players.max / online / sample、description（text component）、favicon（64×64 PNG base64）、enforcesSecureChat。协议可被禁用，1.7 前后不兼容。</div></div></div></div><div class="tabpane" data-pane="ai"><div class="grid g2"><div class="set-card"><div class="hd">AI 容器接口</div><div class="kv"><span class="k">接口地址</span><span><input class="txt" id="setAiAddr" placeholder="用户自填，留空未启用"><span class="setid">core.ai.endpoint</span></span><span class="k">连接状态</span><span><span class="badge off" id="setAiState">未配置</span><span class="setid">core.ai.state</span></span><span class="k">确认粒度</span><span><select class="sel"><option>每次请求单独确认</option></select><span class="setid">core.ai.confirm</span></span><span class="k">删除权限</span><span><select class="sel"><option>不给</option></select><span class="setid">core.ai.delete_scope</span></span></div></div><div class="set-card"><div class="hd">边界</div><div class="kv"><span class="k">请求正文</span><span><span class="badge off">不缓存</span><span class="setid">core.ai.body_cache</span></span><span class="k">审计</span><span><span class="badge up">共用策略引擎</span><span class="setid">core.ai.audit</span></span><span class="k">关页</span><span><span class="badge ok">即停请求</span><span class="setid">core.ai.stop_on_close</span></span><span class="k">失败分类</span><span><span class="mini">地址 / 认证 / 网络 三类</span><span class="setid">core.ai.errors</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">测试</div><div class="panel-tools"><button class="btn tiny" data-v="ai">打开独立页</button></div></div><div class="row"><button class="btn primary tiny" id="setAiTest"><svg class="li" aria-hidden="true"><use href="#i-zap"></use></svg> 测试连接</button><span class="badge ok" id="setAiResult">待命</span></div><div class="mut" style="font-size:11px;margin-top:9px">KCU 不预设地址；其他应用带 AI 容器时由用户自行填写。设置内只放配置，不做业务入口。</div></div></div></div><div class="tabpane" data-pane="plugins"><div class="grid g2"><div class="set-card"><div class="hd">插件</div><div class="kv"><span class="k">插件目录</span><span><input class="txt" value="C:\KCU\plugins" readonly><span class="setid">core.plugins.dir</span></span><span class="k">槽位规则</span><span><select class="sel"><option>只写 slot:plugin.*，core.* 拒绝</option></select><span class="setid">core.plugins.slot_rule</span></span><span class="k">清单校验</span><span><select class="sel"><option>摘要 + 签名 + ABI 主版本</option></select><span class="setid">core.plugins.verify</span></span><span class="k">隔离</span><span><select class="sel"><option>高风险插件进程隔离</option></select><span class="setid">core.plugins.isolation</span></span></div></div><div class="set-card"><div class="hd">插件化更新</div><div class="kv"><span class="k">更新通道</span><span><select class="sel"><option>稳定 / 预览 / 插件化</option></select><span class="setid">core.update.channel</span></span><span class="k">签名校验</span><span><select class="sel"><option>不可禁用</option></select><span class="setid">core.update.signature</span></span><span class="k">版本比较</span><span><select class="sel"><option>默认只升；回滚需显式比较器</option></select><span class="setid">core.update.comparator</span></span><span class="k">失败降级</span><span><select class="sel"><option>保留旧插件，核心不动</option></select><span class="setid">core.update.fallback</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">已装插件与更新模拟</div><div class="panel-tools"><button class="btn tiny" data-v="slots">查看槽位图</button></div></div><table class="rec-tb"><thead><tr><th>插件</th><th>槽位</th><th>许可证</th><th>状态</th></tr></thead><tbody><tr><td>推荐插件</td><td>plugin.nav.recommend</td><td>MIT</td><td><span class="badge ok">启用</span></td></tr><tr><td>状态面板</td><td>plugin.nav.status</td><td>Apache-2.0</td><td><span class="badge ok">启用</span></td></tr></tbody></table><div class="row" style="margin-top:9px"><button class="btn tiny" id="plugUpdate">模拟插件化更新</button><button class="btn tiny" id="plugRollback">模拟回滚</button><span class="badge up" id="plugState">核心 0.0.0 未替换</span></div></div></div></div><div class="tabpane" data-pane="privacy"><div class="grid g2"><div class="set-card"><div class="hd">日志与外传</div><div class="kv"><span class="k">日志上传</span><span><select class="sel"><option>默认脱敏（可手动关）</option></select><span class="setid">core.privacy.redact</span></span><span class="k">保留期</span><span><input class="txt" value="30 天" readonly><span class="setid">core.privacy.retention</span></span><span class="k">外传确认</span><span><select class="sel"><option>每次二次确认</option></select><span class="setid">core.privacy.upload_confirm</span></span><span class="k">审计</span><span><select class="sel"><option>共用策略引擎</option></select><span class="setid">core.privacy.audit</span></span></div></div><div class="set-card"><div class="hd">文件与凭据</div><div class="kv"><span class="k">文件管理</span><span><span class="badge off">系统面板 + OS 级防护</span><span class="setid">core.files.system_panel</span></span><span class="k">锁定</span><span><span class="badge up">lockfile</span><span class="setid">core.files.lockfile</span></span><span class="k">凭据保护</span><span><span class="badge miss">F012 方案待批准</span><span class="setid">core.credential.guard</span></span><span class="k">诊断包</span><span><button class="btn tiny" data-v="logs">导出</button><span class="setid">core.diagnostics.export</span></span></div></div></div></div><div class="tabpane" data-pane="experimental"><div class="grid g2"><div class="set-card"><div class="hd">实验性开关</div><div class="kv"><span class="k">多操作入口</span><span><select class="sel"><option>关闭</option></select><span class="setid">core.exp.multi_action</span></span><span class="k">Win7 兼容</span><span><select class="sel"><option>Tier3 + build-std（待验证）</option></select><span class="setid">core.exp.win7</span></span><span class="k">插件化更新灰度</span><span><select class="sel"><option>关闭</option></select><span class="setid">core.exp.plugin_update</span></span><span class="k">加载器 schema</span><span><span class="badge miss">未证实，不写死</span><span class="setid">core.exp.loader_schema</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">开关约定</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div>实验项默认关闭；改动只影响本实例，重启后读盘。</div><div>未证实项只登记开关，不产生实现行为。</div><div><button class="btn tiny" data-v="handoff">查看底层交接基线</button></div></div></div></div></div>
       </section>
 
       <!-- 关于 -->
@@ -808,6 +809,24 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
               <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">轻量模式独立极简视图，与本页不共用组件</div></div></div>
             </div></div>
         </div>
+
+        <div class="grid g2" style="margin-top:12px">
+          <div class="panel"><div class="panel-head"><div class="panel-title">核心槽位 · 锁定</div><div class="panel-sub">slot:core.locked.*</div><div class="panel-tools"><button class="btn tiny" data-v="slots">槽位图</button></div></div>
+            <div class="kv"><span class="k">设置</span><span>core.locked.settings · 固定位置</span>
+              <span class="k">关于</span><span>core.locked.about · 固定位置</span>
+              <span class="k">插件可写</span><span>仅 slot:plugin.*</span>
+              <span class="k">冲突处置</span><span><span class="badge err">拒绝注册 + 诊断行</span></span></div>
+            <div class="mut" style="font-size:11px;margin-top:9px">更新包与插件不能改写、隐藏、重排这两个槽位，否则下次更新会把设置与关于顶掉。</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title">底层交接基线</div><div class="panel-sub">新对话可把本仓库当底层直接接续</div><div class="panel-tools"><button class="btn tiny" data-v="handoff">打开交接页</button></div></div>
+            <div class="stack" style="font-size:12px;color:var(--ink-2)">
+              <div>基线：`kongbai9288/KCU-launcher-for-pc` / main / public，不含任何凭据与私有配置。</div>
+              <div>必读顺序：docs/index.md 78 项；不可变边界写在 `docs/design/handoff.md`。</div>
+              <div>已完成：L1 core、L2 dispatcher、L3 lightweight；UI 仍是演示层。</div>
+              <div>更新：优先插件化更新，核心不随更新替换；失败保留旧插件。</div>
+            </div></div>
+        </div>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">上层实现采用第三方代码</div><div class="panel-sub">候选清单 · 未进入 src/ 构建 · 逐项取得 LICENSE 全文后才允许复用</div><div class="panel-tools"><button class="btn tiny" data-v="upperstack">完整候选清单</button><button class="btn tiny" data-v="licenses">许可清单</button></div></div>
+          <table class="lic-table"><thead><tr><th>层</th><th>候选</th><th>许可证</th><th>用途</th><th>复制状态</th></tr></thead><tbody id="upperBody"></tbody></table></div>
         <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">开源致谢</div><div class="panel-sub">文档层登记，未复制代码</div></div><div class="row" id="creditRow"></div></div>
       </section>
 
@@ -1030,6 +1049,112 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
           <div class="row"><span class="chip on">外置浏览器</span><span class="chip">内置浏览器</span><span class="chip">连接码 300s</span><span class="chip">零级报错</span><span class="chip">安全模式</span><span class="chip">诊断包 4 行</span></div></div>
       </section>
 
+      <section class="view" data-view="slots">
+        <div class="logicbar" data-lb="slots"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">槽位注册表</div><div class="panel-sub">core.* 保留 · plugin.* 开放</div>
+            <div class="panel-tools"><button class="btn primary tiny" id="slotConflict">模拟插件占用核心槽位</button><button class="btn tiny" id="slotReset">复位</button></div></div>
+            <table class="lic-table"><thead><tr><th>槽位 ID</th><th>归属</th><th>可写方</th><th>位置</th><th>状态</th></tr></thead><tbody>
+              <tr><td>core.locked.settings</td><td>核心</td><td>仅核心</td><td>导航底部固定区</td><td><span class="badge err">锁定</span></td></tr>
+              <tr><td>core.locked.about</td><td>核心</td><td>仅核心</td><td>导航底部固定区</td><td><span class="badge err">锁定</span></td></tr>
+              <tr><td>core.nav.home</td><td>核心</td><td>仅核心</td><td>主导航首位</td><td><span class="badge ok">固定</span></td></tr>
+              <tr><td>core.nav.servers</td><td>核心</td><td>仅核心</td><td>主导航第 4 位</td><td><span class="badge ok">固定</span></td></tr>
+              <tr><td>plugin.nav.*</td><td>插件区</td><td>插件</td><td>分隔线下独立容器</td><td><span class="badge up">开放</span></td></tr>
+              <tr><td>plugin.settings.*</td><td>设置内插件分组</td><td>插件</td><td>设置页末尾</td><td><span class="badge up">开放</span></td></tr>
+              <tr><td>plugin.about.credits</td><td>关于页追加区</td><td>插件</td><td>开源致谢之后</td><td><span class="badge up">开放</span></td></tr>
+            </tbody></table>
+            <div class="notice" id="slotDeny" style="margin-top:11px;display:none;border-color:var(--warn)"><div class="notice-ico" style="color:var(--warn)"><svg class="li" aria-hidden="true"><use href="#i-circle-x"></use></svg></div><div class="notice-main"><div class="notice-title" style="color:var(--warn)">注册被拒绝 · core.locked.settings 已占用</div><div class="notice-body">插件 `plugin.example` 试图占用核心槽位。注册表拒绝写入、保留原条目、写 [KCU] 诊断行；插件自身不崩溃，可改用 plugin.nav.*。</div></div><button class="btn tiny" id="slotDenyClose" style="align-self:center">知道了</button></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><div class="panel-title">锁定规则</div></div>
+              <div class="stack" style="font-size:12px;color:var(--ink-2)">
+                <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-lock-keyhole"></use></svg></div><div class="notice-main"><div class="notice-body">设置与关于固定在同一容器，位置、顺序、ID 三者都不可变更。</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-shield-check"></use></svg></div><div class="notice-main"><div class="notice-body">插件与更新包只能追加到 plugin.* 容器；core.* 冲突一律拒绝注册。</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg></div><div class="notice-main"><div class="notice-body">插件化更新不替换核心二进制，只替换插件包；失败保留旧插件并可回滚。</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg></div><div class="notice-main"><div class="notice-body">插件加载后在关于页追加插件名、许可证、作者、项目地址、修改后版本地址。</div></div></div>
+              </div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title">插件清单校验</div></div>
+              <table class="grid"><thead><tr><th>项</th><th>口径</th></tr></thead><tbody>
+                <tr><td>清单</td><td>manifest 只声明贡献，不执行代码</td></tr>
+                <tr><td>边界</td><td>C ABI / 进程隔离，Rust ABI 不跨边界</td></tr>
+                <tr><td>版本</td><td>ABI_MAJOR 不匹配拒绝加载</td></tr>
+                <tr><td>校验</td><td>摘要 + 签名 + 路径遍历防护</td></tr>
+                <tr><td>预算</td><td>耗时上限，超时可终止</td></tr>
+              </tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-view="recommendations">
+        <div class="logicbar" data-lb="recommendations"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="panel"><div class="panel-head"><div class="panel-title">推荐位总览 · 10 处</div><div class="panel-sub">每处都有内容、权重、用户覆盖、缓存与刷新设置</div>
+          <div class="panel-tools"><button class="btn tiny" data-v="servers">服务器推荐位</button><button class="btn tiny" data-v="settings">推荐设置</button><span class="badge ok">10 / 10 已定义</span></div></div>
+          <table class="lic-table"><thead><tr><th>位置</th><th>推荐内容</th><th>默认权重</th><th>用户覆盖</th><th>缓存 / 刷新</th><th>设置 ID</th></tr></thead><tbody id="recCatalog"></tbody></table>
+        </div>
+        <div class="grid g3" style="margin-top:12px">
+          <div class="panel"><h3 class="sec">用户指定排第一</h3><div class="mut" style="font-size:12px">手动选过的实例、显式指定的服务器、固定的排序值，永远压过系统推荐。</div></div>
+          <div class="panel"><h3 class="sec">不感兴趣只降权</h3><div class="mut" style="font-size:12px">降权不隐藏，避免用户失去找回入口；权重数值可在设置里改。</div></div>
+          <div class="panel"><h3 class="sec">来源可插拔</h3><div class="mut" style="font-size:12px">本地 / 官方 / 插件三类来源可单独开关；插件来源走 plugin.rec.* 槽位，不改 core.rec.*。</div></div>
+        </div>
+      </section>
+
+      <section class="view" data-view="handoff">
+        <div class="logicbar" data-lb="handoff"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">可交接底层基线</div><div class="panel-sub">新对话把本仓库当底层直接接续</div></div>
+            <div class="kv"><span class="k">仓库</span><span>kongbai9288/KCU-launcher-for-pc / main / public</span>
+              <span class="k">基线</span><span>020 轮提交，工作区干净，231+ 文件</span>
+              <span class="k">必读</span><span>docs/index.md 78 项，按命令逐项复读</span>
+              <span class="k">工具链</span><span>腾讯 rustup 镜像；CARGO_HOME / RUSTUP_HOME 在工作区</span>
+              <span class="k">测试</span><span>CARGO_INCREMENTAL=0 cargo test --offline</span>
+              <span class="k">本地 LICENSE</span><span><span class="badge miss">未生成</span></span></div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title">已完成 / 未完成</div></div>
+            <table class="grid"><thead><tr><th>层</th><th>状态</th></tr></thead><tbody>
+              <tr><td>L1 core</td><td><span class="badge ok">已实现、已验证</span></td></tr>
+              <tr><td>L2 dispatcher</td><td><span class="badge ok">已实现、已验证</span></td></tr>
+              <tr><td>L3 lightweight</td><td><span class="badge ok">已实现、已验证</span></td></tr>
+              <tr><td>UI / normal</td><td><span class="badge up">演示层 36 视图</span></td></tr>
+              <tr><td>L4 headless 及以下 6 层</td><td><span class="badge off">未启动</span></td></tr>
+            </tbody></table></div>
+        </div>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">新对话开工 6 步</div><div class="panel-sub">照此顺序就不会丢上下文</div></div>
+          <div class="row"><span class="chip on">1 读 docs/index.md 78 项</span><span class="chip">2 读 docs/design/handoff.md</span><span class="chip">3 读 docs/records/rounds.md 末段</span><span class="chip">4 跑必读检查命令</span><span class="chip">5 跑 cargo test --offline</span><span class="chip">6 对照 docs/features/index.md 继续施工</span></div>
+        </div>
+        <div class="grid g2" style="margin-top:12px">
+          <div class="panel"><div class="panel-head"><div class="panel-title">不可变边界</div></div>
+            <div class="stack" style="font-size:12px;color:var(--ink-2)">
+              <div>全仓零凭据字面量；后端仓只读；私有配置、诊断包、令牌不进公仓。</div>
+              <div>core.locked.* 槽位不可被插件或更新包改写。</div>
+              <div>未取得 LICENSE 全文前不复制上游代码、资源、商标、Client ID。</div>
+              <div>未证实字段不写进实现；四值只用已证实 / 已失败 / 未证实 / 受阻。</div>
+              <div>每实现一个功能写一份功能 md，维护 docs/index.md 与 docs/features/index.md。</div>
+            </div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title">上层实现口径</div></div>
+            <div class="stack" style="font-size:12px;color:var(--ink-2)">
+              <div>上层实现采用第三方库，候选清单见关于页与 docs/design/upper-layer-stack.md。</div>
+              <div>每个候选标许可证、用途、来源、是否取得 LICENSE 全文、是否进入构建。</div>
+              <div>插件化更新优先；核心不随更新替换；失败保留旧插件并可回滚。</div>
+              <div>演示确认后才把 UI 写进实现；轻量模式不复用 normal.ui。</div>
+            </div></div>
+        </div>
+      </section>
+
+      <section class="view" data-view="upperstack">
+        <div class="logicbar" data-lb="upperstack"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title">上层实现候选清单 · 12 组</div><div class="panel-sub">采用第三方代码 · 全部为候选，未进入 src/ 构建</div>
+          <div class="panel-tools"><button class="btn tiny" data-v="licenses">许可清单</button><button class="btn tiny" data-v="about">返回关于</button><span class="badge up">逐项 LICENSE 全文核对后才复制</span></div></div>
+          <table class="lic-table"><thead><tr><th>层</th><th>候选</th><th>许可证</th><th>用途</th><th>全文状态</th><th>复制状态</th></tr></thead><tbody id="upperFull"></tbody></table>
+        </div>
+        <div class="grid g3" style="margin-top:12px">
+          <div class="panel"><h3 class="sec">登记规则</h3><div class="mut" style="font-size:12px">每项进关于页七列表与 THIRD-PARTY-NOTICES.md；写清项目名、版本、许可证、版权、用途、来源、是否进入构建。</div></div>
+          <div class="panel"><h3 class="sec">复用边界</h3><div class="mut" style="font-size:12px">NOASSERTION 以文件头部为准；服务条款与代码许可证分开；GPL / LGPL / 三许可分别判定，不默认放行。</div></div>
+          <div class="panel"><h3 class="sec">插件动态追加</h3><div class="mut" style="font-size:12px">插件加载后追加插件名、许可证、作者、项目地址、修改后版本地址；全文缺失给来源链接与「稍后」。</div></div>
+        </div>
+      </section>
+
       </div>
     </main>
   </div>
@@ -1117,21 +1242,25 @@ function log(d,a,t,r,x){
   for(const b of [$('logView'),$('logDrawerBody')]) if(b){b.insertAdjacentHTML('beforeend',line);b.scrollTop=b.scrollHeight;}
 }
 
-const VIEW_META={home:['实例总览','首页 · 本地 7 个实例 · 上次同步 2 分钟前'],notices:['公告中心','6 条公告 · 3 条未读 · 置顶优先'],
+const VIEW_META={home:['首页','本地 7 个实例 · 上次同步 2 分钟前 · 推荐服务器已就绪'],notices:['公告中心','6 条公告 · 3 条未读 · 置顶优先'],
  instances:['实例与服务器','7 个实例 · 3 个服务器 · 用户指定排第一'],download:['下载中心','批量请求 · 每页 20 · 单飞去重'],
  mods:['模组管理','110 个模组 · 启用 41'],login:['账号登录','三种方式 · 外置 → 内置 → 连接码'],
- logs:['日志诊断','[KCU] 单行诊断 · 每 100 行分片'],settings:['设置','快速配置默认中文 · 高级项可展开'],
- about:['关于','版本、许可证与开源致谢'],popups:['弹窗全集','11 类 · 每类有关闭路径'],
+ logs:['日志诊断','[KCU] 单行诊断 · 每 100 行分片'],settings:['设置','9 个分组 · 配置归拢 · slot:core.locked.settings 插件不可覆盖'],
+ about:['关于','核心槽位锁定 · 第三方许可 · 交接基线'],popups:['弹窗全集','11 类 · 每类有关闭路径'],
  lightweight:['轻量模式','≤2GiB 首次启动自动进入 · 单主题'],error:['异常与边界状态','空 / 加载 / 错误 / 被锁 / 安全模式 / 离线'],
  onboarding:['首次启动','4 步向导 · 可返回、可关闭'],cardgrid:['实例网格','网格视图 · 与列表同源'],
- servers:['服务器与推荐','推荐位 · 权重口径 · 测速缓存 60s'],
- licenses:['第三方许可','16 组组件 · 按许可证分组 · 离线可读'],
- sync:['数据与缓存','四层缓存 · 命中率 · 强制刷新'],
- ai:['AI 接口','用户自填 · 每次请求确认 · 关页停请求'],
- serverhost:['开服器','一键开服 · EULA 启动前写入 · UPnP 默认关'],
- headless:['无头模式','统一信封 · 任务优先级 · 无 UI'],
- refresh:['刷新机制','R1-R5 · 失败回退缓存不空白'],
- states:['状态与降级','六态 · 缓存兜底 · 降级链']};
+ servers:['服务器','推荐位 · 状态设置入口 · 测速缓存 60s'],
+ licenses:['第三方许可','关于 → 第三方许可 · 16 组 · 离线可读'],
+ sync:['数据与缓存','设置 → 缓存与刷新 · 四层总控'],
+ ai:['AI 接口','设置 → AI 容器接口 · 用户自填'],
+ serverhost:['开服器','一键开服 · 状态可在设置里配置'],
+ headless:['无头模式','设计证据页 · 统一信封 · 无 UI'],
+ refresh:['刷新机制','设置内二级页 · R1-R5 · 失败回退缓存'],
+ states:['状态与降级','设计证据页 · 六态 · 缓存兜底'],
+ slots:['插件槽位与锁定','core.locked.* 不可占用 · plugin.* 开放'],
+ recommendations:['推荐位总览','10 处推荐 · 权重 / 覆盖 / 刷新'],
+ handoff:['底层交接基线','新对话把本仓库当底层直接接续'],
+ upperstack:['上层实现候选','12 组第三方库 · 许可证与复用边界']};
 
 function openDlg(title,body,id){
   $('mdTitle').textContent=title;$('mdId').textContent='id='+id;$('mdBody').innerHTML=body;
@@ -1155,8 +1284,12 @@ function show(v){
   if(v==='update'){show('home');openDlg('发现新版本 0.0.1','<p>批量下载、公告中心、纸质界面与 18 张预览图已就绪。</p><div class="attach">更新日志 14 项 · 可「稍后」或「立即更新」</div>','update');return;}
   document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.dataset.view===v));
   document.querySelectorAll('.nav-item[data-v]').forEach(x=>x.classList.toggle('active',x.dataset.v===v));
+  const tab=(location.hash.match(/tab=([a-z-]+)/)||[])[1]||'general';
+  if(v==='settings')setTab(tab);
+  const hideActs=['settings','about','licenses','slots','recommendations','handoff','sync','refresh','states','ai','headless','popups','lightweight','error','onboarding','serverhost','logs','upperstack'];
+  document.querySelector('.tb-actions').style.display=hideActs.indexOf(v)>=0?'none':'flex';
   const m=VIEW_META[v]||VIEW_META.home;$('vTitle').textContent=m[0];$('vCrumb').textContent=m[1];
-  history.replaceState(null,'','#view='+v);
+  history.replaceState(null,'',v==='settings'?'#view=settings&tab='+tab:'#view='+v);
 }
 function setTheme(t){theme=t;win.dataset.theme=t;$('btnTheme').textContent=t==='dark'?'<svg class="li" aria-hidden="true"><use href="#i-sun"></use></svg>':'<svg class="li" aria-hidden="true"><use href="#i-moon"></use></svg>';}
 $('btnTheme').onclick=()=>setTheme(theme==='light'?'dark':'light');
@@ -1339,6 +1472,57 @@ document.querySelectorAll('.logicbar').forEach(lb=>{
   hard.onclick=()=>{st.textContent='重取中';st.className='badge up lb-state';hit.textContent='0';miss.textContent='0';log('ui','refresh','hard','OK','detail='+id+'_clear_cache_full_fetch');setTimeout(()=>{age.textContent='刚刚';hit.textContent='8';miss.textContent='1';st.textContent='就绪';st.className='badge ok lb-state';},160);};
 });
 renderLic();
+
+
+/* 020 设置分组、槽位锁定、推荐目录、服务器状态与交接 */
+function ic(n){return '<svg class="li" aria-hidden="true"><use href="#i-'+n+'"></use></svg>';}
+function setTab(k){
+  document.querySelectorAll('[data-pane]').forEach(x=>x.classList.toggle('on',x.dataset.pane===k));
+  document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('on',x.dataset.tab===k));
+}
+document.querySelectorAll('[data-tab]').forEach(x=>x.onclick=()=>{setTab(x.dataset.tab);log('ui','settings','tab','OK','detail='+x.dataset.tab);});
+$('tabModified').onclick=()=>log('ui','settings','filter','OK','detail=@modified 3');
+$('tabReset').onclick=()=>openDlg('恢复默认','<p>将把本页已改动的 3 项恢复到默认值，需二次确认。</p><div class="attach">取消后 0 副作用；写盘失败保留旧值并可见报错。</div>','settings_reset');
+$('setCacheExpired').onclick=()=>log('ui','cache','clean','OK','detail=expired_only');
+$('setCacheAll').onclick=()=>openDlg('全清缓存','<p>四层缓存将被清空，含令牌缓存，需二次确认。</p>','settings_cache_all');
+$('setAiTest').onclick=()=>{$('setAiState').innerHTML='<span class="badge ok">已连接</span>';$('setAiResult').textContent='连接成功';log('ui','ai','test','OK','detail=settings_scoped');};
+$('plugUpdate').onclick=()=>{$('plugState').textContent='插件包已更新 · 核心 0.0.0 未替换';$('plugState').className='badge ok';log('update','plugin','install','OK','detail=signed core_untouched');};
+$('plugRollback').onclick=()=>{$('plugState').textContent='已回滚到旧插件 · 核心 0.0.0 未替换';$('plugState').className='badge up';log('update','plugin','rollback','OK','detail=old_plugin_restored');};
+
+const UPPER=[
+ ['UI 窗口 / WebView','tao + wry','Apache-2.0 / MIT','桌面窗口与网页渲染','候选 · 未进构建'],
+ ['UI 方案备选','slint','三许可（Royalty-free / GPLv3 / Commercial）','声明式界面','候选 · 未进构建'],
+ ['UI 方案备选','egui / iced','Apache-2.0 / MIT','即时模式界面','候选 · 未进构建'],
+ ['序列化','serde + serde_json','MIT OR Apache-2.0','配置 / 清单 / 统一信封','候选 · 未进构建'],
+ ['网络','reqwest','MIT OR Apache-2.0','批量请求 / 单飞 / 竞速','候选 · 未进构建'],
+ ['异步','tokio','MIT','任务调度与取消','候选 · 未进构建'],
+ ['版本比较','semver','MIT OR Apache-2.0','插件化更新版本判定','候选 · 未进构建'],
+ ['哈希 / 校验','sha2','MIT OR Apache-2.0','文件与插件摘要','候选 · 未进构建'],
+ ['错误','anyhow + thiserror','MIT OR Apache-2.0','错误链','候选 · 未进构建'],
+ ['插件加载','libloading','ISC','动态库加载（C ABI）','候选 · 未进构建'],
+ ['更新','tauri-plugin-updater / self_update','Apache-2.0 / MIT','签名校验与回滚','候选 · 未进构建'],
+ ['本地存储','rusqlite','MIT','索引与状态缓存','候选 · 未进构建'],
+];
+$('upperBody').innerHTML=UPPER.map(r=>'<tr><td>'+esc(r[0])+'</td><td><b>'+esc(r[1])+'</b></td><td>'+esc(r[2])+'</td><td>'+esc(r[3])+'</td><td><span class="badge off">'+esc(r[4])+'</span></td></tr>').join('');
+$('upperFull').innerHTML=UPPER.map(r=>'<tr><td>'+esc(r[0])+'</td><td><b>'+esc(r[1])+'</b></td><td>'+esc(r[2])+'</td><td>'+esc(r[3])+'</td><td><span class="badge '+(r[1].indexOf('slint')>=0?'ok':'up')+'">'+(r[1].indexOf('slint')>=0?'三许可全文已取得':'待逐项核对')+'</span></td><td><span class="badge off">'+esc(r[4])+'</span></td></tr>').join('');
+
+const REC_CATALOG=[
+ ['首页启动卡','上次实例 / 最近 3 个','最近使用 > 推荐','手动选过置顶','30s / 事件推送','core.rec.home_launch'],
+ ['首页推荐服务器','兼容 + 习惯','用户指定 > 兼容度 > 延迟','指定实例排第一','60s / 测速刷新','core.rec.home_server'],
+ ['版本页','稳定版','稳定 > 快照','用户指定排第一','24h / 强制刷新','core.rec.version'],
+ ['下载页','缺失依赖 / 可更新','缺依赖优先','手动清单优先','30s / 完成事件','core.rec.download'],
+ ['模组页','可更新 / 缺依赖','缺失优先','手动禁用保持','60s / 扫描事件','core.rec.mods'],
+ ['公告中心','置顶','置顶 > 时间','不再提示降权','5min / 增量刷新','core.rec.notices'],
+ ['加载器','与实例兼容','兼容度 > 热度','用户指定优先','24h / 强制刷新','core.rec.loader'],
+ ['Java','稳定版本','稳定 > 预览','用户指定优先','24h / 手动刷新','core.rec.java'],
+ ['镜像源','测速结果','延迟 > 可用性','用户强制指定','60s / 测速刷新','core.rec.mirror'],
+ ['插件','已装且启用','用户评分 > 更新日','手动置顶','会话内 / 安装事件','core.rec.plugin'],
+];
+$('recCatalog').innerHTML=REC_CATALOG.map(r=>'<tr><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td>'+esc(r[3])+'</td><td>'+esc(r[4])+'</td><td><span class="mini">'+esc(r[5])+'</span></td></tr>').join('');
+
+$('slotConflict').onclick=()=>{$('slotDeny').style.display='flex';log('plugins','slot','register','DENY','detail=core.locked.settings already_occupied plugin=example');};
+$('slotDenyClose').onclick=()=>{$('slotDeny').style.display='none';};
+$('slotReset').onclick=()=>{$('slotDeny').style.display='none';log('plugins','slot','reset','OK','detail=registry_clean');};
 
 /* 初始 */
 $('sbTime').textContent=new Date().toLocaleString('zh-CN',{hour12:false});

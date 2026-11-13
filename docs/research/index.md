@@ -144,3 +144,10 @@
 | R03 | 未证实字段不写进实现。 |
 | R04 | 四值只用已证实 / 已失败 / 未证实 / 受阻；中间态禁用。 |
 | R05 | 403 policy_default_denied 记为受阻，不记为上游服务异常。 |
+
+## 020 统一调研
+
+| 项 | 文档 | 状态 |
+| --- | --- | --- |
+| 插件槽位、设置架构、插件化更新、服务器状态、上层候选许可 | docs/research/17-plugin-settings-survey.md | 12 一手 + 4 公开资料 + 3 受阻，全部完整 URL 锚点 |
+| 结论 J01-J06 | docs/research/17-plugin-settings-survey.md | 只供设计层使用，020 轮 `src/` 无变化 |

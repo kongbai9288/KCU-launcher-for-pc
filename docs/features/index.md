@@ -41,6 +41,12 @@
 | F019-01 | 全功能使用逻辑补全 | ui.demo | 已实现、已验证（演示层） | ux-logic-completion.md |
 | F019-02 | lucide 图标系统 | assets.icons | 已实现、已验证（演示层） | lucide-icon-system.md |
 | F019-03 | 关于页第三方许可说明 | legal.notices | 已实现、已验证（演示层） | third-party-licenses-about.md |
+| F020-01 | 导航瘦身与核心槽位锁定 | ui.demo / plugins.slots | 已实现、已验证（演示层） | nav-slot-lock.md |
+| F020-02 | 设置九分组与自定义项归拢 | ui.demo / settings | 已实现、已验证（演示层） | settings-groups.md |
+| F020-03 | 推荐位目录与排序自定义 | ui.demo / recommendations | 已实现、已验证（演示层） | recommendation-catalog.md |
+| F020-04 | 服务器状态设置 | ui.demo / settings.status | 已实现、已验证（演示层） | server-status-settings.md |
+| F020-05 | 上层实现第三方候选登记 | legal.notices | 已实现、已验证（演示层） | upper-layer-thirdparty.md |
+| F020-06 | 可交接底层基线 | docs.design / handoff | 已实现、已验证（演示层） | handoff-baseline.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -113,6 +119,9 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G29 | 每个功能填满 L01–L12 使用逻辑骨架，缺一判未补全。 |
 | G30 | 每个视图区块顶部有逻辑条：缓存时间、命中数、刷新、强制刷新、状态。 |
 | G31 | 使用第三方代码须在关于页与发行物声明许可证与项目，构建状态如实。 |
+| G32 | 设置与关于固定在锁定槽位，插件与更新包不可改写。 |
+| G33 | 推荐位与服务器状态的自定义项全部落在设置。 |
+| G34 | 上层实现采用第三方代码，逐项取得 LICENSE 全文后才引入依赖。 |
 
 ## 018 轮纸质 UX 界面
 

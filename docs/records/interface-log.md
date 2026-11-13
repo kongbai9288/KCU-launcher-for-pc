@@ -336,6 +336,32 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | RO44 | 019 spec 逐字副本 1 行 782 字节，SHA-1 `ad626f16ec7c6b763d7892951901e6b609042292`。 |
 | RO45 | 渲染脚本每视图带 `?r=<i>` 强制重载，仅 S02 为深色纸质。 |
 
+## 020 导航锁定、设置归拢与上层候选
+
+| 编号 | 接口 | 输入 | 输出 | 错误 |
+| --- | --- | --- | --- | --- |
+| I50 | `#view=settings&tab=<name>` | 9 个分组名 | 对应设置面板 | 未知名回落 general |
+| I51 | `[data-tab]` / `[data-pane]` | 分组名 | 面板切换与诊断行 | 无 |
+| I52 | `slotConflict` / `slotReset` / `slotDenyClose` | 无 | 拒绝提示 / 复位 | 拒绝注册 |
+| I53 | `setCacheExpired` / `setCacheAll` / `setAiTest` | 无 | 清理、测试反馈 | 二次确认 |
+| I54 | `plugUpdate` / `plugRollback` | 无 | 插件包更新或回滚 | 保留旧插件 |
+| I55 | `data-v="slots"` / `recommendations` / `handoff` / `upperstack` | 无 | 4 个新视图 | 无 |
+| I56 | `python3 scripts/render_ui.py` | 无 | 38 张 PNG | 非零退出 |
+
+| 编号 | 内容 |
+| --- | --- |
+| RO46 | 020 轮对后端仓 0 个写请求，约束延续 RO01-RO45。 |
+| RO47 | 一级导航收敛为 9 项；设置与关于固定 `slot:core.locked.*`；插件区 `slot:plugin.*` 独立。 |
+| RO48 | 工具条按视图收敛：设置 / 关于 / 许可 / 槽位 / 总览 / 交接 / 候选等页面隐藏列表网格、刷新、新建实例按钮。 |
+| RO49 | 设置 9 分组，每项稳定 `core.*` ID、默认值、写后即时生效、`@modified`、单项重置。 |
+| RO50 | 10 处推荐位逐处登记内容 / 权重 / 用户覆盖 / 缓存刷新 / 设置 ID；插件来源走 `plugin.rec.*`。 |
+| RO51 | 服务器状态取 SLP 1.7+ JSON 字段；6 类状态、探测间隔 60s、超时 3s、缓存 60s 失败标灰。 |
+| RO52 | 插件化更新：签名校验不可禁用，默认只升，回滚需显式比较器，失败保留旧插件，核心二进制不动。 |
+| RO53 | 上层实现批准采用第三方代码；12 组候选全部标「候选 · 未进构建」；`src/` 与 Cargo.lock 无变化。 |
+| RO54 | 020 spec 逐字副本 1 行 853 字节，SHA-1 `070c6475693e4bd28f41cfbb3d6b6f9b7d6e72f6`。 |
+| RO55 | 26 个 `<section class="view` 区块、26 条逻辑条、88 个 `<symbol`、37 张截图视图 / 38 张 PNG。 |
+| RO56 | 交接基线 `docs/design/handoff.md`：必读 6 步、已完成 L1-L3、H01-H08 不可变边界。 |
+
 ## 版本弃用
 
 | 接口 | 行为 |

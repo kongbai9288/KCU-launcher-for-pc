@@ -1,7 +1,7 @@
 # 第三方许可证原文索引
 
 检索日期：2026-11-05
-更新轮次：019
+更新轮次：020
 来源接口：`GET https://api.github.com/repos/{owner}/{repo}/license`、`GET https://api.github.com/repos/{owner}/{repo}/contents/{path}`，全部返回 200。
 
 ## 逐字副本
@@ -90,3 +90,12 @@
 | --- | --- |
 | L10 | 图标逐枚来源与 SHA 可审计；新增图标同步 sprite、manifest、许可页计数。 |
 | L11 | 插件加载后在关于页动态追加插件名、许可证、作者、项目地址、修改后版本地址。 |
+
+## 020 增补：上层实现候选
+
+上层实现批准采用第三方代码，12 组候选逐项标许可证、用途、全文状态、复制状态，见 `THIRD-PARTY-NOTICES.md` 第五节与 `docs/design/upper-layer-stack.md`。全部标「候选 · 未进构建」；`src/` 与 Cargo.lock 020 轮无变化。
+
+| 编号 | 约束 |
+| --- | --- |
+| L12 | 上层候选逐项取得 LICENSE 全文后才引入依赖；发布构建以当前 Cargo.lock 与各 crate 自带许可证文件为最终依据。 |
+| L13 | 插件化更新包随附其自身许可信息；核心锁定槽位不因更新包变化。 |

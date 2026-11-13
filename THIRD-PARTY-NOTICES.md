@@ -3,7 +3,7 @@
 | 项 | 值 |
 | --- | --- |
 | 项目 | KCU Launcher for PC |
-| 轮次 | 019 |
+| 轮次 | 019；020 增补上层候选 |
 | 生成依据 | docs/licenses/index.md；assets/icons/lucide-manifest.json；docs/research/09-licenses.md；docs/research/12-compliance.md |
 | 状态 | 演示层已使用 1 项；文档层逐字存档 13 组；进入 `src/` 构建的第三方代码 0 项 |
 | 本项目 LICENSE | 未生成 |
@@ -63,3 +63,31 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | N04 | 插件独立许可证；插件加载后在关于页动态增加插件名、许可证、作者名、项目地址、修改后版本地址。 |
 | N05 | 某条全文缺失给来源链接与「稍后」，不编造许可文本。 |
 | N06 | 进入 `src/` 的第三方代码为 0；清单中「已使用」仅限演示层图标。 |
+
+## 五、上层实现候选（020，未进入构建）
+
+用户批准上层实现采用第三方代码。以下 12 组为候选，全部**未进入 `src/` 构建**；逐项取得 LICENSE 全文后才允许复制代码、资源、商标、Client ID。完整设计见 `docs/design/upper-layer-stack.md`，界面证据见 `demos/preview/37-upperstack.png`。
+
+| 层 | 候选 | 许可证 | 用途 | 全文状态 | 复制状态 |
+| --- | --- | --- | --- | --- | --- |
+| UI 窗口 / WebView | tao + wry | Apache-2.0 / MIT | 桌面窗口与网页渲染 | 待逐项核对 | 候选 · 未进构建 |
+| UI 方案备选 | slint | 三许可（Royalty-free / GPLv3 / Commercial） | 声明式界面 | 三许可全文已取得 | 候选 · 未进构建 |
+| UI 方案备选 | egui / iced | Apache-2.0 / MIT | 即时模式界面 | 待逐项核对 | 候选 · 未进构建 |
+| 序列化 | serde + serde_json | MIT OR Apache-2.0 | 配置 / 清单 / 统一信封 | 待逐项核对 | 候选 · 未进构建 |
+| 网络 | reqwest | MIT OR Apache-2.0 | 批量请求 / 单飞 / 竞速 | 待逐项核对 | 候选 · 未进构建 |
+| 异步 | tokio | MIT | 任务调度与取消 | 待逐项核对 | 候选 · 未进构建 |
+| 版本比较 | semver | MIT OR Apache-2.0 | 插件化更新版本判定 | 待逐项核对 | 候选 · 未进构建 |
+| 哈希 / 校验 | sha2 | MIT OR Apache-2.0 | 文件与插件摘要 | 待逐项核对 | 候选 · 未进构建 |
+| 错误 | anyhow + thiserror | MIT OR Apache-2.0 | 错误链 | 待逐项核对 | 候选 · 未进构建 |
+| 插件加载 | libloading | ISC | 动态库加载（C ABI） | 待逐项核对 | 候选 · 未进构建 |
+| 更新 | tauri-plugin-updater / self_update | Apache-2.0 / MIT | 签名校验与回滚 | 待逐项核对 | 候选 · 未进构建 |
+| 本地存储 | rusqlite | MIT | 索引与状态缓存 | 待逐项核对 | 候选 · 未进构建 |
+
+许可证来源：crates.io 元数据页、第三方项目 THIRD_PARTY_NOTICES 声明、docs/licenses/ 逐字副本。docs/licenses/ 已有 tao、egui、iced、slint 主文件与 slint 三许可全文；其余条目未逐仓库取得全文，标未证实。发布构建以当前 Cargo.lock 与各 crate 自带许可证文件为最终依据。
+
+| 编号 | 约束 |
+| --- | --- |
+| N07 | 上层候选逐项取得 LICENSE 全文后才允许复制；取得前只登记，不引入依赖。 |
+| N08 | 每项进关于页七列表与本文件：项目名、版本、许可证、版权、用途、来源、是否进入构建。 |
+| N09 | NOASSERTION 以文件头部为准；GPL / LGPL / 三许可分别判定；服务条款与代码许可证分开。 |
+| N10 | 插件加载后动态追加插件名、许可证、作者、项目地址、修改后版本地址。 |

@@ -1,6 +1,6 @@
 # 远端推送范围
 
-轮次：019
+轮次：020
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
 特殊版：`kongbai9288/KCU-launcher-special`，private，分支 main，仅 README 占位。
@@ -19,6 +19,9 @@
 | 图标资产 | assets/icon/、assets/icons/（lucide 子集与 manifest） |
 | UI 设计稿 | assets/ui/，逐字副本与资产登记 |
 | 设计矩阵 | docs/design/，全功能使用逻辑矩阵 |
+| 020 设计契约 | docs/design/，槽位 / 推荐 / 状态 / 上层候选 / 交接基线 |
+| 020 调研 | docs/research/17-plugin-settings-survey.md |
+| 改造脚本 | scripts/round020_ui.py、scripts/round020_views.py |
 | 发行物声明 | THIRD-PARTY-NOTICES.md |
 | 仓库配置 | README.md、.gitignore、LICENSE、第三方声明 |
 

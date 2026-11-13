@@ -5,7 +5,7 @@
 | 编号 | R-UI-01 |
 | 状态 | 已批准 |
 | 版本 | 0.0.0 |
-| 轮次 | 015 建立；016 首次触发；017 增 PNG 闸门；018 纸质质感与 UX 形态纠正；019 使用逻辑补全与 lucide |
+| 轮次 | 015 建立；016 首次触发；017 增 PNG 闸门；018 纸质质感与 UX 形态纠正；019 使用逻辑补全与 lucide；020 导航锁定与设置归拢 |
 | 依据 | docs/spec/15-round-015-instructions.txt F02/F03；docs/decisions/015-build-continue.md D02-D04 |
 
 ## 触发
@@ -73,6 +73,7 @@
 | 017 | **已触发**（正常模式界面重排 + 公告族补齐） | `demos/ui-full-kcu-v2.html`、`demos/preview/00-overview.png` + 15 张场景 PNG；**风格取错，已作废** |
 | 018 | **已触发**（纸质质感重做 + UX 形态纠正） | `demos/ui-full-kcu-paper.html`、`demos/preview/00-overview.png` + 20 张视图 PNG |
 | 019 | **已触发**（28 视图、逻辑条、lucide、第三方许可页） | `demos/ui-full-kcu-paper.html` 更新、`demos/preview/00-overview.png` + 28 张视图 PNG、THIRD-PARTY-NOTICES.md |
+| 020 | **已触发**（26 区块 / 37 截图视图、锁定槽位、设置九分组、推荐位总览、上层候选、交接基线） | `demos/ui-full-kcu-paper.html` 更新、`demos/preview/00-overview.png` + 37 张视图 PNG、THIRD-PARTY-NOTICES.md 第五节 |
 
 016 触发记录：
 
@@ -164,3 +165,25 @@ ls demos/preview/*.png | wc -l
 ```
 
 019 手感回路：PNG 总览 → 用户按图提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 无变化。
+
+## 020 增补
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| G16 | 导航 | 一级导航收敛为 9 项日常操作；设置与关于固定在 `slot-core` 锁定容器；插件区 `slot-plugin` 只能追加 |
+| G17 | 设置归拢 | 9 个分组 chip，每视图区块保留逻辑条；AI 接口 / 缓存 / 刷新 / 状态 / 无头 / 许可不再占一级入口 |
+| G18 | 工具条收敛 | 设置、关于、许可、槽位、总览、交接、候选等页面隐藏列表网格 / 刷新 / 新建实例按钮 |
+
+020 检查命令：
+
+```
+test -f docs/design/handoff.md
+test -f docs/design/nav-slot-contract.md
+grep -c '<section class="view' demos/ui-full-kcu-paper.html
+grep -c 'class="logicbar"' demos/ui-full-kcu-paper.html
+ls demos/preview/*.png | wc -l
+! grep -rE 'FCL|揉纸启动器|https?://' demos/ui-full-kcu-paper.html
+! grep -rqE 'gh[p]_' .
+```
+
+020 手感回路：PNG 总览 → 用户按图提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 与 Cargo.lock 无变化。

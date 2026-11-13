@@ -1618,3 +1618,131 @@ L3 落地：
 | 远端只读 GET 未发起 | 验证者无认证，记受阻 | 保留 |
 
 两个哈希由独立验证者计算并写入声明块，改动作者未代算。委托语本轮把 22 独立区块 / 28 截图 / 29 PNG / 88 symbol / 22 逻辑条 / 6 标题 / 78 必读六个口径写清，验证者未再产生数值偏差记录。未通过项全部为真实未解决四值：用户手感反馈未发生、UI 实现未进构建、L4 及以下 6 层未启动、CF F17 / X01-X04 / 特殊版代码 / LICENSE、多项未证实调研、浏览器与 GUI 端到端、交叉编译、git HTTP、6 上游主机、远端无认证只读 GET 受阻、017 风格取错已撤回、Win7+ARM64 与 v99.99 tag 已失败、本地链与远端链哈希不同。验证报告按 18.1 未改。
+
+## 020
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/20-round-020-instructions.txt | 逐字副本，1 行 853 字节，SHA-1 `070c6475693e4bd28f41cfbb3d6b6f9b7d6e72f6` |
+| docs/decisions/020-nav-slots-settings.md | D01-D16、R01-R12 / C01-C04 / M01 调研来源、验证与边界 |
+| docs/research/17-plugin-settings-survey.md | 统一调研：12 一手 + 4 公开资料 + 3 受阻，J01-J06 结论 |
+| docs/design/ | nav-slot-contract.md、recommendation-catalog.md、server-status.md、upper-layer-stack.md、handoff.md |
+| docs/design/ux-logic-matrix.md | U21-U25 逐项 L01-L12、020 自评迭代、C13-C20、最终自评 9.3 |
+| demos/ui-full-kcu-paper.html | 26 区块 / 37 截图视图、26 条逻辑条、导航锁定槽位、设置九分组、4 个新视图 |
+| demos/preview/ | 37 张视图 PNG + `00-overview.png` + 重写 index.md |
+| THIRD-PARTY-NOTICES.md | 第五节：上层实现候选 12 组，全部「候选 · 未进构建」 |
+| docs/features/ | nav-slot-lock.md、settings-groups.md、recommendation-catalog.md、server-status-settings.md、upper-layer-thirdparty.md、handoff-baseline.md |
+| 索引与规则 | decisions / features / licenses / research index、ai-errors A85-A89、ui-demo G16-G18 与 020 行、docs/index 92 项必读、README、interface-log I50-I56 / RO46-RO56、push-scope |
+| docs/verification/round-020.md | 第 020 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Fri Nov 13 23:48:55 CST 2026` |
+| 必读 78 项复读 | `23:48:55`，REQUIRED=78 MISSING=0 |
+| 统一调研两轮 | `23:49`–`23:51` |
+| 导航与设置改造落盘 | `23:54` 前后 |
+| 37 视图首次渲染 | `23:56` 前后 |
+| 工具条收敛、上层候选视图、最终渲染 | `23:59`–`00:02` |
+| 文档收口 | `Sat Nov 14 00:05 CST 2026` 前后 |
+
+用户当轮要求与处置：
+
+| 编号 | 要求 | 处置 |
+| --- | --- | --- |
+| V01 | 看样子我还比较满意 | 019 演示层手感通过；本轮仍按闸门先改演示与截图，不改 `src/` |
+| V02 | 有些功能不用写在顶上，比如接口是设置里头的东西 | 一级导航收敛为 9 项日常操作；AI 接口、数据与缓存、刷新机制、状态与降级、无头模式、第三方许可移出一级导航；工具条操作按视图收敛 |
+| V03 | 支持插件，关于设置要锁定位置，防覆盖 | `core.locked.settings` / `core.locked.about` 固定在同一容器，带虚线描边、锁图标、locked 徽章；插件区 `slot:plugin.*` 独立；冲突拒绝演示与诊断行 |
+| V04 | 以后更新可能用插件化更新 | 更新器作为插件，只替换插件包，核心不动；签名校验不可禁用、默认只升、回滚需显式比较器、失败保留旧插件 |
+| V05 | 对话可能取消，新开对话把本仓库当底层 | `docs/design/handoff.md` 交接基线：必读 6 步、已完成 L1-L3、H01-H08 不可变边界、已知卡点；关于页交接卡片与交接页 |
+| V06 | 推荐项目想好，包括怎么设置服务器状态 | 10 处推荐位逐处定义；服务器状态取 SLP 一手字段，6 类状态 + 自定义项 + 降级路径全落设置 |
+| V07 | 该放设置的放设置，自定义设置功能也放设置 | 设置 9 分组、稳定 ID、写后即时生效、@modified、单项重置 |
+| V08 | 最后统一调研一下 | `docs/research/17-plugin-settings-survey.md`，12 一手来源 + 4 公开资料 + 3 受阻，完整 URL 锚点 |
+| V09 | 上层实现都用别人的代码 | 12 组候选逐项标许可证 / 用途 / 全文状态 / 复制状态；关于页与 NOTICES 登记；全部标「候选 · 未进构建」 |
+| V10 | 发现思考不足就再次增加设计直到自评 9 分以上 | 3 轮 7.4 → 8.6 → 9.3，每轮记录不足与真实补入动作 |
+
+自评迭代（补入动作真实落盘）：
+
+| 轮次 | 自评 | 发现的不足 | 补入 |
+| --- | --- | --- | --- |
+| 迭代 1 | 7.4 | 导航瘦了、槽位锁了、设置九分组，但推荐位只沿用 019 的 6 处、服务器状态只有 SLP 字段没落设置项与状态类型、插件化更新缺签名 / 回滚 / 失败降级、上层候选缺逐项许可证与登记规则、交接页缺不可变边界 | 10 推荐位表、6 类状态与设置 ID、插件化更新 6 项、上层候选 12 组、交接 6 步与 8 条边界 |
+| 迭代 2 | 8.6 | 上述补齐，但缺工具条操作按视图收敛、核心槽位冲突的可见拒绝与诊断行、设置项稳定 ID / @modified / 单项重置、插件来源不改 core.rec.*、插件区双高亮修复 | 工具条 hideActs、槽位冲突弹窗与 `[KCU]` 行、9 分组稳定 ID 与 @modified、plugin.rec.* 约束、状态面板改指 states |
+| 迭代 3 | 9.3 | 上述五项补齐并出 38 张 PNG；剩余均为未证实外部依赖与未启动层，不属设计缺口 | C13-C20 跨功能一致性检查与分项评分，收口 |
+
+本轮真实缺陷与修复（全部留痕）：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E01 | `re.subn` 替换串含 `C:\KCU` 触发 `bad escape \K`，导航与设置改造脚本第一次运行失败 | 改用 lambda 替换并把脚本落盘为 `scripts/round020_ui.py`，重跑通过 |
+| E02 | 插件区两个按钮都指向 slots，`show()` 给两个 nav-item 同时加 active，出现双高亮 | 状态面板改指 states 视图，重渲染后单高亮 |
+| E03 | 关于页上层候选表首屏只露出 1 行，用户看不到完整清单 | 新增 `upperstack` 独立视图，12 行全可见；关于页加「完整候选清单」入口；总截图 37→38 |
+
+统一调研来源：
+
+| 来源 | 事实 |
+| --- | --- |
+| https://code.visualstudio.com/api/ux-guidelines/overview.md | containers / items 模型与六个容器职责 |
+| http://vscode.net.cn/api/references/contribution-points | contributes 声明清单（官方文档中文镜像） |
+| https://code.visualstudio.com/api/extension-guides/tree-view | viewsContainers → views，分组顺序 `@n` |
+| https://code.visualstudio.com/docs/configure/settings | 作用域、分组、搜索、@modified、即时生效、扩展设置区 |
+| https://docs.rs/tauri-plugin-updater/latest/struct.Config.html | pubkey / require_signed_version / allow_downgrades / endpoints |
+| https://doc.rust-lang.org/ | Rust 官方文档入口 |
+| https://docs.rs/rs-rich-plugin-api/latest/rich_plugin_api/abi/index.html | Rust ABI 不稳定、C ABI、ABI_MAJOR 拒绝 |
+| https://docs.rs/supercode-core/latest/supercode/plugins/index.html | manifest DATA + 子进程隔离 |
+| https://minecraft.wiki/w/Java_Edition_protocol/Server_List_Ping | SLP 1.7+ 流程与 JSON 字段 |
+| https://crates.io/crates/reqwest/range/%3E=%200.10.1,%20%3C%200.11 | reqwest MIT OR Apache-2.0 |
+| https://github.com/lucide-icons/lucide | Lucide ISC |
+| https://libre.xram.net/guides/attribution | 归属与 NOTICES 规则 |
+| 4 组公开资料 | 插件 ABI 社区经验、SLP 端到端、ServerListPingEvent、第三方依赖许可汇总 |
+| 3 个受阻 / 镜像项 | Tauri 中文站标未证实（镜像原文）、Tauri v2 官方插件页与 Eclipse/OSGi 官方页受阻 |
+
+验证：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `python3 scripts/render_ui.py` | `render_ui OK shots=37`，38 张 PNG | 已证实 |
+| `grep -c '<section class="view'` | 26 | 已证实 |
+| `grep -c 'class="logicbar"'` | 26 | 已证实 |
+| `grep -c '<symbol'` / 字符图标残留 | 88 / 0 | 已证实 |
+| `grep -o 'data-tab=' \| wc -l` / `grep -o 'data-pane=' \| wc -l` | 9 / 9 | 已证实 |
+| `node -e` 内联脚本 / `compile(scripts/render_ui.py)` | 通过 | 已证实 |
+| `! grep -rE 'FCL\|揉纸启动器\|https?://' demos/ui-full-kcu-paper.html` | exit 0 | 已证实 |
+| `! grep -rqE 'gh[p]_' .` | NO_CREDENTIAL | 已证实 |
+| `CARGO_INCREMENTAL=0 cargo test --offline` | 141 passed / 0 failed | 已证实 |
+| `git diff <019>..HEAD -- src/` / Cargo.lock | 空 / 未变 | 已证实 |
+| 必读 92 项存在非空 | REQUIRED=92 MISSING=0 | 已证实 |
+| 用户按 38 张图给手感反馈 | 未发生 | 未证实 |
+
+阶段：D07 第 3 层 lightweight 已实现、已验证；020 轮只动演示层、设计层与文档，`src/` 与 Cargo.lock 无变化；L4 headless 及以下 6 层未启动。UI 实现按闸门等用户确认演示后进。
+
+未做：
+- UI 实现（PNG 总览确认后才进实现）
+- L4 headless 及以下 6 层、插件注册表与插件化更新实现、第三方依赖引入
+- CF F17 调用方法、X01-X04 逐条处置、特殊版代码、本项目 LICENSE
+- 后端仓任何写请求
+- 浏览器内交互实测（截图为静态帧）、GUI 端到端、交叉编译、SLP 客户端
+- 上层 12 组候选逐仓库 LICENSE 全文、Tauri v2 官方 updater 页与 Eclipse/OSGi 官方页
+
+020 独立验证复核：
+
+| 项 | 值 | 判定 |
+| --- | --- | --- |
+| 独立验证结论 | **部分通过** | 未发通过标记 |
+| 变更内容哈希声明 | `21a2f33e3e13853047d663b78681d088f8a9d816` | `git diff 4abdfc9..f985f07 \| sha1sum` 复算一致 |
+| 报告正文哈希声明 | `3007d7e8d571eca4f46245f946e640ba1da8e2fa` | 与当前报告文件不一致；按声明块偏移 19316 切分得 `3904b03bfbc6a6028939e874f1a5f0cc34e9d194`，去 1 换行得 `aef9a9513e2649db1b70646bb5486977562171f0`，全文 `a480113943ac780ee87975c739032217ad0b12f7`；±6 字节与加换行末尾逐项枚举均未命中声明值。属验证者记录误差，按 18.1 未改报告，留待下轮独立复核 |
+| 报告末尾换行 | 文件末尾无换行 | 验证者收尾自检因沙盒总超时未跑，登记为受阻 |
+| 工具链三项 | `CARGO_INCREMENTAL=0 cargo test --offline` 141 passed / 0 failed；node 遍历 18 份 HTML 全通过；三个 python 脚本 compile 通过 | 改动作者侧已证实，验证者侧受阻 |
+| 全仓扫描 | `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_BRAND_EXT` / `NO_REPEAT` | 改动作者侧已证实；其中 `同上` 首次命中为我方 020 调研索引写入的简写，已修为完整路径 |
+| 92 项必读 | `REQUIRED=92 MISSING=0` | 已证实 |
+| 远端只读 GET | 验证者无认证且超时，记受阻 | 保留 |
+
+本轮真实缺陷追加：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E04 | `docs/research/index.md` 020 段把结论来源写成「同上」，命中 A22 的 `同上` 禁用扫描，首次复跑 `REPEAT_FOUND` | 改为完整路径 `docs/research/17-plugin-settings-survey.md`，复跑 `NO_REPEAT`；改动作者侧修正，未改验证报告 |
+
+两个哈希由独立验证者计算并写入声明块，改动作者未代算；正文哈希与文件内容不一致一项按 18.1 保留原报告，只登记复核结果。委托语本轮把 26 独立区块 / 37 截图 / 38 PNG / 88 symbol / 26 逻辑条 / 9+9 tabs-panes / 92 必读 / 256 tracked 八个口径写清，验证者未再产生数值偏差记录。
+
+未通过项全部为真实未解决四值：用户手感反馈未发生、UI 实现未进构建、L4 及以下 6 层未启动、插件注册表与插件化更新未实现、上层 12 组候选逐仓库 LICENSE 全文未取得、LICENSE 未生成、CF F17 / X01-X04 / 特殊版代码、多项未证实调研、浏览器与 GUI 端到端、交叉编译、git HTTP、6 上游主机、远端无认证只读 GET 受阻、报告正文哈希待复核、017 风格取错已撤回、Win7+ARM64 与 v99.99 tag 已失败、本地链与远端链哈希不同。验证报告按 18.1 未改。

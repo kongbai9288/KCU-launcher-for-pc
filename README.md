@@ -11,13 +11,13 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 019 |
+| 当前轮次 | 020 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
 | 轻量模式 UI | 独立极简视图，不复用正常模式 UI |
-| UI 整页演示闸门 | docs/rules/ui-demo.md；019 增 G13-G15（图标、使用逻辑、第三方许可），已交付 28 视图与 88 枚 lucide，用户手感调整优先于实现 |
-| 功能登记 | docs/features/index.md；F001、F004-F012 已批准未实现；F002、F003、F013-01..09、F014-01..03、F015-01..04、F016-01..04、F017-01、F018-01、F019-01..03 已实现、已验证 |
+| UI 整页演示闸门 | docs/rules/ui-demo.md；020 增 G16-G18（槽位锁定、设置归拢、上层候选），已交付 37 视图，用户手感调整优先于实现 |
+| 功能登记 | docs/features/index.md；F001、F004-F012 已批准未实现；F002、F003、F013-01..09、F014-01..03、F015-01..04、F016-01..04、F017-01、F018-01、F019-01..03、F020-01..06 已实现、已验证 |
 | 开工依据 | 013 轮 F07/F08/F09；答复台账 docs/records/round-013-answers.md；015 决策 docs/decisions/015-build-continue.md |
 | 待拍板问题 | 93 条已答复，细节按用户逻辑落地 |
 | 工具链 | rustc / cargo 1.99.1，腾讯 rustup 镜像；`cargo build --release --offline` 与 `cargo test --offline`（141 passed）实测通过 |
@@ -26,9 +26,12 @@
 | 搭建前置条件 | docs/rules/build-preconditions.md，条件 1-6 已满足到开工层；L1、L2、L3 已实现已验证 |
 | L2 dispatcher | src/dispatcher/，task / mode / launcher + json 底座；模式判定、安全模式、正版凭据闸门、UI 分流、单参数进服、双击按权重选实例 |
 | L3 lightweight | src/lightweight/，login / download / loaders / view；三种登录、三级回退、批量请求每页 20、6 加载器、单主题、游戏运行期无常驻进程 |
-| 整页 UX 演示 | 016 轻量版；017 v2 风格取错作废；018 轮 demos/ui-full-kcu-paper.html，1440×900 桌面窗口、20 视图、纸质两套主题；实现未进构建 |
-| 界面预览图 | demos/preview/00-overview.png 总览 + 28 张视图 PNG，本地 chromium 每视图强制重载，直接看界面长相 |
-| 使用逻辑矩阵 | docs/design/ux-logic-matrix.md，U01–U20 × L01–L12 |
+| 整页 UX 演示 | 016 轻量版；017 v2 作废；018 纸质版；019 28 视图；020 轮 26 区块 / 37 截图视图、导航锁定槽位、设置九分组、推荐位总览、上层候选、交接基线；实现未进构建 |
+| 界面预览图 | demos/preview/00-overview.png 总览 + 37 张视图 PNG，本地 chromium 每视图强制重载，直接看界面长相 |
+| 导航与槽位 | docs/design/nav-slot-contract.md；core.locked.settings / core.locked.about 固定，plugin.* 开放 |
+| 交接基线 | docs/design/handoff.md，新对话按 6 步接续 |
+| 上层候选 | docs/design/upper-layer-stack.md，12 组第三方库，未进入构建 |
+| 使用逻辑矩阵 | docs/design/ux-logic-matrix.md，U01–U25 × L01–L12，020 自评 9.3 |
 | 第三方许可 | THIRD-PARTY-NOTICES.md 与关于页七列表；lucide ISC + Feather MIT |
 | 合规卡点 | X01-X04 按 F10 以正常情况与用户逻辑落地；CF 下载模块不在 L1/L2 范围 |
 | 缓存 / 异步 / 泄漏 | core.cache、core.asynk、core.leak 已实现已验证；CI 有界缓存与并发取消已配置 |
@@ -65,7 +68,7 @@
 | demos/ui-full-lightweight.html | 016 轮轻量极简整页 UI 演示 |
 | demos/ui-full-kcu-v2.html | 017 轮演示，风格取错，保留文件已作废 |
 | demos/ui-full-kcu-paper.html | 018 轮纸质质感 UX 整页演示，20 视图 |
-| demos/preview/ | 28 张视图 PNG + 00-overview.png 总览 + 索引 |
+| demos/preview/ | 37 张视图 PNG + 00-overview.png 总览 + 索引 |
 | assets/icons/ | lucide 88 枚 SVG 子集与逐枚来源 manifest |
 | docs/design/ | 全功能使用逻辑矩阵 |
 | THIRD-PARTY-NOTICES.md | 发行物第三方许可声明 |

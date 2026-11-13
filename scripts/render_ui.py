@@ -41,6 +41,15 @@ SCENES = [
     ("26-ai", "ai", "AI 容器接口与权限"),
     ("27-serverhost", "serverhost", "开服器与控制台"),
     ("28-headless", "headless", "无头模式统一信封"),
+    ("29-settings-recommend", "settings&tab=recommend", "设置 · 推荐与排序 10 位"),
+    ("30-settings-status", "settings&tab=status", "设置 · 服务器状态 SLP"),
+    ("31-settings-plugins", "settings&tab=plugins", "设置 · 插件与插件化更新"),
+    ("32-settings-cache", "settings&tab=cache", "设置 · 四层缓存与刷新"),
+    ("33-settings-ai", "settings&tab=ai", "设置 · AI 容器接口"),
+    ("34-slots", "slots", "插件槽位与核心锁定"),
+    ("35-recommendations", "recommendations", "推荐位总览 10 处"),
+    ("36-handoff", "handoff", "新对话可交接底层基线"),
+    ("37-upperstack", "upperstack", "上层实现第三方候选 12 组"),
 ]
 
 W, H = 1440, 900
@@ -89,8 +98,8 @@ def overview(results):
     canvas = Image.new("RGB", (width, height), (18, 21, 20))
     d = ImageDraw.Draw(canvas)
     f_title, f_sub, f_lab = font(28), font(15), font(15)
-    d.text((pad + 4, 12), "KCU Launcher · 桌面界面预览（28 个视图）", fill=(127, 184, 175), font=f_title)
-    d.text((pad + 4, 44), "米纸质感 · 深色纸质 · 衬线标题 · 窗口 chrome · 公告族全可见 · 离线渲染", fill=(189, 186, 176), font=f_sub)
+    d.text((pad + 4, 12), f"KCU Launcher · 桌面界面预览（{len(results)} 个视图）", fill=(127, 184, 175), font=f_title)
+    d.text((pad + 4, 44), "米纸质感 · 设置归拢 · 核心槽位锁定 · 推荐位总览 · 离线渲染", fill=(189, 186, 176), font=f_sub)
     titles = dict((n, t) for n, _s, t in SCENES)
     for i, (name, path) in enumerate(results):
         r, c = divmod(i, cols)
