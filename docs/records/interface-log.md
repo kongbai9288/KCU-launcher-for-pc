@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：018
+更新轮次：019
 
 ## 前置索引
 
@@ -310,6 +310,31 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | RO34 | `src/` 本轮无变化；`cargo test --offline` 仍为 141 passed / 0 failed；Cargo.lock 未变。 |
 | RO35 | 渲染脚本每视图带 `?r=<i>` 强制重载，避免主题与弹窗状态串场；仅 S02 为深色纸质。 |
 | RO36 | 017 的 `ui-full-kcu-v2.html` 保留文件但标记作废；`demos/preview/` 全部覆盖为纸质版。 |
+
+## 019 使用逻辑、图标与许可
+
+| 编号 | 接口 | 输入 | 输出 | 错误 |
+| --- | --- | --- | --- | --- |
+| I42 | `#view=<name>` URL 路由 | 28 个视图名 + 别名 | 对应视图 | 未知名回落 home |
+| I43 | `.lb-soft` / `.lb-hard` | 无 | 软刷新取增量 / 强制刷新清缓存 | 失败回退快照 |
+| I44 | `<use href="#i-<name>">` | 图标名 | lucide 矢量图形 | 未知名为空 |
+| I45 | `renderLic()` / `[data-lic]` | 分组键 | 七列许可表 | 缺失给来源链接 |
+| I46 | `rfFail` / `rfRetry` / `rfReset` | 无 | 刷新失败兜底提示 | 保留 12 秒前快照 |
+| I47 | `aiTest` / `aiCancel` | 无 | AI 连接状态 | 三类失败分别提示 |
+| I48 | `shStart` / `shStop` | 无 | 开服器状态 | 端口占用给建议 |
+| I49 | `python3 scripts/render_ui.py` | 无 | 29 张 PNG | 非零退出 |
+
+| 编号 | 内容 |
+| --- | --- |
+| RO37 | 019 轮对后端仓 0 个写请求，约束延续 RO01-RO36。 |
+| RO38 | 88 枚图标取自 `api.github.com/repos/lucide-icons/lucide/contents/icons/*.svg`，逐枚记录 blob SHA 与来源 URL；sprite 内联，0 次远端字体 / 脚本请求。 |
+| RO39 | Lucide ISC License（Copyright (c) 2026 Lucide Icons and Contributors）；Feather 派生图标另带 MIT（Cole Bemis, 2013-present）。 |
+| RO40 | 演示层已使用 1 组图标；文档层逐字存档 13 组；进入 `src/` 构建 0 项；本项目 LICENSE 未生成。 |
+| RO41 | 逻辑条 22 处，每处显示已缓存时间、命中 / 未命中、刷新、强制刷新、状态；点击写 `[KCU]` 诊断行。 |
+| RO42 | 刷新 R1–R5 五类触发；失败回退上次缓存，不显示空白；取消 0 副作用；时间戳统一「N 秒前 / N 分钟前 / HH:MM」。 |
+| RO43 | `src/` 本轮无变化；`cargo test --offline` 141 passed / 0 failed；Cargo.lock 未变。 |
+| RO44 | 019 spec 逐字副本 1 行 782 字节，SHA-1 `ad626f16ec7c6b763d7892951901e6b609042292`。 |
+| RO45 | 渲染脚本每视图带 `?r=<i>` 强制重载，仅 S02 为深色纸质。 |
 
 ## 版本弃用
 

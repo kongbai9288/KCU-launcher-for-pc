@@ -5,7 +5,7 @@
 | 编号 | R-UI-01 |
 | 状态 | 已批准 |
 | 版本 | 0.0.0 |
-| 轮次 | 015 建立；016 首次触发；017 增 PNG 闸门；018 纸质质感与 UX 形态纠正 |
+| 轮次 | 015 建立；016 首次触发；017 增 PNG 闸门；018 纸质质感与 UX 形态纠正；019 使用逻辑补全与 lucide |
 | 依据 | docs/spec/15-round-015-instructions.txt F02/F03；docs/decisions/015-build-continue.md D02-D04 |
 
 ## 触发
@@ -72,6 +72,7 @@
 | 016 | **已触发**（L3 lightweight 极简视图） | `demos/ui-full-lightweight.html` |
 | 017 | **已触发**（正常模式界面重排 + 公告族补齐） | `demos/ui-full-kcu-v2.html`、`demos/preview/00-overview.png` + 15 张场景 PNG；**风格取错，已作废** |
 | 018 | **已触发**（纸质质感重做 + UX 形态纠正） | `demos/ui-full-kcu-paper.html`、`demos/preview/00-overview.png` + 20 张视图 PNG |
+| 019 | **已触发**（28 视图、逻辑条、lucide、第三方许可页） | `demos/ui-full-kcu-paper.html` 更新、`demos/preview/00-overview.png` + 28 张视图 PNG、THIRD-PARTY-NOTICES.md |
 
 016 触发记录：
 
@@ -140,3 +141,26 @@ grep -c '<section class="view' demos/ui-full-kcu-paper.html
 ```
 
 018 手感回路：PNG 总览 → 用户按图提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 无变化；017 的 `ui-full-kcu-v2.html` 保留文件但标记作废。
+
+## 019 增补
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| G13 | 图标 | 全站 lucide，内联 sprite，无 CDN / 图标字体 / 全量 sprite；逐枚来源与 SHA 记 manifest；ISC + Feather MIT 登记进关于页 |
+| G14 | 使用逻辑 | 每个功能填满 L01–L12；每个视图区块顶部逻辑条显示已缓存时间、命中/未命中、刷新、强制刷新、状态 |
+| G15 | 第三方许可 | 关于页一级入口 + 七列表 + 分组筛选 + 插件动态追加；发行物随附 THIRD-PARTY-NOTICES.md；构建状态如实标注 |
+
+019 检查命令：
+
+```
+test -f THIRD-PARTY-NOTICES.md
+test -f assets/icons/lucide-subset.svg
+grep -c '<symbol' demos/ui-full-kcu-paper.html
+grep -c 'class="logicbar"' demos/ui-full-kcu-paper.html
+grep -c '<section class="view' demos/ui-full-kcu-paper.html
+ls demos/preview/*.png | wc -l
+! grep -rE 'FCL|揉纸启动器|https?://' demos/ui-full-kcu-paper.html
+! grep -rqE 'gh[p]_' .
+```
+
+019 手感回路：PNG 总览 → 用户按图提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 无变化。

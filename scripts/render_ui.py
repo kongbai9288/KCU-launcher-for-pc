@@ -33,6 +33,14 @@ SCENES = [
     ("18-error", "error", "异常与边界六态"),
     ("19-narrow", "narrow", "侧栏收起态"),
     ("20-context", "context", "右键菜单"),
+    ("21-servers", "servers", "服务器推荐位与权重"),
+    ("22-licenses", "licenses", "第三方许可七列表"),
+    ("23-sync", "sync", "四层缓存与刷新总控"),
+    ("24-refresh", "refresh", "R1-R5 刷新触发"),
+    ("25-states", "states", "六态与缓存兜底"),
+    ("26-ai", "ai", "AI 容器接口与权限"),
+    ("27-serverhost", "serverhost", "开服器与控制台"),
+    ("28-headless", "headless", "无头模式统一信封"),
 ]
 
 W, H = 1440, 900
@@ -81,7 +89,7 @@ def overview(results):
     canvas = Image.new("RGB", (width, height), (18, 21, 20))
     d = ImageDraw.Draw(canvas)
     f_title, f_sub, f_lab = font(28), font(15), font(15)
-    d.text((pad + 4, 12), "KCU Launcher · 桌面界面预览（20 个视图）", fill=(127, 184, 175), font=f_title)
+    d.text((pad + 4, 12), "KCU Launcher · 桌面界面预览（28 个视图）", fill=(127, 184, 175), font=f_title)
     d.text((pad + 4, 44), "米纸质感 · 深色纸质 · 衬线标题 · 窗口 chrome · 公告族全可见 · 离线渲染", fill=(189, 186, 176), font=f_sub)
     titles = dict((n, t) for n, _s, t in SCENES)
     for i, (name, path) in enumerate(results):

@@ -86,6 +86,11 @@
 | A77 | 用流程 HTML（步骤节点 / 状态机）替代 UX HTML 交付界面（关联 018 W02/G12） | 命名核对 `demos/ui-full-*.html` vs `demos/round-0XX-*.html`；主交付须含 PNG |
 | A78 | 仅改 hash 不重载导致主题串场（关联 018 E01） | `scripts/render_ui.py` 每场景带 `?r=<i>`；核对仅 S02 为深色 |
 | A79 | 深色主题漏窗口级 color 覆盖导致文字不可读（关联 018 E03） | `.win[data-theme="dark"]` 含 `color:var(--ink)`；逐张核对深色图可读性 |
+| A80 | 用字符或 emoji 冒充 lucide 图标（关联 019 D01） | 字符图标残留扫描 = 0；`grep -c '<symbol'` = 88；引用缺失数 = 0 |
+| A81 | 某个视图缺缓存 / 刷新 / 推荐逻辑证据（关联 019 D03/D05） | `grep -c 'class="logicbar"'` = 22；对照 docs/design/ux-logic-matrix.md C01-C12 |
+| A82 | 第三方许可只写在文档、关于页没有入口或七列表（关联 019 D07） | `test -f THIRD-PARTY-NOTICES.md`；`demos/preview/22-licenses.png` 可见七列 |
+| A83 | 把文档层调研组件写成已进入构建（关联 019 D08） | 构建状态列逐行核对：演示层 1 组、文档层 13 组、src/ 0 项 |
+| A84 | 图标拼接字面量残留进 HTML（关联 019 实测） | `! grep -n "I('" demos/ui-full-kcu-paper.html`；逐张核对按钮文字 |
 
 ## 输出结构
 

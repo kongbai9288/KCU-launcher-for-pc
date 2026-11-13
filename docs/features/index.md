@@ -38,6 +38,9 @@
 | F016-04 | 轻量极简视图状态 | lightweight.view | 已实现、已验证 | lightweight-view.md |
 | F017-01 | 界面视觉全集与预览 | ui.demo | 已实现、已验证（演示层；风格项作废） | ui-visual-catalog.md |
 | F018-01 | 纸质质感 UX 界面全集 | ui.demo | 已实现、已验证（演示层） | ui-paper-ux.md |
+| F019-01 | 全功能使用逻辑补全 | ui.demo | 已实现、已验证（演示层） | ux-logic-completion.md |
+| F019-02 | lucide 图标系统 | assets.icons | 已实现、已验证（演示层） | lucide-icon-system.md |
+| F019-03 | 关于页第三方许可说明 | legal.notices | 已实现、已验证（演示层） | third-party-licenses-about.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -107,6 +110,9 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G26 | 风格取自样板须逐项对照色板、纹理、衬线、圆角、窗口 chrome；不得另定配色冒充同源。 |
 | G27 | UX HTML 与流程 HTML 分开命名；动 UI 的轮次主交付为 UX HTML + PNG 预览。 |
 | G28 | 每个视图渲染前强制重载，避免主题与弹窗状态串到后续截图。 |
+| G29 | 每个功能填满 L01–L12 使用逻辑骨架，缺一判未补全。 |
+| G30 | 每个视图区块顶部有逻辑条：缓存时间、命中数、刷新、强制刷新、状态。 |
+| G31 | 使用第三方代码须在关于页与发行物声明许可证与项目，构建状态如实。 |
 
 ## 018 轮纸质 UX 界面
 

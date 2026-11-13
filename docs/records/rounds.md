@@ -1514,3 +1514,107 @@ L3 落地：
 | 全仓凭据、项目扫描域措辞 | `NO_CREDENTIAL` / `NO_EXPLANATORY` | 已证实 |
 
 两个哈希由独立验证者计算并写入声明块，改动作者未代算。委托语本轮把 14 个独立 section + 6 个别名派生视图 = 20 张截图、21 张 PNG、功能 md 六标题三个口径写清，验证者未再产生数值偏差记录。未通过项全部为真实未解决四值：用户手感反馈未发生、UI 实现未进构建、L4 及以下 6 层未启动、CF F17 / X01-X04 / 特殊版代码 / LICENSE、多项未证实调研、浏览器与 GUI 端到端、交叉编译、git HTTP、6 上游主机、远端无认证只读 GET 受阻、017 风格取错已撤回、Win7+ARM64 与 v99.99 tag 已失败、本地链与远端链哈希不同。验证报告按 18.1 未改。
+
+## 019
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/19-round-019-instructions.txt | 逐字副本，1 行 782 字节，SHA-1 `ad626f16ec7c6b763d7892951901e6b609042292` |
+| docs/decisions/019-ux-logic-lucide.md | D01-D12、R01-R08 调研来源、验证与边界 |
+| docs/design/ux-logic-matrix.md | L01-L12 骨架、U01-U20 矩阵、缓存分层、刷新触发、推荐位、状态词表、失效冲突、许可动态结构、C01-C12、自评 9.2 |
+| demos/ui-full-kcu-paper.html | 22 区块 / 28 视图、22 条逻辑条、88 枚 lucide 内联、第三方许可七列表 |
+| demos/preview/ | 28 张视图 PNG + `00-overview.png` + 重写 index.md |
+| assets/icons/ | lucide-subset.svg（88 枚）、lucide-manifest.json |
+| THIRD-PARTY-NOTICES.md | 发行物第三方许可声明 |
+| docs/features/ | ux-logic-completion.md、lucide-icon-system.md、third-party-licenses-about.md |
+| 索引与规则 | decisions / features / licenses index、ai-errors A80-A84、ui-demo G13-G15 与 019 行、docs/index 78 项必读、README、interface-log I42-I49 / RO37-RO45、push-scope |
+| docs/verification/round-019.md | 第 019 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Fri Nov 13 23:10:19 CST 2026` |
+| lucide 一手图标抓取 | `23:11` 前后，81 枚成功 + 4 枚改名补齐 + 2 枚圆形补齐 = 88 |
+| 设计矩阵 v1 落盘 | `23:15` 前后 |
+| 28 视图首次渲染 | `23:20` 前后 |
+| 图标字面量修复与最终渲染 | `23:24` 前后 |
+| 文档收口 | `Fri Nov 13 23:30 CST 2026` 前后 |
+
+用户当轮四点要求与处置：
+
+| 编号 | 要求 | 处置 |
+| --- | --- | --- |
+| V01 | 用 lucide 图标，自主权给我，只看结果 | 全站 88 枚一手 SVG 内联 sprite，0 字符图标残留；ISC + Feather MIT 登记 |
+| V02 | 每个地方都要有使用逻辑，像之前设计的；服务器首页要有推荐、缓存、刷新；按这套逻辑补全每个功能 | L01-L12 骨架 × U01-U20；首页推荐服务器卡；每个视图逻辑条；新增服务器推荐 / 数据与缓存 / 刷新机制 / 状态与降级四页；8 个新功能视图 |
+| V03 | 没思路就上网搜 | 查 lucide 许可与 SVG 约定、第三方归属规范、PCL2 多层缓存、FCL 下载后视图不自动刷新的观察者改造，8 条来源写进 019 决策 |
+| V04 | 用别人代码要在关于页说明许可证与项目 | 关于页一级入口 + 七列表 16 组 + 分组筛选 + ISC 原文摘录 + 插件动态追加 + NOTICES 随发行物附带 |
+| V05 | 发现思考不足就再次增加设计直到自评 9 分以上 | 3 轮自评 7.2 → 8.4 → 9.2，每轮记录发现的不足与真实补入内容 |
+
+自评迭代（补入动作真实落盘）：
+
+| 轮次 | 自评 | 发现的不足 | 补入 |
+| --- | --- | --- | --- |
+| 迭代 1 | 7.2 | 矩阵与三张表写完，但 UX HTML 只有 14 个视图，U13/U15/U16/U19/U20 没有界面；图标是字符；逻辑条未注入；许可只有文档没有关于页入口 | 8 个新视图、88 枚 lucide、22 条逻辑条、许可七列表、THIRD-PARTY-NOTICES.md、关于页一级按钮 |
+| 迭代 2 | 8.4 | 主结构补齐，但缺刷新失败回退缓存不空白、命中/未命中可见、时间戳统一口径、许可按许可证分组、轻量与无头缓存刷新证据、插件动态追加界面证据 | 状态徽章 11 类、失效并发冲突 8 种、许可动态数据结构、AI/开服/无头空错加载细则、轻量与无头缓存证据、刷新兜底页与提示 |
+| 迭代 3 | 9.2 | 上述六项补齐并出图；剩余均为未证实外部依赖，不属设计缺口 | C01-C12 跨功能一致性检查表与分项评分，收口 |
+
+本轮真实缺陷与修复（全部留痕）：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E01 | 8 个 lucide 图标名返回 404（circle-alert、triangle-alert、trash-2、filter、circle-help、shield-alert、file-check-2、history） | 换用官方现存名 trash / funnel / shield / file-check / list-filter；其余用 circle-x / info / rotate-ccw 替代；补取 circle 与 circle-dot |
+| E02 | 新增 8 个 section 时把 `'+I('xxx')+'` 写成 python 三引号字面量，19 处按钮标题出现拼接文本 | 正则替换为真实 SVG，重渲染后逐页核对无残留；立 A84 |
+| E03 | 首页右列新增推荐服务器卡后，900px 首屏把「当前账户」卡挤到滚动区外，静态截图看不到 | 删推荐卡冗余说明行、最近公告由 3 条压到 2 条，重渲染后首屏恢复 |
+
+联网调研：
+
+| 来源 | 事实 |
+| --- | --- |
+| https://lucide.dev/license | ISC 全文、Feather 派生清单与 MIT 全文、Copyright 2026 |
+| https://lucide.dev/guide/packages/lucide-static | 内联 SVG / sprite 可用；全量 sprite 不推荐生产，只打包用到的图标 |
+| https://lucide.dev/contribute/icons/code-conventions | 24×24 viewBox、fill=none、stroke=currentColor、stroke-width=2 |
+| https://libre.xram.net/guides/attribution | 归属需项目名、版权、许可证全文或链接；About / Legal 页展示；NOTICES 随发行物 |
+| https://opensourcelicenserisk.com/glossary/attribution-requirement | 归属随代码传递；NOTICE 保留；清单随依赖变化刷新 |
+| PCL2 资源管理公开资料 | 内存 / 磁盘 / 网络 / 预取四层缓存 |
+| FCL 布局下载刷新公开资料 | 下载后列表不自动刷新 → 观察者模式 / 自动跳转推视图 |
+
+验证：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `python3 scripts/render_ui.py` | `render_ui OK shots=28`，29 张 PNG | 已证实 |
+| `grep -c '<symbol'` | 88 | 已证实 |
+| `grep -c 'class="logicbar"'` | 22 | 已证实 |
+| 字符图标残留 / 图标引用缺失 | 0 / 0 | 已证实 |
+| `! grep -rE 'FCL\|揉纸启动器\|https?://' demos/ui-full-kcu-paper.html` | exit 0 | 已证实 |
+| `test -f THIRD-PARTY-NOTICES.md` | 存在 | 已证实 |
+| `CARGO_INCREMENTAL=0 cargo test --offline` | 141 passed / 0 failed | 已证实 |
+| `! grep -rqE 'gh[p]_' .` | NO_CREDENTIAL | 已证实 |
+| `git diff 66019be..HEAD -- src/` | 空 | 已证实 |
+| 用户在手机端按图给手感反馈 | 未发生 | 未证实 |
+
+阶段：D07 第 3 层 lightweight 已实现、已验证；019 轮只动演示层、设计层与文档，`src/` 无变化；L4 headless 及以下 6 层未启动。UI 实现仍按 018/019 D08 等用户确认演示后进。
+
+未做：
+- UI 实现（PNG 总览确认后才进实现）
+- L4 headless 及以下 6 层、CF 下载模块、X01-X04 逐条处置、CF 具体调用方法
+- 特殊版代码（待用户明确同意，用户手拉工具流）、本项目 LICENSE 文件
+- 后端仓任何写请求
+- 浏览器内交互实测（截图为静态帧，交互需用户本地点开 UX HTML）
+- 加载器逐版本 schema、WebView2 检测键、插件源默认、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证
+
+019 独立验证复核：
+
+| 项 | 值 | 判定 |
+| --- | --- | --- |
+| 独立验证结论 | **部分通过** | 未发通过标记 |
+| 报告正文哈希声明 | `0230edd7f15f011717e9f780b4545bd168f4c6b6` | 声明块偏移 11913，`sha1(t[:11912])` 与之完全一致；`t[:11913]` 得 `72309d46…`，属「去掉声明块前多出的 1 个换行」口径，验证者自述的切分差异即此 1 字节 |
+| 全文 SHA-1 | `2fb51086c68f41290927863ca2c076ff9d8a811c` | 含声明块，与正文哈希不同属预期 |
+| 变更内容哈希声明 | `2faf46277b4431f6dd108046e0ca01da26ac01b4` | `git diff 66019be..8c86b05 \| sha1sum` 复算一致 |
+| 验证者三项工具链受阻 | `CARGO_INCREMENTAL=0 cargo test --offline` 141 passed / 0 failed；node 遍历 18 份 HTML 全通过；`compile(scripts/render_ui.py)` 通过 | 改动作者侧已证实，验证者侧受阻 |
+| 验证者全仓扫描未独立复验 | `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_BRAND_EXT` / `NO_REPEAT` | 改动作者侧已证实 |
+| 78 项必读未逐项核对 | `REQUIRED=78 MISSING=0` | 已证实 |
+| 远端只读 GET 未发起 | 验证者无认证，记受阻 | 保留 |
+
+两个哈希由独立验证者计算并写入声明块，改动作者未代算。委托语本轮把 22 独立区块 / 28 截图 / 29 PNG / 88 symbol / 22 逻辑条 / 6 标题 / 78 必读六个口径写清，验证者未再产生数值偏差记录。未通过项全部为真实未解决四值：用户手感反馈未发生、UI 实现未进构建、L4 及以下 6 层未启动、CF F17 / X01-X04 / 特殊版代码 / LICENSE、多项未证实调研、浏览器与 GUI 端到端、交叉编译、git HTTP、6 上游主机、远端无认证只读 GET 受阻、017 风格取错已撤回、Win7+ARM64 与 v99.99 tag 已失败、本地链与远端链哈希不同。验证报告按 18.1 未改。

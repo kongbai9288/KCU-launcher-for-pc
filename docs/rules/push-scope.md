@@ -1,6 +1,6 @@
 # 远端推送范围
 
-轮次：018
+轮次：019
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
 特殊版：`kongbai9288/KCU-launcher-special`，private，分支 main，仅 README 占位。
@@ -16,8 +16,10 @@
 | 事实性文档 | docs/spec/、docs/research/、docs/features/、docs/decisions/、docs/checklists/、docs/rules/、docs/records/、docs/verification/ |
 | 版本与接口记录 | docs/records/changelog.md、docs/records/interface-log.md、docs/records/rounds.md |
 | 运行逻辑演示 | demos/ |
-| 图标资产 | assets/icon/ |
+| 图标资产 | assets/icon/、assets/icons/（lucide 子集与 manifest） |
 | UI 设计稿 | assets/ui/，逐字副本与资产登记 |
+| 设计矩阵 | docs/design/，全功能使用逻辑矩阵 |
+| 发行物声明 | THIRD-PARTY-NOTICES.md |
 | 仓库配置 | README.md、.gitignore、LICENSE、第三方声明 |
 
 ## 不推送

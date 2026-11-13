@@ -249,35 +249,337 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 .sb-right{margin-left:auto;display:flex;gap:var(--sp-4)}
 .sb-btn{border:none;background:none;cursor:pointer;color:var(--ink-3);font-family:inherit;font-size:11px}
 .desk-cap{position:fixed;bottom:4px;left:50%;transform:translateX(-50%);font:11px var(--sans);color:rgba(255,255,255,0);letter-spacing:1px;z-index:30}
+
+
+.li{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;vertical-align:-3px;display:inline-block}
+.nav-item .li,.stat-ico .li,.notice-ico .li{width:18px;height:18px}
+.titlebar .li,.statusbar .li{width:13px;height:13px}
+.btn .li,.chip .li,.badge .li{width:13px;height:13px}
+.logicbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:7px 11px;margin-bottom:12px;background:var(--card-2);border:1px solid var(--line);border-radius:var(--r-md);font-size:11px;color:var(--ink-2)}
+.logicbar .lb-t{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.logicbar .lb-sp{flex:1}
+.logicbar .btn{padding:3px 9px;font-size:11px}
+.lic-table{width:100%;border-collapse:collapse;font-size:11px}
+.lic-table th{text-align:left;color:var(--ink-3);font-weight:500;padding:7px 8px;border-bottom:1px solid var(--line);background:var(--card-2)}
+.lic-table td{padding:7px 8px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.lic-table tr:hover td{background:var(--sel)}
+.cap-bar{height:6px;border-radius:99px;background:rgba(0,0,0,.09);overflow:hidden;min-width:90px}
+.win[data-theme="dark"] .cap-bar{background:rgba(255,255,255,.12)}
+.cap-bar i{display:block;height:100%;background:var(--accent)}
+
 </style>
 </head>
 <body>
+<svg style="display:none" aria-hidden="true">
+<symbol id="i-house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+  <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0" />
+  <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" />
+  <circle cx="11" cy="11" r="8" /></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" />
+  <path d="M12 2v2" />
+  <path d="M12 20v2" />
+  <path d="m4.93 4.93 1.41 1.41" />
+  <path d="m17.66 17.66 1.41 1.41" />
+  <path d="M2 12h2" />
+  <path d="M20 12h2" />
+  <path d="m6.34 17.66-1.41 1.41" />
+  <path d="m19.07 4.93-1.41 1.41" /></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" /></symbol>
+<symbol id="i-square" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" />
+  <path d="m6 6 12 12" /></symbol>
+<symbol id="i-layout-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1" />
+  <rect width="7" height="7" x="14" y="3" rx="1" />
+  <rect width="7" height="7" x="14" y="14" rx="1" />
+  <rect width="7" height="7" x="3" y="14" rx="1" /></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M3 5h.01" />
+  <path d="M3 12h.01" />
+  <path d="M3 19h.01" />
+  <path d="M8 5h13" />
+  <path d="M8 12h13" />
+  <path d="M8 19h13" /></symbol>
+<symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+  <path d="M21 3v5h-5" />
+  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+  <path d="M8 16H3v5" /></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" />
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+  <path d="m7 10 5 5 5-5" /></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+  <path d="M12 22V12" />
+  <polyline points="3.29 7 12 12 20.71 7" />
+  <path d="m7.5 4.27 9 5.15" /></symbol>
+<symbol id="i-boxes" viewBox="0 0 24 24"><path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z" />
+  <path d="m7 16.5-4.74-2.85" />
+  <path d="m7 16.5 5-3" />
+  <path d="M7 16.5v5.17" />
+  <path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z" />
+  <path d="m17 16.5-5-3" />
+  <path d="m17 16.5 4.74-2.85" />
+  <path d="M17 16.5v5.17" />
+  <path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z" />
+  <path d="M12 8 7.26 5.15" />
+  <path d="m12 8 4.74-2.85" />
+  <path d="M12 13.5V8" /></symbol>
+<symbol id="i-server" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" /></symbol>
+<symbol id="i-user-round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5" />
+  <path d="M20 21a8 8 0 0 0-16 0" /></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+  <circle cx="12" cy="12" r="3" /></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" />
+  <path d="M12 16v-4" />
+  <path d="M12 8h.01" /></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+  <rect x="2" y="4" width="20" height="16" rx="2" /></symbol>
+<symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></symbol>
+<symbol id="i-chevrons-left" viewBox="0 0 24 24"><path d="m11 17-5-5 5-5" />
+  <path d="m18 17-5-5 5-5" /></symbol>
+<symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+  <path d="m9 12 2 2 4-4" /></symbol>
+<symbol id="i-file-text" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+  <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+  <path d="M10 9H8" />
+  <path d="M16 13H8" />
+  <path d="M16 17H8" /></symbol>
+<symbol id="i-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5" />
+  <path d="M15 8h-5" />
+  <path d="M19 17V5a2 2 0 0 0-2-2H4" />
+  <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></symbol>
+<symbol id="i-folder-open" viewBox="0 0 24 24"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" /></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" /></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" />
+  <path d="M12 5v14" /></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" />
+  <path d="M12 6v6l4 2" /></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3" />
+  <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+  <path d="M3 12A9 3 0 0 0 21 12" /></symbol>
+<symbol id="i-hard-drive" viewBox="0 0 24 24"><path d="M10 16h.01" />
+  <path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+  <path d="M21.946 12.013H2.054" />
+  <path d="M6 16h.01" /></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></symbol>
+<symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z" /></symbol>
+<symbol id="i-smartphone" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+  <path d="M12 18h.01" /></symbol>
+<symbol id="i-link-2" viewBox="0 0 24 24"><path d="M9 17H7A5 5 0 0 1 7 7h2" />
+  <path d="M15 7h2a5 5 0 1 1 0 10h-2" />
+  <line x1="8" x2="16" y1="12" y2="12" /></symbol>
+<symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6" />
+  <path d="M10 14 21 3" />
+  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol>
+<symbol id="i-ellipsis" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1" />
+  <circle cx="19" cy="12" r="1" />
+  <circle cx="5" cy="12" r="1" /></symbol>
+<symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+  <path d="M3 3v5h5" /></symbol>
+<symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" />
+  <path d="m16 9-5.5 5.5L8 12" /></symbol>
+<symbol id="i-circle-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" />
+  <path d="m15 9-6 6" />
+  <path d="m9 9 6 6" /></symbol>
+<symbol id="i-lock-keyhole" viewBox="0 0 24 24"><circle cx="12" cy="16" r="1" />
+  <rect x="3" y="10" width="18" height="12" rx="2" />
+  <path d="M7 10V7a5 5 0 0 1 10 0v3" /></symbol>
+<symbol id="i-key-round" viewBox="0 0 24 24"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
+  <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+<symbol id="i-wifi" viewBox="0 0 24 24"><path d="M12 20h.01" />
+  <path d="M2 8.82a15 15 0 0 1 20 0" />
+  <path d="M5 12.859a10 10 0 0 1 14 0" />
+  <path d="M8.5 16.429a5 5 0 0 1 7 0" /></symbol>
+<symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01" />
+  <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+  <path d="M5 12.859a10 10 0 0 1 5.17-2.69" />
+  <path d="M19 12.859a10 10 0 0 0-2.007-1.523" />
+  <path d="M2 8.82a15 15 0 0 1 4.177-2.643" />
+  <path d="M22 8.82a15 15 0 0 0-11.288-3.764" />
+  <path d="m2 2 20 20" /></symbol>
+<symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
+  <path d="M20 2v4" />
+  <path d="M22 4h-4" />
+  <circle cx="4" cy="20" r="2" /></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" />
+  <path d="m12 5 7 7-7 7" /></symbol>
+<symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+  <circle cx="12" cy="12" r="3" /></symbol>
+<symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><path d="M10 5H3" />
+  <path d="M12 19H3" />
+  <path d="M14 3v4" />
+  <path d="M16 17v4" />
+  <path d="M21 12h-9" />
+  <path d="M21 19h-5" />
+  <path d="M21 5h-7" />
+  <path d="M8 10v4" />
+  <path d="M8 12H3" /></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 3v12" />
+  <path d="m17 8-5-5-5 5" />
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></symbol>
+<symbol id="i-cloud-download" viewBox="0 0 24 24"><path d="M12 13v8l-4-4" />
+  <path d="m12 21 4-4" />
+  <path d="M4.393 15.269A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.436 8.284" /></symbol>
+<symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4" />
+  <path d="M3.34 19a10 10 0 1 1 17.32 0" /></symbol>
+<symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" /></symbol>
+<symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 5v16" />
+  <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18" />
+  <path d="m19 8 3 8a5 5 0 0 1-6 0zV7" />
+  <path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1" />
+  <path d="m5 8 3 8a5 5 0 0 1-6 0zV7" />
+  <path d="M7 21h10" /></symbol>
+<symbol id="i-badge-check" viewBox="0 0 24 24"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+  <path d="m16 9-5.5 5.5L8 12" /></symbol>
+<symbol id="i-panel-left-close" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" />
+  <path d="M9 3v18" />
+  <path d="m16 15-3-3 3-3" /></symbol>
+<symbol id="i-mouse-pointer-click" viewBox="0 0 24 24"><path d="M14 4.1 12 6" />
+  <path d="m5.1 8-2.9-.8" />
+  <path d="m6 12-1.9 2" />
+  <path d="M7.2 2.2 8 5.1" />
+  <path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z" /></symbol>
+<symbol id="i-command" viewBox="0 0 24 24"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" /></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><path d="M12 19h8" />
+  <path d="m4 17 6-6-6-6" /></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" /></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+  <path d="M16 3.128a4 4 0 0 1 0 7.744" />
+  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+  <circle cx="9" cy="7" r="4" /></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1" />
+  <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+  <path d="M10 12h4" /></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
+  <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" />
+  <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol>
+<symbol id="i-calendar-days" viewBox="0 0 24 24"><path d="M8 2v3" />
+  <path d="M16 2v3" />
+  <rect x="3" y="3" width="18" height="18" rx="2" />
+  <path d="M3 9h18" />
+  <path d="M8 13h.01" />
+  <path d="M12 13h.01" />
+  <path d="M16 13h.01" />
+  <path d="M8 17h.01" />
+  <path d="M12 17h.01" />
+  <path d="M16 17h.01" /></symbol>
+<symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+  <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" /></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 17v5" />
+  <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" /></symbol>
+<symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
+  <path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14" />
+  <path d="M8 6v8" /></symbol>
+<symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" /></symbol>
+<symbol id="i-gamepad-2" viewBox="0 0 24 24"><line x1="6" x2="10" y1="11" y2="11" />
+  <line x1="8" x2="8" y1="9" y2="13" />
+  <line x1="15" x2="15.01" y1="12" y2="12" />
+  <line x1="18" x2="18.01" y1="10" y2="10" />
+  <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" /></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" /></symbol>
+<symbol id="i-cpu" viewBox="0 0 24 24"><path d="M12 20v2" />
+  <path d="M12 2v2" />
+  <path d="M17 20v2" />
+  <path d="M17 2v2" />
+  <path d="M2 12h2" />
+  <path d="M2 17h2" />
+  <path d="M2 7h2" />
+  <path d="M20 12h2" />
+  <path d="M20 17h2" />
+  <path d="M20 7h2" />
+  <path d="M7 20v2" />
+  <path d="M7 2v2" />
+  <rect x="4" y="4" width="16" height="16" rx="2" />
+  <rect x="8" y="8" width="8" height="8" rx="1" /></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1" />
+  <rect x="2" y="16" width="6" height="6" rx="1" />
+  <rect x="9" y="2" width="6" height="6" rx="1" />
+  <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" />
+  <path d="M12 12V8" /></symbol>
+<symbol id="i-git-branch" viewBox="0 0 24 24"><path d="M15 6a9 9 0 0 0-9 9V3" />
+  <circle cx="18" cy="6" r="3" />
+  <circle cx="6" cy="18" r="3" /></symbol>
+<symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+  <path d="M12 11h4" />
+  <path d="M12 16h4" />
+  <path d="M8 11h.01" />
+  <path d="M8 16h.01" /></symbol>
+<symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2" />
+  <line x1="12" x2="15" y1="14" y2="11" />
+  <circle cx="12" cy="14" r="8" /></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" /></symbol>
+<symbol id="i-save" viewBox="0 0 24 24"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+  <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
+  <path d="M7 3v4a1 1 0 0 0 1 1h7" /></symbol>
+<symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+  <path d="m15 5 4 4" /></symbol>
+
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M10 11v6" />
+  <path d="M14 11v6" />
+  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+  <path d="M3 6h18" />
+  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol>
+<symbol id="i-funnel" viewBox="0 0 24 24"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" /></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></symbol>
+<symbol id="i-file-check" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+  <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+  <path d="m9 15 2 2 4-4" /></symbol>
+<symbol id="i-list-filter" viewBox="0 0 24 24"><path d="M2 5h20" />
+  <path d="M6 12h12" />
+  <path d="M9 19h6" /></symbol>
+
+<symbol id="i-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /></symbol>
+<symbol id="i-circle-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1" />
+  <circle cx="12" cy="12" r="10" /></symbol>
+</svg>
 <div class="desk-wrap">
 <div class="win" id="win" data-theme="light">
   <div class="titlebar">
     <div class="tb-logo">K</div>
     <div class="tb-name"><b>KCU Launcher</b> · 桌面端</div>
-    <div class="tb-search"><span class="mag">⌕</span><input type="text" placeholder="搜索实例、模组、设置"><kbd>Ctrl K</kbd></div>
-    <button class="tb-icon" id="btnTheme" title="切换主题">☾</button>
-    <div class="winctl"><button title="最小化">─</button><button title="最大化">□</button><button class="close" title="关闭">×</button></div>
+    <div class="tb-search"><span class="mag"><svg class="li" aria-hidden="true"><use href="#i-search"></use></svg></span><input type="text" placeholder="搜索实例、模组、设置"><kbd>Ctrl K</kbd></div>
+    <button class="tb-icon" id="btnTheme" title="切换主题"><svg class="li" aria-hidden="true"><use href="#i-moon"></use></svg></button>
+    <div class="winctl"><button title="最小化"><svg class="li" aria-hidden="true"><use href="#i-minus"></use></svg></button><button title="最大化"><svg class="li" aria-hidden="true"><use href="#i-square"></use></svg></button><button class="close" title="关闭"><svg class="li" aria-hidden="true"><use href="#i-x"></use></svg></button></div>
   </div>
 
   <div class="body">
     <nav class="nav" id="nav">
-      <button class="nav-item active" data-v="home"><span class="ic">⌂</span><span class="lb">首页</span></button>
-      <button class="nav-item" data-v="notices"><span class="ic">✉</span><span class="lb">公告中心</span><span class="cnt">3</span></button>
-      <button class="nav-item" data-v="instances"><span class="ic">▦</span><span class="lb">实例与服务器</span><span class="cnt">7</span></button>
-      <button class="nav-item" data-v="download"><span class="ic">⇩</span><span class="lb">下载中心</span></button>
-      <button class="nav-item" data-v="mods"><span class="ic">◈</span><span class="lb">模组管理</span><span class="cnt">110</span></button>
-      <button class="nav-item" data-v="login"><span class="ic">◉</span><span class="lb">账号登录</span></button>
-      <button class="nav-item" data-v="logs"><span class="ic">≡</span><span class="lb">日志诊断</span></button>
+      <button class="nav-item active" data-v="home"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-house"></use></svg></span><span class="lb">首页</span></button>
+      <button class="nav-item" data-v="notices"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-mail"></use></svg></span><span class="lb">公告中心</span><span class="cnt">3</span></button>
+      <button class="nav-item" data-v="instances"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-layout-grid"></use></svg></span><span class="lb">实例与服务器</span><span class="cnt">7</span></button>
+      <button class="nav-item" data-v="download"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-download"></use></svg></span><span class="lb">下载中心</span></button>
+      <button class="nav-item" data-v="mods"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-boxes"></use></svg></span><span class="lb">模组管理</span><span class="cnt">110</span></button>
+      <button class="nav-item" data-v="login"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-user-round"></use></svg></span><span class="lb">账号登录</span></button>
+      <button class="nav-item" data-v="logs"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-scroll-text"></use></svg></span><span class="lb">日志诊断</span></button>
       <div class="nav-sep"></div>
-      <button class="nav-item" data-v="settings"><span class="ic">⚙</span><span class="lb">设置</span></button>
-      <button class="nav-item" data-v="about"><span class="ic">ⓘ</span><span class="lb">关于</span></button>
+              <button class="nav-item" data-v="servers"><svg class="li" aria-hidden="true"><use href="#i-server"></use></svg><span class="lb">服务器与推荐</span></button>
+        <button class="nav-item" data-v="serverhost"><svg class="li" aria-hidden="true"><use href="#i-terminal"></use></svg><span class="lb">开服器</span></button>
+        <button class="nav-item" data-v="ai"><svg class="li" aria-hidden="true"><use href="#i-sparkles"></use></svg><span class="lb">AI 接口</span></button>
+        <button class="nav-item" data-v="headless"><svg class="li" aria-hidden="true"><use href="#i-command"></use></svg><span class="lb">无头模式</span></button>
+        <button class="nav-item" data-v="sync"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg><span class="lb">数据与缓存</span></button>
+        <button class="nav-item" data-v="licenses"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg><span class="lb">第三方许可</span><span class="cnt">16</span></button>
+        <button class="nav-item" data-v="refresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg><span class="lb">刷新机制</span></button>
+        <button class="nav-item" data-v="states"><svg class="li" aria-hidden="true"><use href="#i-activity"></use></svg><span class="lb">状态与降级</span></button>
+        <button class="nav-item" data-v="settings"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-settings"></use></svg></span><span class="lb">设置</span></button>
+      <button class="nav-item" data-v="about"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-info"></use></svg></span><span class="lb">关于</span></button>
       <div class="nav-foot">
-        <button class="nav-item" data-v="popups"><span class="ic">▤</span><span class="lb">弹窗全集</span></button>
-        <button class="nav-item" data-v="lightweight"><span class="ic">▷</span><span class="lb">轻量模式</span></button>
-        <button class="nav-item" id="btnCollapse"><span class="ic">‹</span><span class="lb">收起侧栏</span></button>
+        <button class="nav-item" data-v="popups"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-clipboard-list"></use></svg></span><span class="lb">弹窗全集</span></button>
+        <button class="nav-item" data-v="lightweight"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg></span><span class="lb">轻量模式</span></button>
+        <button class="nav-item" id="btnCollapse"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-chevrons-left"></use></svg></span><span class="lb">收起侧栏</span></button>
       </div>
     </nav>
 
@@ -286,17 +588,18 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
         <div><div class="tb-title" id="vTitle">实例总览</div><div class="tb-crumb" id="vCrumb">首页 · 本地 7 个实例 · 上次同步 2 分钟前</div></div>
         <div class="tb-actions">
           <div class="seg"><button class="active" data-seg="list">列表</button><button data-seg="card">网格</button></div>
-          <button class="btn" id="btnRefresh">↻ 刷新</button>
-          <button class="btn primary" id="btnNew">＋ 新建实例</button>
+          <button class="btn" id="btnRefresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button>
+          <button class="btn primary" id="btnNew"><svg class="li" aria-hidden="true"><use href="#i-plus"></use></svg> 新建实例</button>
         </div>
       </div>
       <div class="scroll">
 
       <!-- 首页 -->
       <section class="view on" data-view="home">
+          <div class="logicbar" data-lb="home"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="stack">
           <div class="notice">
-            <div class="notice-ico">📣</div>
+            <div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-megaphone"></use></svg></div>
             <div class="notice-main">
               <div class="notice-head"><div class="notice-title">公告：KCU 0.0.1 预览</div><div class="notice-date">2026.11.13</div></div>
               <div class="notice-body">批量下载、公告中心与界面预览已就绪。共 3 条未读，点右侧查看全部。</div>
@@ -305,10 +608,10 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
             <button class="btn tiny" data-v="notices" style="align-self:center">查看全部</button>
           </div>
           <div class="grid g4">
-            <div class="stat"><div class="stat-ico" style="background:#6B8E4E">▦</div><div><div class="stat-v">7</div><div class="stat-l">本地实例</div></div></div>
-            <div class="stat"><div class="stat-ico" style="background:#3D6B66">◈</div><div><div class="stat-v">110</div><div class="stat-l">已装模组</div></div></div>
-            <div class="stat"><div class="stat-ico" style="background:#4A6FA5">▤</div><div><div class="stat-v">23.4 GB</div><div class="stat-l">数据占用</div></div></div>
-            <div class="stat"><div class="stat-ico" style="background:#B8543F">◷</div><div><div class="stat-v">342</div><div class="stat-l">累计启动</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#6B8E4E"><svg class="li" aria-hidden="true"><use href="#i-layout-grid"></use></svg></div><div><div class="stat-v">7</div><div class="stat-l">本地实例</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#3D6B66"><svg class="li" aria-hidden="true"><use href="#i-boxes"></use></svg></div><div><div class="stat-v">110</div><div class="stat-l">已装模组</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#4A6FA5"><svg class="li" aria-hidden="true"><use href="#i-clipboard-list"></use></svg></div><div><div class="stat-v">23.4 GB</div><div class="stat-l">数据占用</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#B8543F"><svg class="li" aria-hidden="true"><use href="#i-clock"></use></svg></div><div><div class="stat-v">342</div><div class="stat-l">累计启动</div></div></div>
           </div>
           <div class="grid" style="grid-template-columns:1.5fr 1fr">
             <div class="panel">
@@ -324,7 +627,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
                 </svg>
                 <div style="flex:1"><div class="big">生存季 · 1.21.4</div>
                   <div class="dim" style="font-size:12px;margin:5px 0 12px">Fabric 0.16.10 · 42 个模组 · 上次启动正常</div>
-                  <div class="row"><button class="btn primary" id="btnLaunch">▶ 启动游戏</button><button class="btn" data-v="download">检查更新</button><button class="btn" data-v="logs">运行日志</button></div>
+                  <div class="row"><button class="btn primary" id="btnLaunch"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg> 启动游戏</button><button class="btn" data-v="download">检查更新</button><button class="btn" data-v="logs">运行日志</button></div>
                 </div>
               </div>
               <div style="margin-top:14px" class="panel-head"><div class="panel-title">最近实例</div><div class="panel-sub">共 7 条</div></div>
@@ -344,6 +647,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
                 <div class="mut" style="font-size:11px;margin-top:9px">演示层调整，确认后才进实现。纸质样板只取质感，位置重新组织。</div>
               </div>
               <div class="side-card"><h3 class="sec">最近公告</h3><div class="stack" id="homeNotices"></div></div>
+              <div class="side-card"><h3 class="sec">推荐服务器 <svg class="li" aria-hidden="true"><use href="#i-star"></use></svg></h3><div class="stack" id="homeRecSrv"></div><div class="row" style="margin-top:9px"><button class="btn tiny" data-v="servers">全部服务器</button><button class="btn tiny" data-v="sync"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 缓存与刷新</button></div></div>
               <div class="vercard" style="padding:13px"><h3 class="sec">当前账户</h3>
                 <div class="acct" style="box-shadow:none;border:none;padding:0;background:none">
                   <div class="acct-badge">K</div><div><div class="acct-name">kongbai</div><div class="acct-type">离线账户 · 皮肤已加载</div></div>
@@ -356,6 +660,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 公告中心 -->
       <section class="view" data-view="notices">
+          <div class="logicbar" data-lb="notices"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="row" style="margin-bottom:12px">
           <span class="chip on" data-f="all">全部 6</span><span class="chip" data-f="pin">置顶</span><span class="chip" data-f="up">版本更新</span>
           <span class="chip" data-f="evt">活动</span><span class="chip" data-f="mt">维护</span>
@@ -370,9 +675,9 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
             </div>
             <div class="panel"><div class="panel-head"><div class="panel-title">公告规则</div></div>
               <div class="stack" style="font-size:12px" class="dim">
-                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">未读高亮、已读降噪，不自动弹窗打断操作</div></div></div>
-                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">维护公告只在相关入口提示，不全局拦截</div></div></div>
-                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">每条都有不再提示与关闭路径，流程结束 0 残留</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">未读高亮、已读降噪，不自动弹窗打断操作</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">维护公告只在相关入口提示，不全局拦截</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">每条都有不再提示与关闭路径，流程结束 0 残留</div></div></div>
               </div>
             </div>
           </div>
@@ -381,6 +686,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 实例与服务器 -->
       <section class="view" data-view="instances">
+          <div class="logicbar" data-lb="instances"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="panel"><div class="panel-head"><div class="panel-title">实例列表</div><div class="panel-sub">共 7 条 · 双击服务器按权重选实例</div>
           <div class="panel-tools"><button class="btn tiny">批量导入</button><button class="btn tiny">扫描</button></div></div>
           <table class="grid"><thead><tr><th>实例名称</th><th>版本</th><th>加载器</th><th>模组</th><th>上次启动</th><th>状态</th></tr></thead><tbody id="insBody"></tbody></table>
@@ -392,6 +698,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 下载中心 -->
       <section class="view" data-view="download">
+          <div class="logicbar" data-lb="download"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="grid g2">
           <div class="panel"><div class="panel-head"><div class="panel-title">下载队列</div><div class="panel-sub" id="dlSub">4 个任务 · 1 次请求</div>
             <div class="panel-tools"><button class="btn tiny" id="dlRun">拉取 10 个</button><button class="btn tiny" id="dl45">跑 45 个</button><button class="btn tiny" id="dlCancel">取消</button></div></div>
@@ -404,14 +711,15 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
               <span class="k">每页条数</span><input class="txt" value="20" readonly>
               <span class="k">API Key</span><input class="txt" placeholder="用户填写 / 工作流注入">
             </div></div>
-            <div class="grid g2"><div class="stat"><div class="stat-ico" style="background:#3D6B66">⇩</div><div><div class="stat-v" id="dlReq">1</div><div class="stat-l">本次请求</div></div></div>
-            <div class="stat"><div class="stat-ico" style="background:#B8543F">×</div><div><div class="stat-v">禁止</div><div class="stat-l">逐条目单发</div></div></div></div>
+            <div class="grid g2"><div class="stat"><div class="stat-ico" style="background:#3D6B66"><svg class="li" aria-hidden="true"><use href="#i-download"></use></svg></div><div><div class="stat-v" id="dlReq">1</div><div class="stat-l">本次请求</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#B8543F"><svg class="li" aria-hidden="true"><use href="#i-x"></use></svg></div><div><div class="stat-v">禁止</div><div class="stat-l">逐条目单发</div></div></div></div>
           </div>
         </div>
       </section>
 
       <!-- 模组管理 -->
       <section class="view" data-view="mods">
+          <div class="logicbar" data-lb="mods"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="panel"><div class="panel-head"><div class="panel-title">模组管理</div><div class="panel-sub">110 个 · 启用 41</div>
           <div class="panel-tools"><button class="btn tiny">全选</button><button class="btn tiny">禁用选中</button></div></div>
           <table class="grid"><thead><tr><th>模组</th><th>版本</th><th>来源</th><th>大小</th><th>状态</th></tr></thead><tbody>
@@ -426,6 +734,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 登录 -->
       <section class="view" data-view="login">
+          <div class="logicbar" data-lb="login"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="grid g2">
           <div class="panel"><div class="panel-head"><div class="panel-title">选择登录方式</div><div class="panel-sub">三种方式</div></div>
             <div class="stack" id="authList"></div></div>
@@ -443,6 +752,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 日志 -->
       <section class="view" data-view="logs">
+          <div class="logicbar" data-lb="logs"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="panel"><div class="panel-head"><div class="panel-title">运行日志</div><div class="panel-sub">每 100 行分片 · 默认脱敏</div>
           <div class="panel-tools"><button class="btn tiny" id="logClear">清空</button><button class="btn primary tiny" id="logDrawer">打开日志抽屉</button><button class="btn tiny" id="logExport">导出诊断包</button></div></div>
           <div id="logView" class="logbody" style="height:430px;background:rgba(24,25,23,.93);color:#CFCCC2;border-radius:var(--r-md);padding:12px"></div>
@@ -451,6 +761,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 设置 -->
       <section class="view" data-view="settings">
+          <div class="logicbar" data-lb="settings"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="grid g2">
           <div class="set-card"><div class="hd">常规</div><div class="kv">
             <span class="k">界面语言</span><select class="sel"><option>简体中文</option><option>English</option></select>
@@ -481,8 +792,9 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 关于 -->
       <section class="view" data-view="about">
+          <div class="logicbar" data-lb="about"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">关于 KCU Launcher</div><div class="panel-sub">版本与许可证</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title">关于 KCU Launcher</div><div class="panel-sub">版本与许可证</div><div class="panel-tools"><button class="btn primary tiny" data-v="licenses"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg> 查看第三方许可</button></div></div>
             <div class="kv"><span class="k">版本</span><span>0.0.0 · 演示构建</span>
               <span class="k">平台</span><span>Windows 桌面（Win7 方案待定）</span>
               <span class="k">架构</span><span>i686 / x86_64 / aarch64</span>
@@ -490,10 +802,10 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
               <span class="k">纸质样板</span><span>仅质感参考，不复制代码与品牌</span></div></div>
           <div class="panel"><div class="panel-head"><div class="panel-title">界面口径</div></div>
             <div class="stack" style="font-size:12px;color:var(--ink-2)">
-              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">米纸底色、墨色字、暗青绿点缀、衬线标题、细描边小圆角</div></div></div>
-              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">折痕高光与细噪点构成纸面，深色纸质主题独立成组</div></div></div>
-              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">位置重新组织：导航 + 工具条 + 卡片流 + 状态栏，不照搬三栏</div></div></div>
-              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">轻量模式独立极简视图，与本页不共用组件</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">米纸底色、墨色字、暗青绿点缀、衬线标题、细描边小圆角</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">折痕高光与细噪点构成纸面，深色纸质主题独立成组</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">位置重新组织：导航 + 工具条 + 卡片流 + 状态栏，不照搬三栏</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">轻量模式独立极简视图，与本页不共用组件</div></div></div>
             </div></div>
         </div>
         <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">开源致谢</div><div class="panel-sub">文档层登记，未复制代码</div></div><div class="row" id="creditRow"></div></div>
@@ -501,6 +813,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 弹窗全集 -->
       <section class="view" data-view="popups">
+          <div class="logicbar" data-lb="popups"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="panel"><div class="panel-head"><div class="panel-title">弹窗全集</div><div class="panel-sub">11 类 · 按钮 / ESC / 取消 / 确认 / 超时 / 宿主</div>
           <div class="panel-tools"><button class="btn primary tiny" id="popAll">全部登记</button><button class="btn tiny" id="popClose">全部关闭</button><span class="badge ok" id="popCnt">打开 0</span></div></div>
           <div class="grid g4" id="popGrid"></div></div>
@@ -508,12 +821,13 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 轻量模式 -->
       <section class="view" data-view="lightweight">
+          <div class="logicbar" data-lb="lightweight"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="grid g2">
           <div class="panel"><div class="panel-head"><div class="panel-title">轻量模式极简窗口</div><div class="panel-sub">≤2GiB 首次启动自动进入</div></div>
-            <div class="stack"><div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">▷</div><div class="notice-main"><div class="notice-body">单主题 · 不加载本页任何组件与纸纹重资产</div></div></div>
+            <div class="stack"><div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg></div><div class="notice-main"><div class="notice-body">单主题 · 不加载本页任何组件与纸纹重资产</div></div></div>
               <div class="row"><button class="btn primary" style="flex:1">离线登录</button><button class="btn" style="flex:1">第三方</button><button class="btn" style="flex:1">Mojang</button></div>
               <div class="row"><button class="btn" style="flex:1">打开游戏目录</button><button class="btn" style="flex:1">基础日志</button></div>
-              <button class="btn primary" style="width:100%">▶ 启动游戏</button>
+              <button class="btn primary" style="width:100%"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg> 启动游戏</button>
               <div class="mut" style="font-size:11px">游戏运行期启动器退出，后台无常驻进程。</div></div></div>
           <div class="panel"><div class="panel-head"><div class="panel-title">与正常模式的边界</div></div>
             <table class="grid"><thead><tr><th>项</th><th>轻量模式</th></tr></thead><tbody>
@@ -526,6 +840,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 异常状态 -->
       <section class="view" data-view="error">
+          <div class="logicbar" data-lb="error"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="grid g3">
           <div class="panel"><h3 class="sec">空态</h3><div class="empty">还没有实例。新建一个，或双击服务器直接进服。</div></div>
           <div class="panel"><h3 class="sec">加载态</h3><div class="progress"><i style="width:62%"></i></div><div class="mut" style="font-size:11px;margin-top:9px">正在准备实例，可取消且 0 副作用。</div></div>
@@ -538,6 +853,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 首次启动引导 -->
       <section class="view" data-view="onboarding">
+          <div class="logicbar" data-lb="onboarding"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="panel" style="max-width:760px;margin:0 auto"><div class="row" style="margin-bottom:18px" id="obSteps"></div>
           <div id="obBody"></div>
           <div class="row spread" style="margin-top:20px"><button class="btn" id="obClose">跳过引导</button>
@@ -546,7 +862,172 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 网格视图 -->
       <section class="view" data-view="cardgrid">
+          <div class="logicbar" data-lb="cardgrid"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
         <div class="grid g3" id="cardGrid"></div>
+      </section>
+
+      <section class="view" data-view="servers">
+        <div class="logicbar" data-lb="servers"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="grid" style="grid-template-columns:1.3fr 1fr">
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><div class="panel-title">推荐服务器</div><div class="panel-sub"><svg class="li" aria-hidden="true"><use href="#i-star"></use></svg> 版本兼容度 + 习惯权重 · 用户指定实例排第一</div>
+              <div class="panel-tools"><button class="btn tiny" id="srvRecRefresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 重新测速</button><span class="badge up" id="srvRecTime">上次测速 12 秒前</span></div></div>
+              <div class="stack" id="recSrvList"></div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title">全部服务器</div><div class="panel-sub">双击直接进服 · 一个参数也可进服</div></div>
+              <table class="grid"><thead><tr><th>服务器</th><th>版本</th><th>实例选择</th><th>延迟</th><th>来源</th></tr></thead><tbody id="srvAllBody"></tbody></table></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><div class="panel-title">权重口径</div></div>
+              <table class="grid"><thead><tr><th>优先级</th><th>依据</th></tr></thead><tbody>
+                <tr><td>1</td><td>用户显式指定实例</td></tr><tr><td>2</td><td>版本兼容度</td></tr>
+                <tr><td>3</td><td>最近使用习惯</td></tr><tr><td>4</td><td>测速延迟</td></tr><tr><td>5</td><td>推荐热度</td></tr>
+              </tbody></table><div class="mut" style="font-size:11px;margin-top:9px">「不感兴趣」降权，不隐藏；测速结果缓存 60s，可强制刷新重测。</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title">连接前可见提示</div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-shield-check"></use></svg></div><div class="notice-main"><div class="notice-body">连接外部服务器会外传 IP 与 UUID，需二次确认；不兼容时给「换实例」，不静默失败。</div></div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-view="licenses">
+        <div class="logicbar" data-lb="licenses"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="panel"><div class="panel-head"><div class="panel-title">第三方许可</div><div class="panel-sub">清单生成 2026-11-13 · 离线可读 · 按许可证分组</div>
+          <div class="panel-tools"><button class="btn tiny" id="licRefresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新清单</button><button class="btn tiny" id="licHard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新扫描</button><span class="badge ok" id="licTime">已同步 12 秒前</span></div></div>
+          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 16</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up">演示层已使用 1 组</span><span class="badge off">进入 src/ 构建 0 项</span></div>
+          <table class="lic-table"><thead><tr><th>项目</th><th>版本 / 分组</th><th>许可证</th><th>版权</th><th>用途</th><th>来源</th><th>构建状态</th></tr></thead><tbody id="licBody"></tbody></table>
+        </div>
+        <div class="grid g2" style="margin-top:12px">
+          <div class="panel"><div class="panel-head"><div class="panel-title">Lucide · ISC 原文摘录</div><div class="panel-sub"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg> 演示层图标</div></div>
+            <div class="attach">Copyright (c) 2026 Lucide Icons and Contributors<br>Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.<br>THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES.</div>
+            <div class="mut" style="font-size:11px;margin-top:9px">派生自 Feather 的图标另带 MIT License，Copyright (c) 2013-present Cole Bemis。88 枚逐枚来源与 blob SHA 见 assets/icons/lucide-manifest.json。</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title">动态追加与缺失处理</div></div>
+            <div class="stack" style="font-size:12px;color:var(--ink-2)">
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg></div><div class="notice-main"><div class="notice-body">插件加载后动态追加：插件名、许可证、作者名、项目地址、修改后版本地址。</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-file-text"></use></svg></div><div class="notice-main"><div class="notice-body">某条全文缺失给来源链接与「稍后」，不编造许可文本；NOASSERTION 以文件头部为准。</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-book-open"></use></svg></div><div class="notice-main"><div class="notice-body">发行物随附 THIRD-PARTY-NOTICES.md；应用内本页展示同一份清单。</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-shield-check"></use></svg></div><div class="notice-main"><div class="notice-body">服务条款与代码许可证分开；CurseForge X01–X04 未拍板前不默认放行。</div></div></div>
+            </div></div>
+        </div>
+      </section>
+
+      <section class="view" data-view="sync">
+        <div class="logicbar" data-lb="sync"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">四层缓存</div><div class="panel-sub">容量有界 · TTL 过期重取 · 单飞 inflight 0</div>
+            <div class="panel-tools"><button class="btn tiny" id="syncCleanExpired">仅清过期</button><button class="btn tiny" id="syncCleanAll"><svg class="li" aria-hidden="true"><use href="#i-trash"></use></svg> 全清</button></div></div>
+            <table class="lic-table"><thead><tr><th>层</th><th>内容</th><th>TTL</th><th>容量</th><th>命中</th><th>占用</th></tr></thead><tbody id="cacheBody"></tbody></table>
+            <div class="row" style="margin-top:11px"><span class="badge ok">单飞 inflight 0</span><span class="badge up">命中率 88%</span><span class="badge off">最近清理 2 分钟前</span></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><div class="panel-title">缓存与刷新逻辑</div></div>
+              <div class="stack" style="font-size:12px;color:var(--ink-2)">
+                <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg></div><div class="notice-main"><div class="notice-body">内存 30s / 60s / 5min；磁盘 24h；网络 60s；预取会话内 8 条。</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg></div><div class="notice-main"><div class="notice-body">普通刷新取增量不清缓存；强制刷新清对应层重取全量，命中数归零。</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-circle-x"></use></svg></div><div class="notice-main"><div class="notice-body">刷新失败回退到上次缓存，不显示空白；失败层单独标错，其余层继续。</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-lock-keyhole"></use></svg></div><div class="notice-main"><div class="notice-body">全清需二次确认；清令牌缓存再确认一次；取消后 0 副作用扩散。</div></div></div>
+              </div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title">时间戳统一口径</div></div>
+              <div class="kv"><span class="k">显示格式</span><span>「N 秒前 / N 分钟前 / HH:MM」</span>
+                <span class="k">显示位置</span><span>逻辑条、状态栏、各页面板工具区</span>
+                <span class="k">更新触发</span><span>R1 手动 / R2 强制 / R3 事件 / R4 定时</span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-view="ai">
+        <div class="logicbar" data-lb="ai"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">AI 容器接口</div><div class="panel-sub">地址由用户自填 · KCU 不预设</div></div>
+            <div class="kv"><span class="k">接口地址</span><input class="txt" id="aiAddr" placeholder="留空表示未启用">
+              <span class="k">连接状态</span><span id="aiState"><span class="badge off">未配置</span></span>
+              <span class="k">上次测试</span><span id="aiTime">—</span></div>
+            <div class="row" style="margin-top:13px"><button class="btn primary tiny" id="aiTest"><svg class="li" aria-hidden="true"><use href="#i-zap"></use></svg> 测试连接</button><button class="btn tiny" id="aiCancel">取消</button><span class="badge ok" id="aiResult">待命</span></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><div class="panel-title">权限与确认</div></div>
+              <table class="grid"><thead><tr><th>项</th><th>口径</th></tr></thead><tbody>
+                <tr><td>确认粒度</td><td>每次请求单独确认</td></tr><tr><td>删除</td><td>不给删除权限</td></tr>
+                <tr><td>请求正文</td><td>不缓存，只缓存连接状态 30s</td></tr><tr><td>审计</td><td>共用策略引擎与日志</td></tr>
+                <tr><td>页面关闭</td><td>即停请求，无常驻</td></tr>
+              </tbody></table></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title">失败分类</div></div>
+              <div class="row"><span class="chip">地址不可达</span><span class="chip">认证失败</span><span class="chip">网络超时</span></div>
+              <div class="mut" style="font-size:11px;margin-top:9px">三类分别给修复建议，不静默重试；未填地址时测试按钮禁用。</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-view="serverhost">
+        <div class="logicbar" data-lb="serverhost"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">一键开服</div><div class="panel-sub">推荐实例按版本兼容度 · 用户指定排第一</div>
+            <div class="panel-tools"><button class="btn primary tiny" id="shStart"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg> 启动服务端</button><button class="btn tiny" id="shStop">停止</button></div></div>
+            <div class="kv"><span class="k">实例</span><select class="sel"><option>生存季 · 1.21.4 Fabric</option><option>纯原版 · 1.21.4</option></select>
+              <span class="k">端口</span><input class="txt" value="25565" readonly>
+              <span class="k">EULA</span><span><span class="badge ok">启动前写入</span></span>
+              <span class="k">UPnP</span><span><span class="badge off">默认关闭</span></span>
+              <span class="k">崩溃后</span><span><span class="badge up">按日志自动重启</span></span>
+              <span class="k">RCON</span><span>仅本地 / 隧道</span></div>
+            <div class="row" style="margin-top:12px"><span class="badge ok" id="shState">就绪</span><span class="mut" style="font-size:11px">启动阶段：EULA → jar → 端口 → 就绪，可取消</span></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><div class="panel-title">控制台</div><div class="panel-sub">最近 6 行 · 可收起</div></div>
+              <div class="logbody" style="height:190px;background:rgba(24,25,23,.93);color:#CFCCC2;border-radius:var(--r-md);padding:10px">[KCU] serverhost prepare OK detail=eula_written<br>[KCU] serverhost jar OK detail=1.21.4<br>[KCU] serverhost port OK detail=25565<br>[KCU] serverhost ready OK detail=0_players<br>[KCU] serverhost save OK detail=autosave_on<br>[KCU] serverhost rcon OK detail=loopback_only</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title">冲突与边界</div></div>
+              <div class="mut" style="font-size:12px">端口占用给改端口建议；按需启动 / 空闲休眠与崩溃自动重启冲突时，自动重启优先；关窗保存进度。</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-view="headless">
+        <div class="logicbar" data-lb="headless"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">统一信封</div><div class="panel-sub">不加载任何界面</div></div>
+            <div class="attach">{ "ok": true, "mode": "headless", "task": "launch", "result": "OK", "diagnostics": ["[KCU] dispatcher mode headless OK detail=forced"] }</div>
+            <div class="mut" style="font-size:11px;margin-top:9px">纯 std，无 UI 资产、无 WebView2；任务解析结果单飞缓存，同文本 10 次只解析 1 次。</div>
+          </div>
+          <div class="panel"><div class="panel-head"><div class="panel-title">任务优先级</div></div>
+            <table class="grid"><thead><tr><th>序</th><th>来源</th></tr></thead><tbody>
+              <tr><td>1</td><td>强制无头</td></tr><tr><td>2</td><td>命令行</td></tr>
+              <tr><td>3</td><td>config/launch.json</td></tr><tr><td>4</td><td>任务文件</td></tr><tr><td>5</td><td>自动判定</td></tr>
+            </tbody></table>
+            <div class="row" style="margin-top:11px"><span class="badge off">无凭据禁正版</span><span class="badge up">连续失败进安全模式</span><span class="badge ok">进程结束退出</span></div></div>
+        </div>
+      </section>
+
+      <section class="view" data-view="refresh">
+        <div class="logicbar" data-lb="refresh"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="panel"><div class="panel-head"><div class="panel-title">刷新触发 R1–R5</div><div class="panel-sub">普通 / 强制 / 事件 / 定时 / 观察者</div>
+          <div class="panel-tools"><button class="btn tiny" id="rfFail">模拟刷新失败</button><button class="btn tiny" id="rfReset">复位</button></div></div>
+          <table class="lic-table"><thead><tr><th>类型</th><th>动作</th><th>清缓存</th><th>可见反馈</th><th>状态</th></tr></thead><tbody id="refreshBody"></tbody></table>
+          <div class="notice" id="rfFallback" style="margin-top:12px;display:none;border-color:var(--warn)"><div class="notice-ico" style="color:var(--warn)"><svg class="li" aria-hidden="true"><use href="#i-circle-x"></use></svg></div><div class="notice-main"><div class="notice-title" style="color:var(--warn)">刷新失败 · 已回退到上次缓存</div><div class="notice-body">页面保留 12 秒前的快照，不显示空白；失败层单独标错，其余层继续；可重试或稍后。</div></div><button class="btn tiny" id="rfRetry" style="align-self:center">重试</button></div>
+        </div>
+        <div class="grid g3" style="margin-top:12px">
+          <div class="panel"><h3 class="sec">时间戳口径</h3><div class="mut" style="font-size:12px">统一「N 秒前 / N 分钟前 / HH:MM」，逻辑条、状态栏、面板工具区同源。</div></div>
+          <div class="panel"><h3 class="sec">不打断操作</h3><div class="mut" style="font-size:12px">观察者推送只更新对应视图，不弹窗、不抢焦点、不重置滚动位置。</div></div>
+          <div class="panel"><h3 class="sec">取消 0 副作用</h3><div class="mut" style="font-size:12px">刷新取消后保留原缓存，命中数不归零，诊断行记 CANCELLED。</div></div>
+        </div>
+      </section>
+
+      <section class="view" data-view="states">
+        <div class="logicbar" data-lb="states"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 已缓存 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 命中 <b class="lb-hit">8</b> / 未命中 <b class="lb-miss">1</b></span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 强制刷新</button></div>
+
+        <div class="grid g3">
+          <div class="panel"><h3 class="sec">空态 / 首次</h3><div class="empty">还没有实例。新建、导入整合包，或双击服务器直接进服。</div></div>
+          <div class="panel"><h3 class="sec">加载态</h3><div class="progress"><i style="width:62%"></i></div><div class="mut" style="font-size:11px;margin-top:9px">可取消，取消后 0 副作用。</div></div>
+          <div class="panel"><h3 class="sec">错误态</h3><div class="empty" style="border-color:var(--warn);color:var(--warn)">三级回退全部失败。零级报错，不崩溃不静默。</div></div>
+          <div class="panel"><h3 class="sec">被锁态</h3><div class="empty lock">目录被占用，OS 级防护 + lockfile。</div></div>
+          <div class="panel"><h3 class="sec">安全模式</h3><div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-shield-check"></use></svg></div><div class="notice-main"><div class="notice-body">连续失败 3 次进入：忽略自定义配置、禁 UI 与正版、导出诊断包。</div></div></div></div>
+          <div class="panel"><h3 class="sec">离线态 / 缓存兜底</h3><div class="mut" style="font-size:12px">已缓存列表可见并标灰，刷新失败回退快照，不反复发请求、不 blank。</div></div>
+        </div>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">降级链</div></div>
+          <div class="row"><span class="chip on">外置浏览器</span><span class="chip">内置浏览器</span><span class="chip">连接码 300s</span><span class="chip">零级报错</span><span class="chip">安全模式</span><span class="chip">诊断包 4 行</span></div></div>
       </section>
 
       </div>
@@ -555,20 +1036,20 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
   <div class="mask" id="mask"><div class="modal" role="dialog" aria-modal="true">
     <div class="top"><div><h2 id="mdTitle">标题</h2><div class="mut" style="font-size:10px" id="mdId">id</div></div>
-      <button class="x" id="mdX">×</button></div>
+      <button class="x" id="mdX"><svg class="li" aria-hidden="true"><use href="#i-x"></use></svg></button></div>
     <div class="bd" id="mdBody"></div><div class="acts" id="mdActs"></div></div></div>
 
-  <div class="logdrawer" id="logDrawerBox"><div class="lh"><b>运行日志</b><span class="mut">[KCU] 诊断行</span><span class="z" id="logZ">×</span></div>
+  <div class="logdrawer" id="logDrawerBox"><div class="lh"><b>运行日志</b><span class="mut">[KCU] 诊断行</span><span class="z" id="logZ"><svg class="li" aria-hidden="true"><use href="#i-x"></use></svg></span></div>
     <div class="logbody" id="logDrawerBody"></div></div>
   <div class="ctx" id="ctx"><div>打开实例</div><div>重命名</div><div>打开目录</div><hr><div>检查更新</div><div>导出诊断包</div><hr><div>删除</div></div>
 
   <footer class="statusbar">
-    <div class="sb-i">☕ Java 17 · 64 位</div><div class="sb-i">▥ 内存 4096 M</div>
-    <div class="sb-i">◎ BMCLAPI 镜像 · 42 ms</div>
-    <div class="sb-right"><button class="sb-btn" id="sbDev">▯ 手机已连接</button><button class="sb-btn" id="sbLog">≡ 日志</button><span id="sbTime"></span></div>
+    <div class="sb-i"><svg class="li" aria-hidden="true"><use href="#i-cpu"></use></svg> Java 17 · 64 位</div><div class="sb-i"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> 内存 4096 M</div>
+    <div class="sb-i"><svg class="li" aria-hidden="true"><use href="#i-globe"></use></svg> BMCLAPI 镜像 · 42 ms</div>
+    <div class="sb-right"><button class="sb-btn" id="sbDev"><svg class="li" aria-hidden="true"><use href="#i-smartphone"></use></svg> 手机已连接</button><button class="sb-btn" id="sbLog"><svg class="li" aria-hidden="true"><use href="#i-scroll-text"></use></svg> 日志</button><span id="sbTime"></span></div>
   </footer>
 </div>
-<div class="desk-cap" id="cap">KCU LAUNCHER · 桌面界面预览 · 1440 × 900</div>
+<div class="desk-cap" id="cap">KCU LAUNCHER · 桌面界面预览 · 1440 <svg class="li" aria-hidden="true"><use href="#i-x"></use></svg> 900</div>
 </div>
 
 <script>
@@ -611,10 +1092,10 @@ const SRV=[['陶瓦联机 · 主服','1.21.4','用户指定：生存季','已指
 const CREDITS=['HMCL（文档调研）','Prism Launcher','Modrinth','CurseForge','Fabric / Forge / NeoForge / Quilt','BMCLAPI / MCIM','authlib-injector','wry / tao','Rust std'];
 const AUTH=[['offline','离线登录','offline · 免浏览器 · 低配首选'],['third_party','第三方登录','third_party · 网页登录'],['mojang','Mojang 正版','mojang · 需凭据']];
 const OB=[
- ['欢迎','<h3 class="sec">欢迎使用 KCU Launcher</h3><p class="dim">这个引导只有 4 步，随时可以跳过。所有设置之后都能改。</p><div class="notice" style="box-shadow:none;margin-top:12px;padding:10px"><div class="notice-ico">✦</div><div class="notice-main"><div class="notice-body">界面位置按使用逻辑重排，纸质样板只取质感，不照搬三栏。</div></div></div>'],
+ ['欢迎','<h3 class="sec">欢迎使用 KCU Launcher</h3><p class="dim">这个引导只有 4 步，随时可以跳过。所有设置之后都能改。</p><div class="notice" style="box-shadow:none;margin-top:12px;padding:10px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-sparkles"></use></svg></div><div class="notice-main"><div class="notice-body">界面位置按使用逻辑重排，纸质样板只取质感，不照搬三栏。</div></div></div>'],
  ['选择模式','<h3 class="sec">你想怎么用</h3><div class="stack" style="margin-top:12px" id="obModes"></div>'],
  ['数据位置','<h3 class="sec">数据放在哪</h3><p class="dim">默认 C:\\KCU。实例、日志、缓存都在这里，可直接打开系统文件面板查看。</p><div class="kv" style="margin-top:12px"><span class="k">数据目录</span><input class="txt" value="C:\\KCU" readonly><span class="k">文件夹锁</span><select class="sel"><option>OS 级防护 + lockfile</option></select><span class="k">关窗保存</span><select class="sel"><option>保存进度</option></select></div>'],
- ['完成','<h3 class="sec">准备好了</h3><p class="dim">首次启动会显示 3 条公告，都在铃铛里，不会弹窗打断你。现在可以启动游戏，或先去公告中心看看。</p><div class="row" style="margin-top:14px"><button class="btn primary">▶ 启动游戏</button><button class="btn" data-v="notices">查看公告</button></div>']
+ ['完成','<h3 class="sec">准备好了</h3><p class="dim">首次启动会显示 3 条公告，都在铃铛里，不会弹窗打断你。现在可以启动游戏，或先去公告中心看看。</p><div class="row" style="margin-top:14px"><button class="btn primary"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg> 启动游戏</button><button class="btn" data-v="notices">查看公告</button></div>']
 ];
 let curNotice=NOTICES[0];
 
@@ -642,7 +1123,15 @@ const VIEW_META={home:['实例总览','首页 · 本地 7 个实例 · 上次同
  logs:['日志诊断','[KCU] 单行诊断 · 每 100 行分片'],settings:['设置','快速配置默认中文 · 高级项可展开'],
  about:['关于','版本、许可证与开源致谢'],popups:['弹窗全集','11 类 · 每类有关闭路径'],
  lightweight:['轻量模式','≤2GiB 首次启动自动进入 · 单主题'],error:['异常与边界状态','空 / 加载 / 错误 / 被锁 / 安全模式 / 离线'],
- onboarding:['首次启动','4 步向导 · 可返回、可关闭'],cardgrid:['实例网格','网格视图 · 与列表同源']};
+ onboarding:['首次启动','4 步向导 · 可返回、可关闭'],cardgrid:['实例网格','网格视图 · 与列表同源'],
+ servers:['服务器与推荐','推荐位 · 权重口径 · 测速缓存 60s'],
+ licenses:['第三方许可','16 组组件 · 按许可证分组 · 离线可读'],
+ sync:['数据与缓存','四层缓存 · 命中率 · 强制刷新'],
+ ai:['AI 接口','用户自填 · 每次请求确认 · 关页停请求'],
+ serverhost:['开服器','一键开服 · EULA 启动前写入 · UPnP 默认关'],
+ headless:['无头模式','统一信封 · 任务优先级 · 无 UI'],
+ refresh:['刷新机制','R1-R5 · 失败回退缓存不空白'],
+ states:['状态与降级','六态 · 缓存兜底 · 降级链']};
 
 function openDlg(title,body,id){
   $('mdTitle').textContent=title;$('mdId').textContent='id='+id;$('mdBody').innerHTML=body;
@@ -669,7 +1158,7 @@ function show(v){
   const m=VIEW_META[v]||VIEW_META.home;$('vTitle').textContent=m[0];$('vCrumb').textContent=m[1];
   history.replaceState(null,'','#view='+v);
 }
-function setTheme(t){theme=t;win.dataset.theme=t;$('btnTheme').textContent=t==='dark'?'☀':'☾';}
+function setTheme(t){theme=t;win.dataset.theme=t;$('btnTheme').textContent=t==='dark'?'<svg class="li" aria-hidden="true"><use href="#i-sun"></use></svg>':'<svg class="li" aria-hidden="true"><use href="#i-moon"></use></svg>';}
 $('btnTheme').onclick=()=>setTheme(theme==='light'?'dark':'light');
 $('btnCollapse').onclick=()=>win.classList.toggle('narrow');
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>show(b.dataset.v));
@@ -682,7 +1171,7 @@ document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{
 function renderNotices(){
   const list=NOTICES.filter(n=>filter==='all'||n.tag===filter);
   $('noticeList').innerHTML=list.map(n=>`<div class="notice" data-n="${n.id}" style="cursor:pointer;${n.unread?'background:var(--sel);border-color:var(--accent)':''}">
-    <div class="notice-ico">${n.tag==='pin'?'📌':(n.tag==='up'?'🆙':(n.tag==='mt'?'🛠':'🎮'))}</div>
+    <div class="notice-ico">${n.tag==='pin'?'<svg class="li" aria-hidden="true"><use href="#i-pin"></use></svg>':(n.tag==='up'?'<svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg>':(n.tag==='mt'?'<svg class="li" aria-hidden="true"><use href="#i-wrench"></use></svg>':'<svg class="li" aria-hidden="true"><use href="#i-gamepad-2"></use></svg>'))}</div>
     <div class="notice-main"><div class="notice-head"><div class="notice-title">${esc(n.t)} <span class="tag ${n.tag}">${n.tagT}</span></div><div class="notice-date">${n.tm}</div></div>
     <div class="notice-body">${esc(n.d)}</div></div>
     <div style="align-self:center">${n.unread?'<span class="badge err">未读</span>':'<span class="badge off">已读</span>'}</div></div>`).join('');
@@ -697,7 +1186,7 @@ function renderNotices(){
 document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderNotices();});
 $('readAll').onclick=()=>{NOTICES.forEach(n=>n.unread=false);unread=0;$('unreadPill').textContent='未读 0';renderNotices();};
 $('openDetail').onclick=()=>show('notice-detail');
-$('homeNotices').innerHTML=NOTICES.slice(0,3).map(n=>`<div class="row" style="gap:8px"><span style="width:16px">${n.tag==='pin'?'📌':'•'}</span><div style="flex:1"><div style="font-size:12px">${esc(n.t)}</div><div class="mut" style="font-size:10px">${n.tm} · ${n.tagT}</div></div>${n.unread?'<span class="badge err">新</span>':''}</div>`).join('');
+$('homeNotices').innerHTML=NOTICES.slice(0,2).map(n=>`<div class="row" style="gap:8px"><span style="width:16px">${n.tag==='pin'?'<svg class="li" aria-hidden="true"><use href="#i-pin"></use></svg>':'•'}</span><div style="flex:1"><div style="font-size:12px">${esc(n.t)}</div><div class="mut" style="font-size:10px">${n.tm} · ${n.tagT}</div></div>${n.unread?'<span class="badge err">新</span>':''}</div>`).join('');
 
 /* 实例 */
 $('insBody').innerHTML=INS.map(x=>`<tr><td>${esc(x[0])}</td><td>${x[1]}</td><td>${esc(x[2])}</td><td>${x[3]}</td><td>${x[4]}</td><td><span class="badge ${x[5]}">${x[6]}</span></td></tr>`).join('');
@@ -705,7 +1194,7 @@ $('srvBody').innerHTML=SRV.map(x=>`<tr><td>${esc(x[0])}</td><td>${x[1]}</td><td>
 $('cardGrid').innerHTML=INS.map(x=>`<div class="panel"><div class="row spread"><b class="serif" style="font-size:14px">${esc(x[0])}</b><span class="badge ${x[5]}">${x[6]}</span></div>
   <div class="mut" style="font-size:11px;margin:6px 0 10px">${x[1]} · ${esc(x[2])} · ${x[3]} mods</div>
   <div class="progress"><i style="width:${60+Math.floor(Math.random()*35)}%"></i></div>
-  <div class="row" style="margin-top:11px"><button class="btn primary tiny" style="flex:1">启动</button><button class="btn tiny">设置</button><button class="btn tiny">⋯</button></div></div>`).join('');
+  <div class="row" style="margin-top:11px"><button class="btn primary tiny" style="flex:1">启动</button><button class="btn tiny">设置</button><button class="btn tiny"><svg class="li" aria-hidden="true"><use href="#i-ellipsis"></use></svg></button></div></div>`).join('');
 $('creditRow').innerHTML=CREDITS.map(x=>'<span class="chip">'+esc(x)+'</span>').join('');
 
 /* 下载 */
@@ -720,7 +1209,7 @@ $('dlCancel').onclick=()=>{$('dlBar').style.width='0';$('dlSub').textContent='�
 /* 登录 */
 function renderAuth(){
   $('authList').innerHTML=AUTH.map(([k,t,d])=>`<div class="notice" style="box-shadow:none;padding:10px;cursor:pointer;${auth===k?'background:var(--sel);border-color:var(--accent)':''}" data-a="${k}">
-    <div class="notice-ico" style="width:26px;height:26px;flex:0 0 26px;font-size:11px">${auth===k?'●':'○'}</div><div class="notice-main"><div class="notice-title" style="font-size:13px">${t}</div><div class="notice-body" style="margin-top:2px">${d}</div></div></div>`).join('');
+    <div class="notice-ico" style="width:26px;height:26px;flex:0 0 26px;font-size:11px">${auth===k?'<svg class="li" aria-hidden="true"><use href="#i-circle-dot"></use></svg>':'<svg class="li" aria-hidden="true"><use href="#i-circle"></use></svg>'}</div><div class="notice-main"><div class="notice-title" style="font-size:13px">${t}</div><div class="notice-body" style="margin-top:2px">${d}</div></div></div>`).join('');
   document.querySelectorAll('[data-a]').forEach(e=>e.onclick=()=>{auth=e.dataset.a;renderAuth();log('lightweight','select','login','OK','detail='+auth);});
 }
 function renderFlow(){
@@ -763,7 +1252,7 @@ function renderOb(){
   $('obSteps').innerHTML=OB.map((x,i)=>`<div class="step ${i===obStep?'on':(i<obStep?'done':'')}"><span class="n">${i+1}</span><span style="font-size:12px">${x[0]}</span></div>`).join('');
   $('obBody').innerHTML=OB[obStep][1];$('obPrev').disabled=obStep===0;$('obNext').textContent=obStep===OB.length-1?'完成':'下一步';
   if(obStep===1)$('obModes').innerHTML=[['正常模式','完整界面、公告、实例管理','推荐'],['轻量模式','≤2GiB 首次启动自动进入','低配'],['无头模式','不加载任何界面','高级']]
-    .map((x,i)=>`<div class="notice" style="box-shadow:none;padding:10px;${i===0?'background:var(--sel);border-color:var(--accent)':''}"><div class="notice-ico" style="width:26px;height:26px;flex:0 0 26px;font-size:11px">${i===0?'●':'○'}</div><div class="notice-main"><div class="notice-title" style="font-size:13px">${x[0]}</div><div class="notice-body" style="margin-top:2px">${x[1]}</div></div><span class="badge ${i===0?'ok':'off'}">${x[2]}</span></div>`).join('');
+    .map((x,i)=>`<div class="notice" style="box-shadow:none;padding:10px;${i===0?'background:var(--sel);border-color:var(--accent)':''}"><div class="notice-ico" style="width:26px;height:26px;flex:0 0 26px;font-size:11px">${i===0?'<svg class="li" aria-hidden="true"><use href="#i-circle-dot"></use></svg>':'<svg class="li" aria-hidden="true"><use href="#i-circle"></use></svg>'}</div><div class="notice-main"><div class="notice-title" style="font-size:13px">${x[0]}</div><div class="notice-body" style="margin-top:2px">${x[1]}</div></div><span class="badge ${i===0?'ok':'off'}">${x[2]}</span></div>`).join('');
 }
 $('obNext').onclick=()=>{if(obStep<OB.length-1){obStep++;renderOb();}else show('home');};
 $('obPrev').onclick=()=>{if(obStep>0){obStep--;renderOb();}};
@@ -778,6 +1267,78 @@ function applyGate(){
   log('ui','adjust','handfeel','OK','detail=gap='+g+' fs='+f+' r='+r+' noise='+n);
 }
 ['gGap','gFs','gR','gNoise'].forEach(id=>$(id).onchange=applyGate);
+
+
+/* 019 数据与交互 */
+function ic(n){return '<svg class="li" aria-hidden="true"><use href="#i-'+n+'"></use></svg>';}
+const LICENSE_ROWS=[
+ ['Lucide','图标子集 88 枚','ISC','Lucide Icons and Contributors','界面图标，内联 sprite','lucide.dev/license','演示层已使用','ISC'],
+ ['Feather 派生图标','Lucide 派生部分','MIT','Cole Bemis, 2013-present','界面图标','lucide.dev/license','演示层已使用','MIT'],
+ ['HMCL-dev/HMCL','调研快照','GPLv3 + 附加条款 2 条','HMCL-dev','启动器行为调研','docs/licenses/HMCL-LICENSE.txt','文档层','GPL'],
+ ['kongbai9288/KCU-Launcher','调研快照','GPL-3.0','kongbai9288','项目谱系调研','docs/licenses/KCU-Launcher-LICENSE.txt','文档层','GPL'],
+ ['authlib-injector','调研快照','AGPLv3 + exception','yushijinhun','第三方登录调研','docs/licenses/authlib-injector-AGPLv3-exception.txt','文档层','GPL'],
+ ['authlib-injector wiki','调研快照','CC BY-SA 4.0','文档作者','文档调研，不对应代码','docs/licenses/CC-BY-SA-4.0.txt','文档层','GPL'],
+ ['tauri-apps/tao','调研快照','Apache-2.0','tauri-apps','窗口方案候选','docs/licenses/tao-LICENSE.txt','文档层','Apache-2.0'],
+ ['emilk/egui','调研快照','Apache-2.0','emilk','UI 方案候选','docs/licenses/egui-LICENSE.txt','文档层','Apache-2.0'],
+ ['iced-rs/iced','调研快照','MIT','iced-rs','UI 方案候选','docs/licenses/iced-LICENSE.txt','文档层','MIT'],
+ ['slint-ui/slint','调研快照','三许可','slint-ui','UI 方案候选','docs/licenses/slint-LICENSE.txt','文档层','GPL'],
+ ['MultiMC/Launcher','调研快照','NOASSERTION','MultiMC','方案候选，以文件头为准','docs/licenses/MultiMC-COPYING.md','文档层','NOASSERTION'],
+ ['MinecraftForge','调研快照','NOASSERTION（头部 LGPL 2.1）','MinecraftForge','加载器调研','docs/licenses/Forge-LICENSE.txt','文档层','NOASSERTION'],
+ ['neoforged/NeoForge','调研快照','LGPL-2.1','neoforged','加载器调研','docs/licenses/NeoForge-LICENSE.txt','文档层','GPL'],
+ ['QuiltMC/quilt-loader','调研快照','Apache-2.0','QuiltMC','加载器调研','docs/licenses/Quilt-LICENSE.txt','文档层','Apache-2.0'],
+ ['CopperGolemLauncher','调研快照','NOASSERTION','copper-lamp','候选，复用范围未证实','docs/licenses/CopperGolemLauncher-LICENSE','文档层','NOASSERTION'],
+ ['KCU Launcher 本项目','0.0.0','未生成','—','本项目 LICENSE 待定','THIRD-PARTY-NOTICES.md','未生成','NOASSERTION'],
+];
+let licFilter='all';
+function renderLic(){
+  const rows=LICENSE_ROWS.filter(r=>licFilter==='all'||r[7]===licFilter);
+  $('licBody').innerHTML=rows.map(r=>'<tr><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[1])+'</td><td><span class="badge '+(r[6]==='演示层已使用'?'ok':(r[6]==='未生成'?'err':'off'))+'">'+esc(r[2])+'</span></td><td>'+esc(r[3])+'</td><td>'+esc(r[4])+'</td><td>'+esc(r[5])+'</td><td><span class="badge '+(r[6]==='演示层已使用'?'ok':'off')+'">'+esc(r[6])+'</span></td></tr>').join('');
+}
+document.querySelectorAll('[data-lic]').forEach(b=>b.onclick=()=>{licFilter=b.dataset.lic;document.querySelectorAll('[data-lic]').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderLic();log('ui','licenses','filter','OK','detail='+licFilter);});
+$('licRefresh').onclick=()=>{$('licTime').textContent='已同步 刚刚';log('ui','licenses','refresh','OK','detail=soft_incremental');};
+$('licHard').onclick=()=>{$('licTime').textContent='已重新扫描 刚刚';log('ui','licenses','refresh','OK','detail=hard_rescan_dependency_tree');renderLic();};
+
+const CACHE_ROWS=[
+ ['C1 内存','实例 / 公告 / 统计 / 任务解析','30s · 60s · 5min','32 条','8 / 1','72','内存','强制刷新 / 写完成 / 过期'],
+ ['C2 磁盘','版本 / 模组 / 下载文件 / 许可清单','24h','有界目录','6 / 0','41','磁盘','校验和不符 / 强制刷新'],
+ ['C3 网络','测速 / 元数据 / 会话','60s','按源','5 / 2','28','网络','源切换 / 强制刷新 / 超时'],
+ ['C4 预取','上次实例依赖 / 推荐位素材','会话内','8 条','3 / 0','19','内存','会话结束'],
+];
+$('cacheBody').innerHTML=CACHE_ROWS.map(r=>'<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td><div class="cap-bar"><i style="width:'+r[5]+'%"></i></div><span class="mut">'+r[5]+'%</span></td></tr>').join('');
+$('syncCleanExpired').onclick=()=>log('ui','cache','clean','OK','detail=expired_only capacity_preserved');
+$('syncCleanAll').onclick=()=>{openDlg('全清缓存','<p>将清空四层缓存，含令牌缓存。此操作需二次确认，清令牌缓存需再确认一次。</p><div class="attach">取消后 0 副作用扩散；清理失败只标错对应层，其余层继续。</div>','cache_clean_all');};
+
+const REFRESH_ROWS=[
+ ['R1 手动普通','取增量','否','时间戳更新、刷新中徽章','就绪','ok'],
+ ['R2 强制','重取全量','是','命中数归零、诊断行','就绪','up'],
+ ['R3 自动事件','下载完成 / 实例变更 / 公告已读 / 配置保存','局部','对应视图即时更新','已推送','ok'],
+ ['R4 定时','后台软刷新','否','仅状态栏时间戳','静默','off'],
+ ['R5 观察者','数据变化推视图','否','不打断、不弹窗、不重置滚动','已订阅','ok'],
+];
+$('refreshBody').innerHTML=REFRESH_ROWS.map(r=>'<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td><span class="badge '+r[5]+'">'+r[4]+'</span></td></tr>').join('');
+$('rfFail').onclick=()=>{$('rfFallback').style.display='flex';log('ui','refresh','fallback','DEGRADE','detail=last_snapshot_12s_no_blank');};
+$('rfReset').onclick=()=>{$('rfFallback').style.display='none';};
+$('rfRetry').onclick=()=>{$('rfFallback').style.display='none';log('ui','refresh','retry','OK','detail=soft_retry');};
+
+const REC_SRV=[['陶瓦联机 · 主服','1.21.4','兼容度 100% · 42 ms','用户指定：生存季','ok'],['朋友的小服','1.21.1','兼容度 92% · 88 ms','按权重：测试服','up'],['快照服','1.21.5','兼容度 78% · 120 ms','按权重：生存季','off']];
+$('homeRecSrv').innerHTML=REC_SRV.slice(0,2).map(r=>'<div class="row" style="gap:8px"><span style="width:14px">'+ic('star')+'</span><div style="flex:1"><div style="font-size:12px;font-weight:600">'+esc(r[0])+'</div><div class="mut" style="font-size:10px">'+esc(r[2])+'</div></div></div>').join('');
+$('recSrvList').innerHTML=REC_SRV.map(r=>'<div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico">'+ic('server')+'</div><div class="notice-main"><div class="notice-title" style="font-size:13px">'+esc(r[0])+' <span class="badge '+r[4]+'">'+esc(r[1])+'</span></div><div class="notice-body">'+esc(r[2])+' · '+esc(r[3])+'</div></div><button class="btn tiny" style="align-self:center">进入</button></div>').join('');
+$('srvAllBody').innerHTML=REC_SRV.map(r=>'<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+esc(r[3])+'</td><td>'+esc(r[2].split('· ')[1])+'</td><td><span class="badge '+r[4]+'">'+(r[3].startsWith('用户')?'已指定':'自动')+'</span></td></tr>').join('');
+$('srvRecRefresh').onclick=()=>{$('srvRecTime').textContent='上次测速 刚刚';log('ui','servers','speedtest','OK','detail=parallel_3 slow_source_cancelled');};
+
+$('aiTest').onclick=()=>{$('aiState').innerHTML='<span class="badge up">测试中</span>';$('aiTime').textContent='刚刚';$('aiResult').textContent='连接成功';$('aiResult').className='badge ok';log('ui','ai','test','OK','detail=user_supplied_endpoint no_delete_scope');};
+$('aiCancel').onclick=()=>{$('aiState').innerHTML='<span class="badge off">已取消</span>';log('ui','ai','test','CANCELLED','detail=0_work');};
+$('shStart').onclick=()=>{$('shState').textContent='启动中';$('shState').className='badge up';log('serverhost','start','server','OK','detail=eula_before_start upnp_off');};
+$('shStop').onclick=()=>{$('shState').textContent='已停止';$('shState').className='badge off';log('serverhost','stop','server','OK','detail=progress_saved');};
+
+/* 逻辑条：普通刷新 / 强制刷新 / 缓存兜底 */
+document.querySelectorAll('.logicbar').forEach(lb=>{
+  const age=lb.querySelector('.lb-age'),hit=lb.querySelector('.lb-hit'),miss=lb.querySelector('.lb-miss'),st=lb.querySelector('.lb-state');
+  const soft=lb.querySelector('.lb-soft'),hard=lb.querySelector('.lb-hard'),id=lb.dataset.lb;
+  soft.onclick=()=>{st.textContent='刷新中';st.className='badge up lb-state';log('ui','refresh','soft','OK','detail='+id+'_incremental');setTimeout(()=>{age.textContent='刚刚';st.textContent='就绪';st.className='badge ok lb-state';},140);};
+  hard.onclick=()=>{st.textContent='重取中';st.className='badge up lb-state';hit.textContent='0';miss.textContent='0';log('ui','refresh','hard','OK','detail='+id+'_clear_cache_full_fetch');setTimeout(()=>{age.textContent='刚刚';hit.textContent='8';miss.textContent='1';st.textContent='就绪';st.className='badge ok lb-state';},160);};
+});
+renderLic();
 
 /* 初始 */
 $('sbTime').textContent=new Date().toLocaleString('zh-CN',{hour12:false});

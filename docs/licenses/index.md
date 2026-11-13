@@ -1,7 +1,7 @@
 # 第三方许可证原文索引
 
 检索日期：2026-11-05
-更新轮次：011
+更新轮次：019
 来源接口：`GET https://api.github.com/repos/{owner}/{repo}/license`、`GET https://api.github.com/repos/{owner}/{repo}/contents/{path}`，全部返回 200。
 
 ## 逐字副本
@@ -72,3 +72,21 @@
 | L07 | 服务条款与代码许可证分开登记，见 docs/research/12-compliance.md。 |
 | L08 | CopperGolemLauncher 的 `THIRD_PARTY_NOTICES` 存在但未取得全文，复用范围未证实，见 docs/research/15-input-survey.md CG09。 |
 | L09 | 插件独立许可证；插件加载后在开源许可页动态增加插件名、许可证、作者名、项目地址、修改后版本地址。 |
+
+## 019 新增：演示层实际使用的图标
+
+| 项 | 值 |
+| --- | --- |
+| 组件 | Lucide 图标子集 88 枚 |
+| 许可证 | ISC License；派生自 Feather 的图标另带 MIT（Cole Bemis, 2013-present） |
+| 版权 | Copyright (c) 2026 Lucide Icons and Contributors |
+| 原文 | https://lucide.dev/license |
+| 资产 | assets/icons/lucide-subset.svg（内联 sprite）、assets/icons/lucide-manifest.json（逐枚 blob SHA 与来源 URL） |
+| 使用层 | 演示层已使用；进入 `src/` 构建 0 项 |
+| 发行物声明 | THIRD-PARTY-NOTICES.md；应用内关于 → 第三方许可 |
+| 约束 | 只打包用到的图标；不使用全量 sprite 与图标字体；无 CDN |
+
+| 编号 | 约束 |
+| --- | --- |
+| L10 | 图标逐枚来源与 SHA 可审计；新增图标同步 sprite、manifest、许可页计数。 |
+| L11 | 插件加载后在关于页动态追加插件名、许可证、作者、项目地址、修改后版本地址。 |
