@@ -36,7 +36,8 @@
 | F016-02 | Provider 与批量下载 | lightweight.download | 已实现、已验证 | lightweight-download.md |
 | F016-03 | 加载器注册与安装 | lightweight.loaders | 已实现、已验证 | lightweight-loaders.md |
 | F016-04 | 轻量极简视图状态 | lightweight.view | 已实现、已验证 | lightweight-view.md |
-| F017-01 | 界面视觉全集与预览 | ui.demo | 已实现、已验证（演示层） | ui-visual-catalog.md |
+| F017-01 | 界面视觉全集与预览 | ui.demo | 已实现、已验证（演示层；风格项作废） | ui-visual-catalog.md |
+| F018-01 | 纸质质感 UX 界面全集 | ui.demo | 已实现、已验证（演示层） | ui-paper-ux.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -103,6 +104,23 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G23 | 样板只取配色、圆角、描边、卡片层次；位置重新组织，不照搬三栏拖拽与组件位置。 |
 | G24 | 公告中心、详情、更新提示、首次启动引导等界面主动出图，不待用户逐项点名。 |
 | G25 | 场景切换清弹窗残留；弹窗类场景单独渲染；流程结束 0 未关弹窗。 |
+| G26 | 风格取自样板须逐项对照色板、纹理、衬线、圆角、窗口 chrome；不得另定配色冒充同源。 |
+| G27 | UX HTML 与流程 HTML 分开命名；动 UI 的轮次主交付为 UX HTML + PNG 预览。 |
+| G28 | 每个视图渲染前强制重载，避免主题与弹窗状态串到后续截图。 |
+
+## 018 轮纸质 UX 界面
+
+| 项 | 值 |
+| --- | --- |
+| 输入 | docs/spec/18-round-018-instructions.txt，1 行 122 字节 |
+| 决策 | docs/decisions/018-paper-ux.md W01/W02、D01-D10、S01-S20、E01-E05 |
+| UX HTML | demos/ui-full-kcu-paper.html，1440×900 桌面窗口，20 视图，离线可点 |
+| 预览 | demos/preview/ 20 张 PNG + 00-overview.png 总览 + index.md |
+| 渲染脚本 | scripts/render_ui.py，本地 chromium，每视图强制重载，0 次远端请求 |
+| 规则 | docs/rules/ui-demo.md G11-G12、轮次状态表 018 行 |
+| 源码 | `src/` 本轮无变化；演示与实现分开落盘 |
+| 017 处置 | ui-full-kcu-v2.html 风格取错，保留文件但标记作废；预览目录全部覆盖 |
+| 手感回路 | 先看图 → 提意见 → 先改演示与截图 → 确认后才改实现 |
 
 ## 017 轮界面视觉预览
 

@@ -1,6 +1,6 @@
 # 接口更新记录
 
-更新轮次：017
+更新轮次：018
 
 ## 前置索引
 
@@ -289,6 +289,27 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | RO26 | 风格取自样板（配色、圆角、描边、卡片层次、轻噪点），位置重新组织；未复制样板代码、FCL 品牌与外部字体。 |
 | RO27 | `src/` 本轮无变化；`cargo test --offline` 仍为 141 passed / 0 failed；Cargo.lock 未变。 |
 | RO28 | PNG 预览闸门写入 docs/rules/ui-demo.md G07-G10；每轮动 UI 须复跑 `scripts/render_ui.py`。 |
+
+## 018 纸质 UX 界面
+
+| 编号 | 接口 | 输入 | 输出 | 错误 |
+| --- | --- | --- | --- | --- |
+| I37 | `#view=<name>` URL 路由 | 20 个视图名 + 5 个别名 | 对应视图 | 未知名回落 home |
+| I38 | `show(name)` / `setTheme(t)` | 视图名 / light-dark | 可见区块、导航、工具条、主题 | 无 |
+| I39 | `openDlg` / `closeDlg` | 标题 / 正文 / id / 关闭动作 | 弹窗画面与 `[KCU]` 诊断行 | 无 |
+| I40 | `seedNoise(alpha,r,g,b)` | 4 个整数 | 噪点 data URI 注入 CSS 变量 | 无 |
+| I41 | `python3 scripts/render_ui.py` | 无 | 21 张 PNG | 非零退出 |
+
+| 编号 | 内容 |
+| --- | --- |
+| RO29 | 018 轮对后端仓 0 个写请求，约束延续 RO01-RO28。 |
+| RO30 | 截图由本地 chromium 渲染，字体走本地 Noto Sans / Noto Serif CJK；噪点由 canvas 固定种子生成；0 次远端请求，未调用任何 API。 |
+| RO31 | 源稿 `/data/inputs/FCL揉纸启动器-桌面端-v3(1).txt` 与 007 轮存档 `assets/ui/normal-mode-v3.html` 逐字一致，`cmp exit 0`、双端 SHA-1 `235943d2…e99d`。 |
+| RO32 | 视觉 token 同源：米纸 / 墨 / 暗青绿 / 砖红 / 细线 / 半透明卡片 / 深色纸质 / 圆角 4-8-10；位置重排，不采用三栏拖拽与右栏公告。 |
+| RO33 | UX HTML 与流程 HTML 分开命名与登记：`demos/ui-full-*.html` 看界面，`demos/round-0XX-*.html` 看逻辑；动 UI 的主交付为 UX HTML + PNG。 |
+| RO34 | `src/` 本轮无变化；`cargo test --offline` 仍为 141 passed / 0 failed；Cargo.lock 未变。 |
+| RO35 | 渲染脚本每视图带 `?r=<i>` 强制重载，避免主题与弹窗状态串场；仅 S02 为深色纸质。 |
+| RO36 | 017 的 `ui-full-kcu-v2.html` 保留文件但标记作废；`demos/preview/` 全部覆盖为纸质版。 |
 
 ## 版本弃用
 

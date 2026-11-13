@@ -1436,3 +1436,81 @@ L3 落地：
 | 凭据与措辞 | `NO_CREDENTIAL` / `NO_EXPLANATORY` | 已证实 |
 
 独立验证结论：**部分通过**。两个哈希由独立验证者计算并写入声明块，改动作者未代算。验证者 10 项记录中 V01 / V03 / V04 / V05 为委托语数值与口径偏差，V02 / V06 / V07 / V08 为执行与扫描域口径，V09 / V10 为真实未解决项；改动作者侧已纠正委托语数值并登记，验证报告按 18.1 未改。未解决四值项仍存在，不发通过标记。
+
+## 018
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/18-round-018-instructions.txt | 逐字副本，1 行 122 字节，SHA-1 `3a9746a86ff49ab7fbb9aa805326f3e14c39dc50` |
+| docs/decisions/018-paper-ux.md | W01/W02 撤回、D01-D10、视觉 token 对照表、S01-S20、E01-E05 |
+| docs/rules/ui-demo.md | 轮次状态表 018 行、G11-G12、018 检查命令 |
+| demos/ui-full-kcu-paper.html | 纸质质感 UX 整页演示，1440×900 桌面窗口，20 视图 |
+| demos/preview/ | 20 张视图 PNG + `00-overview.png` + 重写的 `index.md` |
+| scripts/render_ui.py | 改渲染 paper 版、20 场景、每视图强制重载、4 列 5 行总览 |
+| docs/features/ui-paper-ux.md | F018-01，字段固定五段 |
+| 索引与记录 | features / decisions index、ai-errors A76-A79、docs/index 71 项必读、README、interface-log I37-I41 / RO29-RO36、push-scope |
+| docs/verification/round-018.md | 第 018 轮独立验证报告 |
+
+时间：
+
+| 项 | 值 |
+| --- | --- |
+| 沙盒开工 | `Fri Nov 13 12:25:37 CST 2026` |
+| 源稿一致性核对 | `12:33:39`，`cmp exit 0` |
+| 首次 20 视图渲染 | `12:30` 前后 |
+| 三轮修复后最终渲染 | `12:33` 前后 |
+| 文档收口 | `Fri Nov 13 12:34 CST 2026` 前后 |
+
+用户当轮两点反馈与撤回：
+
+| 编号 | 反馈 | 上一轮做法 | 018 处置 |
+| --- | --- | --- | --- |
+| W01 | 风格不对 | 017 `ui-full-kcu-v2.html` 用青绿主色 + 深蓝黑底 + 大圆角，自称取自样板 | 撤回。按源稿逐值重做：米纸 `#F1EFE8` / 墨 `#2C2C2A` / 暗青绿 `#3D6B66` / 砖红 `#B8543F` / 细线 / 半透明卡片 / 圆角 4-8-10 / 衬线标题 / 折痕 + 细噪点 / 深色纸质；017 文件保留作废 |
+| W02 | 之前提交的是流程 HTML，不是 UX HTML | 001–016 主要交付 `demos/round-0XX-*.html` 状态机与诊断行 | 撤回交付形态判定。UX HTML ＝ 窗口、导航、卡片、表格、弹窗、状态栏；流程 HTML ＝ 步骤节点、信封、阶段判定。写进 G12，动 UI 的主交付改为 UX HTML + PNG |
+
+风格只取质感，位置仍重排：顶部标题栏 + 精简左导航（可折叠）+ 工具条 + 卡片流主区 + 状态栏；不采用源稿三栏拖拽与右栏公告。KCU 内联 SVG 与 `K` 字标，无源稿品牌字面量、无外部字体 CDN。
+
+本轮真实缺陷与修复（全部留痕）：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E01 | 首次渲染 19 张全部继承深色主题 | `page.goto` 仅改 hash 不重载，浏览器保留上一场景 theme；改每场景带 `?r=<i>` 强制重载，重渲染后仅 S02 为深色 |
+| E02 | 折痕与噪点过重，浅色纸面出现明显 X 形黑线 | 折痕透明度下调（浅色 .045→.022、深色 .28→.10），噪点 alpha 16→9 / 14→8 |
+| E03 | 深色纸质正文继承 body 深墨色，标题与统计数值不可读 | `.win[data-theme="dark"]` 补 `color:var(--ink)`；primary 按钮文字改 `#26272A`；搜索框补 `color` |
+| E04 | 窗口 900px + 底部说明文字撑高 flex，标题栏与状态栏被裁 | 说明文字改 `position:fixed` 且透明，窗口完整可见 |
+| E05 | 20px 方形 logo 挤三字母 | 改单字 `K` |
+
+验证：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `cmp 源稿 assets/ui/normal-mode-v3.html` | exit 0，双端 `235943d2…e99d` | 已证实 |
+| `python3 scripts/render_ui.py` | `render_ui OK shots=20`，21 张 PNG，总览 1462×1392 | 已证实 |
+| `CARGO_INCREMENTAL=0 cargo test --offline` | 141 passed / 0 failed | 已证实 |
+| `node -e` 遍历 demos/*.html | 18 份内联脚本语法通过 | 已证实 |
+| `! grep -rE 'FCL\|揉纸启动器\|https?://' demos/ui-full-kcu-paper.html` | exit 0 | 已证实 |
+| `git diff 52e02c1..HEAD -- src/` | 空 | 已证实 |
+| 用户在手机端按图给手感反馈 | 未发生 | 未证实 |
+
+阶段：D07 第 3 层 lightweight 已实现、已验证；018 轮只动演示层与文档，`src/` 无变化；L4 headless 及以下 6 层未启动。UI 实现仍按 D08 等用户确认演示后进。
+
+未做：
+- UI 实现（PNG 总览确认后才进实现）
+- L4 headless 及以下 6 层、CF 下载模块、X01-X04 逐条处置、CF 具体调用方法
+- 特殊版代码（待用户明确同意，用户手拉工具流）、本项目 LICENSE 文件
+- 后端仓任何写请求
+- 浏览器内交互实测（截图为静态帧，交互需用户本地点开 UX HTML）
+- 加载器逐版本 schema、WebView2 检测键、插件源默认、CF server-only 等价字段、`/talk` 来源、Java 镜像条款、mclo.gs 条款补证
+
+018 独立验证复核：
+
+| 项 | 值 | 判定 |
+| --- | --- | --- |
+| 独立验证结论 | **部分通过** | 未发通过标记 |
+| 报告正文哈希声明 | `81e06b646d8a014a57ebe836a83c6b17c3fd9b13` | 声明块偏移 14173，`sha1(t[:14172])` 一致，属「去掉声明块前多出的 1 个换行」口径 |
+| 全文 SHA-1 | `e103afe47f4d905dbb63b37cda2c09bbf83015a8` | 含声明块，与正文哈希不同属预期 |
+| 变更内容哈希声明 | `1dac5274ce791f1fdafe7371443a254835d1d914` | `git diff 52e02c1..bba186e \| sha1sum` 复算一致 |
+| 报告第 5 行「21 张 PNG 目录项」 | `ls demos/preview/*.png \| wc -l` = 21；目录 22 项含 `index.md` | 措辞口径，未改报告 |
+| 全仓凭据、项目扫描域措辞 | `NO_CREDENTIAL` / `NO_EXPLANATORY` | 已证实 |
+
+两个哈希由独立验证者计算并写入声明块，改动作者未代算。委托语本轮把 14 个独立 section + 6 个别名派生视图 = 20 张截图、21 张 PNG、功能 md 六标题三个口径写清，验证者未再产生数值偏差记录。未通过项全部为真实未解决四值：用户手感反馈未发生、UI 实现未进构建、L4 及以下 6 层未启动、CF F17 / X01-X04 / 特殊版代码 / LICENSE、多项未证实调研、浏览器与 GUI 端到端、交叉编译、git HTTP、6 上游主机、远端无认证只读 GET 受阻、017 风格取错已撤回、Win7+ARM64 与 v99.99 tag 已失败、本地链与远端链哈希不同。验证报告按 18.1 未改。

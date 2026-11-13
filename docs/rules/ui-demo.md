@@ -5,7 +5,7 @@
 | 编号 | R-UI-01 |
 | 状态 | 已批准 |
 | 版本 | 0.0.0 |
-| 轮次 | 015 建立；016 首次触发；017 增加 PNG 预览闸门 |
+| 轮次 | 015 建立；016 首次触发；017 增 PNG 闸门；018 纸质质感与 UX 形态纠正 |
 | 依据 | docs/spec/15-round-015-instructions.txt F02/F03；docs/decisions/015-build-continue.md D02-D04 |
 
 ## 触发
@@ -70,7 +70,8 @@
 | --- | --- | --- |
 | 015 | 不触发（仅调度逻辑） | 无 ui-full 文件；`demos/round-015-dispatcher.html` 是运行逻辑演示，不计入 G01 |
 | 016 | **已触发**（L3 lightweight 极简视图） | `demos/ui-full-lightweight.html` |
-| 017 | **已触发**（正常模式界面重排 + 公告族补齐） | `demos/ui-full-kcu-v2.html`、`demos/preview/00-overview.png` + 15 张场景 PNG |
+| 017 | **已触发**（正常模式界面重排 + 公告族补齐） | `demos/ui-full-kcu-v2.html`、`demos/preview/00-overview.png` + 15 张场景 PNG；**风格取错，已作废** |
+| 018 | **已触发**（纸质质感重做 + UX 形态纠正） | `demos/ui-full-kcu-paper.html`、`demos/preview/00-overview.png` + 20 张视图 PNG |
 
 016 触发记录：
 
@@ -117,3 +118,25 @@ grep -c '<section class="scene' demos/ui-full-kcu-v2.html
 ```
 
 017 手感回路：PNG 总览 → 用户按图提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 无变化。
+
+## 018 增补
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| G11 | 风格源 | 样板纸质色板、折痕纹理、衬线标题、小圆角、细描边、半透明卡片、窗口 chrome；浅色米纸 + 深色纸质两套。不得另定一套配色冒充「风格取自样板」 |
+| G12 | 交付形态 | **UX HTML** ＝ 桌面窗口、导航、工具条、卡片、表格、弹窗、抽屉、状态栏，命名 `demos/ui-full-*.html`；**流程 HTML** ＝ 步骤节点、状态机、诊断行、信封、阶段判定，命名 `demos/round-0XX-*.html`。动 UI 的轮次主交付只能是 UX HTML + PNG，流程 HTML 不得替代 |
+
+018 视觉 token 对照表与 S01-S20 清单见 docs/decisions/018-paper-ux.md；逐图说明见 demos/preview/index.md。
+
+018 轮检查命令：
+
+```
+test -f demos/ui-full-kcu-paper.html
+test -f demos/preview/00-overview.png
+ls demos/preview/*.png | wc -l
+! grep -rE 'FCL|揉纸启动器|https?://' demos/ui-full-kcu-paper.html
+node -e "const fs=require('fs');const m=fs.readFileSync('demos/ui-full-kcu-paper.html','utf8').match(/<script>([\s\S]*?)<\/script>/);new Function(m[1]);"
+grep -c '<section class="view' demos/ui-full-kcu-paper.html
+```
+
+018 手感回路：PNG 总览 → 用户按图提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 无变化；017 的 `ui-full-kcu-v2.html` 保留文件但标记作废。

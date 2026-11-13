@@ -82,6 +82,10 @@
 | A73 | 照搬样板三栏拖拽、组件位置或复用 FCL 品牌（关联 017 D03-D05） | `! grep -rE 'FCL\|揉纸启动器\|https?://' demos/ui-full-kcu-v2.html`；布局按 D04 核对 |
 | A74 | 漏公告中心、公告详情、更新提示、首次启动引导等界面（关联 017 D06/D07） | 对照 docs/decisions/017-visual-preview.md S01-S15 逐项点图 |
 | A75 | 场景切换残留上一个弹窗，导致多张截图内容相同（关联 017 实测） | `dismissOverlay()` 在 `show()` 开头；逐张核对 `demos/preview/*.png` 不重复 |
+| A76 | 另定一套配色冒充「风格取自样板」（关联 018 W01） | 对照 docs/decisions/018-paper-ux.md 视觉 token 表逐值核验 |
+| A77 | 用流程 HTML（步骤节点 / 状态机）替代 UX HTML 交付界面（关联 018 W02/G12） | 命名核对 `demos/ui-full-*.html` vs `demos/round-0XX-*.html`；主交付须含 PNG |
+| A78 | 仅改 hash 不重载导致主题串场（关联 018 E01） | `scripts/render_ui.py` 每场景带 `?r=<i>`；核对仅 S02 为深色 |
+| A79 | 深色主题漏窗口级 color 覆盖导致文字不可读（关联 018 E03） | `.win[data-theme="dark"]` 含 `color:var(--ink)`；逐张核对深色图可读性 |
 
 ## 输出结构
 

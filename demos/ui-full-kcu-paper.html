@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU Launcher · 桌面界面</title>
+<style>
+:root{
+  --paper:#F1EFE8; --paper-hi:#FAF8F2;
+  --ink:#2C2C2A; --ink-2:#55534C; --ink-3:#8E8B80;
+  --line:rgba(40,40,38,.10); --line-2:rgba(40,40,38,.18);
+  --accent:#3D6B66; --accent-hi:#4F8580; --sel:rgba(61,107,102,.10);
+  --card:rgba(255,255,255,.72); --card-2:rgba(255,255,255,.46);
+  --warn:#B8543F; --ok:#6B8E4E; --blue:#4A6FA5; --gold:#B08A3E;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-6:24px;
+  --r-sm:4px; --r-md:8px; --r-lg:10px;
+  --gap:12px; --fs:13px; --noise-a:.055;
+  --sans:"Noto Sans CJK SC","Noto Sans SC","WenQuanYi Micro Hei","Microsoft YaHei",-apple-system,"Segoe UI",sans-serif;
+  --serif:"Noto Serif CJK SC","Noto Serif SC","Songti SC",serif;
+}
+.win[data-theme="dark"]{
+  --paper:#292A28; --paper-hi:#323330;
+  --ink:#E9E7DE; --ink-2:#BDBAB0; --ink-3:#7F7D75;
+  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.18);
+  --accent:#7FB8AF; --accent-hi:#9ACCC3; --sel:rgba(127,184,175,.16);
+  --card:rgba(255,255,255,.055); --card-2:rgba(255,255,255,.035);
+  --warn:#D9755C; --ok:#86AE62; --blue:#7FA2D6; --gold:#E0BE7A;
+  --noise-a:.05;
+  color:var(--ink);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--sans);font-size:var(--fs);color:var(--ink);
+  background:
+    radial-gradient(900px 600px at 14% 10%,#6E7B74 0,transparent 55%),
+    radial-gradient(820px 700px at 90% 95%,#3E4247 0,transparent 60%),
+    linear-gradient(160deg,#57605C,#33363A 70%);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.desk-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.win{
+  width:1440px;height:900px;border-radius:var(--r-lg);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;background-color:var(--paper);
+  background-image:
+    var(--noise),
+    radial-gradient(1100px 760px at 18% 14%,rgba(255,255,255,.52),transparent 62%),
+    radial-gradient(900px 700px at 88% 92%,rgba(0,0,0,.055),transparent 60%),
+    linear-gradient(133deg,transparent 0 29%,rgba(0,0,0,.022) 29.5%,rgba(255,255,255,.34) 30.2%,transparent 31%),
+    linear-gradient(47deg,transparent 0 60%,rgba(255,255,255,.30) 60.6%,rgba(0,0,0,.02) 61.2%,transparent 62%),
+    linear-gradient(176deg,transparent 0 77%,rgba(0,0,0,.018) 77.5%,rgba(255,255,255,.26) 78%,transparent 79%);
+  box-shadow:0 1px 2px rgba(0,0,0,.2),0 18px 50px rgba(0,0,0,.35),0 50px 120px rgba(0,0,0,.4);
+}
+.win[data-theme="dark"]{
+  background-image:
+    var(--noise-dark),
+    radial-gradient(1200px 800px at 18% 12%,rgba(255,255,255,.055),transparent 60%),
+    radial-gradient(900px 700px at 85% 92%,rgba(0,0,0,.42),transparent 62%),
+    linear-gradient(128deg,transparent 0 30%,rgba(0,0,0,.10) 30.6%,rgba(255,255,255,.035) 31.2%,transparent 32%),
+    linear-gradient(52deg,transparent 0 62%,rgba(255,255,255,.03) 62.5%,rgba(0,0,0,.09) 63.2%,transparent 64%),
+    linear-gradient(178deg,transparent 0 78%,rgba(0,0,0,.08) 78.4%,rgba(255,255,255,.025) 78.9%,transparent 79.5%);
+}
+.win::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;border-radius:var(--r-lg);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.05),inset 0 0 0 1px rgba(255,255,255,.5)}
+.win[data-theme="dark"]::before{box-shadow:inset 0 0 60px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.08)}
+.win,.win *{transition:background-color .22s ease,border-color .22s ease,color .22s ease}
+
+/* 标题栏 */
+.titlebar{height:40px;flex-shrink:0;display:flex;align-items:center;gap:var(--sp-3);padding:0 0 0 14px;
+  border-bottom:1px solid var(--line);background:rgba(255,255,255,.35);backdrop-filter:blur(6px);position:relative;z-index:6}
+.win[data-theme="dark"] .titlebar{background:rgba(0,0,0,.28)}
+.tb-logo{width:20px;height:20px;border-radius:var(--r-sm);background:var(--ink);color:var(--paper);
+  font-family:var(--serif);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;letter-spacing:-.5px}
+.tb-name{font-size:12px;color:var(--ink-2);letter-spacing:.5px}
+.tb-name b{font-weight:500;color:var(--ink)}
+.tb-search{margin-left:auto;position:relative;width:260px}
+.tb-search input{width:100%;height:26px;border-radius:13px;border:1px solid var(--line);
+  background:rgba(255,255,255,.6);padding:0 34px 0 28px;font-family:inherit;font-size:12px;color:var(--ink);outline:none}
+.win[data-theme="dark"] .tb-search input{background:rgba(0,0,0,.22);color:var(--ink)}
+.win[data-theme="dark"] .btn.primary{color:#26272A}
+.tb-search .mag{position:absolute;left:9px;top:6px;font-size:12px;color:var(--ink-3)}
+.tb-search kbd{position:absolute;right:8px;top:5px;font-size:10px;color:var(--ink-3);border:1px solid var(--line);
+  border-radius:3px;padding:0 4px;background:var(--paper-hi);font-family:var(--sans)}
+.tb-icon{width:34px;height:24px;border:1px solid var(--line);background:rgba(255,255,255,.5);border-radius:13px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-2);font-size:12px}
+.win[data-theme="dark"] .tb-icon{background:rgba(0,0,0,.3)}
+.winctl{display:flex;height:100%;margin-left:4px}
+.winctl button{width:44px;height:100%;border:none;background:none;cursor:pointer;color:var(--ink-2);font-size:12px}
+.winctl button:hover{background:rgba(0,0,0,.06)}
+.winctl button.close:hover{background:var(--warn);color:#fff}
+
+/* 主体 */
+.body{flex:1;display:flex;min-height:0;position:relative;z-index:2}
+.nav{width:var(--nav-w,196px);flex-shrink:0;padding:var(--sp-4) 10px var(--sp-3);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;gap:2px;transition:width .18s ease}
+.win.narrow .nav{width:64px}
+.nav-item{display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border:none;background:none;
+  border-radius:var(--r-md);cursor:pointer;font-family:inherit;font-size:13px;color:var(--ink-2);width:100%;
+  text-align:left;position:relative}
+.nav-item:hover{background:rgba(0,0,0,.05);color:var(--ink)}
+.win[data-theme="dark"] .nav-item:hover{background:rgba(255,255,255,.07)}
+.nav-item.active{background:var(--sel);color:var(--accent);font-weight:500}
+.nav-item.active::before{content:"";position:absolute;left:-10px;top:10px;width:3px;height:16px;
+  border-radius:0 2px 2px 0;background:var(--accent)}
+.nav-item .ic{width:18px;flex-shrink:0;text-align:center;font-size:14px}
+.nav-item .lb{white-space:nowrap;overflow:hidden}
+.nav-item .cnt{margin-left:auto;font-size:10px;color:var(--ink-3);background:rgba(0,0,0,.05);border-radius:8px;padding:1px 6px}
+.win.narrow .nav-item{justify-content:center;padding:0}
+.win.narrow .nav-item .lb,.win.narrow .nav-item .cnt{display:none}
+.nav-sep{height:1px;background:var(--line);margin:10px 4px}
+.nav-foot{margin-top:auto;display:flex;flex-direction:column;gap:2px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.toolbar{height:56px;flex-shrink:0;padding:0 var(--sp-6);display:flex;align-items:center;gap:var(--sp-3);
+  border-bottom:1px solid var(--line)}
+.tb-title{font-family:var(--serif);font-size:18px;font-weight:700;letter-spacing:.5px}
+.tb-crumb{font-size:11px;color:var(--ink-3);margin-top:2px}
+.tb-actions{margin-left:auto;display:flex;align-items:center;gap:var(--sp-2)}
+.seg{display:flex;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:rgba(255,255,255,.5)}
+.win[data-theme="dark"] .seg{background:rgba(0,0,0,.22)}
+.seg button{border:none;background:none;cursor:pointer;font-family:inherit;font-size:12px;padding:6px 11px;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.active{background:var(--ink);color:var(--paper)}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:var(--r-md);font-family:inherit;font-size:12px;
+  color:var(--ink-2);cursor:pointer;padding:7px 13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--line-2);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-hi);color:#fff}
+.btn.tiny{padding:4px 9px;font-size:11px}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.scroll{flex:1;overflow:auto;padding:var(--sp-6)}
+.view{display:none;animation:fade .2s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.grid{display:grid;gap:var(--gap)}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.stack{display:grid;gap:var(--gap)}
+.row{display:flex;align-items:center;gap:var(--sp-3);flex-wrap:wrap}
+.spread{justify-content:space-between}
+.serif{font-family:var(--serif)}
+.dim{color:var(--ink-2)}.mut{color:var(--ink-3)}.acc{color:var(--accent)}
+h3.sec{font-family:var(--serif);font-size:14px;font-weight:700;margin-bottom:10px;letter-spacing:.4px}
+
+/* 纸感组件 */
+.panel,.notice,.stat,.side-card,.set-card,.modal,.acct,.vercard{background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);box-shadow:0 4px 16px rgba(0,0,0,.05)}
+.win[data-theme="dark"] .panel,.win[data-theme="dark"] .notice,.win[data-theme="dark"] .stat,
+.win[data-theme="dark"] .side-card,.win[data-theme="dark"] .set-card,.win[data-theme="dark"] .modal,
+.win[data-theme="dark"] .acct,.win[data-theme="dark"] .vercard{box-shadow:0 4px 16px rgba(0,0,0,.32)}
+.panel{padding:var(--sp-4)}
+.panel-head{display:flex;align-items:baseline;gap:10px;padding-bottom:11px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.panel-title{font-family:var(--serif);font-size:14px;font-weight:700}
+.panel-sub{font-size:11px;color:var(--ink-3)}
+.panel-tools{margin-left:auto;display:flex;gap:6px}
+.notice{display:flex;gap:12px;padding:14px 16px;align-items:flex-start}
+.notice-ico{width:34px;height:34px;flex:0 0 34px;border-radius:var(--r-md);background:var(--sel);color:var(--accent);
+  display:grid;place-items:center;font-size:16px}
+.win[data-theme="dark"] .notice-ico{background:rgba(127,184,175,.18)}
+.notice-main{flex:1}
+.notice-head{display:flex;align-items:baseline;gap:10px}
+.notice-title{font-family:var(--serif);font-size:14px;font-weight:700}
+.notice-date{font-size:10px;color:var(--ink-3);margin-left:auto;font-family:var(--sans)}
+.notice-body{font-size:12px;color:var(--ink-2);margin-top:5px;line-height:1.75}
+.tag{font-size:10px;border:1px solid var(--line);border-radius:var(--r-sm);padding:1px 6px;color:var(--ink-3);margin-right:5px}
+.tag.pin{color:var(--gold);border-color:var(--gold)}
+.tag.up{color:var(--blue);border-color:var(--blue)}
+.tag.mt{color:var(--warn);border-color:var(--warn)}
+.stat{display:flex;align-items:center;gap:12px;padding:13px 15px}
+.stat-ico{width:34px;height:34px;border-radius:var(--r-md);color:#fff;display:grid;place-items:center;font-size:15px}
+.stat-v{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.2}
+.stat-l{font-size:11px;color:var(--ink-3)}
+.badge{font-size:10px;border-radius:var(--r-sm);padding:2px 7px;white-space:nowrap}
+.badge.ok{background:rgba(107,142,78,.16);color:var(--ok)}
+.badge.up{background:rgba(74,111,165,.14);color:var(--blue)}
+.badge.err{background:rgba(184,84,63,.14);color:var(--warn)}
+.badge.miss{background:rgba(176,138,62,.16);color:var(--gold)}
+.badge.off{background:rgba(0,0,0,.06);color:var(--ink-3)}
+.win[data-theme="dark"] .badge.ok{background:rgba(127,184,175,.22);color:#A9DED5}
+.win[data-theme="dark"] .badge.up{background:rgba(122,162,214,.22);color:#A2C8F2}
+.win[data-theme="dark"] .badge.err{background:rgba(217,117,92,.22);color:#F2AB92}
+table.grid{width:100%;border-collapse:collapse;font-size:12px}
+table.grid th{text-align:left;font-weight:500;color:var(--ink-3);font-size:11px;padding:8px 10px;
+  background:rgba(0,0,0,.035);border-bottom:1px solid var(--line)}
+table.grid td{padding:9px 10px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+table.grid tbody tr:hover{background:var(--sel)}
+.win[data-theme="dark"] table.grid th{background:rgba(255,255,255,.05)}
+.win[data-theme="dark"] table.grid td{color:#D7D4CA}
+.progress{height:7px;border-radius:99px;background:rgba(0,0,0,.09);overflow:hidden}
+.win[data-theme="dark"] .progress{background:rgba(255,255,255,.12)}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.chip{border:1px solid var(--line);border-radius:var(--r-sm);padding:4px 9px;font-size:11px;color:var(--ink-2);
+  background:var(--card-2);cursor:pointer}
+.chip.on{background:var(--sel);border-color:var(--accent);color:var(--accent)}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:10px 14px;align-items:center;font-size:12px}
+.kv .k{color:var(--ink-3)}
+input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(--r-md);background:rgba(255,255,255,.6);
+  padding:7px 10px;font-family:inherit;font-size:12px;color:var(--ink);outline:none}
+.win[data-theme="dark"] input.txt,.win[data-theme="dark"] select.sel{background:rgba(0,0,0,.22)}
+.set-card{padding:15px}
+.set-card .hd{font-family:var(--serif);font-size:14px;font-weight:700;margin-bottom:12px;
+  padding-bottom:9px;border-bottom:1px solid var(--line)}
+.empty{padding:28px;text-align:center;color:var(--ink-3);border:1px dashed var(--line-2);border-radius:var(--r-lg);font-size:12px}
+.lock{opacity:.55;pointer-events:none}
+.hero{display:flex;gap:18px;align-items:center;padding:22px;border-radius:var(--r-lg);
+  border:1px solid var(--line-2);background:var(--card);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.hero .big{font-family:var(--serif);font-size:22px;font-weight:700}
+.cube{width:64px;height:64px;flex:0 0 64px}
+.acct{display:flex;gap:12px;align-items:center;padding:13px}
+.acct-badge{width:38px;height:38px;border-radius:var(--r-md);background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-weight:700}
+.acct-name{font-size:13px;font-weight:600}.acct-type{font-size:11px;color:var(--ink-3)}
+.step{display:flex;gap:10px;align-items:center}
+.step .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--card-2);
+  border:1px solid var(--line);font-size:11px;color:var(--ink-3);flex:0 0 26px}
+.step.on .n{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.step.done .n{background:var(--sel);border-color:var(--accent);color:var(--accent)}
+
+/* 弹窗 / 抽屉 / 右键菜单 / 状态栏 */
+.mask{position:absolute;inset:0;background:rgba(30,30,28,.42);z-index:20;display:none;align-items:center;justify-content:center}
+.win[data-theme="dark"] .mask{background:rgba(10,10,10,.58)}
+.mask.on{display:flex}
+.modal{width:min(540px,86%);max-height:80%;overflow:auto;position:relative;z-index:21}
+.modal .top{display:flex;align-items:flex-start;gap:10px;padding:16px 18px 11px;border-bottom:1px solid var(--line)}
+.modal .top h2{font-family:var(--serif);font-size:16px;font-weight:700}
+.modal .x{margin-left:auto;border:none;background:none;cursor:pointer;color:var(--ink-3);font-size:17px;line-height:1}
+.modal .bd{padding:15px 18px;font-size:12px;color:var(--ink-2);line-height:1.85}
+.modal .bd p{margin-bottom:9px}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;padding:11px 18px 16px;flex-wrap:wrap}
+.attach{border:1px dashed var(--line-2);border-radius:var(--r-md);padding:9px 11px;background:var(--card-2);
+  font-size:11px;color:var(--ink-3);margin-top:8px}
+.logdrawer{position:absolute;right:14px;bottom:32px;width:min(620px,60%);height:330px;z-index:15;
+  background:rgba(24,25,23,.95);color:#CFCCC2;border:1px solid rgba(255,255,255,.14);border-radius:var(--r-lg);
+  box-shadow:0 18px 50px rgba(0,0,0,.4);display:none;flex-direction:column}
+.logdrawer.on{display:flex}
+.logdrawer .lh{display:flex;align-items:center;gap:9px;padding:9px 13px;border-bottom:1px solid rgba(255,255,255,.14);font-size:12px}
+.logdrawer .lh .z{margin-left:auto;cursor:pointer;color:#9B988E}
+.logbody{flex:1;overflow:auto;padding:11px 13px;font:11px/1.8 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.ctx{position:absolute;z-index:25;left:44%;top:42%;width:180px;background:var(--paper-hi);border:1px solid var(--line-2);
+  border-radius:var(--r-md);box-shadow:0 14px 34px rgba(0,0,0,.22);padding:5px;display:none}
+.win[data-theme="dark"] .ctx{background:#323330;box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.ctx.on{display:block}
+.ctx div{padding:7px 10px;font-size:12px;color:var(--ink-2);border-radius:var(--r-sm);cursor:pointer}
+.ctx div:hover{background:var(--sel);color:var(--accent)}
+.ctx hr{border:none;border-top:1px solid var(--line);margin:4px 2px}
+.statusbar{height:28px;flex-shrink:0;display:flex;align-items:center;gap:var(--sp-4);padding:0 14px;
+  border-top:1px solid var(--line);background:rgba(255,255,255,.32);font-size:11px;color:var(--ink-3);position:relative;z-index:6}
+.win[data-theme="dark"] .statusbar{background:rgba(0,0,0,.22)}
+.sb-i{display:flex;align-items:center;gap:5px}
+.sb-right{margin-left:auto;display:flex;gap:var(--sp-4)}
+.sb-btn{border:none;background:none;cursor:pointer;color:var(--ink-3);font-family:inherit;font-size:11px}
+.desk-cap{position:fixed;bottom:4px;left:50%;transform:translateX(-50%);font:11px var(--sans);color:rgba(255,255,255,0);letter-spacing:1px;z-index:30}
+</style>
+</head>
+<body>
+<div class="desk-wrap">
+<div class="win" id="win" data-theme="light">
+  <div class="titlebar">
+    <div class="tb-logo">K</div>
+    <div class="tb-name"><b>KCU Launcher</b> · 桌面端</div>
+    <div class="tb-search"><span class="mag">⌕</span><input type="text" placeholder="搜索实例、模组、设置"><kbd>Ctrl K</kbd></div>
+    <button class="tb-icon" id="btnTheme" title="切换主题">☾</button>
+    <div class="winctl"><button title="最小化">─</button><button title="最大化">□</button><button class="close" title="关闭">×</button></div>
+  </div>
+
+  <div class="body">
+    <nav class="nav" id="nav">
+      <button class="nav-item active" data-v="home"><span class="ic">⌂</span><span class="lb">首页</span></button>
+      <button class="nav-item" data-v="notices"><span class="ic">✉</span><span class="lb">公告中心</span><span class="cnt">3</span></button>
+      <button class="nav-item" data-v="instances"><span class="ic">▦</span><span class="lb">实例与服务器</span><span class="cnt">7</span></button>
+      <button class="nav-item" data-v="download"><span class="ic">⇩</span><span class="lb">下载中心</span></button>
+      <button class="nav-item" data-v="mods"><span class="ic">◈</span><span class="lb">模组管理</span><span class="cnt">110</span></button>
+      <button class="nav-item" data-v="login"><span class="ic">◉</span><span class="lb">账号登录</span></button>
+      <button class="nav-item" data-v="logs"><span class="ic">≡</span><span class="lb">日志诊断</span></button>
+      <div class="nav-sep"></div>
+      <button class="nav-item" data-v="settings"><span class="ic">⚙</span><span class="lb">设置</span></button>
+      <button class="nav-item" data-v="about"><span class="ic">ⓘ</span><span class="lb">关于</span></button>
+      <div class="nav-foot">
+        <button class="nav-item" data-v="popups"><span class="ic">▤</span><span class="lb">弹窗全集</span></button>
+        <button class="nav-item" data-v="lightweight"><span class="ic">▷</span><span class="lb">轻量模式</span></button>
+        <button class="nav-item" id="btnCollapse"><span class="ic">‹</span><span class="lb">收起侧栏</span></button>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="toolbar">
+        <div><div class="tb-title" id="vTitle">实例总览</div><div class="tb-crumb" id="vCrumb">首页 · 本地 7 个实例 · 上次同步 2 分钟前</div></div>
+        <div class="tb-actions">
+          <div class="seg"><button class="active" data-seg="list">列表</button><button data-seg="card">网格</button></div>
+          <button class="btn" id="btnRefresh">↻ 刷新</button>
+          <button class="btn primary" id="btnNew">＋ 新建实例</button>
+        </div>
+      </div>
+      <div class="scroll">
+
+      <!-- 首页 -->
+      <section class="view on" data-view="home">
+        <div class="stack">
+          <div class="notice">
+            <div class="notice-ico">📣</div>
+            <div class="notice-main">
+              <div class="notice-head"><div class="notice-title">公告：KCU 0.0.1 预览</div><div class="notice-date">2026.11.13</div></div>
+              <div class="notice-body">批量下载、公告中心与界面预览已就绪。共 3 条未读，点右侧查看全部。</div>
+              <div style="margin-top:7px"><span class="tag up">更新</span><span class="tag">稳定性</span></div>
+            </div>
+            <button class="btn tiny" data-v="notices" style="align-self:center">查看全部</button>
+          </div>
+          <div class="grid g4">
+            <div class="stat"><div class="stat-ico" style="background:#6B8E4E">▦</div><div><div class="stat-v">7</div><div class="stat-l">本地实例</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#3D6B66">◈</div><div><div class="stat-v">110</div><div class="stat-l">已装模组</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#4A6FA5">▤</div><div><div class="stat-v">23.4 GB</div><div class="stat-l">数据占用</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#B8543F">◷</div><div><div class="stat-v">342</div><div class="stat-l">累计启动</div></div></div>
+          </div>
+          <div class="grid" style="grid-template-columns:1.5fr 1fr">
+            <div class="panel">
+              <div class="panel-head"><div class="panel-title">启动</div><div class="panel-sub">当前实例 · 1.21.4 Fabric</div>
+                <div class="panel-tools"><button class="btn tiny" data-v="instances">切换</button></div></div>
+              <div class="hero">
+                <svg class="cube" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                  <path d="M13 2 L23 7.5 L23 18.5 L13 24 L3 18.5 L3 7.5 Z" fill="#3D6B66" opacity=".14"/>
+                  <path d="M13 2 L23 7.5 L13 13 L3 7.5 Z" fill="#3D6B66"/>
+                  <path d="M3 7.5 L13 13 L13 24 L3 18.5 Z" fill="#4F8580"/>
+                  <path d="M23 7.5 L13 13 L13 24 L23 18.5 Z" fill="#2F5450"/>
+                  <text x="7.2" y="11.3" font-size="6" font-family="serif" fill="#F1EFE8" font-weight="700">K</text>
+                </svg>
+                <div style="flex:1"><div class="big">生存季 · 1.21.4</div>
+                  <div class="dim" style="font-size:12px;margin:5px 0 12px">Fabric 0.16.10 · 42 个模组 · 上次启动正常</div>
+                  <div class="row"><button class="btn primary" id="btnLaunch">▶ 启动游戏</button><button class="btn" data-v="download">检查更新</button><button class="btn" data-v="logs">运行日志</button></div>
+                </div>
+              </div>
+              <div style="margin-top:14px" class="panel-head"><div class="panel-title">最近实例</div><div class="panel-sub">共 7 条</div></div>
+              <table class="grid"><thead><tr><th>实例</th><th>版本 / 加载器</th><th>模组</th><th>状态</th></tr></thead><tbody>
+                <tr><td>生存季</td><td>1.21.4 · Fabric</td><td>42</td><td><span class="badge ok">正常</span></td></tr>
+                <tr><td>纯原版</td><td>1.21.4 · Vanilla</td><td>0</td><td><span class="badge ok">正常</span></td></tr>
+                <tr><td>旧存档</td><td>1.20.1 · Forge</td><td>18</td><td><span class="badge up">可更新</span></td></tr>
+                <tr><td>测试服</td><td>1.21.1 · NeoForge</td><td>7</td><td><span class="badge off">被锁</span></td></tr>
+              </tbody></table>
+            </div>
+            <div class="stack">
+              <div class="side-card"><h3 class="sec">手感调整</h3>
+                <div class="row"><select class="sel" id="gGap" style="width:auto"><option value="12">间距 12</option><option value="8">间距 8</option><option value="18">间距 18</option></select>
+                <select class="sel" id="gFs" style="width:auto"><option value="13">字号 13</option><option value="12">字号 12</option><option value="14">字号 14</option></select></div>
+                <div class="row" style="margin-top:8px"><select class="sel" id="gR" style="width:auto"><option value="10">圆角 10</option><option value="4">圆角 4</option><option value="16">圆角 16</option></select>
+                <select class="sel" id="gNoise" style="width:auto"><option value=".055">纸纹 中</option><option value=".02">纸纹 淡</option><option value=".09">纸纹 重</option></select></div>
+                <div class="mut" style="font-size:11px;margin-top:9px">演示层调整，确认后才进实现。纸质样板只取质感，位置重新组织。</div>
+              </div>
+              <div class="side-card"><h3 class="sec">最近公告</h3><div class="stack" id="homeNotices"></div></div>
+              <div class="vercard" style="padding:13px"><h3 class="sec">当前账户</h3>
+                <div class="acct" style="box-shadow:none;border:none;padding:0;background:none">
+                  <div class="acct-badge">K</div><div><div class="acct-name">kongbai</div><div class="acct-type">离线账户 · 皮肤已加载</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 公告中心 -->
+      <section class="view" data-view="notices">
+        <div class="row" style="margin-bottom:12px">
+          <span class="chip on" data-f="all">全部 6</span><span class="chip" data-f="pin">置顶</span><span class="chip" data-f="up">版本更新</span>
+          <span class="chip" data-f="evt">活动</span><span class="chip" data-f="mt">维护</span>
+          <button class="btn tiny" id="readAll" style="margin-left:auto">全部标为已读</button><span class="badge err" id="unreadPill">未读 3</span>
+        </div>
+        <div class="grid" style="grid-template-columns:1.35fr 1fr">
+          <div class="stack" id="noticeList"></div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><div class="panel-title">公告详情</div><div class="panel-sub">点左侧条目切换</div></div>
+              <div id="noticePreview" class="dim" style="font-size:12px;line-height:1.8"></div>
+              <div class="row" style="margin-top:12px"><button class="btn primary tiny" id="openDetail">打开详情弹窗</button></div>
+            </div>
+            <div class="panel"><div class="panel-head"><div class="panel-title">公告规则</div></div>
+              <div class="stack" style="font-size:12px" class="dim">
+                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">未读高亮、已读降噪，不自动弹窗打断操作</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">维护公告只在相关入口提示，不全局拦截</div></div></div>
+                <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">每条都有不再提示与关闭路径，流程结束 0 残留</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 实例与服务器 -->
+      <section class="view" data-view="instances">
+        <div class="panel"><div class="panel-head"><div class="panel-title">实例列表</div><div class="panel-sub">共 7 条 · 双击服务器按权重选实例</div>
+          <div class="panel-tools"><button class="btn tiny">批量导入</button><button class="btn tiny">扫描</button></div></div>
+          <table class="grid"><thead><tr><th>实例名称</th><th>版本</th><th>加载器</th><th>模组</th><th>上次启动</th><th>状态</th></tr></thead><tbody id="insBody"></tbody></table>
+        </div>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">服务器列表</div><div class="panel-sub">一个参数可直接进服 · 用户指定排第一</div></div>
+          <table class="grid"><thead><tr><th>服务器</th><th>版本</th><th>实例选择</th><th>来源</th></tr></thead><tbody id="srvBody"></tbody></table>
+        </div>
+      </section>
+
+      <!-- 下载中心 -->
+      <section class="view" data-view="download">
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">下载队列</div><div class="panel-sub" id="dlSub">4 个任务 · 1 次请求</div>
+            <div class="panel-tools"><button class="btn tiny" id="dlRun">拉取 10 个</button><button class="btn tiny" id="dl45">跑 45 个</button><button class="btn tiny" id="dlCancel">取消</button></div></div>
+            <div class="stack" id="dlList"></div><div class="progress" style="margin-top:12px"><i id="dlBar" style="width:84%"></i></div>
+          </div>
+          <div class="stack">
+            <div class="set-card"><div class="hd">下载源与软策略</div><div class="kv">
+              <span class="k">默认源</span><select class="sel"><option>BMCLAPI 国内镜像</option><option>Mojang 官方</option></select>
+              <span class="k">地域判定</span><select class="sel"><option>自动测速</option><option>强制境外（仅影响下载选择）</option></select>
+              <span class="k">每页条数</span><input class="txt" value="20" readonly>
+              <span class="k">API Key</span><input class="txt" placeholder="用户填写 / 工作流注入">
+            </div></div>
+            <div class="grid g2"><div class="stat"><div class="stat-ico" style="background:#3D6B66">⇩</div><div><div class="stat-v" id="dlReq">1</div><div class="stat-l">本次请求</div></div></div>
+            <div class="stat"><div class="stat-ico" style="background:#B8543F">×</div><div><div class="stat-v">禁止</div><div class="stat-l">逐条目单发</div></div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 模组管理 -->
+      <section class="view" data-view="mods">
+        <div class="panel"><div class="panel-head"><div class="panel-title">模组管理</div><div class="panel-sub">110 个 · 启用 41</div>
+          <div class="panel-tools"><button class="btn tiny">全选</button><button class="btn tiny">禁用选中</button></div></div>
+          <table class="grid"><thead><tr><th>模组</th><th>版本</th><th>来源</th><th>大小</th><th>状态</th></tr></thead><tbody>
+            <tr><td>sodium</td><td>0.6.9</td><td>Modrinth</td><td>1.8 MB</td><td><span class="badge ok">启用</span></td></tr>
+            <tr><td>iris</td><td>1.8.1</td><td>Modrinth</td><td>2.4 MB</td><td><span class="badge ok">启用</span></td></tr>
+            <tr><td>fabric-api</td><td>0.115.0</td><td>Modrinth</td><td>3.1 MB</td><td><span class="badge ok">启用</span></td></tr>
+            <tr><td>jei</td><td>19.2.0</td><td>CurseForge</td><td>1.2 MB</td><td><span class="badge off">禁用</span></td></tr>
+            <tr><td>旧版 optifine</td><td>—</td><td>本地</td><td>—</td><td><span class="badge err">lockfile 禁用</span></td></tr>
+          </tbody></table>
+        </div>
+      </section>
+
+      <!-- 登录 -->
+      <section class="view" data-view="login">
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">选择登录方式</div><div class="panel-sub">三种方式</div></div>
+            <div class="stack" id="authList"></div></div>
+          <div class="stack">
+            <div class="panel"><div class="panel-head"><div class="panel-title">网页登录回退链</div><div class="panel-sub">外置 → 内置 → 连接码</div></div>
+              <div class="stack" id="loginFlow"></div>
+              <div class="row" style="margin-top:12px"><button class="btn primary tiny" id="loginStart">开始登录</button><button class="btn tiny" id="loginFail">模拟逐级失败</button><button class="btn tiny" id="loginReset">复位</button></div>
+              <div id="pairBox" class="attach" style="display:none"></div>
+            </div>
+            <div class="acct"><div class="acct-badge">K</div><div><div class="acct-name">kongbai</div><div class="acct-type">离线账户 · 皮肤已加载</div></div>
+              <button class="btn tiny" style="margin-left:auto">切换账户</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 日志 -->
+      <section class="view" data-view="logs">
+        <div class="panel"><div class="panel-head"><div class="panel-title">运行日志</div><div class="panel-sub">每 100 行分片 · 默认脱敏</div>
+          <div class="panel-tools"><button class="btn tiny" id="logClear">清空</button><button class="btn primary tiny" id="logDrawer">打开日志抽屉</button><button class="btn tiny" id="logExport">导出诊断包</button></div></div>
+          <div id="logView" class="logbody" style="height:430px;background:rgba(24,25,23,.93);color:#CFCCC2;border-radius:var(--r-md);padding:12px"></div>
+        </div>
+      </section>
+
+      <!-- 设置 -->
+      <section class="view" data-view="settings">
+        <div class="grid g2">
+          <div class="set-card"><div class="hd">常规</div><div class="kv">
+            <span class="k">界面语言</span><select class="sel"><option>简体中文</option><option>English</option></select>
+            <span class="k">主题</span><select class="sel"><option>纸质浅色（默认）</option><option>深色纸质</option><option>跟随系统</option></select>
+            <span class="k">数据目录</span><input class="txt" value="C:\KCU" readonly>
+            <span class="k">公告</span><select class="sel"><option>未读时铃铛提示</option><option>静默</option></select>
+          </div></div>
+          <div class="set-card"><div class="hd">下载与网络</div><div class="kv">
+            <span class="k">每页条数</span><input class="txt" value="20" readonly>
+            <span class="k">镜像测速</span><select class="sel"><option>开启</option><option>关闭</option></select>
+            <span class="k">缓存容量</span><input class="txt" value="32 条 / TTL 30s" readonly>
+            <span class="k">AI 接口</span><input class="txt" placeholder="用户自填">
+          </div></div>
+          <div class="set-card"><div class="hd">游戏与实例</div><div class="kv">
+            <span class="k">EULA</span><select class="sel"><option>启动前写入</option></select>
+            <span class="k">UPnP</span><select class="sel"><option>默认关闭</option></select>
+            <span class="k">崩溃后</span><select class="sel"><option>自动重启</option></select>
+            <span class="k">旧版 jar</span><select class="sel"><option>写 lockfile 禁用</option></select>
+          </div></div>
+          <div class="set-card"><div class="hd">隐私</div><div class="kv">
+            <span class="k">日志上传</span><select class="sel"><option>默认脱敏（可手动关）</option></select>
+            <span class="k">保留期</span><input class="txt" value="30 天" readonly>
+            <span class="k">文件管理</span><input class="txt" value="系统面板" readonly>
+            <span class="k">凭据保护</span><input class="txt" value="待方案批准" readonly>
+          </div></div>
+        </div>
+      </section>
+
+      <!-- 关于 -->
+      <section class="view" data-view="about">
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">关于 KCU Launcher</div><div class="panel-sub">版本与许可证</div></div>
+            <div class="kv"><span class="k">版本</span><span>0.0.0 · 演示构建</span>
+              <span class="k">平台</span><span>Windows 桌面（Win7 方案待定）</span>
+              <span class="k">架构</span><span>i686 / x86_64 / aarch64</span>
+              <span class="k">本项目许可证</span><span><span class="badge miss">LICENSE 未生成</span></span>
+              <span class="k">纸质样板</span><span>仅质感参考，不复制代码与品牌</span></div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title">界面口径</div></div>
+            <div class="stack" style="font-size:12px;color:var(--ink-2)">
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">米纸底色、墨色字、暗青绿点缀、衬线标题、细描边小圆角</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">折痕高光与细噪点构成纸面，深色纸质主题独立成组</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">位置重新组织：导航 + 工具条 + 卡片流 + 状态栏，不照搬三栏</div></div></div>
+              <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">✓</div><div class="notice-main"><div class="notice-body">轻量模式独立极简视图，与本页不共用组件</div></div></div>
+            </div></div>
+        </div>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">开源致谢</div><div class="panel-sub">文档层登记，未复制代码</div></div><div class="row" id="creditRow"></div></div>
+      </section>
+
+      <!-- 弹窗全集 -->
+      <section class="view" data-view="popups">
+        <div class="panel"><div class="panel-head"><div class="panel-title">弹窗全集</div><div class="panel-sub">11 类 · 按钮 / ESC / 取消 / 确认 / 超时 / 宿主</div>
+          <div class="panel-tools"><button class="btn primary tiny" id="popAll">全部登记</button><button class="btn tiny" id="popClose">全部关闭</button><span class="badge ok" id="popCnt">打开 0</span></div></div>
+          <div class="grid g4" id="popGrid"></div></div>
+      </section>
+
+      <!-- 轻量模式 -->
+      <section class="view" data-view="lightweight">
+        <div class="grid g2">
+          <div class="panel"><div class="panel-head"><div class="panel-title">轻量模式极简窗口</div><div class="panel-sub">≤2GiB 首次启动自动进入</div></div>
+            <div class="stack"><div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">▷</div><div class="notice-main"><div class="notice-body">单主题 · 不加载本页任何组件与纸纹重资产</div></div></div>
+              <div class="row"><button class="btn primary" style="flex:1">离线登录</button><button class="btn" style="flex:1">第三方</button><button class="btn" style="flex:1">Mojang</button></div>
+              <div class="row"><button class="btn" style="flex:1">打开游戏目录</button><button class="btn" style="flex:1">基础日志</button></div>
+              <button class="btn primary" style="width:100%">▶ 启动游戏</button>
+              <div class="mut" style="font-size:11px">游戏运行期启动器退出，后台无常驻进程。</div></div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title">与正常模式的边界</div></div>
+            <table class="grid"><thead><tr><th>项</th><th>轻量模式</th></tr></thead><tbody>
+              <tr><td>组件</td><td>独立极简视图</td></tr><tr><td>主题</td><td>单主题</td></tr>
+              <tr><td>登录</td><td>三种 + 三级回退</td></tr><tr><td>下载</td><td>Mojang / BMCLAPI 批量</td></tr>
+              <tr><td>文件管理</td><td>系统面板</td></tr><tr><td>进程</td><td>运行期无常驻</td></tr>
+            </tbody></table></div>
+        </div>
+      </section>
+
+      <!-- 异常状态 -->
+      <section class="view" data-view="error">
+        <div class="grid g3">
+          <div class="panel"><h3 class="sec">空态</h3><div class="empty">还没有实例。新建一个，或双击服务器直接进服。</div></div>
+          <div class="panel"><h3 class="sec">加载态</h3><div class="progress"><i style="width:62%"></i></div><div class="mut" style="font-size:11px;margin-top:9px">正在准备实例，可取消且 0 副作用。</div></div>
+          <div class="panel"><h3 class="sec">错误态</h3><div class="empty" style="border-color:var(--warn);color:var(--warn)">外置 / 内置 / 连接码全部失败。零级报错，不崩溃不静默。</div></div>
+          <div class="panel"><h3 class="sec">被锁态</h3><div class="empty lock">实例目录被占用，OS 级防护 + lockfile。</div></div>
+          <div class="panel"><h3 class="sec">安全模式</h3><div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico">!</div><div class="notice-main"><div class="notice-body">连续失败 3 次进入：忽略自定义配置、禁 UI 与正版，导出 4 行诊断包。</div></div></div></div>
+          <div class="panel"><h3 class="sec">离线态</h3><div class="mut" style="font-size:12px">无网络：已缓存列表可见，下载入口提示离线，不反复发请求。</div></div>
+        </div>
+      </section>
+
+      <!-- 首次启动引导 -->
+      <section class="view" data-view="onboarding">
+        <div class="panel" style="max-width:760px;margin:0 auto"><div class="row" style="margin-bottom:18px" id="obSteps"></div>
+          <div id="obBody"></div>
+          <div class="row spread" style="margin-top:20px"><button class="btn" id="obClose">跳过引导</button>
+            <div class="row"><button class="btn" id="obPrev">上一步</button><button class="btn primary" id="obNext">下一步</button></div></div></div>
+      </section>
+
+      <!-- 网格视图 -->
+      <section class="view" data-view="cardgrid">
+        <div class="grid g3" id="cardGrid"></div>
+      </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="mask" id="mask"><div class="modal" role="dialog" aria-modal="true">
+    <div class="top"><div><h2 id="mdTitle">标题</h2><div class="mut" style="font-size:10px" id="mdId">id</div></div>
+      <button class="x" id="mdX">×</button></div>
+    <div class="bd" id="mdBody"></div><div class="acts" id="mdActs"></div></div></div>
+
+  <div class="logdrawer" id="logDrawerBox"><div class="lh"><b>运行日志</b><span class="mut">[KCU] 诊断行</span><span class="z" id="logZ">×</span></div>
+    <div class="logbody" id="logDrawerBody"></div></div>
+  <div class="ctx" id="ctx"><div>打开实例</div><div>重命名</div><div>打开目录</div><hr><div>检查更新</div><div>导出诊断包</div><hr><div>删除</div></div>
+
+  <footer class="statusbar">
+    <div class="sb-i">☕ Java 17 · 64 位</div><div class="sb-i">▥ 内存 4096 M</div>
+    <div class="sb-i">◎ BMCLAPI 镜像 · 42 ms</div>
+    <div class="sb-right"><button class="sb-btn" id="sbDev">▯ 手机已连接</button><button class="sb-btn" id="sbLog">≡ 日志</button><span id="sbTime"></span></div>
+  </footer>
+</div>
+<div class="desk-cap" id="cap">KCU LAUNCHER · 桌面界面预览 · 1440 × 900</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const win=$('win'), root=document.documentElement;
+let theme='light', unread=3, dlgOpen=false, reqCount=1, popState={}, filter='all', obStep=0, auth='offline', stage=-1;
+
+const NOTICES=[
+ {id:'n1',tag:'pin',tagT:'置顶',t:'KCU Launcher 项目说明',d:'三种模式、公开仓库与功能边界',tm:'2026.11.13',unread:true,
+  body:'<p>KCU Launcher 分三种模式：正常、轻量、无头。正常模式提供完整界面；轻量模式面向低配机器，越简单越好；无头模式不加载任何界面。</p><p>文档、功能登记与每轮验证都在公开仓库。界面演示先按手感调整，确认后才进实现。</p><div class="attach">附件：项目说明.pdf · 版本 v0.0.0 · 可「不再提示」</div>'},
+ {id:'n2',tag:'up',tagT:'更新',t:'0.0.1 预览：批量下载与公告中心',d:'一次请求带多个 id，每页 20 条',tm:'2026.11.13',unread:true,
+  body:'<p>新增批量请求：列表页一次取一页，详情走批量 ID 端点，逐条目单发已列为禁止项。</p><p>公告中心新增置顶、版本更新、活动、维护四类，未读高亮，不自动弹窗打断操作。</p><div class="attach">更新日志 14 项 · 兼容 1.21.4 · 可「稍后更新」</div>'},
+ {id:'n3',tag:'mt',tagT:'维护',t:'镜像源维护窗口',d:'本周日 02:00-03:00 部分国内镜像可能变慢',tm:'2026.11.12',unread:true,
+  body:'<p>维护窗口内下载源会自动测速切换；已缓存内容不受影响。</p><p>维护公告只在下载入口出现，不全局拦截，也不会阻止继续使用本地实例。</p>'},
+ {id:'n4',tag:'evt',tagT:'活动',t:'生存季 · 推荐整合包',d:'Fabric 0.16.10 + 42 个模组',tm:'2026.11.11',unread:false,
+  body:'<p>推荐整合包可在实例页一键导入，导入时做路径穿越防护。</p><p>下载域名白名单机制按你的要求先不做，留待以后高度自定义。</p>'},
+ {id:'n5',tag:'up',tagT:'更新',t:'加载器版本库更新',d:'六种加载器标识已登记，暂不写死字段',tm:'2026.11.10',unread:false,
+  body:'<p>加载器逐版本 schema 未取得一手原文，界面只展示标识与安装结果，不生成 version json patch。</p>'},
+ {id:'n6',tag:'evt',tagT:'活动',t:'服务器列表权重说明',d:'双击服务器按权重选实例，用户指定排第一',tm:'2026.11.09',unread:false,
+  body:'<p>双击服务器时若用户指定了实例，直接采用；未指定时按版本兼容度与习惯权重排序。</p><p>不兼容选择会可见提示，不会静默失败或崩溃。</p>'},
+];
+const POPUPS=[
+ ['privacy','隐私政策','首次进入需确认，可随时关闭，流程结束不残留。'],
+ ['declaration','声明页','模式说明与授权边界，轻量模式不复用本页。'],
+ ['eula','EULA','Minecraft EULA 在启动前写入，可查看原文。'],
+ ['dup-mod','重复模组','发现同名模组，保留或替换由你决定。'],
+ ['file-lock','文件锁提示','实例目录被占用时提示，OS 级防护 + lockfile。'],
+ ['guest','访客密码','联机访客口令输入，可取消。'],
+ ['notice','联网提示','联网下载前的可见提示，维护公告只在此处出现。'],
+ ['duration','游玩时长','本次游玩时长记录，可关闭。'],
+ ['error','错误','失败可见、可诊断、可回退，不崩溃。'],
+ ['ai-confirm','AI 请求确认','每次请求单独确认；接口由用户自填。'],
+ ['extension','扩展安装','扩展安装确认，可关闭。'],
+];
+const INS=[['生存季','1.21.4','Fabric 0.16.10','42','2 分钟前','ok','正常'],['纯原版','1.21.4','Vanilla','0','昨天','ok','正常'],
+ ['旧存档','1.20.1','Forge 47.2.0','18','3 天前','up','可更新'],['测试服','1.21.1','NeoForge','7','上周','off','被锁'],
+ ['快照服','1.21.5','Fabric','3','上周','miss','缺依赖'],['整合包 A','1.19.2','Quilt','26','两周前','ok','正常'],
+ ['旧版留存','1.12.2','Forge','23','一个月前','off','已禁用']];
+const SRV=[['陶瓦联机 · 主服','1.21.4','用户指定：生存季','已指定'],['朋友的小服','1.21.1','按权重：测试服','自动'],['快照服','1.21.4','按权重：生存季','自动']];
+const CREDITS=['HMCL（文档调研）','Prism Launcher','Modrinth','CurseForge','Fabric / Forge / NeoForge / Quilt','BMCLAPI / MCIM','authlib-injector','wry / tao','Rust std'];
+const AUTH=[['offline','离线登录','offline · 免浏览器 · 低配首选'],['third_party','第三方登录','third_party · 网页登录'],['mojang','Mojang 正版','mojang · 需凭据']];
+const OB=[
+ ['欢迎','<h3 class="sec">欢迎使用 KCU Launcher</h3><p class="dim">这个引导只有 4 步，随时可以跳过。所有设置之后都能改。</p><div class="notice" style="box-shadow:none;margin-top:12px;padding:10px"><div class="notice-ico">✦</div><div class="notice-main"><div class="notice-body">界面位置按使用逻辑重排，纸质样板只取质感，不照搬三栏。</div></div></div>'],
+ ['选择模式','<h3 class="sec">你想怎么用</h3><div class="stack" style="margin-top:12px" id="obModes"></div>'],
+ ['数据位置','<h3 class="sec">数据放在哪</h3><p class="dim">默认 C:\\KCU。实例、日志、缓存都在这里，可直接打开系统文件面板查看。</p><div class="kv" style="margin-top:12px"><span class="k">数据目录</span><input class="txt" value="C:\\KCU" readonly><span class="k">文件夹锁</span><select class="sel"><option>OS 级防护 + lockfile</option></select><span class="k">关窗保存</span><select class="sel"><option>保存进度</option></select></div>'],
+ ['完成','<h3 class="sec">准备好了</h3><p class="dim">首次启动会显示 3 条公告，都在铃铛里，不会弹窗打断你。现在可以启动游戏，或先去公告中心看看。</p><div class="row" style="margin-top:14px"><button class="btn primary">▶ 启动游戏</button><button class="btn" data-v="notices">查看公告</button></div>']
+];
+let curNotice=NOTICES[0];
+
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function seedNoise(alpha,r,g,b){
+  const c=document.createElement('canvas');c.width=c.height=180;
+  const x=c.getContext('2d'),d=x.createImageData(180,180);
+  let s=20261113;
+  const rnd=()=>{s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;};
+  for(let i=0;i<d.data.length;i+=4){d.data[i]=r;d.data[i+1]=g;d.data[i+2]=b;d.data[i+3]=Math.floor(rnd()*alpha);}
+  x.putImageData(d,0,0);return 'url('+c.toDataURL()+')';
+}
+root.style.setProperty('--noise',seedNoise(9,44,42,36));
+root.style.setProperty('--noise-dark',seedNoise(8,235,232,220));
+
+function log(d,a,t,r,x){
+  const cls=r==='OK'?'#86AE62':(r==='DEGRADE'?'#D9A25C':(r==='FAIL'||r==='TIMEOUT'||r==='CANCELLED'?'#D9755C':'#9B988E'));
+  const line='<div><span style="color:#7FA2D6">[KCU] '+esc(d)+'</span> '+esc(a)+' '+esc(t)+' <span style="color:'+cls+'">'+esc(r)+'</span> <span style="color:#9B988E">'+esc(x)+'</span></div>';
+  for(const b of [$('logView'),$('logDrawerBody')]) if(b){b.insertAdjacentHTML('beforeend',line);b.scrollTop=b.scrollHeight;}
+}
+
+const VIEW_META={home:['实例总览','首页 · 本地 7 个实例 · 上次同步 2 分钟前'],notices:['公告中心','6 条公告 · 3 条未读 · 置顶优先'],
+ instances:['实例与服务器','7 个实例 · 3 个服务器 · 用户指定排第一'],download:['下载中心','批量请求 · 每页 20 · 单飞去重'],
+ mods:['模组管理','110 个模组 · 启用 41'],login:['账号登录','三种方式 · 外置 → 内置 → 连接码'],
+ logs:['日志诊断','[KCU] 单行诊断 · 每 100 行分片'],settings:['设置','快速配置默认中文 · 高级项可展开'],
+ about:['关于','版本、许可证与开源致谢'],popups:['弹窗全集','11 类 · 每类有关闭路径'],
+ lightweight:['轻量模式','≤2GiB 首次启动自动进入 · 单主题'],error:['异常与边界状态','空 / 加载 / 错误 / 被锁 / 安全模式 / 离线'],
+ onboarding:['首次启动','4 步向导 · 可返回、可关闭'],cardgrid:['实例网格','网格视图 · 与列表同源']};
+
+function openDlg(title,body,id){
+  $('mdTitle').textContent=title;$('mdId').textContent='id='+id;$('mdBody').innerHTML=body;
+  $('mdActs').innerHTML='<button class="btn" id="mdNo">不再提示</button><button class="btn" id="mdCancel">稍后</button><button class="btn primary" id="mdOk">知道了</button>';
+  $('mdNo').onclick=()=>closeDlg('no_prompt');$('mdCancel').onclick=()=>closeDlg('cancel');$('mdOk').onclick=()=>closeDlg('confirm');
+  $('mask').classList.add('on');dlgOpen=true;
+}
+function closeDlg(r){if(!dlgOpen)return;$('mask').classList.remove('on');dlgOpen=false;log('ui','popup','close','OK','detail='+r);}
+$('mdX').onclick=()=>closeDlg('button');
+$('mask').onclick=e=>{if(e.target===$('mask'))closeDlg('host');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDlg('escape');$('logDrawerBox').classList.remove('on');$('ctx').classList.remove('on');}});
+
+function show(v){
+  if(v!=='notice-detail'&&v!=='update')closeDlg('switch');
+  if(v==='home-dark'){setTheme('dark');v='home';}
+  if(v==='home-light'){setTheme('light');v='home';}
+  if(v==='narrow'){win.classList.add('narrow');v='home';}else if(v!=='home'){win.classList.remove('narrow');}
+  if(v==='context'){v='instances';setTimeout(()=>$('ctx').classList.add('on'),40);}else $('ctx').classList.remove('on');
+  if(v==='logs-drawer'){v='logs';setTimeout(()=>$('logDrawerBox').classList.add('on'),40);}else $('logDrawerBox').classList.remove('on');
+  if(v==='notice-detail'){show('notices');openDlg('公告详情 · '+curNotice.t,curNotice.body,curNotice.id);return;}
+  if(v==='update'){show('home');openDlg('发现新版本 0.0.1','<p>批量下载、公告中心、纸质界面与 18 张预览图已就绪。</p><div class="attach">更新日志 14 项 · 可「稍后」或「立即更新」</div>','update');return;}
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.dataset.view===v));
+  document.querySelectorAll('.nav-item[data-v]').forEach(x=>x.classList.toggle('active',x.dataset.v===v));
+  const m=VIEW_META[v]||VIEW_META.home;$('vTitle').textContent=m[0];$('vCrumb').textContent=m[1];
+  history.replaceState(null,'','#view='+v);
+}
+function setTheme(t){theme=t;win.dataset.theme=t;$('btnTheme').textContent=t==='dark'?'☀':'☾';}
+$('btnTheme').onclick=()=>setTheme(theme==='light'?'dark':'light');
+$('btnCollapse').onclick=()=>win.classList.toggle('narrow');
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>show(b.dataset.v));
+document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('[data-seg]').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  show(b.dataset.seg==='card'?'cardgrid':'home');
+});
+
+/* 公告 */
+function renderNotices(){
+  const list=NOTICES.filter(n=>filter==='all'||n.tag===filter);
+  $('noticeList').innerHTML=list.map(n=>`<div class="notice" data-n="${n.id}" style="cursor:pointer;${n.unread?'background:var(--sel);border-color:var(--accent)':''}">
+    <div class="notice-ico">${n.tag==='pin'?'📌':(n.tag==='up'?'🆙':(n.tag==='mt'?'🛠':'🎮'))}</div>
+    <div class="notice-main"><div class="notice-head"><div class="notice-title">${esc(n.t)} <span class="tag ${n.tag}">${n.tagT}</span></div><div class="notice-date">${n.tm}</div></div>
+    <div class="notice-body">${esc(n.d)}</div></div>
+    <div style="align-self:center">${n.unread?'<span class="badge err">未读</span>':'<span class="badge off">已读</span>'}</div></div>`).join('');
+  document.querySelectorAll('[data-n]').forEach(e=>e.onclick=()=>{
+    curNotice=NOTICES.find(x=>x.id===e.dataset.n);
+    if(curNotice.unread){curNotice.unread=false;unread=Math.max(0,unread-1);}
+    $('unreadPill').textContent='未读 '+unread;
+    $('noticePreview').innerHTML='<div class="serif" style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px">'+esc(curNotice.t)+'</div>'+curNotice.body;
+    renderNotices();log('ui','notice','open','OK','detail='+curNotice.id);
+  });
+}
+document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderNotices();});
+$('readAll').onclick=()=>{NOTICES.forEach(n=>n.unread=false);unread=0;$('unreadPill').textContent='未读 0';renderNotices();};
+$('openDetail').onclick=()=>show('notice-detail');
+$('homeNotices').innerHTML=NOTICES.slice(0,3).map(n=>`<div class="row" style="gap:8px"><span style="width:16px">${n.tag==='pin'?'📌':'•'}</span><div style="flex:1"><div style="font-size:12px">${esc(n.t)}</div><div class="mut" style="font-size:10px">${n.tm} · ${n.tagT}</div></div>${n.unread?'<span class="badge err">新</span>':''}</div>`).join('');
+
+/* 实例 */
+$('insBody').innerHTML=INS.map(x=>`<tr><td>${esc(x[0])}</td><td>${x[1]}</td><td>${esc(x[2])}</td><td>${x[3]}</td><td>${x[4]}</td><td><span class="badge ${x[5]}">${x[6]}</span></td></tr>`).join('');
+$('srvBody').innerHTML=SRV.map(x=>`<tr><td>${esc(x[0])}</td><td>${x[1]}</td><td>${esc(x[2])}</td><td><span class="badge ${x[3]==='已指定'?'ok':'up'}">${x[3]}</span></td></tr>`).join('');
+$('cardGrid').innerHTML=INS.map(x=>`<div class="panel"><div class="row spread"><b class="serif" style="font-size:14px">${esc(x[0])}</b><span class="badge ${x[5]}">${x[6]}</span></div>
+  <div class="mut" style="font-size:11px;margin:6px 0 10px">${x[1]} · ${esc(x[2])} · ${x[3]} mods</div>
+  <div class="progress"><i style="width:${60+Math.floor(Math.random()*35)}%"></i></div>
+  <div class="row" style="margin-top:11px"><button class="btn primary tiny" style="flex:1">启动</button><button class="btn tiny">设置</button><button class="btn tiny">⋯</button></div></div>`).join('');
+$('creditRow').innerHTML=CREDITS.map(x=>'<span class="chip">'+esc(x)+'</span>').join('');
+
+/* 下载 */
+const DL=[['sodium','0.6.9','Modrinth','1.8 MB',100],['iris','1.8.1','Modrinth','2.4 MB',100],['fabric-api','0.115.0','Modrinth','3.1 MB',100],['modmenu','13.0.1','Modrinth','620 KB',62]];
+function renderDl(){ $('dlList').innerHTML=DL.map(x=>`<div class="row" style="gap:10px;font-size:12px"><span style="width:150px">${x[0]}</span><span class="mut" style="width:70px">${x[1]}</span>
+  <span class="mut" style="width:80px">${x[2]}</span><div class="progress" style="flex:1"><i style="width:${x[4]}%"></i></div><span style="width:56px;text-align:right">${x[3]}</span></div>`).join(''); }
+function runBatch(n){const pages=Math.ceil(n/20);reqCount+=pages;$('dlReq').textContent=reqCount;$('dlSub').textContent=n+' 个 id · '+pages+' 页 · '+reqCount+' 次请求';$('dlBar').style.width='100%';
+  DL.forEach(x=>x[4]=100);renderDl();log('lightweight','batch','download','OK','detail='+n+'_ids pages='+pages+' requests='+pages+' no_per_item_request');}
+$('dlRun').onclick=()=>runBatch(10);$('dl45').onclick=()=>runBatch(45);
+$('dlCancel').onclick=()=>{$('dlBar').style.width='0';$('dlSub').textContent='已取消 · 0 副作用';DL[3][4]=0;renderDl();log('lightweight','batch','cancel','CANCELLED','detail=token_cancelled 0_work');};
+
+/* 登录 */
+function renderAuth(){
+  $('authList').innerHTML=AUTH.map(([k,t,d])=>`<div class="notice" style="box-shadow:none;padding:10px;cursor:pointer;${auth===k?'background:var(--sel);border-color:var(--accent)':''}" data-a="${k}">
+    <div class="notice-ico" style="width:26px;height:26px;flex:0 0 26px;font-size:11px">${auth===k?'●':'○'}</div><div class="notice-main"><div class="notice-title" style="font-size:13px">${t}</div><div class="notice-body" style="margin-top:2px">${d}</div></div></div>`).join('');
+  document.querySelectorAll('[data-a]').forEach(e=>e.onclick=()=>{auth=e.dataset.a;renderAuth();log('lightweight','select','login','OK','detail='+auth);});
+}
+function renderFlow(){
+  const names=['外置浏览器','内置浏览器','连接码'];
+  $('loginFlow').innerHTML=names.map((n,i)=>`<div class="row" style="gap:10px;padding:7px 0;border-bottom:1px solid var(--line)">
+    <span class="chip ${stage===i?'on':''}">0${i+1}</span><div style="flex:1"><b style="font-size:12px">${n}</b><div class="mut" style="font-size:11px">${stage>i?'已跳过':(stage===i?'当前阶段':'待用')}</div></div>
+    <span class="badge ${stage>i?'miss':(stage===i?'ok':'off')}">${stage>i?'降级':(stage===i?'进行中':'待命')}</span></div>`).join('');
+  $('pairBox').style.display=stage===2?'block':'none';
+  $('pairBox').innerHTML='连接码 <b class="serif" style="font-size:17px;color:var(--accent);letter-spacing:2px">KCU-7F3A</b><br>手机端完成 · 300s 超时可取消';
+}
+$('loginStart').onclick=()=>{stage=auth==='offline'?-1:0;renderFlow();log('lightweight','login','login','OK',auth==='offline'?'detail=offline_no_browser':'detail=external_browser');};
+$('loginFail').onclick=()=>{if(auth==='offline')return;stage=Math.min(2,stage+1);renderFlow();log('lightweight','fallback','login','DEGRADE','detail=stage='+stage);};
+$('loginReset').onclick=()=>{stage=-1;renderFlow();};
+
+/* 日志 */
+$('logClear').onclick=()=>{for(const b of [$('logView'),$('logDrawerBody')])b.innerHTML='';};
+$('logDrawer').onclick=()=>show('logs-drawer');
+$('logZ').onclick=()=>$('logDrawerBox').classList.remove('on');
+$('sbLog').onclick=()=>show('logs-drawer');
+$('logExport').onclick=()=>{log('dispatcher','export','bundle','OK','detail=4_lines safe_mode');};
+$('btnLaunch').onclick=()=>log('dispatcher','launch','game','OK','detail=instance=生存季');
+
+/* 弹窗全集 */
+function renderPops(){
+  $('popGrid').innerHTML=POPUPS.map(([id,t,d])=>`<div class="side-card"><div class="row spread"><b style="font-size:12px">${t}</b><span class="badge ${popState[id]?'err':'ok'}">${popState[id]?'打开':'已关'}</span></div>
+    <div class="mut" style="font-size:11px;margin:6px 0 10px">${d}</div><button class="btn tiny" data-p="${id}" style="width:100%">${popState[id]?'关闭':'打开预览'}</button></div>`).join('');
+  document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.p,p=POPUPS.find(x=>x[0]===id);
+    if(popState[id]){popState[id]=false;closeDlg('button');}
+    else{popState[id]=true;openDlg(p[1],'<p>'+p[2]+'</p><div class="attach">id='+id+' · 关闭路径：按钮 / ESC / 取消 / 确认 / 宿主</div>',id);}
+    renderPops();
+  });
+  $('popCnt').textContent='打开 '+Object.values(popState).filter(Boolean).length;
+}
+$('popAll').onclick=()=>{POPUPS.forEach(p=>popState[p[0]]=true);renderPops();};
+$('popClose').onclick=()=>{popState={};closeDlg('close_all');renderPops();};
+
+/* 引导 */
+function renderOb(){
+  $('obSteps').innerHTML=OB.map((x,i)=>`<div class="step ${i===obStep?'on':(i<obStep?'done':'')}"><span class="n">${i+1}</span><span style="font-size:12px">${x[0]}</span></div>`).join('');
+  $('obBody').innerHTML=OB[obStep][1];$('obPrev').disabled=obStep===0;$('obNext').textContent=obStep===OB.length-1?'完成':'下一步';
+  if(obStep===1)$('obModes').innerHTML=[['正常模式','完整界面、公告、实例管理','推荐'],['轻量模式','≤2GiB 首次启动自动进入','低配'],['无头模式','不加载任何界面','高级']]
+    .map((x,i)=>`<div class="notice" style="box-shadow:none;padding:10px;${i===0?'background:var(--sel);border-color:var(--accent)':''}"><div class="notice-ico" style="width:26px;height:26px;flex:0 0 26px;font-size:11px">${i===0?'●':'○'}</div><div class="notice-main"><div class="notice-title" style="font-size:13px">${x[0]}</div><div class="notice-body" style="margin-top:2px">${x[1]}</div></div><span class="badge ${i===0?'ok':'off'}">${x[2]}</span></div>`).join('');
+}
+$('obNext').onclick=()=>{if(obStep<OB.length-1){obStep++;renderOb();}else show('home');};
+$('obPrev').onclick=()=>{if(obStep>0){obStep--;renderOb();}};
+$('obClose').onclick=()=>show('home');
+
+/* 手感 */
+function applyGate(){
+  const g=$('gGap').value,f=$('gFs').value,r=$('gR').value,n=$('gNoise').value;
+  root.style.setProperty('--gap',g+'px');root.style.setProperty('--fs',f+'px');
+  root.style.setProperty('--r-lg',r+'px');root.style.setProperty('--r-md',Math.max(4,parseInt(r)-2)+'px');
+  root.style.setProperty('--noise-a',n);
+  log('ui','adjust','handfeel','OK','detail=gap='+g+' fs='+f+' r='+r+' noise='+n);
+}
+['gGap','gFs','gR','gNoise'].forEach(id=>$(id).onchange=applyGate);
+
+/* 初始 */
+$('sbTime').textContent=new Date().toLocaleString('zh-CN',{hour12:false});
+renderNotices();$('noticePreview').innerHTML='<div class="serif" style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px">'+esc(NOTICES[0].t)+'</div>'+NOTICES[0].body;
+renderDl();renderAuth();renderFlow();renderOb();renderPops();
+for(const [d,a,t,r,x] of [
+ ['ui','boot','ui_full_kcu_paper','OK','detail=paper_tokens serif grain window_chrome'],
+ ['ui','scene','count','OK','detail=18_shots ux_html_not_flow_html'],
+ ['dispatcher','mode','select','OK','detail=normal ui_loaded=true'],
+ ['lightweight','batch','download','OK','detail=10_ids pages=1 requests=1 no_per_item_request'],
+ ['lightweight','cache','single_flight','OK','detail=10_repeats 1_network_call inflight=0'],
+ ['dispatcher','auth','premium','DEGRADE','detail=credential_absent fallback=1'],
+ ['ui','popup','close_all','OK','detail=11_catalog 0_open'],
+ ['dispatcher','export','bundle','OK','detail=4_lines safe_mode'],
+]) log(d,a,t,r,x);
+const hash=(location.hash.match(/view=([a-z-]+)/)||[])[1]||'home';
+show(hash);
+window.addEventListener('hashchange',()=>show((location.hash.match(/view=([a-z-]+)/)||[])[1]||'home'));
+</script>
+</body>
+</html>
