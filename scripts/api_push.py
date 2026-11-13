@@ -7,6 +7,7 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 BASE = "https://api.github.com"
 UA = "KCU-Launcher-Desktop/0.0.0"
@@ -57,15 +58,35 @@ def tracked_files():
     return [os.fsdecode(p) for p in raw.split(b"\0") if p]
 
 
-def blob(content):
+def blob(content, local_sha, existing):
+    if local_sha in existing:
+        return local_sha
     status, payload = request(
         "POST",
         "/repos/" + REPO + "/git/blobs",
         {"content": base64.b64encode(content).decode("ascii"), "encoding": "base64"},
     )
     if status != 201:
+        status, payload = request(
+            "POST",
+            "/repos/" + REPO + "/git/blobs",
+            {"content": base64.b64encode(content).decode("ascii"), "encoding": "base64"},
+        )
+    if status != 201:
         raise RuntimeError("blob create " + str(status) + " " + json.dumps(payload, ensure_ascii=False)[:300])
     return payload["sha"]
+
+
+def remote_blobs(parent):
+    if not parent:
+        return set()
+    status, commit = request("GET", "/repos/" + REPO + "/git/commits/" + parent)
+    if status != 200:
+        return set()
+    status, tree = request("GET", "/repos/" + REPO + "/git/trees/" + commit["tree"]["sha"] + "?recursive=1")
+    if status != 200:
+        return set()
+    return set(x["sha"] for x in tree.get("tree", []) if x.get("type") == "blob")
 
 
 def bootstrap(branch):
@@ -110,14 +131,19 @@ def main():
         log("ref", branch, "FAIL", "http=" + str(status) + " " + json.dumps(ref, ensure_ascii=False)[:300])
         return 1
 
-    tree = []
-    for path in paths:
+    existing = remote_blobs(parent)
+
+    def one(path):
         with open(path, "rb") as handle:
             content = handle.read()
-        sha = blob(content)
+        local_sha = subprocess.check_output(["git", "hash-object", path], text=True).strip()
+        sha = blob(content, local_sha, existing)
         mode = "100755" if os.stat(path).st_mode & stat.S_IXUSR else "100644"
-        tree.append({"path": path, "mode": mode, "type": "blob", "sha": sha})
-    log("blob", str(len(tree)), "OK", "encoding=base64")
+        return {"path": path, "mode": mode, "type": "blob", "sha": sha}
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        tree = list(pool.map(one, paths))
+    log("blob", str(len(tree)), "OK", "concurrent=8 remote_reused=" + str(len(existing)))
 
     status, tree_obj = request("POST", "/repos/" + REPO + "/git/trees", {"tree": tree})
     if status != 201:
