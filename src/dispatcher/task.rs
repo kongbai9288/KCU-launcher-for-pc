@@ -1,5 +1,5 @@
 use crate::core::args::LaunchArgs;
-use crate::dispatcher::json::Json;
+use crate::dispatcher::json::{Json, StringField};
 use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -65,7 +65,7 @@ impl Default for LaunchTask {
 impl LaunchTask {
     pub fn from_json(value: &Json) -> Result<Self, String> {
         let obj = match value {
-            Json::Obj(_) => value,
+            Json::Object(_) => value,
             _ => return Err("task root must be an object".to_string()),
         };
         let mut t = Self::default();
@@ -106,7 +106,7 @@ impl LaunchTask {
                 t.kculh = Some(t.id.clone());
             }
         }
-        if let Some(Json::Obj(m)) = obj.get("extras") {
+        if let Some(Json::Object(m)) = obj.get("extras") {
             for (k, v) in m {
                 if let Some(s) = v.as_str() {
                     t.extras.insert(k.clone(), s.to_string());

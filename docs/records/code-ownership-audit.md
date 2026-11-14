@@ -121,3 +121,15 @@
 | 023 的「底座例外」属自我授权、未获批准 | 已证实 |
 | 替换后剩余自写行数、各库许可证全文、真实运行时行为 | 未证实 |
 | 第三方库实际集成与 CI 独立构建 | 受阻（未启动） |
+
+## 025 首次替换后状态
+
+| 项 | 024 | 025 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 0 | 5（serde_json / serde_core / itoa / ryu / memchr） |
+| `Cargo.lock` 包数 | 1 | 6 |
+| `src/dispatcher/json.rs` | 336 行手写解析器 | 77 行（产品约 20 行 + 回归测试） |
+| `src/` 行数 | 4339 | 4081 |
+| `src/` 有效代码行 | 3876 | 3636 |
+
+替换映射第一块已落地，详见 `docs/decisions/025-vendor-first-replacement.md`。其余自写模块（cache / asynk / leak / launcher / lightweight）仍按本文件映射逐模块推进，未在本轮完成。

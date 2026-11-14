@@ -99,3 +99,14 @@
 ## 诊断行
 
 `[KCU] remote <动作> <目标> <结果> <详情>`
+
+## 025 允许推送
+
+| 类 | 路径 |
+| --- | --- |
+| vendor 上游源码 | `vendor/**`（`src/`、`Cargo.toml`、`build.rs`、LICENSE、`.cargo-checksum.json`） |
+| cargo 目录源配置 | `.cargo/config.toml` |
+| 依赖清单 | `Cargo.toml`、`Cargo.lock` |
+| 许可证全文 | `docs/licenses/*-LICENSE-*` |
+
+排除项不变：`target/`、`__pycache__/`、诊断包、私有配置、凭据字面量。

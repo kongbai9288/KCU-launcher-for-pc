@@ -4,6 +4,9 @@ version = "0.0.0"
 edition = "2021"
 publish = false
 
+[dependencies]
+serde_json = { version = "1.0.145", default-features = false, features = ["std"] }
+
 [lib]
 name = "kcu_core"
 path = "src/lib.rs"

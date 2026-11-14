@@ -99,3 +99,15 @@
 | --- | --- |
 | L12 | 上层候选逐项取得 LICENSE 全文后才引入依赖；发布构建以当前 Cargo.lock 与各 crate 自带许可证文件为最终依据。 |
 | L13 | 插件化更新包随附其自身许可信息；核心锁定槽位不因更新包变化。 |
+
+## 025 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| serde_json-LICENSE-MIT.txt / serde_json-LICENSE-APACHE.txt | serde_json 1.0.145 | MIT OR Apache-2.0 |
+| serde_core-LICENSE-MIT.txt / serde_core-LICENSE-APACHE.txt | serde_core 1.0.228 | MIT OR Apache-2.0 |
+| itoa-LICENSE-MIT.txt / itoa-LICENSE-APACHE.txt | itoa 1.0.15 | MIT OR Apache-2.0 |
+| ryu-LICENSE-APACHE.txt / ryu-LICENSE-BOOST.txt | ryu 1.0.20 | Apache-2.0 OR BSL-1.0 |
+| memchr-LICENSE-MIT.txt | memchr 2.7.6 | Unlicense OR MIT（仅 MIT 全文） |
+
+来源：各上游 GitHub tag 打包内的 LICENSE 文件，逐字副本。

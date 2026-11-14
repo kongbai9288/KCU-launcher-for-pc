@@ -7,6 +7,7 @@ use crate::core::instance::{select_instance, Instance, ServerEntry, VersionWeigh
 use crate::core::log::LogBuffer;
 use crate::core::popup::{catalog, CloseAction, PopupRegistry};
 use crate::dispatcher::json;
+use crate::dispatcher::json::StringField;
 use crate::dispatcher::mode::{Fallback, Mode, ModeInput, ModeSelection, ModeSelector};
 use crate::dispatcher::task::{LaunchTask, TaskSet};
 use std::sync::atomic::{AtomicUsize, Ordering};

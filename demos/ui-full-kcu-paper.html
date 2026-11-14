@@ -991,9 +991,9 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       <section class="view" data-view="licenses">
         <div class="logicbar" data-lb="licenses"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
-        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="view.licenses">第三方许可</div><div class="panel-sub" data-i18n="清单生成 2026-11-14 · 离线可读 · 按许可证分组">清单生成 2026-11-14 · 离线可读 · 按许可证分组</div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="view.licenses">第三方许可</div><div class="panel-sub" data-i18n="清单生成 2026-11-14 · 离线可读 · 含 5 组已进构建依赖">清单生成 2026-11-14 · 离线可读 · 按许可证分组</div>
           <div class="panel-tools"><button class="btn tiny" id="licRefresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新清单</button><button class="btn tiny" id="licHard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新扫描</button><span class="badge ok" id="licTime">已同步 12 秒前</span></div></div>
-          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 22</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up" data-i18n="lic.group">按许可证分组</span></div>
+          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 27</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up" data-i18n="lic.group">按许可证分组</span></div>
           <table class="lic-table"><thead><tr><th data-i18n="项目">项目</th><th data-i18n="版本 / 分组">版本 / 分组</th><th data-i18n="许可证">许可证</th><th data-i18n="版权">版权</th><th data-i18n="用途">用途</th><th data-i18n="来源">来源</th><th data-i18n="说明">说明</th></tr></thead><tbody id="licBody"></tbody></table>
         </div>
         <div class="grid g2" style="margin-top:12px">
@@ -1585,6 +1585,11 @@ const LICENSE_ROWS=[
  ['rust-minidump','UI / 崩溃层候选','MIT','Mozilla & contributors','本地解析 minidump，不联网','lib.rs/crates/minidump','候选 · 未进构建','MIT'],
  ['Breakpad','UI / 崩溃层候选','BSD-3-Clause','Google','崩溃后端之一','chromium.googlesource.com/breakpad','候选 · 未进构建','Apache-2.0'],
  ['sentry-native','UI / 崩溃层候选','MIT','Sentry','Breakpad / Crashpad 后端封装','github.com/getsentry/sentry-native','候选 · 未进构建','MIT'],
+ ['serde_json','1.0.145','MIT OR Apache-2.0','Erick Tryzelaar, David Tolnay','任务 JSON 解析','vendor/serde_json','构建中已使用','MIT'],
+ ['serde_core','1.0.228','MIT OR Apache-2.0','serde-rs','serde_json 依赖','vendor/serde_core','构建中已使用','MIT'],
+ ['itoa','1.0.15','MIT OR Apache-2.0','David Tolnay','整数格式化','vendor/itoa','构建中已使用','MIT'],
+ ['ryu','1.0.20','Apache-2.0 OR BSL-1.0','David Tolnay','浮点格式化','vendor/ryu','构建中已使用','Apache-2.0'],
+ ['memchr','2.7.6','Unlicense OR MIT','Andrew Gallant','字节搜索','vendor/memchr','构建中已使用','MIT'],
 ];
 let licFilter='all';
 function renderLic(){

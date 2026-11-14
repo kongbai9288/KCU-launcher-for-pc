@@ -68,3 +68,12 @@
 | 下一层 | L4 headless；开工前需 Q02（UI 宿主授权）与手感反馈落定 |
 | 新对话 | 读 `docs/index.md` 必读项 + `docs/design/handoff.md` 即可接上 |
 | 未证实 | Q01-Q04、L4 以下实现、LICENSE 全文取得、真实 Win7 构建 |
+
+## 025 进度
+
+| 层 | 状态 |
+| --- | --- |
+| JSON 解析 | **已落地**：手写 `dispatcher/json.rs` 换为 `serde_json`，vendor 目录源离线构建通过 |
+| 配置序列化 / 参数 / 路径 / 日志 / 缓存 / 异步 / 网络 / UI / 崩溃 / 插件 | 未启动，仍为自写或候选 |
+
+registry 在本环境被 403 阻断，故采用 `vendor/` + `.cargo/config.toml` 目录源；正式联网 CI 可改用 registry 直连，业务代码不需改动。

@@ -2012,3 +2012,30 @@ L3 落地：
 | V03 | 上层用别人代码被歪曲 | 撤回 023 A03 自我授权，core 允许依赖成熟库 |
 
 本轮：`src/` 与 Cargo.lock 改动 0；未引依赖、未删模块、未跑自评、未出演示 HTML；后端仓 0 写请求。
+
+## 025
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/25-round-025-instructions.txt | 逐字副本 |
+| docs/decisions/025-vendor-first-replacement.md | registry 端点实测、vendor 方案、M01-M04、数字变化、B01-B04 行为差异、未换清单 |
+| docs/verification/round-025.md | 15 条复跑证据 |
+| Cargo.toml / Cargo.lock / .cargo/config.toml / vendor/ | 首次 `[dependencies]`；6 包（5 第三方）；目录源离线构建 |
+| src/dispatcher/json.rs / task.rs / launcher.rs / mod.rs | 336 行手写解析器删为 77 行薄适配 |
+| docs/licenses/ | 9 份新增全文 |
+| demos/ui-full-kcu-paper.html / demos/preview/ | 关于页 5 组「构建中已使用」，43 张截图重渲 |
+| 索引与规则 | decisions/index、docs/index 128 项、README、licenses/index、push-scope、code-ownership-audit、implementation-strategy |
+
+用户意图：对我写的代码不信任，要求用别人的代码。处置：不做新一轮文档或演示层堆砌，直接把替换映射第一块落地，让 `Cargo.lock` 出现真实第三方包。
+
+本轮真实缺陷与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E01 | `cargo build --offline` 首次报 `no matching package named serde found` | serde_json / serde_core 的 `[dev-dependencies]` 与 `[target.'cfg(any())'.dependencies]` 引用未 vendor 的 path；删这两段后构建通过，改动登记为 M01/M02 |
+| E02 | 首次往许可表插入 5 行时替换目标写错，脚本断言失败 | 改为在数组末尾 `];` 前插入，复查 `构建中已使用=5` 与 JS 语法 |
+| E03 | 手写解析器深度上限 64，serde_json 默认 128，原 80 层测试会变成通过 | 测试改 200 层并登记 B01，断言未降级 |
+
+阶段：D07 第 3 层 lightweight 逻辑不变；本轮动的是 L2 dispatcher 的 JSON 解析实现。UI 演示层只改许可数据行并重渲截图，未改界面结构。
+
+未做：剩余自写模块替换、真实网络 / GUI / 跨平台构建、CF F17、特殊版代码、本项目 LICENSE、后端仓任何写请求。

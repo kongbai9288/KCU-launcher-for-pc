@@ -110,3 +110,22 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | N11 | 上述 6 组与既有 12 组一致：LICENSE 全文取得并写进关于页后才允许加进 Cargo.toml。 |
 | N12 | 插件加载后动态追加其语言包与崩溃扩展的许可信息。 |
 | N13 | 服务条款、代码许可证、服务端许可三者分开登记，不因拿到 LICENSE 就默认放行。 |
+
+## 025 已进构建依赖（非候选）
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| serde_json | 1.0.145 | MIT OR Apache-2.0 | Erick Tryzelaar, David Tolnay | 任务 JSON 解析 | vendor/serde_json | 构建中已使用 |
+| serde_core | 1.0.228 | MIT OR Apache-2.0 | serde-rs | serde_json 依赖 | vendor/serde_core | 构建中已使用 |
+| itoa | 1.0.15 | MIT OR Apache-2.0 | David Tolnay | 整数格式化 | vendor/itoa | 构建中已使用 |
+| ryu | 1.0.20 | Apache-2.0 OR BSL-1.0 | David Tolnay | 浮点格式化 | vendor/ryu | 构建中已使用 |
+| memchr | 2.7.6 | Unlicense OR MIT | Andrew Gallant | 字节搜索 | vendor/memchr | 构建中已使用 |
+
+许可证全文：`docs/licenses/serde_json-LICENSE-{MIT,APACHE}.txt`、`serde_core-LICENSE-{MIT,APACHE}.txt`、`itoa-LICENSE-{MIT,APACHE}.txt`、`ryu-LICENSE-{APACHE,BOOST}.txt`、`memchr-LICENSE-MIT.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N14 | memchr 的 license 字段为 `Unlicense OR MIT`，上游仓库只提供 LICENSE-MIT 文件；本项目按 MIT 条款使用，Unlicense 全文未单独取得，如实登记。 |
+| N15 | ryu 为 `Apache-2.0 OR BSL-1.0`，两份全文均已落盘，按 Apache-2.0 条款使用。 |
+| N16 | vendor 内上游 `src/` 原样保留；manifest 仅删 dev / 恒假 cfg 段，改动可 diff 审计。 |
+| N17 | 后续每引入一个库，重复 H02 四步：LICENSE 全文 → 关于页 → 本文件 → Cargo.toml。 |
