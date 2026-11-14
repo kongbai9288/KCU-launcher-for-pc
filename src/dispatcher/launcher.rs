@@ -288,7 +288,6 @@ impl Dispatcher {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::leak::Tracker;
 
     fn input() -> DispatchInput {
         DispatchInput {
@@ -514,15 +513,21 @@ mod tests {
 
     #[test]
     fn outcomes_do_not_leave_live_tracked_objects() {
-        let t = Tracker::new();
         let mut d = Dispatcher::default();
-        {
-            let a = t.track(d.dispatch(&input(), &CancelToken::new()));
-            let b = a.clone();
-            assert_eq!(t.live(), 2);
-            drop(b);
-        }
-        assert_eq!(t.live(), 0);
+        let a = std::sync::Arc::new(d.dispatch(&input(), &CancelToken::new()));
+        let b = a.clone();
+        assert_eq!(std::sync::Arc::strong_count(&a), 2);
+        drop(b);
+        assert_eq!(std::sync::Arc::strong_count(&a), 1);
+        let weak = std::sync::Arc::downgrade(&a);
+        drop(a);
+        assert!(weak.upgrade().is_none());
+
+        let mut g = crate::core::asynk::TaskGroup::new();
+        g.spawn(|_| {});
+        g.spawn(|_| {});
+        assert_eq!(g.shutdown(), 2);
+        assert_eq!(g.live(), 0);
     }
 
     #[test]

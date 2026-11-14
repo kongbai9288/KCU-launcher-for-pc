@@ -433,3 +433,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | Modrinth 旧版本 | 完全弃用后永久 410 |
 | GitHub REST API | 2022-11-28 支持至 2028-03-10；不再支持的版本返回 410 |
 | 破坏性变更 | 升版本号并给迁移步骤 |
+
+## 028 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I28 | F028-01 | `server.join_alert.subscribe` / `list` / `dismiss` |
+| I29 | F028-02 | `server.activity.pie` / `sessions` / `export` |
+| I30 | F028-03 | `server.auto_cmd.rules` / `upsert` / `fire` / `audit` |
+| S28 | 状态 | 三项均为文档登记，未进入 `src/`，无函数实现 |

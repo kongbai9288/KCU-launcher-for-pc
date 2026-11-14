@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 028 开服器新功能运行逻辑</title>
+<style>
+:root{
+  --paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;
+  --line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:6px;max-height:660px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}
+.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}
+.node .t{font-weight:600}
+.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}
+button:hover{border-color:var(--teal)}
+button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}
+.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff;min-height:132px}
+.mini h3{font:600 13px Georgia,serif;margin:0 0 6px;color:var(--teal)}
+.mini p{margin:4px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}
+.badge.g{color:var(--teal);border-color:var(--teal)}
+.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:290px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>028 运行逻辑</h1>
+    <div class="sub">开服器三项新功能 · 只记文档 · 非整页 UX 演示</div>
+    <div class="bar">
+      <button class="pri" onclick="run()">▶ 逐步执行</button>
+      <button onclick="reset()">重置</button>
+    </div>
+    <div class="flow" id="flow"></div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="kv">
+        <b>当前步骤</b><span id="step">—</span>
+        <b>阶段</b><span id="phase">待执行</span>
+        <b>统一信封</b><span id="env">—</span>
+      </div>
+      <div class="grid">
+        <div class="mini">
+          <h3>F028-01 上线提醒</h3>
+          <p id="m1">未运行</p>
+          <span class="badge g" id="b1">默认开启</span>
+          <span class="badge">铃铛未读</span>
+          <span class="badge">不弹窗打断</span>
+        </div>
+        <div class="mini">
+          <h3>F028-02 活跃度饼图</h3>
+          <p id="m2">未运行</p>
+          <span class="badge g" id="b2">7 天</span>
+          <span class="badge">扇区下钻</span>
+          <span class="badge">CSV 导出</span>
+        </div>
+        <div class="mini">
+          <h3>F028-03 命令文字触发</h3>
+          <p id="m3">未运行</p>
+          <span class="badge g" id="b3">包含匹配</span>
+          <span class="badge r">黑名单拦截</span>
+          <span class="badge">冷却去重</span>
+        </div>
+      </div>
+      <div class="note" id="note">三项功能均处于「已批准 · 未实现 · 未进入构建」；本页只演示运行逻辑，不加载界面、不写实现。</div>
+    </div>
+    <div class="card log">
+      <div class="tag">[KCU] 诊断行 / 统一信封</div>
+      <pre id="out">等待执行…</pre>
+    </div>
+  </div>
+</div>
+
+<script>
+const NODES = [
+  ['01','开工预检','读索引 137 项、逐字副本、四值规则'],
+  ['02','指令拆分','「干」= 继续替换；「只记文档」= 三项零实现'],
+  ['03','逐字落盘','28-round-028-instructions.txt，cmp exit 0'],
+  ['04','代码替换','leak.rs 删自写计数 191→99，依赖不变'],
+  ['05','测试迁移','Arc::strong_count + WaitGroup 归零，139/0'],
+  ['06','资料检索','15 条来源、完整 URL、四值标注'],
+  ['07','F028-01 登记','joined the game → 去重 → 提醒中心'],
+  ['08','F028-02 登记','会话配对 → 累计秒数 → 饼图占比'],
+  ['09','F028-03 登记','日志行文字 → 规则匹配 → 预设动作'],
+  ['10','边界判定','sid 非名字、脱敏默认开、轮转按 inode + 偏移'],
+  ['11','UI 闸门','本轮不动界面，整页 UX 演示未触发'],
+  ['12','双扫描','凭据 / 禁用词 / P09 / 必读文件'],
+  ['13','提交推送','本地提交 → api.github 快照 → 远端比对']
+];
+const DETAIL = {
+  '01':'REQ 137/137 OK',
+  '02':'BRANCH B01=replace B02=doc_only',
+  '03':'SPEC cmp 0 sha1 ok',
+  '04':'LEAK 191->99 tracker_removed',
+  '05':'TEST 139 passed 0 failed',
+  '06':'DOC 15 sources 15 urls',
+  '07':'EVENT join sid=d.ip:port dedup=offset+inode',
+  '08':'PIE range=7d playtime_map size=3',
+  '09':'RULE pattern=contains source=server_only',
+  '10':'PRIVACY redact=on key=sid',
+  '11':'GATE ui_demo not_triggered',
+  '12':'SCAN NO_CREDENTIAL NO_EXPLANATORY P09=0',
+  '13':'PUSH remote_snapshot ALL_MATCH'
+};
+const PHASE = {
+  '01':'开工预检','02':'指令拆分','03':'逐字落盘','04':'代码替换','05':'测试迁移',
+  '06':'资料检索','07':'功能登记','08':'功能登记','09':'功能登记','10':'边界判定',
+  '11':'UI 闸门','12':'双扫描','13':'提交推送'
+};
+const M = {
+  '07':['m1','b1','命中 joined the game；同事件按偏移去重，铃铛未读高亮，免打扰时段不弹窗。'],
+  '08':['m2','b2','join/left 配成会话，按 sid 累计时长；崩溃缺下线按日志结束时间闭区间收口，标「已估算」。'],
+  '09':['m3','b3','规则命中后写审计与诊断行；命中黑名单只给可见提示，动作不执行。']
+};
+let cur = 0, lines = [];
+const flow = document.getElementById('flow');
+NODES.forEach((n,i)=>{
+  const d=document.createElement('div');
+  d.className='node'; d.id='nd'+i;
+  d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';
+  d.onclick=()=>{cur=i;paint(i);};
+  flow.appendChild(d);
+});
+function envelope(i){
+  const k=['core.start','core.branch','core.spec','core.leak','core.test','core.doc',
+           'server.join_alert','server.activity','server.auto_cmd','server.privacy',
+           'ui.gate','core.scan','core.push'];
+  return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' OK';
+}
+function paint(i){
+  document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));
+  const n=NODES[i];
+  document.getElementById('step').textContent=n[0]+' · '+n[1];
+  document.getElementById('phase').textContent=PHASE[n[0]];
+  document.getElementById('env').textContent=envelope(i);
+  const line='[KCU] '+n[0]+' '+['core','core','core','core','core','core','server','server','server','server','ui','core','core'][i]+' '+n[0]+' OK '+DETAIL[n[0]];
+  lines=lines.slice(0,i); lines.push(line);
+  document.getElementById('out').textContent=lines.join('\n');
+  for(let k=1;k<=i+1;k++){
+    const key=String(k).padStart(2,'0');
+    if(M[key]){
+      const [a,b,txt]=M[key];
+      document.getElementById(a).textContent=txt;
+    }
+  }
+  if(i===12) document.getElementById('note').textContent='三项功能已登记、零实现；代码替换落地、依赖不变；远端快照与本地逐项一致。';
+}
+function run(){
+  reset(); let i=0;
+  const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);
+}
+function reset(){
+  lines=[];cur=0;
+  document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));
+  document.getElementById('step').textContent='—';
+  document.getElementById('phase').textContent='待执行';
+  document.getElementById('env').textContent='—';
+  document.getElementById('m1').textContent='未运行';
+  document.getElementById('m2').textContent='未运行';
+  document.getElementById('m3').textContent='未运行';
+  document.getElementById('out').textContent='等待执行…';
+  document.getElementById('note').textContent='三项功能均处于「已批准 · 未实现 · 未进入构建」；本页只演示运行逻辑，不加载界面、不写实现。';
+}
+</script>
+</body>
+</html>

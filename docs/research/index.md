@@ -172,3 +172,9 @@
 | --- | --- | --- |
 | 18 个完整 URL 锚点、J01-J07 结论、Q01-Q04 口径说明 | docs/research/20-i18n-crash-identity.md | 一手 15 组 + 公开资料 6 组 |
 | Fluent / i18n-embed / Sentry SDK / minidump / Breakpad / Win7 Tier 3 / servers.dat 无 ID 字段 | docs/research/20-i18n-crash-identity.md | 已证实 |
+
+## 028 轮新增
+
+| 编号 | 文档 | 来源数 | 主题 |
+| --- | --- | --- | --- |
+| R20 | 20-server-log-events.md | 15 条来源 / 13 个独立 URL | 日志格式、实时读取、声明式正则、PlayerJoinEvent、活跃度饼图、脱敏约束 |

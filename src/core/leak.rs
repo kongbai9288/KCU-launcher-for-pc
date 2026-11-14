@@ -1,72 +1,6 @@
 use std::collections::HashMap;
 use std::hash::Hash;
-use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex, Weak};
-
-pub struct Tracker {
-    n: Arc<AtomicUsize>,
-}
-
-impl Tracker {
-    pub fn new() -> Self {
-        Self {
-            n: Arc::new(AtomicUsize::new(0)),
-        }
-    }
-
-    pub fn track<T>(&self, value: T) -> Tracked<T> {
-        self.n.fetch_add(1, Ordering::SeqCst);
-        Tracked {
-            inner: Arc::new(value),
-            n: self.n.clone(),
-        }
-    }
-
-    pub fn live(&self) -> usize {
-        self.n.load(Ordering::SeqCst)
-    }
-}
-
-impl Default for Tracker {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-pub struct Tracked<T> {
-    inner: Arc<T>,
-    n: Arc<AtomicUsize>,
-}
-
-impl<T> Tracked<T> {
-    pub fn get(&self) -> &T {
-        &self.inner
-    }
-
-    pub fn downgrade(&self) -> Weak<T> {
-        Arc::downgrade(&self.inner)
-    }
-
-    pub fn strong_count(&self) -> usize {
-        Arc::strong_count(&self.inner)
-    }
-}
-
-impl<T> Clone for Tracked<T> {
-    fn clone(&self) -> Self {
-        self.n.fetch_add(1, Ordering::SeqCst);
-        Self {
-            inner: self.inner.clone(),
-            n: self.n.clone(),
-        }
-    }
-}
-
-impl<T> Drop for Tracked<T> {
-    fn drop(&mut self) {
-        self.n.fetch_sub(1, Ordering::SeqCst);
-    }
-}
 
 pub struct WeakRegistry<K, V> {
     map: Mutex<HashMap<K, Weak<V>>>,
@@ -120,29 +54,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn tracked_releases_on_drop() {
-        let t = Tracker::new();
-        {
-            let a = t.track(7u32);
-            assert_eq!(*a.get(), 7);
-            assert_eq!(t.live(), 1);
-        }
-        assert_eq!(t.live(), 0);
-    }
-
-    #[test]
-    fn clone_increments_and_all_drops_return_to_zero() {
-        let t = Tracker::new();
-        let a = t.track(1u32);
-        let b = a.clone();
-        assert_eq!(t.live(), 2);
-        drop(a);
-        assert_eq!(t.live(), 1);
-        drop(b);
-        assert_eq!(t.live(), 0);
-    }
-
-    #[test]
     fn weak_registry_does_not_keep_value_alive() {
         let reg = WeakRegistry::<String, u32>::new();
         let v = Arc::new(42u32);
@@ -168,24 +79,21 @@ mod tests {
     }
 
     #[test]
-    fn weak_link_breaks_cycle_and_reaches_zero() {
+    fn weak_link_breaks_cycle() {
         struct Node {
             next: Mutex<Option<Weak<Node>>>,
         }
-        let t = Tracker::new();
-        let a = t.track(Node {
-            next: Mutex::new(None),
-        });
-        let b = t.track(Node {
-            next: Mutex::new(None),
-        });
-        *a.get().next.lock().unwrap() = Some(b.downgrade());
-        *b.get().next.lock().unwrap() = Some(a.downgrade());
-        assert_eq!(a.strong_count(), 1);
-        assert_eq!(b.strong_count(), 1);
-        assert_eq!(t.live(), 2);
+        let a = Arc::new(Node { next: Mutex::new(None) });
+        let b = Arc::new(Node { next: Mutex::new(None) });
+        *a.next.lock().unwrap() = Some(Arc::downgrade(&b));
+        *b.next.lock().unwrap() = Some(Arc::downgrade(&a));
+        assert_eq!(Arc::strong_count(&a), 1);
+        assert_eq!(Arc::strong_count(&b), 1);
+        let wa = Arc::downgrade(&a);
+        let wb = Arc::downgrade(&b);
         drop(a);
         drop(b);
-        assert_eq!(t.live(), 0);
+        assert!(wa.upgrade().is_none());
+        assert!(wb.upgrade().is_none());
     }
 }

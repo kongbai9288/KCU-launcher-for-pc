@@ -2077,3 +2077,30 @@ L3 落地：
 | E07 | 关于页首次插入 2 行时替换目标写错，脚本断言失败 | 改为在数组末尾 `];` 前插入，复查 `构建中已使用=7` 与 JS 语法 |
 
 未做：cache / leak / launcher / lightweight 替换、UI 实现、真实运行时 / GUI / 跨平台构建、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 028
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/28-round-028-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/028-server-features.md | B01-B03 双轨边界、三项功能编号、C01-C05 代码替换、UI 闸门 |
+| docs/features/ | 3 份五字段功能 md + index + server-backlog 028 段 |
+| docs/research/20-server-log-events.md | 15 条来源、L01-L15、R01-R06、未证实项 |
+| docs/verification/round-028.md | 14 条复跑证据 |
+| demos/round-028-server-features.html | 13 步运行逻辑演示（非整页 UX） |
+| src/core/leak.rs | 删 Tracker / Tracked，191 → 99 行 |
+| src/dispatcher/launcher.rs / src/lib.rs | 测试迁移到 `Arc::strong_count` + `WaitGroup`，导出收敛 |
+| 索引与记录 | docs/index 137 项、README、decisions/index、research/index、ai-errors A67-A69、interface-log |
+
+「干」继续替换自写代码，按映射表把 `core/leak.rs` 的「大幅删减或删」落地：自写 AtomicUsize 计数、clone / drop 配对、Drop 兜底全删；`WeakRegistry` 保留（只用 std Arc/Mutex/Weak）。`Cargo.toml` / `Cargo.lock` / `vendor/` 未动，仍 8 包 7 第三方。
+
+三项新功能按「只记文档」处理，逐字登记、写五字段 md、补一手调研、出运行逻辑演示；`src/server` 不存在，UI 整页演示闸门未触发，`demos/ui-full-*.html` 与预览图未改。
+
+本轮真实差异与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E08 | 迁移后的 `outcomes_do_not_leave_live_tracked_objects` 用 `TaskGroup::new()` 编译报 `cannot find type TaskGroup in this scope` | 改用完整路径 `crate::core::asynk::TaskGroup::new()`，`cargo test --offline` 139 / 0 |
+| E09 | 删除自写类型带走 2 个自带测试，141 → 139 | 如实登记差值，等价断言迁移到 `Arc::strong_count` / `Weak::upgrade` / `WaitGroup`，未降低验收项 |
+
+未做：三项功能实现、UI 实现、真实服务端联调、浏览器图表渲染、cache / launcher / lightweight 替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。

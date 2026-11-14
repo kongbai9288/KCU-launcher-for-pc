@@ -226,3 +226,13 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | 开工闸门 | docs/decisions/012-server-input.md D03；Q-H01 至 Q-H06 未满足 |
 
 状态值：已批准 / 已实现 / 已验证 / 已合并 / 已进入构建 / 已部署 / 行为已确认。每份功能 md 只声明实际达到的一层。
+
+## 028 轮开服器新输入（只记文档）
+
+| 编号 | 功能 | 框架 | 状态 | 文件 |
+| --- | --- | --- | --- | --- |
+| F028-01 | 玩家上线提醒 | normal.server | 已批准 · 未实现 · 未进入构建 | server-join-alert.md |
+| F028-02 | 饼图分析活跃度 | normal.server | 已批准 · 未实现 · 未进入构建 | server-activity-pie.md |
+| F028-03 | 自动命令：服务器出现的命令文字作为触发条件 | normal.server | 已批准 · 未实现 · 未进入构建 | server-auto-command-log-trigger.md |
+
+三项均挂 012 轮开服器台账下，不另起框架；界面形态等手感轮再出整页 UX 演示。

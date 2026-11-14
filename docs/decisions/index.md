@@ -57,3 +57,5 @@
 | 026 | mini-moka 替换缓存受阻并回退 025 基线，src 改动 0 | 受阻；已回退 | 026-vendor-blocked.md |
 
 | 027 | asynk 手写并发原语换 crossbeam 两件套，小闭包路线落地 | 已实现、已验证 | 027-crossbeam-replacement.md |
+
+| 028 | 开服器三项新功能只记文档；leak.rs 自写计数删除 | 已登记；新功能未实现 | 028-server-features.md |

@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 027 |
+| 当前轮次 | 028 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -101,3 +101,9 @@
 ## 027 异步块换成 crossbeam
 
 `src/core/asynk.rs` 的手写 `std::sync::mpsc` 竞速、`Arc<AtomicUsize>` 活跃计数、`Vec<JoinHandle>` 回收循环全部删除，换成 `crossbeam-channel` + `crossbeam-utils`（`thread::scope` / `WaitGroup`）。`Cargo.lock` 8 包、7 个第三方 crate，4 份许可证全文落盘，关于页 7 组「构建中已使用」，`cargo test --offline` 141/0。026 的 mini-moka 大闭包仍按 N 选项挂着。详见 `docs/decisions/027-crossbeam-replacement.md`。
+
+## 028 开服器三项新功能（只记文档）
+
+玩家上线提醒、饼图分析活跃度、自动命令支持把服务器出现的命令文字作为触发条件，逐字登记并各写一份五字段功能 md，补 15 条来源标注与运行逻辑演示；`src/server` 不存在、UI 整页演示未触发。
+
+「干」继续替换自写代码：`src/core/leak.rs` 删掉自写 `Tracker` / `Tracked` 计数（191 → 99 行），测试迁移到 `Arc::strong_count` 与 027 的 `crossbeam_utils::sync::WaitGroup`；依赖仍 8 包 7 第三方，`cargo test --offline` 139 / 0。详见 `docs/decisions/028-server-features.md`。
