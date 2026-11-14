@@ -292,6 +292,16 @@ def install(pkg: str, want=None, force: bool = False) -> bool:
             j = tmp / junk
             if j.is_dir() and not j.is_symlink():
                 shutil.rmtree(j, ignore_errors=True)
+        # M05: mono-repo crates symlink build helpers to the repo root.
+        parent = cd.parent
+        for helper in ("no_atomic.rs", "build-common.rs"):
+            h = tmp / helper
+            if h.is_symlink() or (h.exists() and not h.is_file()):
+                h.unlink()
+            if (tmp / "build.rs").exists() and f'include!("{helper}")' in (tmp / "build.rs").read_text(errors="ignore"):
+                src_h = parent / helper
+                if src_h.exists() and not h.exists():
+                    shutil.copy2(src_h, h)
         mp = tmp / "Cargo.toml"
         mp.write_text(clean_manifest(mp.read_text(), version, pkg))
         (tmp / ".cargo-checksum.json").write_text(json.dumps({"files": {}, "package": None}))

@@ -1,7 +1,8 @@
-use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-use std::sync::mpsc::{channel, Receiver};
+use crossbeam_channel::{unbounded, RecvTimeoutError};
+use crossbeam_utils::sync::WaitGroup;
+use crossbeam_utils::thread;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
 #[derive(Clone)]
@@ -31,28 +32,20 @@ impl Default for CancelToken {
     }
 }
 
-struct LiveGuard {
-    n: Arc<AtomicUsize>,
-}
-
-impl Drop for LiveGuard {
-    fn drop(&mut self) {
-        self.n.fetch_sub(1, Ordering::SeqCst);
-    }
-}
-
 pub struct TaskGroup {
-    handles: Vec<JoinHandle<()>>,
     cancel: CancelToken,
-    live: Arc<AtomicUsize>,
+    wg: Option<WaitGroup>,
+    spawned: usize,
+    drained: bool,
 }
 
 impl TaskGroup {
     pub fn new() -> Self {
         Self {
-            handles: Vec::new(),
             cancel: CancelToken::new(),
-            live: Arc::new(AtomicUsize::new(0)),
+            wg: Some(WaitGroup::new()),
+            spawned: 0,
+            drained: false,
         }
     }
 
@@ -60,13 +53,13 @@ impl TaskGroup {
     where
         F: FnOnce(CancelToken) + Send + 'static,
     {
-        self.live.fetch_add(1, Ordering::SeqCst);
-        let n = self.live.clone();
+        let w = self.wg.clone();
         let c = self.cancel.clone();
-        self.handles.push(thread::spawn(move || {
-            let _g = LiveGuard { n };
+        self.spawned += 1;
+        std::thread::spawn(move || {
+            let _w = w;
             f(c);
-        }));
+        });
     }
 
     pub fn cancel_token(&self) -> CancelToken {
@@ -78,17 +71,20 @@ impl TaskGroup {
     }
 
     pub fn live(&self) -> usize {
-        self.live.load(Ordering::SeqCst)
+        if self.drained {
+            0
+        } else {
+            self.spawned
+        }
     }
 
     pub fn shutdown(&mut self) -> usize {
         self.cancel.cancel();
-        let mut joined = 0;
-        for h in self.handles.drain(..) {
-            let _ = h.join();
-            joined += 1;
+        if let Some(wg) = self.wg.take() {
+            wg.wait();
         }
-        joined
+        self.drained = true;
+        self.spawned
     }
 }
 
@@ -101,8 +97,8 @@ impl Default for TaskGroup {
 impl Drop for TaskGroup {
     fn drop(&mut self) {
         self.cancel.cancel();
-        for h in self.handles.drain(..) {
-            let _ = h.join();
+        if let Some(wg) = self.wg.take() {
+            wg.wait();
         }
     }
 }
@@ -126,40 +122,36 @@ where
     T: Send + 'static,
 {
     let cancel = CancelToken::new();
-    let live = Arc::new(AtomicUsize::new(0));
-    let (tx, rx): (_, Receiver<(usize, T)>) = channel();
-    let mut handles = Vec::new();
+    let (tx, rx) = unbounded::<(usize, T)>();
 
-    for (i, f) in loaders.into_iter().enumerate() {
-        let c = cancel.clone();
-        let tx = tx.clone();
-        let n = live.clone();
-        n.fetch_add(1, Ordering::SeqCst);
-        handles.push(thread::spawn(move || {
-            let _g = LiveGuard { n };
-            if c.is_cancelled() {
-                return;
-            }
-            if let Some(v) = f(c.clone()) {
-                let _ = tx.send((i, v));
-            }
-        }));
-    }
-    drop(tx);
-
-    let first = rx.recv_timeout(timeout);
-    cancel.cancel();
-    for h in handles {
-        let _ = h.join();
-    }
+    let first = thread::scope(|s| {
+        for (i, f) in loaders.into_iter().enumerate() {
+            let c = cancel.clone();
+            let tx = tx.clone();
+            s.spawn(move |_| {
+                if c.is_cancelled() {
+                    return;
+                }
+                if let Some(v) = f(c.clone()) {
+                    let _ = tx.send((i, v));
+                }
+            });
+        }
+        drop(tx);
+        let got = rx.recv_timeout(timeout);
+        cancel.cancel();
+        got
+    });
 
     match first {
-        Ok((index, value)) => Ok(RaceResult {
+        Ok(Ok((index, value))) => Ok(RaceResult {
             index,
             value,
-            live_after_join: live.load(Ordering::SeqCst),
+            live_after_join: 0,
         }),
-        Err(_) => Err(RaceError::TimedOut),
+        Ok(Err(RecvTimeoutError::Timeout | RecvTimeoutError::Disconnected)) | Err(_) => {
+            Err(RaceError::TimedOut)
+        }
     }
 }
 
@@ -172,7 +164,7 @@ mod tests {
         let mut g = TaskGroup::new();
         g.spawn(|c| {
             while !c.is_cancelled() {
-                thread::yield_now();
+                std::thread::yield_now();
             }
         });
         g.cancel();
@@ -192,7 +184,7 @@ mod tests {
 
     #[test]
     fn drop_joins_without_explicit_shutdown() {
-        let done = Arc::new(AtomicUsize::new(0));
+        let done = Arc::new(std::sync::atomic::AtomicUsize::new(0));
         {
             let mut g = TaskGroup::new();
             for _ in 0..4 {
@@ -214,7 +206,7 @@ mod tests {
                     if c.is_cancelled() {
                         return None;
                     }
-                    thread::sleep(Duration::from_millis(1));
+                    std::thread::sleep(Duration::from_millis(1));
                 }
                 Some(22)
             }),
@@ -223,7 +215,7 @@ mod tests {
                     if c.is_cancelled() {
                         return None;
                     }
-                    thread::sleep(Duration::from_millis(1));
+                    std::thread::sleep(Duration::from_millis(1));
                 }
                 Some(33)
             }),
@@ -239,7 +231,7 @@ mod tests {
         let loaders: Vec<Box<dyn FnOnce(CancelToken) -> Option<u32> + Send>> = vec![
             Box::new(|c| {
                 while !c.is_cancelled() {
-                    thread::sleep(Duration::from_millis(1));
+                    std::thread::sleep(Duration::from_millis(1));
                 }
                 None
             }),

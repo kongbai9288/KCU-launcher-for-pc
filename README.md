@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 026 |
+| 当前轮次 | 027 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -97,3 +97,7 @@
 ## 026 受阻回退
 
 尝试把手写 `src/core/cache.rs` 换成 `mini-moka`，离线 vendor 闭包拉到 21 个上游包后卡在 `libc 0.2.191` 源码解压（沙盒 IO 超时）与工具层 502。已回退 `Cargo.toml` / `vendor/` / `Cargo.lock` 到 025 基线，`cargo build --offline` 与 `cargo test --offline` 复跑通过（141/0），`src/` 一行未动。详见 `docs/decisions/026-vendor-blocked.md`。
+
+## 027 异步块换成 crossbeam
+
+`src/core/asynk.rs` 的手写 `std::sync::mpsc` 竞速、`Arc<AtomicUsize>` 活跃计数、`Vec<JoinHandle>` 回收循环全部删除，换成 `crossbeam-channel` + `crossbeam-utils`（`thread::scope` / `WaitGroup`）。`Cargo.lock` 8 包、7 个第三方 crate，4 份许可证全文落盘，关于页 7 组「构建中已使用」，`cargo test --offline` 141/0。026 的 mini-moka 大闭包仍按 N 选项挂着。详见 `docs/decisions/027-crossbeam-replacement.md`。

@@ -111,3 +111,12 @@
 | memchr-LICENSE-MIT.txt | memchr 2.7.6 | Unlicense OR MIT（仅 MIT 全文） |
 
 来源：各上游 GitHub tag 打包内的 LICENSE 文件，逐字副本。
+
+## 027 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| crossbeam-channel-LICENSE-MIT.txt / crossbeam-channel-LICENSE-APACHE.txt | crossbeam-channel 0.5.17 | MIT OR Apache-2.0 |
+| crossbeam-utils-LICENSE-MIT.txt / crossbeam-utils-LICENSE-APACHE.txt | crossbeam-utils 0.8.23 | MIT OR Apache-2.0 |
+
+来源：crossbeam-rs/crossbeam 对应 tag 打包内的 LICENSE 文件，逐字副本。

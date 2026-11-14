@@ -2053,3 +2053,27 @@ L3 落地：
 用户问「好了吗」时，本轮状态是：mini-moka 依赖闭包未收敛（libc 0.2.191 解压受阻、工具层多次 502），已回退到 025 基线，`src/` 一行未动。如实答「没好」，不发通过标记。
 
 本轮未做：cache.rs / asynk.rs / leak.rs 替换、任何新依赖进构建、UI 演示、自评打分、后端仓写请求。
+
+## 027
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/27-round-027-instructions.txt | 逐字副本「干」 |
+| docs/decisions/027-crossbeam-replacement.md | 路线调整、D01-D05、8 包数字、M05/M06、B05-B08、未换清单 |
+| docs/verification/round-027.md | 12 条复跑证据 |
+| src/core/asynk.rs | 手写 mpsc / AtomicUsize / LiveGuard / JoinHandle 循环删除，换 crossbeam-channel + crossbeam-utils |
+| Cargo.toml / Cargo.lock / vendor/ | 8 包，7 第三方 |
+| docs/licenses/ | 4 份新增全文 |
+| demos/ui-full-kcu-paper.html / demos/preview/ | 关于页 7 组「构建中已使用」，43 张截图重渲 |
+| 索引与记录 | decisions/index、docs/index 133 项、README、licenses/index、push-scope 沿用、code-ownership-audit、implementation-strategy、THIRD-PARTY-NOTICES、026 决策更新、rounds |
+
+用户「干」继续推进；026 受阻后不重走大闭包，先啃依赖最浅且用户最早点名的异步块。
+
+本轮真实缺陷与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E06 | `crossbeam-utils/build.rs` 报 `couldn't find file no_atomic.rs` | mono-repo 子目录里的 `no_atomic.rs` / `build-common.rs` 是指向仓库根的软链，move 后悬空；删软链、复制仓库根真实文件，已写进 vendor 脚本 M05 |
+| E07 | 关于页首次插入 2 行时替换目标写错，脚本断言失败 | 改为在数组末尾 `];` 前插入，复查 `构建中已使用=7` 与 JS 语法 |
+
+未做：cache / leak / launcher / lightweight 替换、UI 实现、真实运行时 / GUI / 跨平台构建、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。

@@ -58,3 +58,7 @@
 | libc 0.2.191 本地解压完成、闭包收敛、cache.rs 替换 | 受阻 |
 | 真实运行时行为、Win7 / 多架构构建 | 未证实 |
 | 后端仓写请求 | 0（已证实） |
+
+## 027 更新
+
+mini-moka 大闭包仍按 N01/N02/N03 挂着，未选定前不动 Cargo.toml。027 改用依赖闭包最浅的 crossbeam 两件套，把 `src/core/asynk.rs` 的手写并发原语替换完成，8 包 / 7 第三方、141 / 0 通过，详见 `docs/decisions/027-crossbeam-replacement.md`。

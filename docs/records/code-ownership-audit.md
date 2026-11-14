@@ -133,3 +133,17 @@
 | `src/` 有效代码行 | 3876 | 3636 |
 
 替换映射第一块已落地，详见 `docs/decisions/025-vendor-first-replacement.md`。其余自写模块（cache / asynk / leak / launcher / lightweight）仍按本文件映射逐模块推进，未在本轮完成。
+
+## 027 第二块替换后状态
+
+| 项 | 024 | 025 | 027 |
+| --- | --- | --- | --- |
+| 第三方 crate 进构建 | 0 | 5 | **7** |
+| `Cargo.lock` 包数 | 1 | 6 | 8 |
+| `src/dispatcher/json.rs` | 336 行手写解析器 | 77 行薄适配 | 77 行 |
+| `src/core/asynk.rs` | 258 行手写并发 | 258 行 | 250 行，手写并发原语全删 |
+| `src/` 行数 | 4339 | 4081 | 4073 |
+
+027 删掉的自写并发：`std::sync::mpsc` 多源竞速、`Arc<AtomicUsize>` + `LiveGuard` + Drop 递减、`Vec<JoinHandle>` 手工 join 循环；换成 `crossbeam_channel::unbounded/recv_timeout`、`crossbeam_utils::thread::scope`、`crossbeam_utils::sync::WaitGroup`。详见 `docs/decisions/027-crossbeam-replacement.md`。
+
+剩余自写模块：cache / leak / launcher / lightweight 与其余 core，按本文件映射继续推进。

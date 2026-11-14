@@ -8,3 +8,6 @@ MISSING hashbrown want=None
 BUILD_FAIL_NON_MISSING
 MISSING hashbrown want=None
 BUILD_FAIL_NON_MISSING
+MISSING crossbeam-channel want=None
+MISSING crossbeam-utils want=None
+BUILD_FAIL_NON_MISSING

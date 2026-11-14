@@ -129,3 +129,17 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | N15 | ryu 为 `Apache-2.0 OR BSL-1.0`，两份全文均已落盘，按 Apache-2.0 条款使用。 |
 | N16 | vendor 内上游 `src/` 原样保留；manifest 仅删 dev / 恒假 cfg 段，改动可 diff 审计。 |
 | N17 | 后续每引入一个库，重复 H02 四步：LICENSE 全文 → 关于页 → 本文件 → Cargo.toml。 |
+
+## 027 新增已进构建依赖
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| crossbeam-channel | 0.5.17 | MIT OR Apache-2.0 | crossbeam-rs | 多源竞速结果通道 | vendor/crossbeam-channel | 构建中已使用 |
+| crossbeam-utils | 0.8.23 | MIT OR Apache-2.0 | crossbeam-rs | 线程组与活跃归零 | vendor/crossbeam-utils | 构建中已使用 |
+
+许可证全文：`docs/licenses/crossbeam-channel-LICENSE-{MIT,APACHE}.txt`、`crossbeam-utils-LICENSE-{MIT,APACHE}.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N18 | crossbeam 为 mono-repo，crate 子目录的 `no_atomic.rs` / `build-common.rs` 原本是指向仓库根的软链；vendor 时改为真实文件副本，上游 `src/` 未改。 |
+| N19 | 按 MIT 条款使用，Apache-2.0 全文同时随附。 |
