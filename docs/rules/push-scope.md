@@ -1,6 +1,6 @@
 # 远端推送范围
 
-轮次：022
+轮次：023
 
 远端：`kongbai9288/KCU-launcher-for-pc`，public，分支 main。
 特殊版：`kongbai9288/KCU-launcher-special`，private，分支 main，仅 README 占位。
@@ -26,6 +26,8 @@
 | 021 调研与设计 | docs/research/18-server-list-autodiscovery.md、docs/design/server-list-logic.md、docs/design/ui-product-copy.md |
 | 022 改造脚本 | scripts/round022_async.py、scripts/round022_docs.py、scripts/round022_index.py |
 | 022 调研与设计 | docs/research/19-async-probe-budget.md、docs/design/async-probe-policy.md |
+| 023 改造脚本 | scripts/round023_ux.py、scripts/round023_i18n_cover.py、scripts/round023_docs.py、scripts/round023_index.py |
+| 023 调研与设计 | docs/research/20-i18n-crash-identity.md、docs/design/ 四份策略文档 |
 | 发行物声明 | THIRD-PARTY-NOTICES.md |
 | 仓库配置 | README.md、.gitignore、LICENSE、第三方声明 |
 

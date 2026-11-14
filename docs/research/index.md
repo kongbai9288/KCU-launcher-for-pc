@@ -165,3 +165,10 @@
 | --- | --- | --- |
 | 并行探测 API、context deadline、启动器异步 ping、背压 / 有界队列 / 连接池上限 / 失败不毁整批 | docs/research/19-async-probe-budget.md | 12 个完整 URL 锚点，J01-J07 结论 |
 | Q01-Q04 口径说明 | docs/research/19-async-probe-budget.md | 自主拍板，待用户确认，只落 docs/ |
+
+## 023 i18n / 崩溃 / 稳定标识 / 兼容性
+
+| 项 | 文档 | 状态 |
+| --- | --- | --- |
+| 18 个完整 URL 锚点、J01-J07 结论、Q01-Q04 口径说明 | docs/research/20-i18n-crash-identity.md | 一手 15 组 + 公开资料 6 组 |
+| Fluent / i18n-embed / Sentry SDK / minidump / Breakpad / Win7 Tier 3 / servers.dat 无 ID 字段 | docs/research/20-i18n-crash-identity.md | 已证实 |

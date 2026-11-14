@@ -11,13 +11,13 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 022 |
+| 当前轮次 | 023 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
 | 轻量模式 UI | 独立极简视图，不复用正常模式 UI |
-| UI 整页演示闸门 | docs/rules/ui-demo.md；022 增 G22（异步预算与失败历史口径），已交付 37 视图，用户手感调整优先于实现 |
-| 功能登记 | docs/features/index.md；F001、F004-F012 已批准未实现；F002、F003、F013-01..09、F014-01..03、F015-01..04、F016-01..04、F017-01、F018-01、F019-01..03、F020-01..06、F021-01..04、F022-01..02 已实现、已验证 |
+| UI 整页演示闸门 | docs/rules/ui-demo.md；023 增 G23，已交付 43 视图，用户手感调整优先于实现 |
+| 功能登记 | docs/features/index.md；F001、F004-F012 已批准未实现；F002、F003、F013-01..09、F014-01..03、F015-01..04、F016-01..04、F017-01、F018-01、F019-01..03、F020-01..06、F021-01..04、F022-01..02、F023-01..02 已实现、已验证 |
 | 开工依据 | 013 轮 F07/F08/F09；答复台账 docs/records/round-013-answers.md；015 决策 docs/decisions/015-build-continue.md |
 | 待拍板问题 | 93 条已答复，细节按用户逻辑落地 |
 | 工具链 | rustc / cargo 1.99.1，腾讯 rustup 镜像；`cargo build --release --offline` 与 `cargo test --offline`（141 passed）实测通过 |
@@ -26,14 +26,14 @@
 | 搭建前置条件 | docs/rules/build-preconditions.md，条件 1-6 已满足到开工层；L1、L2、L3 已实现已验证 |
 | L2 dispatcher | src/dispatcher/，task / mode / launcher + json 底座；模式判定、安全模式、正版凭据闸门、UI 分流、单参数进服、双击按权重选实例 |
 | L3 lightweight | src/lightweight/，login / download / loaders / view；三种登录、三级回退、批量请求每页 20、6 加载器、单主题、游戏运行期无常驻进程 |
-| 整页 UX 演示 | 016 轻量版；017 v2 作废；018 纸质版；019 28 视图；020 37 视图；021 去工程化并重做服务器页；022 异步探测与连接范围，37 张产品视图；实现未进构建 |
-| 界面预览图 | demos/preview/00-overview.png 总览 + 37 张产品视图 PNG，本地 chromium 每视图强制重载，直接看界面长相 |
-| 服务器 | 添加后异步自动连接、结果缓存为排序权重、锁定置顶、连不上沉底、双击按上次实例绑定进服；只读 servers.dat 自动分析；按设备能力限制同时连几台，范围外不连、无成功记录的不反复连 |
+| 整页 UX 演示 | 016 轻量版；017 v2 作废；018 纸质版；019 28 视图；020 37 视图；021 去工程化并重做服务器页；023 i18n / 崩溃反馈 / 稳定标识，43 张产品视图；实现未进构建 |
+| 界面预览图 | demos/preview/00-overview.png 总览 + 43 张产品视图 PNG，本地 chromium 每视图强制重载，直接看界面长相 |
+| 服务器 | 添加后异步自动连接、结果缓存为排序权重、锁定置顶、连不上沉底、双击按上次实例绑定进服；只读 servers.dat 自动分析；按设备能力限制同时连几台，范围外不连、无成功记录的不反复连；稳定 ID 隔离同名、显示名可改 |
 | 产品文案 | docs/design/ui-product-copy.md；界面不出现槽位 ID、稳定设置 ID、交接基线、候选状态等工程叙事 |
 | 导航与槽位 | docs/design/nav-slot-contract.md；core.locked.settings / core.locked.about 固定，plugin.* 开放 |
 | 交接基线 | docs/design/handoff.md，新对话按 6 步接续 |
 | 上层候选 | docs/design/upper-layer-stack.md，12 组第三方库，未进入构建 |
-| 使用逻辑矩阵 | docs/design/ux-logic-matrix.md，U01–U27 × L01–L12，022 新增 U27 |
+| 使用逻辑矩阵 | docs/design/ux-logic-matrix.md，U01–U28 × L01–L12，023 新增 U28 |
 | 第三方许可 | THIRD-PARTY-NOTICES.md 与关于页七列表；lucide ISC + Feather MIT |
 | 合规卡点 | X01-X04 按 F10 以正常情况与用户逻辑落地；CF 下载模块不在 L1/L2 范围 |
 | 缓存 / 异步 / 泄漏 | core.cache、core.asynk、core.leak 已实现已验证；CI 有界缓存与并发取消已配置 |

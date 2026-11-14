@@ -326,6 +326,12 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 .budget-bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
 .srv-note{display:inline-block;font-size:10px;color:var(--ink-3);border:1px solid var(--line);border-radius:3px;padding:0 5px;margin-left:6px}
 
+
+.srv-ms{font-size:10px;color:var(--ink-3);margin-top:2px;text-align:right;font-variant-numeric:tabular-nums}
+.rename-btn{border:none;background:none;cursor:pointer;color:var(--ink-3);font-size:11px;padding:0 3px;margin-left:4px;vertical-align:1px}
+.rename-btn:hover{color:var(--accent)}
+.tb-lang{font-size:11px;letter-spacing:.3px}
+.same-tag{display:inline-block;font-size:10px;color:var(--accent);border:1px solid var(--line-2);border-radius:3px;padding:0 5px;margin-left:6px}
 </style>
 </head>
 <body>
@@ -609,34 +615,35 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 <div class="win" id="win" data-theme="light">
   <div class="titlebar">
     <div class="tb-logo">K</div>
-    <div class="tb-name"><b>KCU Launcher</b> · 桌面端</div>
-    <div class="tb-search"><span class="mag"><svg class="li" aria-hidden="true"><use href="#i-search"></use></svg></span><input type="text" placeholder="搜索实例、模组、设置"><kbd>Ctrl K</kbd></div>
+    <div class="tb-name"><b>KCU Launcher</b> · <span data-i18n="app.desktop">桌面端</span></div>
+    <div class="tb-search"><span class="mag"><svg class="li" aria-hidden="true"><use href="#i-search"></use></svg></span><input type="text" placeholder="搜索实例、模组、设置" data-i18n-ph="search.hint"><kbd>Ctrl K</kbd></div>
+    <button class="tb-icon tb-lang" id="btnLang" title="界面语言" data-i18n-title="lang.switch">中</button>
     <button class="tb-icon" id="btnTheme" title="切换主题"><svg class="li" aria-hidden="true"><use href="#i-moon"></use></svg></button>
     <div class="winctl"><button title="最小化"><svg class="li" aria-hidden="true"><use href="#i-minus"></use></svg></button><button title="最大化"><svg class="li" aria-hidden="true"><use href="#i-square"></use></svg></button><button class="close" title="关闭"><svg class="li" aria-hidden="true"><use href="#i-x"></use></svg></button></div>
   </div>
 
   <div class="body">
     <nav class="nav" id="nav">
-      <button class="nav-item active" data-v="home"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-house"></use></svg></span><span class="lb">首页</span></button>
-      <button class="nav-item" data-v="notices"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-mail"></use></svg></span><span class="lb">公告中心</span><span class="cnt">3</span></button>
-      <button class="nav-item" data-v="instances"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-layout-grid"></use></svg></span><span class="lb">实例与版本</span><span class="cnt">7</span></button>
-      <button class="nav-item" data-v="servers"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-server"></use></svg></span><span class="lb">服务器</span></button>
-      <button class="nav-item" data-v="download"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-download"></use></svg></span><span class="lb">下载中心</span></button>
-      <button class="nav-item" data-v="mods"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-boxes"></use></svg></span><span class="lb">模组管理</span><span class="cnt">110</span></button>
-      <button class="nav-item" data-v="login"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-user-round"></use></svg></span><span class="lb">账号登录</span></button>
-      <button class="nav-item" data-v="serverhost"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-terminal"></use></svg></span><span class="lb">开服器</span></button>
-      <button class="nav-item" data-v="logs"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-scroll-text"></use></svg></span><span class="lb">日志诊断</span></button>
+      <button class="nav-item active" data-v="home"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-house"></use></svg></span><span class="lb" data-i18n="nav.home">首页</span></button>
+      <button class="nav-item" data-v="notices"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-mail"></use></svg></span><span class="lb" data-i18n="nav.notices">公告中心</span><span class="cnt">3</span></button>
+      <button class="nav-item" data-v="instances"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-layout-grid"></use></svg></span><span class="lb" data-i18n="nav.instances">实例与版本</span><span class="cnt">7</span></button>
+      <button class="nav-item" data-v="servers"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-server"></use></svg></span><span class="lb" data-i18n="nav.servers">服务器</span></button>
+      <button class="nav-item" data-v="download"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-download"></use></svg></span><span class="lb" data-i18n="nav.download">下载中心</span></button>
+      <button class="nav-item" data-v="mods"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-boxes"></use></svg></span><span class="lb" data-i18n="nav.mods">模组管理</span><span class="cnt">110</span></button>
+      <button class="nav-item" data-v="login"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-user-round"></use></svg></span><span class="lb" data-i18n="nav.login">账号登录</span></button>
+      <button class="nav-item" data-v="serverhost"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-terminal"></use></svg></span><span class="lb" data-i18n="nav.serverhost">开服器</span></button>
+      <button class="nav-item" data-v="logs"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-scroll-text"></use></svg></span><span class="lb" data-i18n="nav.logs">日志诊断</span></button>
       <div class="nav-sep"></div>
       <div class="slot-plugin"><div class="sh"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg> 扩展</div>
-        <button class="nav-item" data-gotab="plugins"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg></span><span class="lb">我的插件</span><span class="cnt">2</span></button>
-        <button class="nav-item" data-gotab="plugins"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-activity"></use></svg></span><span class="lb">更新与状态</span></button>
+        <button class="nav-item" data-gotab="plugins"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg></span><span class="lb" data-i18n="我的插件">我的插件</span><span class="cnt">2</span></button>
+        <button class="nav-item" data-gotab="plugins"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-activity"></use></svg></span><span class="lb" data-i18n="更新与状态">更新与状态</span></button>
       </div>
       <div class="nav-foot">
         <div class="slot-core"><div class="sh"> </div>
-          <button class="nav-item" data-v="settings"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-settings"></use></svg></span><span class="lb">设置</span></button>
-          <button class="nav-item" data-v="about"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-info"></use></svg></span><span class="lb">关于</span></button>
+          <button class="nav-item" data-v="settings"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-settings"></use></svg></span><span class="lb" data-i18n="nav.settings">设置</span></button>
+          <button class="nav-item" data-v="about"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-info"></use></svg></span><span class="lb" data-i18n="nav.about">关于</span></button>
         </div>
-        <button class="nav-item" id="btnCollapse"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-chevrons-left"></use></svg></span><span class="lb">收起侧栏</span></button>
+        <button class="nav-item" id="btnCollapse"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-chevrons-left"></use></svg></span><span class="lb" data-i18n="收起侧栏">收起侧栏</span></button>
       </div>
     </nav>
 
@@ -653,7 +660,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 首页 -->
       <section class="view on" data-view="home">
-          <div class="logicbar" data-lb="home"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="home"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="stack">
           <div class="notice">
             <div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-megaphone"></use></svg></div>
@@ -672,7 +679,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
           </div>
           <div class="grid" style="grid-template-columns:1.5fr 1fr">
             <div class="panel">
-              <div class="panel-head"><div class="panel-title">启动</div><div class="panel-sub">当前实例 · 1.21.4 Fabric</div>
+              <div class="panel-head"><div class="panel-title" data-i18n="启动">启动</div><div class="panel-sub" data-i18n="当前实例 · 1.21.4 Fabric">当前实例 · 1.21.4 Fabric</div>
                 <div class="panel-tools"><button class="btn tiny" data-v="instances">切换</button></div></div>
               <div class="hero">
                 <svg class="cube" viewBox="0 0 26 26" fill="none" aria-hidden="true">
@@ -687,8 +694,8 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
                   <div class="row"><button class="btn primary" id="btnLaunch"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg> 启动游戏</button><button class="btn" data-v="download">检查更新</button><button class="btn" data-v="logs">运行日志</button></div>
                 </div>
               </div>
-              <div style="margin-top:14px" class="panel-head"><div class="panel-title">最近实例</div><div class="panel-sub">共 7 条</div></div>
-              <table class="grid"><thead><tr><th>实例</th><th>版本 / 加载器</th><th>模组</th><th>状态</th></tr></thead><tbody>
+              <div style="margin-top:14px" class="panel-head"><div class="panel-title" data-i18n="最近实例">最近实例</div><div class="panel-sub" data-i18n="共 7 条">共 7 条</div></div>
+              <table class="grid"><thead><tr><th data-i18n="实例">实例</th><th data-i18n="版本 / 加载器">版本 / 加载器</th><th data-i18n="模组">模组</th><th data-i18n="状态">状态</th></tr></thead><tbody>
                 <tr><td>生存季</td><td>1.21.4 · Fabric</td><td>42</td><td><span class="badge ok">正常</span></td></tr>
                 <tr><td>纯原版</td><td>1.21.4 · Vanilla</td><td>0</td><td><span class="badge ok">正常</span></td></tr>
                 <tr><td>旧存档</td><td>1.20.1 · Forge</td><td>18</td><td><span class="badge up">可更新</span></td></tr>
@@ -697,10 +704,10 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
             </div>
             <div class="stack">
               <div class="side-card"><h3 class="sec">手感调整</h3>
-                <div class="row"><select class="sel" id="gGap" style="width:auto"><option value="12">间距 12</option><option value="8">间距 8</option><option value="18">间距 18</option></select>
-                <select class="sel" id="gFs" style="width:auto"><option value="13">字号 13</option><option value="12">字号 12</option><option value="14">字号 14</option></select></div>
-                <div class="row" style="margin-top:8px"><select class="sel" id="gR" style="width:auto"><option value="10">圆角 10</option><option value="4">圆角 4</option><option value="16">圆角 16</option></select>
-                <select class="sel" id="gNoise" style="width:auto"><option value=".055">纸纹 中</option><option value=".02">纸纹 淡</option><option value=".09">纸纹 重</option></select></div>
+                <div class="row"><select class="sel" id="gGap" style="width:auto"><option value="12" data-i18n="间距 12">间距 12</option><option value="8" data-i18n="间距 8">间距 8</option><option value="18" data-i18n="间距 18">间距 18</option></select>
+                <select class="sel" id="gFs" style="width:auto"><option value="13" data-i18n="字号 13">字号 13</option><option value="12" data-i18n="字号 12">字号 12</option><option value="14" data-i18n="字号 14">字号 14</option></select></div>
+                <div class="row" style="margin-top:8px"><select class="sel" id="gR" style="width:auto"><option value="10" data-i18n="圆角 10">圆角 10</option><option value="4" data-i18n="圆角 4">圆角 4</option><option value="16" data-i18n="圆角 16">圆角 16</option></select>
+                <select class="sel" id="gNoise" style="width:auto"><option value=".055" data-i18n="纸纹 中">纸纹 中</option><option value=".02" data-i18n="纸纹 淡">纸纹 淡</option><option value=".09" data-i18n="纸纹 重">纸纹 重</option></select></div>
                 <div class="mut" style="font-size:11px;margin-top:9px">演示层调整，确认后才进实现。纸质样板只取质感，位置重新组织。</div>
               </div>
               <div class="side-card"><h3 class="sec">最近公告</h3><div class="stack" id="homeNotices"></div></div>
@@ -717,7 +724,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 公告中心 -->
       <section class="view" data-view="notices">
-          <div class="logicbar" data-lb="notices"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="notices"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="row" style="margin-bottom:12px">
           <span class="chip on" data-f="all">全部 6</span><span class="chip" data-f="pin">置顶</span><span class="chip" data-f="up">版本更新</span>
           <span class="chip" data-f="evt">活动</span><span class="chip" data-f="mt">维护</span>
@@ -726,11 +733,11 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
         <div class="grid" style="grid-template-columns:1.35fr 1fr">
           <div class="stack" id="noticeList"></div>
           <div class="stack">
-            <div class="panel"><div class="panel-head"><div class="panel-title">公告详情</div><div class="panel-sub">点左侧条目切换</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="公告详情">公告详情</div><div class="panel-sub" data-i18n="点左侧条目切换">点左侧条目切换</div></div>
               <div id="noticePreview" class="dim" style="font-size:12px;line-height:1.8"></div>
               <div class="row" style="margin-top:12px"><button class="btn primary tiny" id="openDetail">打开详情弹窗</button></div>
             </div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">公告规则</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="公告规则">公告规则</div></div>
               <div class="stack" style="font-size:12px" class="dim">
                 <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">未读高亮、已读降噪，不自动弹窗打断操作</div></div></div>
                 <div class="notice" style="box-shadow:none;padding:10px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-check"></use></svg></div><div class="notice-main"><div class="notice-body">维护公告只在相关入口提示，不全局拦截</div></div></div>
@@ -743,29 +750,29 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 实例与服务器 -->
       <section class="view" data-view="instances">
-          <div class="logicbar" data-lb="instances"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
-        <div class="panel"><div class="panel-head"><div class="panel-title">实例列表</div><div class="panel-sub">共 7 条 · 双击服务器按权重选实例</div>
+          <div class="logicbar" data-lb="instances"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="实例列表">实例列表</div><div class="panel-sub" data-i18n="共 7 条 · 双击服务器按权重选实例">共 7 条 · 双击服务器按权重选实例</div>
           <div class="panel-tools"><button class="btn tiny">批量导入</button><button class="btn tiny">扫描</button></div></div>
-          <table class="grid"><thead><tr><th>实例名称</th><th>版本</th><th>加载器</th><th>模组</th><th>上次启动</th><th>状态</th></tr></thead><tbody id="insBody"></tbody></table>
+          <table class="grid"><thead><tr><th data-i18n="实例名称">实例名称</th><th data-i18n="版本">版本</th><th data-i18n="加载器">加载器</th><th data-i18n="模组">模组</th><th data-i18n="上次启动">上次启动</th><th data-i18n="状态">状态</th></tr></thead><tbody id="insBody"></tbody></table>
         </div>
-        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">服务器列表</div><div class="panel-sub">一个参数可直接进服 · 用户指定排第一</div></div>
-          <table class="grid"><thead><tr><th>服务器</th><th>版本</th><th>实例选择</th><th>来源</th></tr></thead><tbody id="srvBody"></tbody></table>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title" data-i18n="服务器列表">服务器列表</div><div class="panel-sub" data-i18n="一个参数可直接进服 · 用户指定排第一">一个参数可直接进服 · 用户指定排第一</div></div>
+          <table class="grid"><thead><tr><th data-i18n="服务器">服务器</th><th data-i18n="版本">版本</th><th data-i18n="实例选择">实例选择</th><th data-i18n="来源">来源</th></tr></thead><tbody id="srvBody"></tbody></table>
         </div>
       </section>
 
       <!-- 下载中心 -->
       <section class="view" data-view="download">
-          <div class="logicbar" data-lb="download"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="download"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">下载队列</div><div class="panel-sub" id="dlSub">4 个任务 · 1 次请求</div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="下载队列">下载队列</div><div class="panel-sub" id="dlSub" data-i18n="4 个任务 · 1 次请求">4 个任务 · 1 次请求</div>
             <div class="panel-tools"><button class="btn tiny" id="dlRun">拉取 10 个</button><button class="btn tiny" id="dl45">跑 45 个</button><button class="btn tiny" id="dlCancel">取消</button></div></div>
             <div class="stack" id="dlList"></div><div class="progress" style="margin-top:12px"><i id="dlBar" style="width:84%"></i></div>
           </div>
           <div class="stack">
-            <div class="set-card"><div class="hd">下载源与软策略</div><div class="kv">
-              <span class="k">默认源</span><select class="sel"><option>BMCLAPI 国内镜像</option><option>Mojang 官方</option></select>
-              <span class="k">地域判定</span><select class="sel"><option>自动测速</option><option>强制境外（仅影响下载选择）</option></select>
-              <span class="k">每页条数</span><input class="txt" value="20" readonly>
+            <div class="set-card"><div class="hd" data-i18n="下载源与软策略">下载源与软策略</div><div class="kv">
+              <span class="k" data-i18n="默认源">默认源</span><select class="sel"><option value="BMCLAPI 国内镜像" data-i18n="BMCLAPI 国内镜像">BMCLAPI 国内镜像</option><option value="Mojang 官方" data-i18n="Mojang 官方">Mojang 官方</option></select>
+              <span class="k" data-i18n="地域判定">地域判定</span><select class="sel"><option value="自动测速" data-i18n="自动测速">自动测速</option><option value="强制境外（仅影响下载选择）" data-i18n="强制境外（仅影响下载选择）">强制境外（仅影响下载选择）</option></select>
+              <span class="k" data-i18n="每页条数">每页条数</span><input class="txt" value="20" readonly>
               <span class="k">API Key</span><input class="txt" placeholder="用户填写 / 工作流注入">
             </div></div>
             <div class="grid g2"><div class="stat"><div class="stat-ico" style="background:#3D6B66"><svg class="li" aria-hidden="true"><use href="#i-download"></use></svg></div><div><div class="stat-v" id="dlReq">1</div><div class="stat-l">本次请求</div></div></div>
@@ -776,10 +783,10 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 模组管理 -->
       <section class="view" data-view="mods">
-          <div class="logicbar" data-lb="mods"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
-        <div class="panel"><div class="panel-head"><div class="panel-title">模组管理</div><div class="panel-sub">110 个 · 启用 41</div>
+          <div class="logicbar" data-lb="mods"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="模组管理">模组管理</div><div class="panel-sub" data-i18n="110 个 · 启用 41">110 个 · 启用 41</div>
           <div class="panel-tools"><button class="btn tiny">全选</button><button class="btn tiny">禁用选中</button></div></div>
-          <table class="grid"><thead><tr><th>模组</th><th>版本</th><th>来源</th><th>大小</th><th>状态</th></tr></thead><tbody>
+          <table class="grid"><thead><tr><th data-i18n="模组">模组</th><th data-i18n="版本">版本</th><th data-i18n="来源">来源</th><th data-i18n="大小">大小</th><th data-i18n="状态">状态</th></tr></thead><tbody>
             <tr><td>sodium</td><td>0.6.9</td><td>Modrinth</td><td>1.8 MB</td><td><span class="badge ok">启用</span></td></tr>
             <tr><td>iris</td><td>1.8.1</td><td>Modrinth</td><td>2.4 MB</td><td><span class="badge ok">启用</span></td></tr>
             <tr><td>fabric-api</td><td>0.115.0</td><td>Modrinth</td><td>3.1 MB</td><td><span class="badge ok">启用</span></td></tr>
@@ -791,12 +798,12 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 登录 -->
       <section class="view" data-view="login">
-          <div class="logicbar" data-lb="login"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="login"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">选择登录方式</div><div class="panel-sub">三种方式</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="选择登录方式">选择登录方式</div><div class="panel-sub" data-i18n="三种方式">三种方式</div></div>
             <div class="stack" id="authList"></div></div>
           <div class="stack">
-            <div class="panel"><div class="panel-head"><div class="panel-title">网页登录回退链</div><div class="panel-sub">外置 → 内置 → 连接码</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="网页登录回退链">网页登录回退链</div><div class="panel-sub" data-i18n="外置 → 内置 → 连接码">外置 → 内置 → 连接码</div></div>
               <div class="stack" id="loginFlow"></div>
               <div class="row" style="margin-top:12px"><button class="btn primary tiny" id="loginStart">开始登录</button><button class="btn tiny" id="loginFail">模拟逐级失败</button><button class="btn tiny" id="loginReset">复位</button></div>
               <div id="pairBox" class="attach" style="display:none"></div>
@@ -809,8 +816,8 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 日志 -->
       <section class="view" data-view="logs">
-          <div class="logicbar" data-lb="logs"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
-        <div class="panel"><div class="panel-head"><div class="panel-title">运行日志</div><div class="panel-sub">每 100 行分片 · 默认脱敏</div>
+          <div class="logicbar" data-lb="logs"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="运行日志">运行日志</div><div class="panel-sub" data-i18n="每 100 行分片 · 默认脱敏">每 100 行分片 · 默认脱敏</div>
           <div class="panel-tools"><button class="btn tiny" id="logClear">清空</button><button class="btn primary tiny" id="logDrawer">打开日志抽屉</button><button class="btn tiny" id="logExport">导出诊断包</button></div></div>
           <div id="logView" class="logbody" style="height:430px;background:rgba(24,25,23,.93);color:#CFCCC2;border-radius:var(--r-md);padding:12px"></div>
         </div>
@@ -818,78 +825,91 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 设置 -->
       <section class="view" data-view="settings">
-          <div class="logicbar" data-lb="settings"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
-        <div class="panel" style="margin-bottom:12px"><div class="panel-head"><div class="panel-title">设置</div><div class="panel-sub">改动立即生效 · 可搜索 · 只看改过的项 · 一键恢复默认</div><div class="panel-tools"><span class="badge ok">已保存</span></div></div><div class="set-tabs"><span class="chip on" data-tab="general">常规</span><span class="chip" data-tab="download">下载与镜像</span><span class="chip" data-tab="cache">缓存与刷新</span><span class="chip" data-tab="recommend">推荐与排序</span><span class="chip" data-tab="status">服务器与连接</span><span class="chip" data-tab="ai">AI 容器接口</span><span class="chip" data-tab="plugins">插件与更新</span><span class="chip" data-tab="privacy">隐私与诊断</span><span class="chip" data-tab="experimental">实验性</span><span class="chip" id="tabModified">已改 3 项</span><span class="chip" id="tabReset">恢复默认</span></div></div>
-<div class="tabpane on" data-pane="general"><div class="grid g2"><div class="set-card"><div class="hd">常规</div><div class="kv"><span class="k">界面语言</span><span><select class="sel"><option>简体中文</option><option>English</option></select></span><span class="k">主题</span><span><select class="sel"><option>纸质浅色（默认）</option><option>深色纸质</option><option>跟随系统</option></select></span><span class="k">数据目录</span><span><input class="txt" value="C:\KCU" readonly></span><span class="k">公告提示</span><span><select class="sel"><option>未读时铃铛提示</option><option>静默</option></select></span></div></div><div class="set-card"><div class="hd">启动与实例</div><div class="kv"><span class="k">EULA</span><span><select class="sel"><option>启动前写入</option></select></span><span class="k">崩溃后</span><span><select class="sel"><option>按日志自动重启</option></select></span><span class="k">旧版 jar</span><span><select class="sel"><option>写 lockfile 禁用</option></select></span><span class="k">用户指定</span><span><select class="sel"><option>永远排第一</option></select></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">使用说明</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div>改动立即生效；保存失败会保留原来的值并给出提示。</div><div>「已改 3 项」只看动过的地方，每项都能单独恢复默认。</div><div>插件可以加自己的设置分组，不会改动原有的设置。</div></div></div></div></div><div class="tabpane" data-pane="download"><div class="grid g2"><div class="set-card"><div class="hd">下载与网络</div><div class="kv"><span class="k">每页条数</span><span><input class="txt" value="20" readonly></span><span class="k">批量请求</span><span><select class="sel"><option>一次带多个 id</option><option>逐条目单发（禁止）</option></select></span><span class="k">并发上限</span><span><input class="txt" value="3" readonly></span><span class="k">单飞去重</span><span><select class="sel"><option>开启</option></select></span></div></div><div class="set-card"><div class="hd">镜像与地域</div><div class="kv"><span class="k">镜像测速</span><span><select class="sel"><option>开启</option><option>关闭</option></select></span><span class="k">地域软策略</span><span><select class="sel"><option>区域设置 + 物理位置</option></select></span><span class="k">强制境外</span><span><select class="sel"><option>允许用户自行指定</option></select></span><span class="k">用途边界</span><span><span class="badge off">仅下载选择，不复用为地区禁用</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">自定义项</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div>测速源列表、每页条数、超时、重试上限、失败后镜像顺序均可自定义。</div><div>下载域名白名单机制按既有决定先不启用，留高度自定义。</div><div><button class="btn tiny" data-v="servers">查看服务器排序</button> <button class="btn tiny" data-v="refresh">查看刷新机制</button></div></div></div></div></div><div class="tabpane" data-pane="cache"><div class="grid g2"><div class="set-card"><div class="hd">四层缓存</div><div class="kv"><span class="k">C1 内存</span><span><input class="txt" value="32 条 / TTL 30s" readonly></span><span class="k">C2 磁盘</span><span><input class="txt" value="有界目录 / 24h" readonly></span><span class="k">C3 网络</span><span><input class="txt" value="按源 / 60s" readonly></span><span class="k">C4 预取</span><span><input class="txt" value="8 条 / 会话内" readonly></span></div></div><div class="set-card"><div class="hd">刷新</div><div class="kv"><span class="k">普通刷新</span><span><select class="sel"><option>取增量，不清缓存</option></select></span><span class="k">强制刷新</span><span><select class="sel"><option>清层重取全量</option></select></span><span class="k">事件推送</span><span><select class="sel"><option>开启，不弹窗不抢焦点</option></select></span><span class="k">失败回退</span><span><select class="sel"><option>保留上次缓存，不空白</option></select></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">操作</div><div class="panel-tools"><button class="btn tiny" data-v="sync">打开四层总控</button></div></div><div class="row"><button class="btn tiny" id="setCacheExpired">仅清过期</button><button class="btn tiny" id="setCacheAll">全清（二次确认）</button><span class="badge up">已复用 88%</span><span class="badge ok">inflight 0</span></div><div class="mut" style="font-size:11px;margin-top:9px">时间戳统一「N 秒前 / N 分钟前 / HH:MM」；取消后 0 副作用扩散。</div></div></div></div><div class="tabpane" data-pane="recommend"><div class="grid g2"><div class="set-card"><div class="hd">推荐总控</div><div class="kv"><span class="k">推荐总开关</span><span><select class="sel"><option>开启</option><option>关闭</option></select></span><span class="k">权重可自定义</span><span><select class="sel"><option>允许调数值与顺序</option></select></span><span class="k">用户指定</span><span><select class="sel"><option>永远排第一</option></select></span><span class="k">不感兴趣</span><span><select class="sel"><option>降权，不隐藏</option></select></span></div></div><div class="set-card"><div class="hd">来源与刷新</div><div class="kv"><span class="k">推荐来源</span><span><select class="sel"><option>本地 + 官方 + 插件</option></select></span><span class="k">刷新方式</span><span><select class="sel"><option>事件驱动 + 定时软刷新</option></select></span><span class="k">缓存</span><span><input class="txt" value="5min / 容量有界" readonly></span><span class="k">排序口径</span><span><span class="badge up">10 个推荐位统一</span></span></div></div></div><div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">10 个推荐位</div><div class="panel-sub">每个都可单独开关、调权重、看来源</div><div class="panel-tools"><button class="btn tiny" data-v="servers">看排序</button></div></div><table class="rec-tb"><thead><tr><th>位置</th><th>内容</th><th>默认权重</th><th>状态</th></tr></thead><tbody><tr><td>首页启动卡</td><td>上次实例 / 最近 3 个</td><td>最近使用 > 推荐</td><td><span class="badge ok">开</span></td></tr><tr><td>首页推荐服务器</td><td>兼容 + 习惯</td><td>用户指定 > 兼容度 > 延迟</td><td><span class="badge ok">开</span></td></tr><tr><td>版本页</td><td>稳定版</td><td>稳定 > 快照</td><td><span class="badge ok">开</span></td></tr><tr><td>下载页</td><td>缺失依赖 / 可更新</td><td>缺依赖优先</td><td><span class="badge ok">开</span></td></tr><tr><td>模组页</td><td>可更新 / 缺依赖</td><td>缺失优先</td><td><span class="badge ok">开</span></td></tr><tr><td>公告中心</td><td>置顶</td><td>置顶 > 时间</td><td><span class="badge ok">开</span></td></tr><tr><td>加载器</td><td>与实例兼容</td><td>兼容度 > 热度</td><td><span class="badge ok">开</span></td></tr><tr><td>Java</td><td>稳定版本</td><td>稳定 > 预览</td><td><span class="badge ok">开</span></td></tr><tr><td>镜像源</td><td>测速结果</td><td>延迟 > 可用性</td><td><span class="badge ok">开</span></td></tr><tr><td>插件</td><td>已装且启用</td><td>用户评分 > 更新日</td><td><span class="badge ok">开</span></td></tr></tbody></table></div></div><div class="tabpane" data-pane="status"><div class="grid g2"><div class="set-card"><div class="hd">自动连接</div><div class="kv">
-<span class="k">添加后</span><span><select class="sel"><option>自动尝试连接</option><option>等我手动刷新</option></select></span>
-<span class="k">打开列表时</span><span><select class="sel"><option>自动同步一次</option><option>不自动同步</option></select></span>
-<span class="k">同步间隔</span><span><select class="sel"><option>60 秒</option><option>5 分钟</option><option>仅手动</option></select></span>
-<span class="k">连接结果</span><span><span class="badge ok">缓存为排序权重</span></span></div></div>
-<div class="set-card"><div class="hd">排序</div><div class="kv">
-<span class="k">锁定的服务器</span><span><select class="sel"><option>永远排最前，连不上也不动</option></select></span>
-<span class="k">连不上的</span><span><select class="sel"><option>排到列表最后</option><option>保持原位</option></select></span>
-<span class="k">其余顺序</span><span><select class="sel"><option>延迟 + 最近玩过 + 在线人数</option></select></span>
-<span class="k">不感兴趣</span><span><select class="sel"><option>降权，不隐藏</option></select></span></div></div>
-<div class="set-card"><div class="hd">读取游戏里的服务器</div><div class="kv">
-<span class="k">自动读取</span><span><select class="sel"><option>开启 · 各实例目录的 servers.dat</option><option>关闭</option></select></span>
-<span class="k">隐藏的服务器</span><span><select class="sel"><option>不导入</option><option>一起导入</option></select></span>
-<span class="k">快速进入过的</span><span><select class="sel"><option>一起导入</option><option>不导入</option></select></span>
-<span class="k">显示内容</span><span><span class="badge off">与游戏内一致</span></span></div></div>
-<div class="set-card"><div class="hd">设备连接范围</div><div class="kv">
-<span class="k">每次自动连几台</span><span><select class="sel" id="setBudLimit"><option>4 台（推荐）</option><option>2 台</option><option>6 台</option><option>全部</option></select></span>
-<span class="k">同时连接</span><span><select class="sel" id="setBudConc"><option>3 路</option><option>2 路</option><option>1 路</option></select></span>
-<span class="k">轻量机器</span><span><select class="sel" id="setBudTier"><option>自动降到 2 台 / 2 路</option><option>与标准一致</option></select></span>
-<span class="k">新加的服务器</span><span><select class="sel"><option>一定连，但占同一份额度</option></select></span>
-<span class="k">范围外的</span><span><select class="sel"><option>保留上次结果，不主动连</option></select></span></div></div>
-<div class="set-card"><div class="hd">双击进服</div><div class="kv">
-<span class="k">优先</span><span><select class="sel"><option>上次玩这个服用的实例</option></select></span>
-<span class="k">其次</span><span><select class="sel"><option>上次用过的实例</option></select></span>
-<span class="k">范围</span><span><select class="sel"><option>只选版本兼容的实例</option></select></span>
-<span class="k">锁定实例</span><span><select class="sel"><option>按锁定的来</option></select></span></div></div></div>
-<div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">现在读到的</div><div class="panel-sub">来自游戏自己保存的服务器列表</div><div class="panel-tools"><button class="btn tiny" id="setSrvScan">重新读取</button><span class="badge ok" id="setSrvState">3 个实例目录 · 5 台服务器</span></div></div>
-<div class="stack" style="font-size:12px;color:var(--ink-2)"><div>服务器名字、地址、图标都在游戏目录的 servers.dat 里；加过服务器或进过服以后游戏会自动生成。</div><div>列表分「可见」和「隐藏」两份，快速进入过的地址会进隐藏那份；这里只读、不改游戏的文件。</div><div>连不上也从没成功过的，按原来的权重留在列表里，不再反复占用连接；锁定过的始终排最前。</div></div></div></div><div class="tabpane" data-pane="ai"><div class="grid g2"><div class="set-card"><div class="hd">AI 容器接口</div><div class="kv"><span class="k">接口地址</span><span><input class="txt" id="setAiAddr" placeholder="用户自填，留空未启用"></span><span class="k">连接状态</span><span><span class="badge off" id="setAiState">未配置</span></span><span class="k">确认粒度</span><span><select class="sel"><option>每次请求单独确认</option></select></span><span class="k">删除权限</span><span><select class="sel"><option>不给</option></select></span></div></div><div class="set-card"><div class="hd">边界</div><div class="kv"><span class="k">请求正文</span><span><span class="badge off">不缓存</span></span><span class="k">审计</span><span><span class="badge up">统一记录</span></span><span class="k">关页</span><span><span class="badge ok">即停请求</span></span><span class="k">失败分类</span><span><span class="mini">地址 / 认证 / 网络 三类</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">测试</div><div class="panel-tools"><button class="btn tiny" data-v="ai">打开独立页</button></div></div><div class="row"><button class="btn primary tiny" id="setAiTest"><svg class="li" aria-hidden="true"><use href="#i-zap"></use></svg> 测试连接</button><span class="badge ok" id="setAiResult">待命</span></div><div class="mut" style="font-size:11px;margin-top:9px">地址由你自己填；不填就不会连接。</div></div></div></div><div class="tabpane" data-pane="plugins"><div class="grid g2"><div class="set-card"><div class="hd">插件</div><div class="kv"><span class="k">插件目录</span><span><input class="txt" value="C:\KCU\plugins" readonly></span><span class="k">槽位规则</span><span><select class="sel"><option>插件只能加自己的位置</option></select></span><span class="k">清单校验</span><span><select class="sel"><option>校验来源与版本</option></select></span><span class="k">隔离</span><span><select class="sel"><option>插件单独运行，不影响启动器</option></select></span></div></div><div class="set-card"><div class="hd">插件化更新</div><div class="kv"><span class="k">更新通道</span><span><select class="sel"><option>稳定 / 预览 / 插件化</option></select></span><span class="k">签名校验</span><span><select class="sel"><option>不可禁用</option></select></span><span class="k">版本比较</span><span><select class="sel"><option>只更新到新版本，可回滚</option></select></span><span class="k">失败降级</span><span><select class="sel"><option>失败保留原来的插件</option></select></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">已装插件与更新模拟</div><div class="panel-tools"><button class="btn tiny" data-gotab="plugins">查看插件</button></div></div><table class="rec-tb"><thead><tr><th>插件</th><th>槽位</th><th>许可证</th><th>状态</th></tr></thead><tbody><tr><td>推荐插件</td><td>推荐位</td><td>MIT</td><td><span class="badge ok">启用</span></td></tr><tr><td>状态面板</td><td>状态显示</td><td>Apache-2.0</td><td><span class="badge ok">启用</span></td></tr></tbody></table><div class="row" style="margin-top:9px"><button class="btn tiny" id="plugUpdate">模拟插件化更新</button><button class="btn tiny" id="plugRollback">模拟回滚</button><span class="badge up" id="plugState">启动器本体未改动</span></div></div></div></div><div class="tabpane" data-pane="privacy"><div class="grid g2"><div class="set-card"><div class="hd">日志与外传</div><div class="kv"><span class="k">日志上传</span><span><select class="sel"><option>默认脱敏（可手动关）</option></select></span><span class="k">保留期</span><span><input class="txt" value="30 天" readonly></span><span class="k">外传确认</span><span><select class="sel"><option>每次二次确认</option></select></span><span class="k">审计</span><span><select class="sel"><option>共用策略引擎</option></select></span></div></div><div class="set-card"><div class="hd">文件与凭据</div><div class="kv"><span class="k">文件管理</span><span><span class="badge off">系统面板 + OS 级防护</span></span><span class="k">锁定</span><span><span class="badge up">lockfile</span></span><span class="k">凭据保护</span><span><span class="badge miss">暂未启用</span></span><span class="k">诊断包</span><span><button class="btn tiny" data-v="logs">导出</button></span></div></div></div></div><div class="tabpane" data-pane="experimental"><div class="grid g2"><div class="set-card"><div class="hd">实验性开关</div><div class="kv"><span class="k">多操作入口</span><span><select class="sel"><option>关闭</option></select></span><span class="k">Win7 兼容</span><span><select class="sel"><option>Win7 兼容（试验中）</option></select></span><span class="k">插件化更新灰度</span><span><select class="sel"><option>关闭</option></select></span><span class="k">加载器 schema</span><span><span class="badge miss">暂未启用</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title">开关约定</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div>实验项默认关闭；改动只影响本实例，重启后读盘。</div><div>试验中的功能默认关闭，改动只影响当前实例。</div><div><button class="btn tiny" data-v="about">查看关于</button></div></div></div></div></div>
+          <div class="logicbar" data-lb="settings"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
+        <div class="panel" style="margin-bottom:12px"><div class="panel-head"><div class="panel-title" data-i18n="settings.title">设置</div><div class="panel-sub" data-i18n="settings.sub">改动立即生效 · 可搜索 · 只看改过的项 · 一键恢复默认</div><div class="panel-tools"><span class="badge ok">已保存</span></div></div><div class="set-tabs"><span class="chip on" data-tab="general" data-i18n="tab.general">常规</span><span class="chip" data-tab="download" data-i18n="tab.download">下载与镜像</span><span class="chip" data-tab="cache" data-i18n="tab.cache">缓存与刷新</span><span class="chip" data-tab="recommend" data-i18n="tab.recommend">推荐与排序</span><span class="chip" data-tab="status" data-i18n="tab.status">服务器与连接</span><span class="chip" data-tab="ai" data-i18n="tab.ai">AI 容器接口</span><span class="chip" data-tab="plugins" data-i18n="tab.plugins">插件与更新</span><span class="chip" data-tab="crash" data-i18n="tab.crash">崩溃反馈</span><span class="chip" data-tab="privacy" data-i18n="tab.privacy">隐私与诊断</span><span class="chip" data-tab="experimental" data-i18n="tab.experimental">实验性</span><span class="chip" id="tabModified" data-i18n="已改 3 项">已改 3 项</span><span class="chip" id="tabReset" data-i18n="恢复默认">恢复默认</span></div></div>
+<div class="tabpane on" data-pane="general"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="常规">常规</div><div class="kv"><span class="k" data-i18n="set.lang">界面语言</span><span><select class="sel" id="setLang"><option value="zh-CN" data-i18n="简体中文">简体中文</option><option value="en-US">English</option></select></span><span class="k" data-i18n="主题">主题</span><span><select class="sel"><option value="纸质浅色（默认）" data-i18n="纸质浅色（默认）">纸质浅色（默认）</option><option value="深色纸质" data-i18n="深色纸质">深色纸质</option><option value="跟随系统" data-i18n="跟随系统">跟随系统</option></select></span><span class="k" data-i18n="数据目录">数据目录</span><span><input class="txt" value="C:\KCU" readonly></span><span class="k" data-i18n="公告提示">公告提示</span><span><select class="sel"><option value="未读时铃铛提示" data-i18n="未读时铃铛提示">未读时铃铛提示</option><option value="静默" data-i18n="静默">静默</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="启动与实例">启动与实例</div><div class="kv"><span class="k">EULA</span><span><select class="sel"><option value="启动前写入" data-i18n="启动前写入">启动前写入</option></select></span><span class="k" data-i18n="崩溃后">崩溃后</span><span><select class="sel"><option value="按日志自动重启" data-i18n="按日志自动重启">按日志自动重启</option></select></span><span class="k" data-i18n="旧版 jar">旧版 jar</span><span><select class="sel"><option value="写 lockfile 禁用" data-i18n="写 lockfile 禁用">写 lockfile 禁用</option></select></span><span class="k" data-i18n="用户指定">用户指定</span><span><select class="sel"><option value="永远排第一" data-i18n="永远排第一">永远排第一</option></select></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="使用说明">使用说明</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div data-i18n="改动立即生效；保存失败会保留原来的值并给出提示。">改动立即生效；保存失败会保留原来的值并给出提示。</div><div data-i18n="「已改 3 项」只看动过的地方，每项都能单独恢复默认。">「已改 3 项」只看动过的地方，每项都能单独恢复默认。</div><div data-i18n="插件可以加自己的设置分组，不会改动原有的设置。">插件可以加自己的设置分组，不会改动原有的设置。</div></div></div></div></div><div class="tabpane" data-pane="download"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="下载与网络">下载与网络</div><div class="kv"><span class="k" data-i18n="每页条数">每页条数</span><span><input class="txt" value="20" readonly></span><span class="k" data-i18n="批量请求">批量请求</span><span><select class="sel"><option value="一次带多个 id" data-i18n="一次带多个 id">一次带多个 id</option><option value="逐条目单发（禁止）" data-i18n="逐条目单发（禁止）">逐条目单发（禁止）</option></select></span><span class="k" data-i18n="并发上限">并发上限</span><span><input class="txt" value="3" readonly></span><span class="k" data-i18n="单飞去重">单飞去重</span><span><select class="sel"><option value="开启" data-i18n="开启">开启</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="镜像与地域">镜像与地域</div><div class="kv"><span class="k" data-i18n="镜像测速">镜像测速</span><span><select class="sel"><option value="开启" data-i18n="开启">开启</option><option value="关闭" data-i18n="关闭">关闭</option></select></span><span class="k" data-i18n="地域软策略">地域软策略</span><span><select class="sel"><option value="区域设置 + 物理位置" data-i18n="区域设置 + 物理位置">区域设置 + 物理位置</option></select></span><span class="k" data-i18n="强制境外">强制境外</span><span><select class="sel"><option value="允许用户自行指定" data-i18n="允许用户自行指定">允许用户自行指定</option></select></span><span class="k" data-i18n="用途边界">用途边界</span><span><span class="badge off">仅下载选择，不复用为地区禁用</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="自定义项">自定义项</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div data-i18n="测速源列表、每页条数、超时、重试上限、失败后镜像顺序均可自定义。">测速源列表、每页条数、超时、重试上限、失败后镜像顺序均可自定义。</div><div>下载域名白名单机制按既有决定先不启用，留高度自定义。</div><div><button class="btn tiny" data-v="servers">查看服务器排序</button> <button class="btn tiny" data-v="refresh">查看刷新机制</button></div></div></div></div></div><div class="tabpane" data-pane="cache"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="四层缓存">四层缓存</div><div class="kv"><span class="k" data-i18n="C1 内存">C1 内存</span><span><input class="txt" value="32 条 / TTL 30s" readonly></span><span class="k" data-i18n="C2 磁盘">C2 磁盘</span><span><input class="txt" value="有界目录 / 24h" readonly></span><span class="k" data-i18n="C3 网络">C3 网络</span><span><input class="txt" value="按源 / 60s" readonly></span><span class="k" data-i18n="C4 预取">C4 预取</span><span><input class="txt" value="8 条 / 会话内" readonly></span></div></div><div class="set-card"><div class="hd" data-i18n="刷新">刷新</div><div class="kv"><span class="k" data-i18n="普通刷新">普通刷新</span><span><select class="sel"><option value="取增量，不清缓存" data-i18n="取增量，不清缓存">取增量，不清缓存</option></select></span><span class="k" data-i18n="强制刷新">强制刷新</span><span><select class="sel"><option value="清层重取全量" data-i18n="清层重取全量">清层重取全量</option></select></span><span class="k" data-i18n="事件推送">事件推送</span><span><select class="sel"><option value="开启，不弹窗不抢焦点" data-i18n="开启，不弹窗不抢焦点">开启，不弹窗不抢焦点</option></select></span><span class="k" data-i18n="失败回退">失败回退</span><span><select class="sel"><option value="保留上次缓存，不空白" data-i18n="保留上次缓存，不空白">保留上次缓存，不空白</option></select></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="操作">操作</div><div class="panel-tools"><button class="btn tiny" data-v="sync">打开四层总控</button></div></div><div class="row"><button class="btn tiny" id="setCacheExpired">仅清过期</button><button class="btn tiny" id="setCacheAll">全清（二次确认）</button><span class="badge up">已复用 88%</span><span class="badge ok">inflight 0</span></div><div class="mut" style="font-size:11px;margin-top:9px">时间戳统一「N 秒前 / N 分钟前 / HH:MM」；取消后 0 副作用扩散。</div></div></div></div><div class="tabpane" data-pane="recommend"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="推荐总控">推荐总控</div><div class="kv"><span class="k" data-i18n="推荐总开关">推荐总开关</span><span><select class="sel"><option value="开启" data-i18n="开启">开启</option><option value="关闭" data-i18n="关闭">关闭</option></select></span><span class="k" data-i18n="权重可自定义">权重可自定义</span><span><select class="sel"><option value="允许调数值与顺序" data-i18n="允许调数值与顺序">允许调数值与顺序</option></select></span><span class="k" data-i18n="用户指定">用户指定</span><span><select class="sel"><option value="永远排第一" data-i18n="永远排第一">永远排第一</option></select></span><span class="k" data-i18n="不感兴趣">不感兴趣</span><span><select class="sel"><option value="降权，不隐藏" data-i18n="降权，不隐藏">降权，不隐藏</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="来源与刷新">来源与刷新</div><div class="kv"><span class="k" data-i18n="推荐来源">推荐来源</span><span><select class="sel"><option value="本地 + 官方 + 插件" data-i18n="本地 + 官方 + 插件">本地 + 官方 + 插件</option></select></span><span class="k" data-i18n="刷新方式">刷新方式</span><span><select class="sel"><option value="事件驱动 + 定时软刷新" data-i18n="事件驱动 + 定时软刷新">事件驱动 + 定时软刷新</option></select></span><span class="k" data-i18n="缓存">缓存</span><span><input class="txt" value="5min / 容量有界" readonly></span><span class="k" data-i18n="排序口径">排序口径</span><span><span class="badge up">10 个推荐位统一</span></span></div></div></div><div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title" data-i18n="10 个推荐位">10 个推荐位</div><div class="panel-sub" data-i18n="每个都可单独开关、调权重、看来源">每个都可单独开关、调权重、看来源</div><div class="panel-tools"><button class="btn tiny" data-v="servers">看排序</button></div></div><table class="rec-tb"><thead><tr><th data-i18n="位置">位置</th><th data-i18n="内容">内容</th><th data-i18n="默认权重">默认权重</th><th data-i18n="状态">状态</th></tr></thead><tbody><tr><td>首页启动卡</td><td>上次实例 / 最近 3 个</td><td>最近使用 > 推荐</td><td><span class="badge ok">开</span></td></tr><tr><td>首页推荐服务器</td><td>兼容 + 习惯</td><td>用户指定 > 兼容度 > 延迟</td><td><span class="badge ok">开</span></td></tr><tr><td>版本页</td><td>稳定版</td><td>稳定 > 快照</td><td><span class="badge ok">开</span></td></tr><tr><td>下载页</td><td>缺失依赖 / 可更新</td><td>缺依赖优先</td><td><span class="badge ok">开</span></td></tr><tr><td>模组页</td><td>可更新 / 缺依赖</td><td>缺失优先</td><td><span class="badge ok">开</span></td></tr><tr><td>公告中心</td><td>置顶</td><td>置顶 > 时间</td><td><span class="badge ok">开</span></td></tr><tr><td>加载器</td><td>与实例兼容</td><td>兼容度 > 热度</td><td><span class="badge ok">开</span></td></tr><tr><td>Java</td><td>稳定版本</td><td>稳定 > 预览</td><td><span class="badge ok">开</span></td></tr><tr><td>镜像源</td><td>测速结果</td><td>延迟 > 可用性</td><td><span class="badge ok">开</span></td></tr><tr><td>插件</td><td>已装且启用</td><td>用户评分 > 更新日</td><td><span class="badge ok">开</span></td></tr></tbody></table></div></div><div class="tabpane" data-pane="status"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="自动连接">自动连接</div><div class="kv">
+<span class="k" data-i18n="添加后">添加后</span><span><select class="sel"><option value="自动尝试连接" data-i18n="自动尝试连接">自动尝试连接</option><option value="等我手动刷新" data-i18n="等我手动刷新">等我手动刷新</option></select></span>
+<span class="k" data-i18n="打开列表时">打开列表时</span><span><select class="sel"><option value="自动同步一次" data-i18n="自动同步一次">自动同步一次</option><option value="不自动同步" data-i18n="不自动同步">不自动同步</option></select></span>
+<span class="k" data-i18n="同步间隔">同步间隔</span><span><select class="sel"><option value="60 秒" data-i18n="60 秒">60 秒</option><option value="5 分钟" data-i18n="5 分钟">5 分钟</option><option value="仅手动" data-i18n="仅手动">仅手动</option></select></span>
+<span class="k" data-i18n="连接结果">连接结果</span><span><span class="badge ok">缓存为排序权重</span></span></div></div>
+<div class="set-card"><div class="hd" data-i18n="排序">排序</div><div class="kv">
+<span class="k" data-i18n="锁定的服务器">锁定的服务器</span><span><select class="sel"><option value="永远排最前，连不上也不动" data-i18n="永远排最前，连不上也不动">永远排最前，连不上也不动</option></select></span>
+<span class="k" data-i18n="连不上的">连不上的</span><span><select class="sel"><option value="排到列表最后" data-i18n="排到列表最后">排到列表最后</option><option value="保持原位" data-i18n="保持原位">保持原位</option></select></span>
+<span class="k" data-i18n="其余顺序">其余顺序</span><span><select class="sel"><option value="延迟 + 最近玩过 + 在线人数" data-i18n="延迟 + 最近玩过 + 在线人数">延迟 + 最近玩过 + 在线人数</option></select></span>
+<span class="k" data-i18n="不感兴趣">不感兴趣</span><span><select class="sel"><option value="降权，不隐藏" data-i18n="降权，不隐藏">降权，不隐藏</option></select></span></div></div>
+<div class="set-card"><div class="hd" data-i18n="读取游戏里的服务器">读取游戏里的服务器</div><div class="kv">
+<span class="k" data-i18n="自动读取">自动读取</span><span><select class="sel"><option value="开启 · 各实例目录的 servers.dat" data-i18n="开启 · 各实例目录的 servers.dat">开启 · 各实例目录的 servers.dat</option><option value="关闭" data-i18n="关闭">关闭</option></select></span>
+<span class="k" data-i18n="隐藏的服务器">隐藏的服务器</span><span><select class="sel"><option value="不导入" data-i18n="不导入">不导入</option><option value="一起导入" data-i18n="一起导入">一起导入</option></select></span>
+<span class="k" data-i18n="快速进入过的">快速进入过的</span><span><select class="sel"><option value="一起导入" data-i18n="一起导入">一起导入</option><option value="不导入" data-i18n="不导入">不导入</option></select></span>
+<span class="k" data-i18n="显示内容">显示内容</span><span><span class="badge off">与游戏内一致</span></span></div></div>
+<div class="set-card"><div class="hd" data-i18n="srv.devcard">设备连接范围</div><div class="kv">
+<span class="k" data-i18n="每次自动连几台">每次自动连几台</span><span><select class="sel" id="setBudLimit"><option value="4 台（推荐）" data-i18n="4 台（推荐）">4 台（推荐）</option><option value="2 台" data-i18n="2 台">2 台</option><option value="6 台" data-i18n="6 台">6 台</option><option value="全部" data-i18n="全部">全部</option></select></span>
+<span class="k" data-i18n="同时连接">同时连接</span><span><select class="sel" id="setBudConc"><option value="3 路" data-i18n="3 路">3 路</option><option value="2 路" data-i18n="2 路">2 路</option><option value="1 路" data-i18n="1 路">1 路</option></select></span>
+<span class="k" data-i18n="轻量机器">轻量机器</span><span><select class="sel" id="setBudTier"><option value="自动降到 2 台 / 2 路" data-i18n="自动降到 2 台 / 2 路">自动降到 2 台 / 2 路</option><option value="与标准一致" data-i18n="与标准一致">与标准一致</option></select></span>
+<span class="k" data-i18n="新加的服务器">新加的服务器</span><span><select class="sel"><option value="一定连，但占同一份额度" data-i18n="一定连，但占同一份额度">一定连，但占同一份额度</option></select></span>
+<span class="k" data-i18n="范围外的">范围外的</span><span><select class="sel"><option value="保留上次结果，不主动连" data-i18n="保留上次结果，不主动连">保留上次结果，不主动连</option></select></span></div></div>
+<div class="set-card"><div class="hd" data-i18n="双击进服">双击进服</div><div class="kv">
+<span class="k" data-i18n="优先">优先</span><span><select class="sel"><option value="上次玩这个服用的实例" data-i18n="上次玩这个服用的实例">上次玩这个服用的实例</option></select></span>
+<span class="k" data-i18n="其次">其次</span><span><select class="sel"><option value="上次用过的实例" data-i18n="上次用过的实例">上次用过的实例</option></select></span>
+<span class="k" data-i18n="范围">范围</span><span><select class="sel"><option value="只选版本兼容的实例" data-i18n="只选版本兼容的实例">只选版本兼容的实例</option></select></span>
+<span class="k" data-i18n="锁定实例">锁定实例</span><span><select class="sel"><option value="按锁定的来" data-i18n="按锁定的来">按锁定的来</option></select></span></div></div></div>
+<div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title" data-i18n="现在读到的">现在读到的</div><div class="panel-sub" data-i18n="来自游戏自己保存的服务器列表">来自游戏自己保存的服务器列表</div><div class="panel-tools"><button class="btn tiny" id="setSrvScan">重新读取</button><span class="badge ok" id="setSrvState">3 个实例目录 · 5 台服务器</span></div></div>
+<div class="stack" style="font-size:12px;color:var(--ink-2)"><div data-i18n="服务器名字、地址、图标都在游戏目录的 servers.dat 里；加过服务器或进过服以后游戏会自动生成。">服务器名字、地址、图标都在游戏目录的 servers.dat 里；加过服务器或进过服以后游戏会自动生成。</div><div>列表分「可见」和「隐藏」两份，快速进入过的地址会进隐藏那份；这里只读、不改游戏的文件。</div><div data-i18n="srv.note1">连不上也从没成功过的，按原来的权重留在列表里，不再反复占用连接；锁定过的始终排最前。</div><div data-i18n="srv.note2">名字可以重复、也可以随时改；同名服务器各归各，改一个不会动到另一个。</div></div></div></div><div class="tabpane" data-pane="ai"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="AI 容器接口">AI 容器接口</div><div class="kv"><span class="k" data-i18n="接口地址">接口地址</span><span><input class="txt" id="setAiAddr" placeholder="用户自填，留空未启用"></span><span class="k" data-i18n="连接状态">连接状态</span><span><span class="badge off" id="setAiState">未配置</span></span><span class="k" data-i18n="确认粒度">确认粒度</span><span><select class="sel"><option value="每次请求单独确认" data-i18n="每次请求单独确认">每次请求单独确认</option></select></span><span class="k" data-i18n="删除权限">删除权限</span><span><select class="sel"><option value="不给" data-i18n="不给">不给</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="边界">边界</div><div class="kv"><span class="k" data-i18n="请求正文">请求正文</span><span><span class="badge off">不缓存</span></span><span class="k" data-i18n="审计">审计</span><span><span class="badge up">统一记录</span></span><span class="k" data-i18n="关页">关页</span><span><span class="badge ok">即停请求</span></span><span class="k" data-i18n="失败分类">失败分类</span><span><span class="mini">地址 / 认证 / 网络 三类</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="测试">测试</div><div class="panel-tools"><button class="btn tiny" data-v="ai">打开独立页</button></div></div><div class="row"><button class="btn primary tiny" id="setAiTest"><svg class="li" aria-hidden="true"><use href="#i-zap"></use></svg> 测试连接</button><span class="badge ok" id="setAiResult">待命</span></div><div class="mut" style="font-size:11px;margin-top:9px">地址由你自己填；不填就不会连接。</div></div></div></div><div class="tabpane" data-pane="plugins"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="插件">插件</div><div class="kv"><span class="k" data-i18n="插件目录">插件目录</span><span><input class="txt" value="C:\KCU\plugins" readonly></span><span class="k" data-i18n="槽位规则">槽位规则</span><span><select class="sel"><option value="插件只能加自己的位置" data-i18n="插件只能加自己的位置">插件只能加自己的位置</option></select></span><span class="k" data-i18n="清单校验">清单校验</span><span><select class="sel"><option value="校验来源与版本" data-i18n="校验来源与版本">校验来源与版本</option></select></span><span class="k" data-i18n="隔离">隔离</span><span><select class="sel"><option value="插件单独运行，不影响启动器" data-i18n="插件单独运行，不影响启动器">插件单独运行，不影响启动器</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="插件化更新">插件化更新</div><div class="kv"><span class="k" data-i18n="更新通道">更新通道</span><span><select class="sel"><option value="稳定 / 预览 / 插件化" data-i18n="稳定 / 预览 / 插件化">稳定 / 预览 / 插件化</option></select></span><span class="k" data-i18n="签名校验">签名校验</span><span><select class="sel"><option value="不可禁用" data-i18n="不可禁用">不可禁用</option></select></span><span class="k" data-i18n="版本比较">版本比较</span><span><select class="sel"><option value="只更新到新版本，可回滚" data-i18n="只更新到新版本，可回滚">只更新到新版本，可回滚</option></select></span><span class="k" data-i18n="失败降级">失败降级</span><span><select class="sel"><option value="失败保留原来的插件" data-i18n="失败保留原来的插件">失败保留原来的插件</option></select></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="已装插件与更新模拟">已装插件与更新模拟</div><div class="panel-tools"><button class="btn tiny" data-gotab="plugins">查看插件</button></div></div><table class="rec-tb"><thead><tr><th data-i18n="插件">插件</th><th data-i18n="槽位">槽位</th><th data-i18n="许可证">许可证</th><th data-i18n="状态">状态</th></tr></thead><tbody><tr><td>推荐插件</td><td>推荐位</td><td>MIT</td><td><span class="badge ok">启用</span></td></tr><tr><td>状态面板</td><td>状态显示</td><td>Apache-2.0</td><td><span class="badge ok">启用</span></td></tr></tbody></table><div class="row" style="margin-top:9px"><button class="btn tiny" id="plugUpdate">模拟插件化更新</button><button class="btn tiny" id="plugRollback">模拟回滚</button><span class="badge up" id="plugState">启动器本体未改动</span></div></div></div></div><div class="tabpane" data-pane="crash"><div class="grid g2">
+<div class="set-card"><div class="hd" data-i18n="crash.card">崩溃反馈</div><div class="kv">
+<span class="k" data-i18n="crash.enable">出问题时记录</span><span><select class="sel" id="setCrashOn"><option value="off" data-i18n="crash.off">先问我，再发送</option><option value="local" data-i18n="crash.local">只留在本地</option><option value="off2" data-i18n="crash.never">不记录</option></select></span>
+<span class="k" data-i18n="crash.addr">接收地址</span><span><input class="txt" id="setCrashAddr" placeholder="由用户自己填写，留空不外发" data-i18n-ph="crash.addrph"></span>
+<span class="k" data-i18n="crash.mask">先抹掉私人信息</span><span><select class="sel" id="setCrashMask"><option data-i18n="crash.maskon">默认抹掉（可手动关）</option><option data-i18n="crash.maskoff">不抹掉</option></select></span>
+<span class="k" data-i18n="crash.dir">诊断包位置</span><span><input class="txt" value="C:\KCU\diagnostics" readonly></span></div></div>
+<div class="set-card"><div class="hd" data-i18n="crash.what">会记下什么</div><div class="stack" style="font-size:12px;color:var(--ink-2)">
+<div data-i18n="crash.what1">出错时的窗口、版本、系统版本与出错前的操作步骤。</div>
+<div data-i18n="crash.what2">服务器地址、聊天、玩家名与存档内容默认不进诊断包。</div>
+<div data-i18n="crash.what3">发送前会弹一次确认，能看完整内容，也能直接取消。</div>
+<div data-i18n="crash.what4">不填接收地址就只存本地，随时可以自己导出。</div></div>
+<div class="row" style="margin-top:10px"><button class="btn tiny" id="crashView" data-i18n="crash.view">看最近一次</button><button class="btn tiny" id="crashExport" data-i18n="crash.export">导出诊断包</button><span class="badge ok" id="crashState" data-i18n="crash.state">未发送</span></div></div></div>
+<div class="stack" style="font-size:12px;color:var(--ink-2)"><div data-i18n="crash.note">旧机器、多架构与不同系统版本的行为不完全一样；这一类记录交给专门的崩溃分析库处理，不在启动器里自己写一套。</div></div></div>
+<div class="tabpane" data-pane="privacy"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="日志与外传">日志与外传</div><div class="kv"><span class="k" data-i18n="日志上传">日志上传</span><span><select class="sel"><option value="默认脱敏（可手动关）" data-i18n="默认脱敏（可手动关）">默认脱敏（可手动关）</option></select></span><span class="k" data-i18n="保留期">保留期</span><span><input class="txt" value="30 天" readonly></span><span class="k" data-i18n="外传确认">外传确认</span><span><select class="sel"><option value="每次二次确认" data-i18n="每次二次确认">每次二次确认</option></select></span><span class="k" data-i18n="审计">审计</span><span><select class="sel"><option value="共用策略引擎" data-i18n="共用策略引擎">共用策略引擎</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="文件与凭据">文件与凭据</div><div class="kv"><span class="k" data-i18n="文件管理">文件管理</span><span><span class="badge off">系统面板 + OS 级防护</span></span><span class="k" data-i18n="锁定">锁定</span><span><span class="badge up">lockfile</span></span><span class="k" data-i18n="凭据保护">凭据保护</span><span><span class="badge miss">暂未启用</span></span><span class="k" data-i18n="诊断包">诊断包</span><span><button class="btn tiny" data-v="logs">导出</button></span></div></div></div></div><div class="tabpane" data-pane="experimental"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="实验性开关">实验性开关</div><div class="kv"><span class="k" data-i18n="多操作入口">多操作入口</span><span><select class="sel"><option value="关闭" data-i18n="关闭">关闭</option></select></span><span class="k" data-i18n="Win7 兼容">Win7 兼容</span><span><select class="sel"><option value="Win7 兼容（试验中）" data-i18n="Win7 兼容（试验中）">Win7 兼容（试验中）</option></select></span><span class="k" data-i18n="插件化更新灰度">插件化更新灰度</span><span><select class="sel"><option value="关闭" data-i18n="关闭">关闭</option></select></span><span class="k" data-i18n="加载器 schema">加载器 schema</span><span><span class="badge miss">暂未启用</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="开关约定">开关约定</div></div><div class="stack" style="font-size:11px;color:var(--ink-2)"><div data-i18n="实验项默认关闭；改动只影响本实例，重启后读盘。">实验项默认关闭；改动只影响本实例，重启后读盘。</div><div>试验中的功能默认关闭，改动只影响当前实例。</div><div><button class="btn tiny" data-v="about">查看关于</button></div></div></div></div></div>
       </section>
 
       <!-- 关于 -->
       <section class="view" data-view="about">
-          <div class="logicbar" data-lb="about"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="about"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">关于 KCU Launcher</div><div class="panel-sub">版本与开源许可</div><div class="panel-tools"><button class="btn primary tiny" data-v="licenses"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg> 第三方许可</button></div></div>
-            <div class="kv"><span class="k">版本</span><span>0.0.1</span>
-              <span class="k">平台</span><span>Windows 桌面</span>
-              <span class="k">架构</span><span>i686 / x86_64 / aarch64</span>
-              <span class="k">开源许可</span><span>见「第三方许可」</span>
-              <span class="k">界面</span><span>纸质质感 · 深浅两套主题</span></div></div>
-          <div class="panel"><div class="panel-head"><div class="panel-title">外观</div><div class="panel-sub">按自己的手感调</div></div>
-          <div class="kv" style="margin-top:10px"><span class="k">主题</span><span><select class="sel"><option>纸质浅色</option><option>深色纸质</option><option>跟随系统</option></select></span>
-            <span class="k">字号</span><span><select class="sel"><option>标准</option><option>大一点</option><option>小一点</option></select></span>
-            <span class="k">纸纹</span><span><select class="sel"><option>轻</option><option>关</option></select></span>
-            <span class="k">圆角</span><span><select class="sel"><option>标准</option><option>更圆</option></select></span></div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="about.title">关于 KCU Launcher</div><div class="panel-sub" data-i18n="about.sub">版本与开源许可</div><div class="panel-tools"><button class="btn primary tiny" data-v="licenses"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg> 第三方许可</button></div></div>
+            <div class="kv"><span class="k" data-i18n="版本">版本</span><span>0.0.1</span>
+              <span class="k" data-i18n="平台">平台</span><span>Windows 桌面</span>
+              <span class="k" data-i18n="架构">架构</span><span>i686 / x86_64 / aarch64</span>
+              <span class="k" data-i18n="开源许可">开源许可</span><span>见「第三方许可」</span>
+              <span class="k" data-i18n="界面">界面</span><span>纸质质感 · 深浅两套主题</span></div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="外观">外观</div><div class="panel-sub" data-i18n="按自己的手感调">按自己的手感调</div></div>
+          <div class="kv" style="margin-top:10px"><span class="k" data-i18n="主题">主题</span><span><select class="sel"><option value="纸质浅色" data-i18n="纸质浅色">纸质浅色</option><option value="深色纸质" data-i18n="深色纸质">深色纸质</option><option value="跟随系统" data-i18n="跟随系统">跟随系统</option></select></span>
+            <span class="k" data-i18n="字号">字号</span><span><select class="sel"><option value="标准" data-i18n="标准">标准</option><option value="大一点" data-i18n="大一点">大一点</option><option value="小一点" data-i18n="小一点">小一点</option></select></span>
+            <span class="k" data-i18n="纸纹">纸纹</span><span><select class="sel"><option value="轻" data-i18n="轻">轻</option><option value="关" data-i18n="关">关</option></select></span>
+            <span class="k" data-i18n="圆角">圆角</span><span><select class="sel"><option value="标准" data-i18n="标准">标准</option><option value="更圆" data-i18n="更圆">更圆</option></select></span></div></div>
         </div>
 
-        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">开源致谢</div><div class="panel-sub">感谢这些项目</div></div><div class="row" id="creditRow"></div></div>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title" data-i18n="开源致谢">开源致谢</div><div class="panel-sub" data-i18n="感谢这些项目">感谢这些项目</div></div><div class="row" id="creditRow"></div></div>
       </section>
 
       <!-- 弹窗全集 -->
       <section class="view" data-view="popups">
-          <div class="logicbar" data-lb="popups"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
-        <div class="panel"><div class="panel-head"><div class="panel-title">弹窗全集</div><div class="panel-sub">11 类 · 按钮 / ESC / 取消 / 确认 / 超时 / 宿主</div>
+          <div class="logicbar" data-lb="popups"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="弹窗全集">弹窗全集</div><div class="panel-sub" data-i18n="11 类 · 按钮 / ESC / 取消 / 确认 / 超时 / 宿主">11 类 · 按钮 / ESC / 取消 / 确认 / 超时 / 宿主</div>
           <div class="panel-tools"><button class="btn primary tiny" id="popAll">全部登记</button><button class="btn tiny" id="popClose">全部关闭</button><span class="badge ok" id="popCnt">打开 0</span></div></div>
           <div class="grid g4" id="popGrid"></div></div>
       </section>
 
       <!-- 轻量模式 -->
       <section class="view" data-view="lightweight">
-          <div class="logicbar" data-lb="lightweight"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="lightweight"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">轻量模式极简窗口</div><div class="panel-sub">≤2GiB 首次启动自动进入</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="轻量模式极简窗口">轻量模式极简窗口</div><div class="panel-sub" data-i18n="≤2GiB 首次启动自动进入">≤2GiB 首次启动自动进入</div></div>
             <div class="stack"><div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg></div><div class="notice-main"><div class="notice-body">单主题 · 不加载本页任何组件与纸纹重资产</div></div></div>
               <div class="row"><button class="btn primary" style="flex:1">离线登录</button><button class="btn" style="flex:1">第三方</button><button class="btn" style="flex:1">Mojang</button></div>
               <div class="row"><button class="btn" style="flex:1">打开游戏目录</button><button class="btn" style="flex:1">基础日志</button></div>
               <button class="btn primary" style="width:100%"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg> 启动游戏</button>
               <div class="mut" style="font-size:11px">游戏运行期启动器退出，后台无常驻进程。</div></div></div>
-          <div class="panel"><div class="panel-head"><div class="panel-title">与正常模式的边界</div></div>
-            <table class="grid"><thead><tr><th>项</th><th>轻量模式</th></tr></thead><tbody>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="与正常模式的边界">与正常模式的边界</div></div>
+            <table class="grid"><thead><tr><th data-i18n="项">项</th><th data-i18n="轻量模式">轻量模式</th></tr></thead><tbody>
               <tr><td>组件</td><td>独立极简视图</td></tr><tr><td>主题</td><td>单主题</td></tr>
               <tr><td>登录</td><td>三种 + 三级回退</td></tr><tr><td>下载</td><td>Mojang / BMCLAPI 批量</td></tr>
               <tr><td>文件管理</td><td>系统面板</td></tr><tr><td>进程</td><td>运行期无常驻</td></tr>
@@ -899,7 +919,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 异常状态 -->
       <section class="view" data-view="error">
-          <div class="logicbar" data-lb="error"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="error"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="grid g3">
           <div class="panel"><h3 class="sec">空态</h3><div class="empty">还没有实例。新建一个，或双击服务器直接进服。</div></div>
           <div class="panel"><h3 class="sec">加载态</h3><div class="progress"><i style="width:62%"></i></div><div class="mut" style="font-size:11px;margin-top:9px">正在准备实例，可取消且 0 副作用。</div></div>
@@ -912,7 +932,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 首次启动引导 -->
       <section class="view" data-view="onboarding">
-          <div class="logicbar" data-lb="onboarding"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="onboarding"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="panel" style="max-width:760px;margin:0 auto"><div class="row" style="margin-bottom:18px" id="obSteps"></div>
           <div id="obBody"></div>
           <div class="row spread" style="margin-top:20px"><button class="btn" id="obClose">跳过引导</button>
@@ -921,22 +941,22 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
       <!-- 网格视图 -->
       <section class="view" data-view="cardgrid">
-          <div class="logicbar" data-lb="cardgrid"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+          <div class="logicbar" data-lb="cardgrid"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
         <div class="grid g3" id="cardGrid"></div>
       </section>
 
       <section class="view" data-view="servers">
-        <div class="logicbar" data-lb="servers"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 自动同步 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-activity"></use></svg> <b class="lb-hit">4</b> 台连得上 / <b class="lb-miss">1</b> 台连不上</span><span class="lb-sp"></span><span class="badge ok lb-state">已同步</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 重新连接</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重读游戏列表</button></div>
+        <div class="logicbar" data-lb="servers"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 自动同步 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-activity"></use></svg> <b class="lb-hit">4</b> 台连得上 / <b class="lb-miss">1</b> 台连不上</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.synced">已同步</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 重新连接</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重读游戏列表</button></div>
         <div class="grid" style="grid-template-columns:1.35fr 1fr">
           <div class="stack">
-            <div class="panel"><div class="panel-head"><div class="panel-title">服务器</div><div class="panel-sub">和游戏里看到的一样 · 双击直接进服</div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="服务器">服务器</div><div class="panel-sub" data-i18n="和游戏里看到的一样 · 双击直接进服">和游戏里看到的一样 · 双击直接进服</div>
               <div class="panel-tools"><button class="btn tiny" id="srvRecRefresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 重新连接</button><button class="btn primary tiny" id="srvAdd"><svg class="li" aria-hidden="true"><use href="#i-plus"></use></svg> 添加服务器</button><span class="badge up" id="srvRecTime">上次同步 12 秒前</span></div></div>
               <div id="recSrvList"></div></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">全部服务器</div><div class="panel-sub">排序按连接结果自动更新 · 锁定的不会掉下去</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="全部服务器">全部服务器</div><div class="panel-sub" data-i18n="排序按连接结果自动更新 · 锁定的不会掉下去">排序按连接结果自动更新 · 锁定的不会掉下去</div></div>
               <div id="srvAllBody"></div></div>
           </div>
           <div class="stack">
-            <div class="panel"><div class="panel-head"><div class="panel-title">排序规则</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="排序规则">排序规则</div></div>
               <table class="rank-tb"><tbody>
                 <tr><td>1</td><td>锁定的服务器，连不上也排最前</td></tr>
                 <tr><td>2</td><td>连得上、延迟低、最近玩过</td></tr>
@@ -945,42 +965,42 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
                 <tr><td>5</td><td>没连上过的按权重排在中间，不再反复去连</td></tr>
                 <tr><td>6</td><td>曾连上过、这轮连不上的排到最后</td></tr>
               </tbody></table><div class="mut" style="font-size:11px;margin-top:9px">每次连接的结果会记下来，下次打开直接按这个顺序排；不感兴趣只降权，不会消失。</div></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title" style="white-space:nowrap">连接范围</div><div class="panel-sub">按机器能力控制同时连几台，连不过来就排队</div>
-              <div class="panel-tools"><span class="badge ok" id="budTier">标准模式</span><button class="btn tiny" id="budSwitch">切到轻量档</button><button class="btn tiny" id="budCancel">停止本次同步</button></div></div>
-              <div class="budget-kv"><div class="budget-cell"><span>本次可连</span><b id="budLimit">4</b></div><div class="budget-cell"><span>同时连接</span><b id="budConc">3</b></div><div class="budget-cell"><span>正在连 / 队列</span><b id="budFlight">0 / 0</b></div><div class="budget-cell"><span>本次不连</span><b id="budSkip">0</b></div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" style="white-space:nowrap" data-i18n="srv.budget">连接范围</div><div class="panel-sub" data-i18n="srv.budgetsub">按机器能力控制同时连几台，连不过来就排队</div>
+              <div class="panel-tools"><span class="badge ok" id="budTier">标准模式</span><button class="btn tiny" id="budSwitch" data-i18n="srv.tier">切到轻量档</button><button class="btn tiny" id="budCancel" data-i18n="srv.stop">停止本次同步</button></div></div>
+              <div class="budget-kv"><div class="budget-cell"><span data-i18n="srv.limit">本次可连</span><b id="budLimit">4</b></div><div class="budget-cell"><span data-i18n="srv.conc">同时连接</span><b id="budConc">3</b></div><div class="budget-cell"><span data-i18n="srv.flight">正在连 / 队列</span><b id="budFlight">0 / 0</b></div><div class="budget-cell"><span data-i18n="srv.skip">本次不连</span><b id="budSkip">0</b></div></div>
               <div class="budget-bar"><i id="budBar"></i></div>
               <div class="mut" style="font-size:11px;margin-top:8px" id="budHint">按权重取前几台自动连；范围外的保留上次结果，不发请求。新加的服务器一定连，但总数还是卡在这个范围里。</div></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">自动同步</div><div class="panel-tools"><button class="btn tiny" id="srvScan"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 重新读取</button><span class="badge ok" id="srvScanState">3 个实例目录</span></div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="srv.autosync">自动同步</div><div class="panel-tools"><button class="btn tiny" id="srvScan"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 重新读取</button><span class="badge ok" id="srvScanState">3 个实例目录</span></div></div>
               <div class="stack" style="font-size:12px;color:var(--ink-2)">
-                <div>添加完服务器就自动连一次，结果缓存下来作为排序依据。</div>
+                <div data-i18n="添加完服务器就自动连一次，结果缓存下来作为排序依据。">添加完服务器就自动连一次，结果缓存下来作为排序依据。</div>
                 <div>游戏自己会把服务器名单存在目录里的 servers.dat，启动器会自动读取；快速进入过的地址也能找到。</div>
                 <div>显示的名字、图标、公告、人数和延迟都照游戏内的样子，不另做一套。</div>
               </div>
               <div class="attach" style="margin-top:9px" id="srvScanLog">[KCU] servers.dat 可见 4 · 隐藏 2 · 快速进入 1<br>[KCU] 连接 4 成功 / 1 失败 · 锁定 2 台保持靠前</div></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">双击进服</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="双击进服">双击进服</div></div>
               <div class="stack" style="font-size:12px;color:var(--ink-2)">
-                <div>先看「上次玩这个服用的实例」，再看「上次用过的实例」，只在版本兼容的范围里挑。</div>
+                <div data-i18n="先看「上次玩这个服用的实例」，再看「上次用过的实例」，只在版本兼容的范围里挑。">先看「上次玩这个服用的实例」，再看「上次用过的实例」，只在版本兼容的范围里挑。</div>
                 <div>你锁定过实例就按锁定的来；没有合适的实例会让你换一个，不会静默失败。</div>
               </div><div class="row" style="margin-top:9px"><button class="btn tiny" id="srvBindDemo">看一次实例选择</button></div></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">连接前提示</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="连接前提示">连接前提示</div></div>
               <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-shield-check"></use></svg></div><div class="notice-main"><div class="notice-body">连接外部服务器会外传 IP 与 UUID，首次连接会问一次；之后不再打断。</div></div></div></div>
           </div>
         </div>
       </section>
 
       <section class="view" data-view="licenses">
-        <div class="logicbar" data-lb="licenses"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="licenses"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
-        <div class="panel"><div class="panel-head"><div class="panel-title">第三方许可</div><div class="panel-sub">清单生成 2026-11-13 · 离线可读 · 按许可证分组</div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="view.licenses">第三方许可</div><div class="panel-sub" data-i18n="清单生成 2026-11-14 · 离线可读 · 按许可证分组">清单生成 2026-11-14 · 离线可读 · 按许可证分组</div>
           <div class="panel-tools"><button class="btn tiny" id="licRefresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新清单</button><button class="btn tiny" id="licHard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新扫描</button><span class="badge ok" id="licTime">已同步 12 秒前</span></div></div>
-          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 16</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up">按许可证分组</span></div>
-          <table class="lic-table"><thead><tr><th>项目</th><th>版本 / 分组</th><th>许可证</th><th>版权</th><th>用途</th><th>来源</th><th>说明</th></tr></thead><tbody id="licBody"></tbody></table>
+          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 22</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up" data-i18n="lic.group">按许可证分组</span></div>
+          <table class="lic-table"><thead><tr><th data-i18n="项目">项目</th><th data-i18n="版本 / 分组">版本 / 分组</th><th data-i18n="许可证">许可证</th><th data-i18n="版权">版权</th><th data-i18n="用途">用途</th><th data-i18n="来源">来源</th><th data-i18n="说明">说明</th></tr></thead><tbody id="licBody"></tbody></table>
         </div>
         <div class="grid g2" style="margin-top:12px">
-          <div class="panel"><div class="panel-head"><div class="panel-title">Lucide · ISC 原文摘录</div><div class="panel-sub"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg> 演示层图标</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="Lucide · ISC 原文摘录">Lucide · ISC 原文摘录</div><div class="panel-sub"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg> 演示层图标</div></div>
             <div class="attach">Copyright (c) 2026 Lucide Icons and Contributors<br>Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.<br>THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES.</div>
             <div class="mut" style="font-size:11px;margin-top:9px">派生自 Feather 的图标另带 MIT License，Copyright (c) 2013-present Cole Bemis。88 枚逐枚来源与 blob SHA 见 assets/icons/lucide-manifest.json。</div></div>
-          <div class="panel"><div class="panel-head"><div class="panel-title">动态追加与缺失处理</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="动态追加与缺失处理">动态追加与缺失处理</div></div>
             <div class="stack" style="font-size:12px;color:var(--ink-2)">
               <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg></div><div class="notice-main"><div class="notice-body">插件加载后动态追加：插件名、许可证、作者名、项目地址、修改后版本地址。</div></div></div>
               <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-file-text"></use></svg></div><div class="notice-main"><div class="notice-body">某条全文缺失给来源链接与「稍后」，不编造许可文本；NOASSERTION 以文件头部为准。</div></div></div>
@@ -991,48 +1011,48 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       </section>
 
       <section class="view" data-view="sync">
-        <div class="logicbar" data-lb="sync"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="sync"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">四层缓存</div><div class="panel-sub">容量有界 · TTL 过期重取 · 单飞 inflight 0</div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="四层缓存">四层缓存</div><div class="panel-sub" data-i18n="容量有界 · TTL 过期重取 · 单飞 inflight 0">容量有界 · TTL 过期重取 · 单飞 inflight 0</div>
             <div class="panel-tools"><button class="btn tiny" id="syncCleanExpired">仅清过期</button><button class="btn tiny" id="syncCleanAll"><svg class="li" aria-hidden="true"><use href="#i-trash"></use></svg> 全清</button></div></div>
-            <table class="lic-table"><thead><tr><th>层</th><th>内容</th><th>TTL</th><th>容量</th><th>命中</th><th>占用</th></tr></thead><tbody id="cacheBody"></tbody></table>
+            <table class="lic-table"><thead><tr><th data-i18n="层">层</th><th data-i18n="内容">内容</th><th>TTL</th><th data-i18n="容量">容量</th><th data-i18n="命中">命中</th><th data-i18n="占用">占用</th></tr></thead><tbody id="cacheBody"></tbody></table>
             <div class="row" style="margin-top:11px"><span class="badge ok">单飞 inflight 0</span><span class="badge up">已复用 88%</span><span class="badge off">最近清理 2 分钟前</span></div>
           </div>
           <div class="stack">
-            <div class="panel"><div class="panel-head"><div class="panel-title">缓存与刷新逻辑</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="缓存与刷新逻辑">缓存与刷新逻辑</div></div>
               <div class="stack" style="font-size:12px;color:var(--ink-2)">
                 <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg></div><div class="notice-main"><div class="notice-body">内存 30s / 60s / 5min；磁盘 24h；网络 60s；预取会话内 8 条。</div></div></div>
                 <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg></div><div class="notice-main"><div class="notice-body">普通刷新取增量不清缓存；强制刷新清对应层重取全量，命中数归零。</div></div></div>
                 <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-circle-x"></use></svg></div><div class="notice-main"><div class="notice-body">刷新失败回退到上次缓存，不显示空白；失败层单独标错，其余层继续。</div></div></div>
                 <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-lock-keyhole"></use></svg></div><div class="notice-main"><div class="notice-body">全清需二次确认；清令牌缓存再确认一次；取消后 0 副作用扩散。</div></div></div>
               </div></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">时间戳统一口径</div></div>
-              <div class="kv"><span class="k">显示格式</span><span>「N 秒前 / N 分钟前 / HH:MM」</span>
-                <span class="k">显示位置</span><span>逻辑条、状态栏、各页面板工具区</span>
-                <span class="k">更新触发</span><span>R1 手动 / R2 强制 / R3 事件 / R4 定时</span></div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="时间戳统一口径">时间戳统一口径</div></div>
+              <div class="kv"><span class="k" data-i18n="显示格式">显示格式</span><span>「N 秒前 / N 分钟前 / HH:MM」</span>
+                <span class="k" data-i18n="显示位置">显示位置</span><span>逻辑条、状态栏、各页面板工具区</span>
+                <span class="k" data-i18n="更新触发">更新触发</span><span>R1 手动 / R2 强制 / R3 事件 / R4 定时</span></div></div>
           </div>
         </div>
       </section>
 
       <section class="view" data-view="ai">
-        <div class="logicbar" data-lb="ai"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="ai"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">AI 容器接口</div><div class="panel-sub">地址由用户自填 · KCU 不预设</div></div>
-            <div class="kv"><span class="k">接口地址</span><input class="txt" id="aiAddr" placeholder="留空表示未启用">
-              <span class="k">连接状态</span><span id="aiState"><span class="badge off">未配置</span></span>
-              <span class="k">上次测试</span><span id="aiTime">—</span></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="AI 容器接口">AI 容器接口</div><div class="panel-sub" data-i18n="地址由用户自填 · KCU 不预设">地址由用户自填 · KCU 不预设</div></div>
+            <div class="kv"><span class="k" data-i18n="接口地址">接口地址</span><input class="txt" id="aiAddr" placeholder="留空表示未启用">
+              <span class="k" data-i18n="连接状态">连接状态</span><span id="aiState"><span class="badge off">未配置</span></span>
+              <span class="k" data-i18n="上次测试">上次测试</span><span id="aiTime">—</span></div>
             <div class="row" style="margin-top:13px"><button class="btn primary tiny" id="aiTest"><svg class="li" aria-hidden="true"><use href="#i-zap"></use></svg> 测试连接</button><button class="btn tiny" id="aiCancel">取消</button><span class="badge ok" id="aiResult">待命</span></div>
           </div>
           <div class="stack">
-            <div class="panel"><div class="panel-head"><div class="panel-title">权限与确认</div></div>
-              <table class="grid"><thead><tr><th>项</th><th>口径</th></tr></thead><tbody>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="权限与确认">权限与确认</div></div>
+              <table class="grid"><thead><tr><th data-i18n="项">项</th><th data-i18n="口径">口径</th></tr></thead><tbody>
                 <tr><td>确认粒度</td><td>每次请求单独确认</td></tr><tr><td>删除</td><td>不给删除权限</td></tr>
                 <tr><td>请求正文</td><td>不缓存，只缓存连接状态 30s</td></tr><tr><td>审计</td><td>共用策略引擎与日志</td></tr>
                 <tr><td>页面关闭</td><td>即停请求，无常驻</td></tr>
               </tbody></table></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">失败分类</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="失败分类">失败分类</div></div>
               <div class="row"><span class="chip">地址不可达</span><span class="chip">认证失败</span><span class="chip">网络超时</span></div>
               <div class="mut" style="font-size:11px;margin-top:9px">三类分别给修复建议，不静默重试；未填地址时测试按钮禁用。</div></div>
           </div>
@@ -1040,38 +1060,38 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       </section>
 
       <section class="view" data-view="serverhost">
-        <div class="logicbar" data-lb="serverhost"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="serverhost"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">一键开服</div><div class="panel-sub">推荐实例按版本兼容度 · 用户指定排第一</div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="一键开服">一键开服</div><div class="panel-sub" data-i18n="推荐实例按版本兼容度 · 用户指定排第一">推荐实例按版本兼容度 · 用户指定排第一</div>
             <div class="panel-tools"><button class="btn primary tiny" id="shStart"><svg class="li" aria-hidden="true"><use href="#i-play"></use></svg> 启动服务端</button><button class="btn tiny" id="shStop">停止</button></div></div>
-            <div class="kv"><span class="k">实例</span><select class="sel"><option>生存季 · 1.21.4 Fabric</option><option>纯原版 · 1.21.4</option></select>
-              <span class="k">端口</span><input class="txt" value="25565" readonly>
+            <div class="kv"><span class="k" data-i18n="实例">实例</span><select class="sel"><option value="生存季 · 1.21.4 Fabric" data-i18n="生存季 · 1.21.4 Fabric">生存季 · 1.21.4 Fabric</option><option value="纯原版 · 1.21.4" data-i18n="纯原版 · 1.21.4">纯原版 · 1.21.4</option></select>
+              <span class="k" data-i18n="端口">端口</span><input class="txt" value="25565" readonly>
               <span class="k">EULA</span><span><span class="badge ok">启动前写入</span></span>
               <span class="k">UPnP</span><span><span class="badge off">默认关闭</span></span>
-              <span class="k">崩溃后</span><span><span class="badge up">按日志自动重启</span></span>
+              <span class="k" data-i18n="崩溃后">崩溃后</span><span><span class="badge up">按日志自动重启</span></span>
               <span class="k">RCON</span><span>仅本地 / 隧道</span></div>
             <div class="row" style="margin-top:12px"><span class="badge ok" id="shState">就绪</span><span class="mut" style="font-size:11px">启动阶段：EULA → jar → 端口 → 就绪，可取消</span></div>
           </div>
           <div class="stack">
-            <div class="panel"><div class="panel-head"><div class="panel-title">控制台</div><div class="panel-sub">最近 6 行 · 可收起</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="控制台">控制台</div><div class="panel-sub" data-i18n="最近 6 行 · 可收起">最近 6 行 · 可收起</div></div>
               <div class="logbody" style="height:190px;background:rgba(24,25,23,.93);color:#CFCCC2;border-radius:var(--r-md);padding:10px">[KCU] serverhost prepare OK detail=eula_written<br>[KCU] serverhost jar OK detail=1.21.4<br>[KCU] serverhost port OK detail=25565<br>[KCU] serverhost ready OK detail=0_players<br>[KCU] serverhost save OK detail=autosave_on<br>[KCU] serverhost rcon OK detail=loopback_only</div></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">冲突与边界</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="冲突与边界">冲突与边界</div></div>
               <div class="mut" style="font-size:12px">端口占用给改端口建议；按需启动 / 空闲休眠与崩溃自动重启冲突时，自动重启优先；关窗保存进度。</div></div>
           </div>
         </div>
       </section>
 
       <section class="view" data-view="headless">
-        <div class="logicbar" data-lb="headless"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="headless"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">统一信封</div><div class="panel-sub">不加载任何界面</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="统一信封">统一信封</div><div class="panel-sub" data-i18n="不加载任何界面">不加载任何界面</div></div>
             <div class="attach">{ "ok": true, "mode": "headless", "task": "launch", "result": "OK", "diagnostics": ["[KCU] dispatcher mode headless OK detail=forced"] }</div>
             <div class="mut" style="font-size:11px;margin-top:9px">纯 std，无 UI 资产、无 WebView2；任务解析结果单飞缓存，同文本 10 次只解析 1 次。</div>
           </div>
-          <div class="panel"><div class="panel-head"><div class="panel-title">任务优先级</div></div>
-            <table class="grid"><thead><tr><th>序</th><th>来源</th></tr></thead><tbody>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="任务优先级">任务优先级</div></div>
+            <table class="grid"><thead><tr><th data-i18n="序">序</th><th data-i18n="来源">来源</th></tr></thead><tbody>
               <tr><td>1</td><td>强制无头</td></tr><tr><td>2</td><td>命令行</td></tr>
               <tr><td>3</td><td>config/launch.json</td></tr><tr><td>4</td><td>任务文件</td></tr><tr><td>5</td><td>自动判定</td></tr>
             </tbody></table>
@@ -1080,11 +1100,11 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       </section>
 
       <section class="view" data-view="refresh">
-        <div class="logicbar" data-lb="refresh"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="refresh"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
-        <div class="panel"><div class="panel-head"><div class="panel-title">刷新触发 R1–R5</div><div class="panel-sub">普通 / 强制 / 事件 / 定时 / 观察者</div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="刷新触发 R1–R5">刷新触发 R1–R5</div><div class="panel-sub" data-i18n="普通 / 强制 / 事件 / 定时 / 观察者">普通 / 强制 / 事件 / 定时 / 观察者</div>
           <div class="panel-tools"><button class="btn tiny" id="rfFail">模拟刷新失败</button><button class="btn tiny" id="rfReset">复位</button></div></div>
-          <table class="lic-table"><thead><tr><th>类型</th><th>动作</th><th>清缓存</th><th>可见反馈</th><th>状态</th></tr></thead><tbody id="refreshBody"></tbody></table>
+          <table class="lic-table"><thead><tr><th data-i18n="类型">类型</th><th data-i18n="动作">动作</th><th data-i18n="清缓存">清缓存</th><th data-i18n="可见反馈">可见反馈</th><th data-i18n="状态">状态</th></tr></thead><tbody id="refreshBody"></tbody></table>
           <div class="notice" id="rfFallback" style="margin-top:12px;display:none;border-color:var(--warn)"><div class="notice-ico" style="color:var(--warn)"><svg class="li" aria-hidden="true"><use href="#i-circle-x"></use></svg></div><div class="notice-main"><div class="notice-title" style="color:var(--warn)">刷新失败 · 已回退到上次缓存</div><div class="notice-body">页面保留 12 秒前的快照，不显示空白；失败层单独标错，其余层继续；可重试或稍后。</div></div><button class="btn tiny" id="rfRetry" style="align-self:center">重试</button></div>
         </div>
         <div class="grid g3" style="margin-top:12px">
@@ -1095,7 +1115,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       </section>
 
       <section class="view" data-view="states">
-        <div class="logicbar" data-lb="states"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="states"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
         <div class="grid g3">
           <div class="panel"><h3 class="sec">空态 / 首次</h3><div class="empty">还没有实例。新建、导入整合包，或双击服务器直接进服。</div></div>
@@ -1105,17 +1125,17 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
           <div class="panel"><h3 class="sec">安全模式</h3><div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-shield-check"></use></svg></div><div class="notice-main"><div class="notice-body">连续失败 3 次进入：忽略自定义配置、禁 UI 与正版、导出诊断包。</div></div></div></div>
           <div class="panel"><h3 class="sec">离线态 / 缓存兜底</h3><div class="mut" style="font-size:12px">已缓存列表可见并标灰，刷新失败回退快照，不反复发请求、不 blank。</div></div>
         </div>
-        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">降级链</div></div>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title" data-i18n="降级链">降级链</div></div>
           <div class="row"><span class="chip on">外置浏览器</span><span class="chip">内置浏览器</span><span class="chip">连接码 300s</span><span class="chip">零级报错</span><span class="chip">安全模式</span><span class="chip">诊断包 4 行</span></div></div>
       </section>
 
       <section class="view" data-internal="1" data-view="slots">
-        <div class="logicbar" data-lb="slots"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="slots"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">槽位注册表</div><div class="panel-sub">core.* 保留 · plugin.* 开放</div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="槽位注册表">槽位注册表</div><div class="panel-sub" data-i18n="core.* 保留 · plugin.* 开放">core.* 保留 · plugin.* 开放</div>
             <div class="panel-tools"><button class="btn primary tiny" id="slotConflict">模拟插件占用核心槽位</button><button class="btn tiny" id="slotReset">复位</button></div></div>
-            <table class="lic-table"><thead><tr><th>槽位 ID</th><th>归属</th><th>可写方</th><th>位置</th><th>状态</th></tr></thead><tbody>
+            <table class="lic-table"><thead><tr><th data-i18n="槽位 ID">槽位 ID</th><th data-i18n="归属">归属</th><th data-i18n="可写方">可写方</th><th data-i18n="位置">位置</th><th data-i18n="状态">状态</th></tr></thead><tbody>
               <tr><td>core.locked.settings</td><td>核心</td><td>仅核心</td><td>导航底部固定区</td><td><span class="badge err">锁定</span></td></tr>
               <tr><td>core.locked.about</td><td>核心</td><td>仅核心</td><td>导航底部固定区</td><td><span class="badge err">锁定</span></td></tr>
               <tr><td>core.nav.home</td><td>核心</td><td>仅核心</td><td>主导航首位</td><td><span class="badge ok">固定</span></td></tr>
@@ -1127,15 +1147,15 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
             <div class="notice" id="slotDeny" style="margin-top:11px;display:none;border-color:var(--warn)"><div class="notice-ico" style="color:var(--warn)"><svg class="li" aria-hidden="true"><use href="#i-circle-x"></use></svg></div><div class="notice-main"><div class="notice-title" style="color:var(--warn)">注册被拒绝 · core.locked.settings 已占用</div><div class="notice-body">插件 `plugin.example` 试图占用核心槽位。注册表拒绝写入、保留原条目、写 [KCU] 诊断行；插件自身不崩溃，可改用 plugin.nav.*。</div></div><button class="btn tiny" id="slotDenyClose" style="align-self:center">知道了</button></div>
           </div>
           <div class="stack">
-            <div class="panel"><div class="panel-head"><div class="panel-title">锁定规则</div></div>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="锁定规则">锁定规则</div></div>
               <div class="stack" style="font-size:12px;color:var(--ink-2)">
                 <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-lock-keyhole"></use></svg></div><div class="notice-main"><div class="notice-body">设置与关于固定在同一容器，位置、顺序、ID 三者都不可变更。</div></div></div>
                 <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-shield-check"></use></svg></div><div class="notice-main"><div class="notice-body">插件与更新包只能追加到 plugin.* 容器；core.* 冲突一律拒绝注册。</div></div></div>
                 <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg></div><div class="notice-main"><div class="notice-body">插件化更新不替换核心二进制，只替换插件包；失败保留旧插件并可回滚。</div></div></div>
                 <div class="notice" style="box-shadow:none;padding:9px"><div class="notice-ico"><svg class="li" aria-hidden="true"><use href="#i-scale"></use></svg></div><div class="notice-main"><div class="notice-body">插件加载后在关于页追加插件名、许可证、作者、项目地址、修改后版本地址。</div></div></div>
               </div></div>
-            <div class="panel"><div class="panel-head"><div class="panel-title">插件清单校验</div></div>
-              <table class="grid"><thead><tr><th>项</th><th>口径</th></tr></thead><tbody>
+            <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="插件清单校验">插件清单校验</div></div>
+              <table class="grid"><thead><tr><th data-i18n="项">项</th><th data-i18n="口径">口径</th></tr></thead><tbody>
                 <tr><td>清单</td><td>manifest 只声明贡献，不执行代码</td></tr>
                 <tr><td>边界</td><td>C ABI / 进程隔离，Rust ABI 不跨边界</td></tr>
                 <tr><td>版本</td><td>ABI_MAJOR 不匹配拒绝加载</td></tr>
@@ -1147,11 +1167,11 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       </section>
 
       <section class="view" data-internal="1" data-view="recommendations">
-        <div class="logicbar" data-lb="recommendations"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="recommendations"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
-        <div class="panel"><div class="panel-head"><div class="panel-title">推荐位总览 · 10 处</div><div class="panel-sub">每处都有内容、权重、用户覆盖、缓存与刷新设置</div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="推荐位总览 · 10 处">推荐位总览 · 10 处</div><div class="panel-sub" data-i18n="每处都有内容、权重、用户覆盖、缓存与刷新设置">每处都有内容、权重、用户覆盖、缓存与刷新设置</div>
           <div class="panel-tools"><button class="btn tiny" data-v="servers">服务器推荐位</button><button class="btn tiny" data-v="settings">推荐设置</button><span class="badge ok">10 / 10 已定义</span></div></div>
-          <table class="lic-table"><thead><tr><th>位置</th><th>推荐内容</th><th>默认权重</th><th>用户覆盖</th><th>缓存 / 刷新</th><th>设置 ID</th></tr></thead><tbody id="recCatalog"></tbody></table>
+          <table class="lic-table"><thead><tr><th data-i18n="位置">位置</th><th data-i18n="推荐内容">推荐内容</th><th data-i18n="默认权重">默认权重</th><th data-i18n="用户覆盖">用户覆盖</th><th data-i18n="缓存 / 刷新">缓存 / 刷新</th><th data-i18n="设置 ID">设置 ID</th></tr></thead><tbody id="recCatalog"></tbody></table>
         </div>
         <div class="grid g3" style="margin-top:12px">
           <div class="panel"><h3 class="sec">用户指定排第一</h3><div class="mut" style="font-size:12px">手动选过的实例、显式指定的服务器、固定的排序值，永远压过系统推荐。</div></div>
@@ -1161,18 +1181,18 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       </section>
 
       <section class="view" data-internal="1" data-view="handoff">
-        <div class="logicbar" data-lb="handoff"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
+        <div class="logicbar" data-lb="handoff"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
 
         <div class="grid g2">
-          <div class="panel"><div class="panel-head"><div class="panel-title">可交接底层基线</div><div class="panel-sub">新对话把本仓库当底层直接接续</div></div>
-            <div class="kv"><span class="k">仓库</span><span>kongbai9288/KCU-launcher-for-pc / main / public</span>
-              <span class="k">基线</span><span>020 轮提交，工作区干净，231+ 文件</span>
-              <span class="k">必读</span><span>docs/index.md 78 项，按命令逐项复读</span>
-              <span class="k">工具链</span><span>腾讯 rustup 镜像；CARGO_HOME / RUSTUP_HOME 在工作区</span>
-              <span class="k">测试</span><span>CARGO_INCREMENTAL=0 cargo test --offline</span>
-              <span class="k">本地 LICENSE</span><span><span class="badge miss">未生成</span></span></div></div>
-          <div class="panel"><div class="panel-head"><div class="panel-title">已完成 / 未完成</div></div>
-            <table class="grid"><thead><tr><th>层</th><th>状态</th></tr></thead><tbody>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="可交接底层基线">可交接底层基线</div><div class="panel-sub" data-i18n="新对话把本仓库当底层直接接续">新对话把本仓库当底层直接接续</div></div>
+            <div class="kv"><span class="k" data-i18n="仓库">仓库</span><span>kongbai9288/KCU-launcher-for-pc / main / public</span>
+              <span class="k" data-i18n="基线">基线</span><span>020 轮提交，工作区干净，231+ 文件</span>
+              <span class="k" data-i18n="必读">必读</span><span>docs/index.md 78 项，按命令逐项复读</span>
+              <span class="k" data-i18n="工具链">工具链</span><span>腾讯 rustup 镜像；CARGO_HOME / RUSTUP_HOME 在工作区</span>
+              <span class="k" data-i18n="测试">测试</span><span>CARGO_INCREMENTAL=0 cargo test --offline</span>
+              <span class="k" data-i18n="本地 LICENSE">本地 LICENSE</span><span><span class="badge miss">未生成</span></span></div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="已完成 / 未完成">已完成 / 未完成</div></div>
+            <table class="grid"><thead><tr><th data-i18n="层">层</th><th data-i18n="状态">状态</th></tr></thead><tbody>
               <tr><td>L1 core</td><td><span class="badge ok">已实现、已验证</span></td></tr>
               <tr><td>L2 dispatcher</td><td><span class="badge ok">已实现、已验证</span></td></tr>
               <tr><td>L3 lightweight</td><td><span class="badge ok">已实现、已验证</span></td></tr>
@@ -1180,21 +1200,21 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
               <tr><td>L4 headless 及以下 6 层</td><td><span class="badge off">未启动</span></td></tr>
             </tbody></table></div>
         </div>
-        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title">新对话开工 6 步</div><div class="panel-sub">照此顺序就不会丢上下文</div></div>
+        <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title" data-i18n="新对话开工 6 步">新对话开工 6 步</div><div class="panel-sub" data-i18n="照此顺序就不会丢上下文">照此顺序就不会丢上下文</div></div>
           <div class="row"><span class="chip on">1 读 docs/index.md 78 项</span><span class="chip">2 读 docs/design/handoff.md</span><span class="chip">3 读 docs/records/rounds.md 末段</span><span class="chip">4 跑必读检查命令</span><span class="chip">5 跑 cargo test --offline</span><span class="chip">6 对照 docs/features/index.md 继续施工</span></div>
         </div>
         <div class="grid g2" style="margin-top:12px">
-          <div class="panel"><div class="panel-head"><div class="panel-title">不可变边界</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="不可变边界">不可变边界</div></div>
             <div class="stack" style="font-size:12px;color:var(--ink-2)">
-              <div>全仓零凭据字面量；后端仓只读；私有配置、诊断包、令牌不进公仓。</div>
+              <div data-i18n="全仓零凭据字面量；后端仓只读；私有配置、诊断包、令牌不进公仓。">全仓零凭据字面量；后端仓只读；私有配置、诊断包、令牌不进公仓。</div>
               <div>core.locked.* 槽位不可被插件或更新包改写。</div>
               <div>未取得 LICENSE 全文前不复制上游代码、资源、商标、Client ID。</div>
               <div>未证实字段不写进实现；四值只用已证实 / 已失败 / 未证实 / 受阻。</div>
               <div>每实现一个功能写一份功能 md，维护 docs/index.md 与 docs/features/index.md。</div>
             </div></div>
-          <div class="panel"><div class="panel-head"><div class="panel-title">上层实现口径</div></div>
+          <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="上层实现口径">上层实现口径</div></div>
             <div class="stack" style="font-size:12px;color:var(--ink-2)">
-              <div>上层实现采用第三方库，候选清单见关于页与 docs/design/upper-layer-stack.md。</div>
+              <div data-i18n="上层实现采用第三方库，候选清单见关于页与 docs/design/upper-layer-stack.md。">上层实现采用第三方库，候选清单见关于页与 docs/design/upper-layer-stack.md。</div>
               <div>每个候选标许可证、用途、来源、是否取得 LICENSE 全文、是否进入构建。</div>
               <div>插件化更新优先；核心不随更新替换；失败保留旧插件并可回滚。</div>
               <div>演示确认后才把 UI 写进实现；轻量模式不复用 normal.ui。</div>
@@ -1203,10 +1223,10 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       </section>
 
       <section class="view" data-internal="1" data-view="upperstack">
-        <div class="logicbar" data-lb="upperstack"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> 上次更新 · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新</button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新获取</button></div>
-        <div class="panel"><div class="panel-head"><div class="panel-title">上层实现候选清单 · 12 组</div><div class="panel-sub">采用第三方代码 · 全部为候选，未进入 src/ 构建</div>
+        <div class="logicbar" data-lb="upperstack"><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-database"></use></svg> <span data-i18n="cache.updated">上次更新</span> · <b class="lb-age">12 秒前</b></span><span class="lb-t"><svg class="li" aria-hidden="true"><use href="#i-gauge"></use></svg> <b class="lb-hit">8</b> 项已就绪 / <b class="lb-miss">1</b> 项待刷新</span><span class="lb-sp"></span><span class="badge ok lb-state" data-i18n="state.ready">就绪</span><button class="btn lb-soft"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> <span data-i18n="act.refresh">刷新</span></button><button class="btn lb-hard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> <span data-i18n="act.hard">重新获取</span></button></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="上层实现候选清单 · 12 组">上层实现候选清单 · 12 组</div><div class="panel-sub" data-i18n="采用第三方代码 · 全部为候选，未进入 src/ 构建">采用第三方代码 · 全部为候选，未进入 src/ 构建</div>
           <div class="panel-tools"><button class="btn tiny" data-v="licenses">许可清单</button><button class="btn tiny" data-v="about">返回关于</button><span class="badge up">逐项 LICENSE 全文核对后才复制</span></div></div>
-          <table class="lic-table"><thead><tr><th>层</th><th>候选</th><th>许可证</th><th>用途</th><th>全文状态</th><th>复制状态</th></tr></thead><tbody id="upperFull"></tbody></table>
+          <table class="lic-table"><thead><tr><th data-i18n="层">层</th><th data-i18n="候选">候选</th><th data-i18n="许可证">许可证</th><th data-i18n="用途">用途</th><th data-i18n="全文状态">全文状态</th><th data-i18n="复制状态">复制状态</th></tr></thead><tbody id="upperFull"></tbody></table>
         </div>
         <div class="grid g3" style="margin-top:12px">
           <div class="panel"><h3 class="sec">登记规则</h3><div class="mut" style="font-size:12px">每项进关于页七列表与 THIRD-PARTY-NOTICES.md；写清项目名、版本、许可证、版权、用途、来源、是否进入构建。</div></div>
@@ -1284,6 +1304,76 @@ const OB=[
 ];
 let curNotice=NOTICES[0];
 
+
+/* 023 i18n：界面文案只走 key，中文是缺资源时的兜底；实现层改用 .ftl 后源码不保留文案 */
+const EN={
+ 'app.desktop':'Desktop','search.hint':'Search instances, mods, settings','lang.switch':'Language',
+ 'nav.home':'Home','nav.notices':'Notices','nav.instances':'Instances','nav.servers':'Servers',
+ 'nav.download':'Downloads','nav.mods':'Mods','nav.login':'Accounts','nav.serverhost':'Server Host','nav.logs':'Logs',
+ 'cache.updated':'Updated','act.refresh':'Refresh','act.hard':'Reload','state.ready':'Ready','state.synced':'Synced',
+ 'settings.title':'Settings','settings.sub':'Applied instantly · searchable · changed only · reset all',
+ 'tab.general':'General','tab.download':'Downloads','tab.cache':'Cache','tab.recommend':'Recommend','tab.status':'Servers',
+ 'tab.ai':'AI','tab.crash':'Crash reports','tab.plugins':'Plugins','tab.privacy':'Privacy','tab.experimental':'Labs',
+ 'tab.modified':'Changed','tab.reset':'Reset','set.lang':'Language','set.theme':'Theme','set.dir':'Data folder',
+ 'srv.budget':'Connection budget','srv.budgetsub':'Limit how many connect at once based on this machine',
+ 'srv.limit':'This round','srv.conc':'At the same time','srv.flight':'Active / queued','srv.skip':'Not this round',
+ 'srv.tier':'Lighter mode','srv.stop':'Stop','srv.devcard':'Connection budget',
+ 'srv.note1':'Servers that never connected keep their old rank and are not retried; locked ones stay on top.',
+ 'srv.note2':'Names can repeat and can be changed anytime; each server keeps its own records.',
+ 'srv.autosync':'Auto sync','srv.offline':'Offline','srv.locked':'Locked','srv.new':'New · pending',
+ 'srv.never':'Never connected · skipped','srv.out':'Outside this round · last result','srv.fail':'Offline · moved down',
+ 'srv.norecord':'No successful connection yet','srv.unreachable':'Unable to connect','srv.played':'played',
+ 'srv.same':'Same name','srv.locktip':'Pin / unpin','srv.rename':'Rename',
+ 'srv.renameTitle':'Rename server','srv.renameBody':'Names may repeat and can change anytime. Only the label changes; history, ranking and folder stay.',
+ 'srv.join':'Join server','srv.other':'Pick instance','srv.enter':'Join','srv.hintStop':'Stopped. No new connections; results already received are kept.',
+ 'srv.hintRun':'Connecting in the background. Last results show first; slow ones are skipped and you can stop anytime.',
+ 'srv.hintIdle':'Connect the top few by rank; the rest keep their last result without a request. New servers always connect but stay inside the same budget.',
+ 'act.cancel':'Cancel','act.save':'Save','act.later':'Later','act.ok':'Got it','act.noprompt':'Do not show again',
+ 'crash.card':'Crash reports','crash.enable':'When something breaks','crash.off':'Ask me first','crash.local':'Keep locally only',
+ 'crash.never':'Do not record','crash.addr':'Destination','crash.addrph':'Filled in by you; leave empty to stay local',
+ 'crash.mask':'Remove private details','crash.maskon':'Masked by default (can turn off)','crash.maskoff':'Do not mask',
+ 'crash.dir':'Diagnostic folder','crash.what':'What is recorded','crash.what1':'Window, version, OS build and the steps before the error.',
+ 'crash.what2':'Server addresses, chat, player names and save contents are excluded by default.',
+ 'crash.what3':'You get one confirmation with the full contents before anything is sent, and can cancel.',
+ 'crash.what4':'Without a destination it stays local and you can export it yourself.',
+ 'crash.view':'View latest','crash.export':'Export diagnostics','crash.state':'Not sent',
+ 'crash.note':'Older machines, different architectures and OS builds behave differently; a dedicated crash library handles this instead of custom code here.',
+ 'view.home':'Home','view.notices':'Notices','view.instances':'Instances','view.servers':'Servers',
+ 'view.download':'Downloads','view.mods':'Mods','view.login':'Accounts','view.serverhost':'Server Host','view.logs':'Logs',
+ 'view.settings':'Settings','view.about':'About','nav.settings':'Settings','nav.about':'About','view.licenses':'Third-party licenses','view.popups':'Dialogs',
+ 'lic.all':'All','lic.group':'Grouped by license','about.title':'About KCU Launcher','about.sub':'Version and licenses'
+};
+const EN_TEXT={"常规":"General","启动与实例":"Startup & instances","界面语言":"Language","主题":"Theme","数据目录":"Data folder","公告提示":"Notices","使用说明":"How it works","EULA":"EULA","崩溃后":"After a crash","旧版 jar":"Old jars","用户指定":"User pick","设备连接范围":"Connection budget","双击进服":"Double-click to join","推荐与排序":"Recommend & rank","服务器状态":"Server status","自动连接":"Auto connect","排序规则":"Sorting","缓存与刷新":"Cache & refresh","下载与镜像":"Downloads & mirrors","AI 容器接口":"AI container","插件与更新":"Plugins & updates","崩溃反馈":"Crash reports","隐私与诊断":"Privacy & diagnostics","实验性":"Labs","已改 3 项":"Changed 3","恢复默认":"Reset all","扩展":"Extensions","我的插件":"My plugins","更新与状态":"Updates & status","设置":"Settings","关于":"About","收起侧栏":"Collapse","公告中心":"Notices","实例与版本":"Instances","服务器":"Servers","下载中心":"Downloads","模组管理":"Mods","账号登录":"Accounts","开服器":"Server Host","日志诊断":"Logs","首页":"Home","桌面端":"Desktop","简体中文":"简体中文","English":"English","纸质浅色（默认）":"Paper light (default)","深色纸质":"Paper dark","跟随系统":"Follow system","启动前写入":"Write before launch","按日志自动重启":"Restart on crash log","写 lockfile 禁用":"Disable with lockfile","永远排第一":"Always first","未读时铃铛提示":"Bell for unread","静默":"Silent","每次自动连几台":"Servers per round","同时连接":"Concurrent","轻量机器":"Light machines","新加的服务器":"Newly added","范围外的":"Outside the round","一定连，但占同一份额度":"Always connect, inside the same budget","保留上次结果，不主动连":"Keep last result, no request","4 台（推荐）":"4 (recommended)","2 台":"2","6 台":"6","全部":"All","3 路":"3","2 路":"2","1 路":"1","自动降到 2 台 / 2 路":"Auto: 2 / 2","与标准一致":"Same as standard","上次玩这个服用的实例":"Last instance for this server","上次用过的实例":"Last used instance","版本兼容范围":"Compatible versions","自动选定":"Selected","只读，不改游戏文件":"Read only","SLP + 手动覆盖":"SLP + manual override","仅手动":"Manual only","插件提供":"From plugin","在线":"Online","维护中":"Maintenance","离线":"Offline","满员":"Full","私有":"Private","自定义":"Custom","超时标灰，回退缓存":"Grey on timeout, fall back to cache","协议被禁用时给可见提示":"Visible notice when protocol is off","不静默重试":"No silent retry","项目":"Project","版本 / 分组":"Version / group","许可证":"License","版权":"Copyright","用途":"Use","来源":"Source","说明":"Notes","状态":"Status","名称":"Name","地址":"Address","操作":"Actions","类型":"Type","时间":"Time","内容":"Content","数量":"Count","结果":"Result","已就绪":"Ready","待刷新":"Pending","就绪":"Ready","已保存":"Saved","未配置":"Not set","未发送":"Not sent","启用":"Enabled","正常":"OK","可更新":"Update","被锁":"Locked","刷新":"Refresh","重新获取":"Reload","刷新清单":"Refresh list","重新扫描":"Rescan","新建实例":"New instance","列表":"List","网格":"Grid","取消":"Cancel","保存":"Save","稍后":"Later","知道了":"Got it","不再提示":"Do not show again","知道了 ":"Got it","看最近一次":"View latest","导出诊断包":"Export diagnostics","查看插件":"View plugins","模拟插件化更新":"Simulate plugin update","模拟回滚":"Simulate rollback","重新读取":"Rescan","停止本次同步":"Stop","切到轻量档":"Lighter mode","切回标准档":"Standard mode","上次更新":"Updated","仅清过期":"Clear expired","仅本地":"Local only","关于 KCU Launcher":"About KCU Launcher","第三方许可":"Third-party licenses","连接范围":"Connection budget","自动同步":"Auto sync","四层缓存":"Four-layer cache","刷新机制":"Refresh triggers","推荐位":"Recommendations","服务器列表":"Server list","推荐服务器":"Recommended servers","运行状态":"Status","已装插件与更新模拟":"Installed plugins & update demo","会记下什么":"What is recorded","按许可证分组":"Grouped by license","离线可读":"Readable offline","改动立即生效":"Applied instantly","容量有界":"Bounded","单飞去重":"Single-flight","失败回退上次缓存":"Fall back to last cache","取消 0 副作用":"Cancel has no side effects","流程结束 0 残留":"No dialogs left open","改动立即生效；保存失败会保留原来的值并给出提示。":"Applied instantly. If saving fails, the old value stays and you get a visible notice.","「已改 3 项」只看动过的地方，每项都能单独恢复默认。":"Changed-only view lists just what you touched; each item resets on its own.","插件可以加自己的设置分组，不会改动原有的设置。":"Plugins can add their own settings groups without touching the built-in ones."};
+let LOCALE='zh-CN';
+function tr(k,fb){if(LOCALE==='en-US'){if(EN[k])return EN[k];if(EN_TEXT[k])return EN_TEXT[k];}return fb!==undefined?fb:k;}
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    if(el.dataset.i18nFb===undefined)el.dataset.i18nFb=el.textContent;
+    el.textContent=tr(el.dataset.i18n,el.dataset.i18nFb);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    if(el.dataset.i18nPhFb===undefined)el.dataset.i18nPhFb=el.getAttribute('placeholder')||'';
+    el.setAttribute('placeholder',tr(el.dataset.i18nPh,el.dataset.i18nPhFb));
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{
+    if(el.dataset.i18nTFb===undefined)el.dataset.i18nTFb=el.getAttribute('title')||'';
+    el.setAttribute('title',tr(el.dataset.i18nTitle,el.dataset.i18nTFb));
+  });
+  const cur=document.querySelector('.view.on');
+  if(cur){const k='view.'+cur.dataset.view;$('vTitle').textContent=EN[k]&&LOCALE==='en-US'?EN[k]:(window.__vTitleFb||$('vTitle').textContent);}
+  $('btnLang').textContent=LOCALE==='en-US'?'EN':'中';
+}
+function setLang(l){
+  LOCALE=l;
+  const sel=$('setLang');if(sel)sel.value=l;
+  if(typeof renderSrv==='function')renderSrv();
+  if(typeof updateBudget==='function')updateBudget();
+  applyI18n();
+  log('ui','i18n','switch','OK','detail='+LOCALE);
+}
+$('btnLang').onclick=()=>setLang(LOCALE==='zh-CN'?'en-US':'zh-CN');
+if($('setLang'))$('setLang').onchange=e=>setLang(e.target.value);
+
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 function seedNoise(alpha,r,g,b){
   const c=document.createElement('canvas');c.width=c.height=180;
@@ -1324,7 +1414,7 @@ const VIEW_META={home:['首页','本地 7 个实例 · 上次同步 2 分钟前 
 
 function openDlg(title,body,id){
   $('mdTitle').textContent=title;$('mdId').textContent='id='+id;$('mdBody').innerHTML=body;
-  $('mdActs').innerHTML='<button class="btn" id="mdNo">不再提示</button><button class="btn" id="mdCancel">稍后</button><button class="btn primary" id="mdOk">知道了</button>';
+  $('mdActs').innerHTML='<button class="btn" id="mdNo">'+tr('act.noprompt','不再提示')+'</button><button class="btn" id="mdCancel">'+tr('act.later','稍后')+'</button><button class="btn primary" id="mdOk">'+tr('act.ok','知道了')+'</button>';
   $('mdNo').onclick=()=>closeDlg('no_prompt');$('mdCancel').onclick=()=>closeDlg('cancel');$('mdOk').onclick=()=>closeDlg('confirm');
   $('mask').classList.add('on');dlgOpen=true;
 }
@@ -1346,13 +1436,16 @@ function show(v){
   if(v==='servers-locked'){show('servers');setTimeout(()=>srvForceOffline(),40);return;}
   if(v==='servers-budget'){show('servers');setTimeout(()=>srvProbe(true),40);return;}
   if(v==='servers-history'){show('servers');DEVICE_TIER='lightweight';const bs=$('budSwitch');if(bs)bs.textContent='切回标准档';buildPlan();renderSrv();updateBudget();setTimeout(()=>srvProbe(true),40);return;}
+  if(v==='servers-rename'){show('servers');setTimeout(()=>openRename(SERVERS[0]),40);return;}
+  if(v==='servers-samenames'){show('servers');setTimeout(()=>{if(typeof renderSrv==='function')renderSrv();},40);return;}
+  if(v==='i18n-en'){setLang('en-US');show('settings');setTab('general');return;}
   document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.dataset.view===v));
   document.querySelectorAll('.nav-item[data-v]').forEach(x=>x.classList.toggle('active',x.dataset.v===v));
   const tab=(location.hash.match(/tab=([a-z-]+)/)||[])[1]||'general';
   if(v==='settings')setTab(tab);
   const hideActs=['settings','about','licenses','slots','recommendations','handoff','sync','refresh','states','ai','headless','popups','lightweight','error','onboarding','serverhost','logs','upperstack','servers'];
   document.querySelector('.tb-actions').style.display=hideActs.indexOf(v)>=0?'none':'flex';
-  const m=VIEW_META[v]||VIEW_META.home;$('vTitle').textContent=m[0];$('vCrumb').textContent=m[1];
+  const m=VIEW_META[v]||VIEW_META.home;window.__vTitleFb=m[0];$('vTitle').textContent=tr('view.'+v,m[0]);$('vCrumb').textContent=m[1];
   history.replaceState(null,'',v==='settings'?'#view=settings&tab='+tab:'#view='+v);
 }
 function setTheme(t){theme=t;win.dataset.theme=t;$('btnTheme').textContent=t==='dark'?'<svg class="li" aria-hidden="true"><use href="#i-sun"></use></svg>':'<svg class="li" aria-hidden="true"><use href="#i-moon"></use></svg>';}
@@ -1486,6 +1579,12 @@ const LICENSE_ROWS=[
  ['QuiltMC/quilt-loader','调研快照','Apache-2.0','QuiltMC','加载器调研','docs/licenses/Quilt-LICENSE.txt','文档层','Apache-2.0'],
  ['CopperGolemLauncher','调研快照','NOASSERTION','copper-lamp','候选，复用范围未证实','docs/licenses/CopperGolemLauncher-LICENSE','文档层','NOASSERTION'],
  ['KCU Launcher 本项目','0.0.0','未生成','—','本项目 LICENSE 待定','THIRD-PARTY-NOTICES.md','未生成','NOASSERTION'],
+ ['fluent-rs','UI / 崩溃层候选','Apache-2.0 OR MIT','Mozilla & contributors','界面文案 .ftl 运行时选择','projectfluent.org','候选 · 未进构建','Apache-2.0'],
+ ['i18n-embed','UI / 崩溃层候选','MIT','i18n-embed contributors','语言包嵌入与系统语言探测','lib.rs/crates/i18n-embed','候选 · 未进构建','MIT'],
+ ['sentry-minidump','UI / 崩溃层候选','MIT','Sentry','独立进程捕获原生崩溃','lib.rs/crates/sentry-minidump','候选 · 未进构建','MIT'],
+ ['rust-minidump','UI / 崩溃层候选','MIT','Mozilla & contributors','本地解析 minidump，不联网','lib.rs/crates/minidump','候选 · 未进构建','MIT'],
+ ['Breakpad','UI / 崩溃层候选','BSD-3-Clause','Google','崩溃后端之一','chromium.googlesource.com/breakpad','候选 · 未进构建','Apache-2.0'],
+ ['sentry-native','UI / 崩溃层候选','MIT','Sentry','Breakpad / Crashpad 后端封装','github.com/getsentry/sentry-native','候选 · 未进构建','MIT'],
 ];
 let licFilter='all';
 function renderLic(){
@@ -1520,15 +1619,17 @@ $('rfRetry').onclick=()=>{$('rfFallback').style.display='none';log('ui','refresh
 
 /* 022 服务器：异步探测、设备连接范围、失败历史分类、双击进服 */
 const SERVERS=[
- {id:'s1',name:'陶瓦联机 · 主服',ip:'mc.taowa.example',ver:'1.21.4',motd:'§a§l陶瓦联机 §7| §f生存季 S3\n§7每周六活动 · 欢迎回家',online:42,max:100,ping:42,ok:true,lock:true,ever:true,tried:true,last:'2 分钟前',inst:'生存季',src:'servers.dat'},
- {id:'s2',name:'朋友的小服',ip:'mc.friends.example:25566',ver:'1.21.1',motd:'§e小服 §7· §f别炸我家',online:6,max:20,ping:88,ok:true,lock:false,ever:true,tried:true,last:'昨天',inst:'测试服',src:'servers.dat'},
- {id:'s3',name:'快照体验服',ip:'snap.example',ver:'1.21.5',motd:'§6快照抢先玩\n§7内容随时会变',online:11,max:30,ping:120,ok:true,lock:false,ever:true,tried:true,last:'3 天前',inst:'快照服',src:'快速进入'},
- {id:'s4',name:'旧服（我锁过）',ip:'old.example',ver:'1.20.4',motd:'',online:0,max:0,ping:null,ok:false,lock:true,ever:true,tried:true,offlineMark:true,last:'上个月',inst:'怀旧服',src:'隐藏列表'},
- {id:'s5',name:'临时测试服',ip:'tmp.example',ver:'1.21.4',motd:'',online:0,max:0,ping:null,ok:false,lock:false,ever:false,tried:true,last:'两周前',inst:'测试服',src:'servers.dat'},
- {id:'s6',name:'朋友的 1.20 服',ip:'a.example',ver:'1.20.4',motd:'§fA Minecraft Server',online:3,max:20,ping:210,ok:true,lock:false,ever:true,tried:true,last:'两周前',inst:'怀旧服',src:'servers.dat'},
- {id:'s7',name:'公益小服',ip:'b.example',ver:'1.21.1',motd:'§7欢迎',online:2,max:10,ping:340,ok:true,lock:false,ever:true,tried:true,last:'上个月',inst:'测试服',src:'servers.dat'},
- {id:'s8',name:'没连上过的地址',ip:'c.example',ver:'1.21.4',motd:'',online:0,max:0,ping:null,ok:false,lock:false,ever:false,tried:true,last:'上个月',inst:'测试服',src:'快速进入'}
+ {sid:'sv-2101b6d4',id:'s1',name:'陶瓦联机 · 主服',ip:'mc.taowa.example',ver:'1.21.4',motd:'§a§l陶瓦联机 §7| §f生存季 S3\n§7每周六活动 · 欢迎回家',online:42,max:100,ping:42,ok:true,lock:true,ever:true,tried:true,last:'2 分钟前',inst:'生存季',src:'servers.dat'},
+ {sid:'sv-7427fdf7',id:'s2',name:'朋友的小服',ip:'mc.friends.example:25566',ver:'1.21.1',motd:'§e小服 §7· §f别炸我家',online:6,max:20,ping:88,ok:true,lock:false,ever:true,tried:true,last:'昨天',inst:'测试服',src:'servers.dat'},
+ {sid:'sv-120458a2',id:'s3',name:'快照体验服',ip:'snap.example',ver:'1.21.5',motd:'§6快照抢先玩\n§7内容随时会变',online:11,max:30,ping:120,ok:true,lock:false,ever:true,tried:true,last:'3 天前',inst:'快照服',src:'快速进入'},
+ {sid:'sv-06231a26',id:'s4',name:'旧服（我锁过）',ip:'old.example',ver:'1.20.4',motd:'',online:0,max:0,ping:null,ok:false,lock:true,ever:true,tried:true,offlineMark:true,last:'上个月',inst:'怀旧服',src:'隐藏列表'},
+ {sid:'sv-87ff6f55',id:'s5',name:'临时测试服',ip:'tmp.example',ver:'1.21.4',motd:'',online:0,max:0,ping:null,ok:false,lock:false,ever:false,tried:true,last:'两周前',inst:'测试服',src:'servers.dat'},
+ {sid:'sv-f4e610b8',id:'s6',name:'朋友的 1.20 服',ip:'a.example',ver:'1.20.4',motd:'§fA Minecraft Server',online:3,max:20,ping:210,ok:true,lock:false,ever:true,tried:true,last:'两周前',inst:'怀旧服',src:'servers.dat'},
+ {sid:'sv-99d4387d',id:'s7',name:'公益小服',ip:'b.example',ver:'1.21.1',motd:'§7欢迎',online:2,max:10,ping:340,ok:true,lock:false,ever:true,tried:true,last:'上个月',inst:'测试服',src:'servers.dat'},
+ {sid:'sv-9b9aab2d',id:'s8',name:'没连上过的地址',ip:'c.example',ver:'1.21.4',motd:'',online:0,max:0,ping:null,ok:false,lock:false,ever:false,tried:true,last:'上个月',inst:'测试服',src:'快速进入'},
+ {id:'s9',sid:'sv-taowa2b',name:'陶瓦联机 · 主服',ip:'mc.taowa2.example:25566',ver:'1.21.4',motd:'§a§l陶瓦联机 §7| §f备用入口\n§7同一个名字，另一台机器',online:8,max:60,ping:96,ok:true,lock:false,ever:true,tried:true,last:'昨天',inst:'生存季',src:'servers.dat'},
 ];
+
 const DEVICE={normal:{limit:4,concurrency:3,label:'标准模式'},lightweight:{limit:2,concurrency:2,label:'轻量档'},headless:{limit:0,concurrency:0,label:'无界面'}};
 let DEVICE_TIER='normal';
 let SERVERS_SYNC='12 秒前';
@@ -1549,25 +1650,27 @@ function srvCachedWeight(s){
 }
 function srvSorted(){return SERVERS.slice().sort((a,b)=>srvRank(a)-srvRank(b));}
 function pingBars(s){
-  if(!s.ok)return '<span class="mut" style="font-size:10px">连不上</span>';
+  if(!s.ok)return '<span class="mut" style="font-size:10px">'+tr('srv.offline','连不上')+'</span>';
   const n=s.ping<150?5:s.ping<300?4:s.ping<600?3:s.ping<1000?2:1;
-  return '<span class="srv-ping">'+[1,2,3,4,5].map(i=>'<i style="'+(i>n?'opacity:.2':'')+'"></i>').join('')+'</span>';
+  return '<span class="srv-ping">'+[1,2,3,4,5].map(i=>'<i style="'+(i>n?'opacity:.2':'')+'"></i>').join('')+'</span><div class="srv-ms">'+s.ping+' ms</div>';
 }
 function srvNote(s){
-  if(s.lock)return '<span class="srv-note">已锁定</span>';
-  if(s.isNew)return '<span class="srv-note">新加 · 待连接</span>';
-  if(s.probeSkip==='never')return '<span class="srv-note">还没连上过 · 暂不重试</span>';
-  if(s.probeSkip==='out')return '<span class="srv-note">超出本次范围 · 用上次结果</span>';
-  if(!s.ok)return '<span class="srv-note">连不上 · 排到最后</span>';
+  if(s.lock)return '<span class="srv-note">'+tr('srv.locked','已锁定')+'</span>';
+  if(s.isNew)return '<span class="srv-note">'+tr('srv.new','新加 · 待连接')+'</span>';
+  if(s.probeSkip==='never')return '<span class="srv-note">'+tr('srv.never','还没连上过 · 暂不重试')+'</span>';
+  if(s.probeSkip==='out')return '<span class="srv-note">'+tr('srv.out','超出本次范围 · 用上次结果')+'</span>';
+  if(!s.ok)return '<span class="srv-note">'+tr('srv.fail','连不上 · 排到最后')+'</span>';
   return '';
 }
 function srvRow(s){
-  const star='<span class="lock-star" data-lock="'+s.id+'" title="锁定/取消锁定">'+(s.lock?'★':'☆')+'</span>';
+  const star='<span class="lock-star" data-lock="'+s.sid+'" title="'+tr('srv.locktip','锁定/取消锁定')+'">'+(s.lock?'★':'☆')+'</span>';
   const ico='<div class="srv-ico'+(s.ok?'':' off')+'">'+esc(s.name.charAt(0))+'</div>';
-  const motd=(s.ok&&s.motd)?'<div class="srv-motd">'+esc(s.motd.replace(/§[0-9a-fklmnor]/g,''))+'</div>':'<div class="srv-motd" style="color:var(--ink-3)">'+(s.probeSkip==='never'?'还没有成功的连接记录':'无法连接到服务器')+'</div>';
+  const motd=(s.ok&&s.motd)?'<div class="srv-motd">'+esc(s.motd.replace(/§[0-9a-fklmnor]/g,''))+'</div>':'<div class="srv-motd" style="color:var(--ink-3)">'+(s.probeSkip==='never'?tr('srv.norecord','还没有成功的连接记录'):tr('srv.unreachable','无法连接到服务器'))+'</div>';
   const side='<div class="srv-side"><div class="srv-count">'+(s.ok?s.online+' / '+s.max:'—')+'</div>'+pingBars(s)+'<div class="srv-ver">'+esc(s.ver)+(s.ok?' · '+s.ping+' ms':'')+'</div></div>';
-  const meta='<div class="srv-meta">'+esc(s.last)+' 玩过 · '+esc(s.inst)+srvNote(s)+'</div>';
-  return '<div class="srv-row" data-join="'+s.id+'">'+ico+'<div class="srv-main"><div class="srv-name">'+star+esc(s.name)+'</div>'+motd+meta+'</div>'+side+'</div>';
+  const meta='<div class="srv-meta">'+esc(s.last)+' '+tr('srv.played','玩过')+' · '+esc(s.inst)+srvNote(s)+'</div>';
+  const rn='<button class="rename-btn" data-rename="'+s.sid+'" title="'+tr('srv.rename','改名')+'">✎</button>';
+  const same=SERVERS.filter(x=>x.name===s.name).length>1?'<span class="same-tag" data-i18n="srv.same">同名</span>':'';
+  return '<div class="srv-row" data-join="'+s.sid+'">'+ico+'<div class="srv-main"><div class="srv-name">'+star+esc(s.name)+same+rn+'</div>'+motd+meta+'</div>'+side+'</div>';
 }
 function renderSrv(){
   const list=srvSorted();
@@ -1576,9 +1679,10 @@ function renderSrv(){
   $('recSrvList').innerHTML=list.map(s=>srvRow(s)).join('');
   $('srvAllBody').innerHTML='<div class="panel" style="padding:0">'+list.map(s=>srvRow(s)).join('')+'</div>';
   $('homeRecSrv').innerHTML=list.filter(s=>s.ok).slice(0,2).map(s=>'<div class="row" style="gap:8px"><span style="width:14px">'+ic('star')+'</span><div style="flex:1"><div style="font-size:12px;font-weight:600">'+esc(s.name)+'</div><div class="mut" style="font-size:10px">'+s.online+' 人在线 · '+s.ping+' ms</div></div></div>').join('');
-  document.querySelectorAll('[data-lock]').forEach(x=>x.onclick=e=>{e.stopPropagation();const s=SERVERS.find(y=>y.id===x.dataset.lock);s.lock=!s.lock;renderSrv();log('ui','servers','lock','OK','detail='+s.id+' locked='+s.lock);});
-  document.querySelectorAll('[data-join]').forEach(x=>x.ondblclick=()=>openJoin(SERVERS.find(y=>y.id===x.dataset.join)));
+  document.querySelectorAll('[data-lock]').forEach(x=>x.onclick=e=>{e.stopPropagation();const s=SERVERS.find(y=>y.sid===x.dataset.lock);s.lock=!s.lock;renderSrv();log('ui','servers','lock','OK','detail='+s.sid+' locked='+s.lock);});
+  document.querySelectorAll('[data-join]').forEach(x=>x.ondblclick=()=>openJoin(SERVERS.find(y=>y.sid===x.dataset.join)));
   document.querySelectorAll('[data-join]').forEach(x=>x.onclick=e=>{if(e.detail===1)log('ui','servers','select','OK','detail='+x.dataset.join+' single_click');});
+  document.querySelectorAll('[data-rename]').forEach(x=>x.onclick=e=>{e.stopPropagation();const s=SERVERS.find(y=>y.sid===x.dataset.rename);if(s)openRename(s);});
 }
 function buildPlan(){
   const cfg=DEVICE[DEVICE_TIER];
@@ -1602,7 +1706,7 @@ function updateBudget(){
   set('budFlight',PROBE.inflight+' / '+Math.max(0,PROBE.total-PROBE.done-PROBE.inflight));
   set('budSkip',PROBE.skipped);
   const bar=$('budBar');if(bar)bar.style.width=(PROBE.total?Math.round(PROBE.done/PROBE.total*100):0)+'%';
-  const hint=$('budHint');if(hint)hint.textContent=PROBE.cancelled?'已停止，不再发出新的连接；已经拿到的结果保留。':PROBE.running?'正在后台连接，界面先显示上次结果；慢的会自动跳过，随时可以停。':'按权重取前几台自动连；范围外的保留上次结果，不发请求。新加的服务器一定连，但总数还是卡在这个范围里。';
+  const hint=$('budHint');if(hint)hint.textContent=PROBE.cancelled?tr('srv.hintStop','已停止，不再发出新的连接；已经拿到的结果保留。'):PROBE.running?tr('srv.hintRun','正在后台连接，界面先显示上次结果；慢的会自动跳过，随时可以停。'):tr('srv.hintIdle','按权重取前几台自动连；范围外的保留上次结果，不发请求。新加的服务器一定连，但总数还是卡在这个范围里。');
 }
 function applyResult(s,soft){
   s.isNew=false;s.tried=true;s.probeSkip=null;
@@ -1661,29 +1765,46 @@ function srvScan(){
   log('ui','servers','servers_dat','OK','detail=visible=6 hidden=2 quickplay=1 readonly=true');
 }
 function srvForceOffline(){
-  const s=SERVERS.find(x=>x.id==='s2');s.ok=false;s.offlineMark=true;s.ping=null;s.motd='';renderSrv();
+  const s=SERVERS[1];s.ok=false;s.offlineMark=true;s.ping=null;s.motd='';renderSrv();
   $('srvScanLog').innerHTML='[KCU] 异步预算内 4 台 · 2 台范围外 · 2 台无成功记录<br>[KCU] 曾连上过但这轮连不上的排到最后，锁定的不动';
   log('ui','servers','offline','DEGRADE','detail=s2_timeout moved_to_bottom locked_unchanged');
 }
 function srvAdd(){
-  const s={id:'s'+(SERVERS.length+1),name:'新加的服务器',ip:'new.example',ver:'1.21.4',motd:'',online:0,max:0,ping:null,ok:false,lock:false,ever:false,tried:false,isNew:true,last:'刚刚',inst:'1.21.4 Fabric',src:'servers.dat'};
+  const s={id:'s'+(SERVERS.length+1),sid:'sv-new'+SERVERS.length,name:'新加的服务器',ip:'new.example',ver:'1.21.4',motd:'',online:0,max:0,ping:null,ok:false,lock:false,ever:false,tried:false,isNew:true,last:'刚刚',inst:'1.21.4 Fabric',src:'servers.dat'};
   SERVERS.forEach(x=>{x.isNew=false;});SERVERS.push(s);
   renderSrv();srvScan();
   log('ui','servers','add','OK','detail=fresh_force_probe budget_unchanged');
   srvProbe(false);
+}
+function openRename(s){
+  const body='<p style="font-size:13px;color:var(--ink);margin-bottom:10px">'+tr('srv.renameTitle','给服务器换个名字')+'</p>'+
+   '<input class="txt" id="rnInput" value="'+esc(s.name)+'" style="width:100%;margin-bottom:9px">'+
+   '<div class="attach" style="line-height:1.9">'+tr('srv.renameBody','名字可以重复，也可以随时改；改完只换显示名，之前的连接记录、排序与目录都留着。')+'</div>';
+  openDlg(tr('srv.renameTitle','给服务器换个名字'),body,'rename_'+s.sid);
+  $('mdActs').innerHTML='<button class="btn" id="rnCancel">'+tr('act.cancel','取消')+'</button><button class="btn primary" id="rnOk">'+tr('act.save','保存')+'</button>';
+  $('rnCancel').onclick=()=>closeDlg('cancel');
+  $('rnOk').onclick=()=>{
+    const v=($('rnInput').value||'').trim();
+    if(v){s.name=v;renderSrv();log('ui','servers','rename','OK','detail=sid='+s.sid+' unchanged=true');}
+    closeDlg('confirm');
+  };
+  $('rnInput').onkeydown=e=>{if(e.key==='Enter')$('rnOk').click();};
 }
 function openJoin(s){
   const body='<p style="font-size:13px;color:var(--ink);margin-bottom:10px">准备进入 <b>'+esc(s.name)+'</b>（'+esc(s.ip)+'）</p>'+
    '<div class="attach" style="line-height:1.9">上次玩这个服用的实例：<b>'+esc(s.inst)+'</b>'+(s.lock?' · 已锁定':'')+'<br>'+
    '上次用过的实例：<b>1.21.4 Fabric</b><br>版本兼容范围：'+esc(s.ver)+' / 1.21.4 / 1.21.1<br>'+
    '自动选定：<b>'+esc(s.inst)+'</b>'+(s.ok?'':'<br><span style="color:var(--warn)">这台服务器现在连不上，仍可尝试进入</span>')+'</div>';
-  openDlg('进入服务器',body,'join_'+s.id);
-  $('mdActs').innerHTML='<button class="btn" id="jnCancel">取消</button><button class="btn" id="jnOther">换实例</button><button class="btn primary" id="jnGo">进入</button>';
+  openDlg(tr('srv.join','进入服务器'),body,'join_'+s.sid);
+  $('mdActs').innerHTML='<button class="btn" id="jnCancel">'+tr('act.cancel','取消')+'</button><button class="btn" id="jnOther">'+tr('srv.other','换实例')+'</button><button class="btn primary" id="jnGo">'+tr('srv.enter','进入')+'</button>';
   $('jnCancel').onclick=()=>closeDlg('cancel');
   $('jnOther').onclick=()=>{closeDlg('other');show('instances');};
   $('jnGo').onclick=()=>{closeDlg('confirm');log('dispatcher','server','join','OK','detail='+s.id+' instance='+s.inst+' weight=user_last');};
 }
-renderSrv();buildPlan();renderSrv();updateBudget();
+renderSrv();buildPlan();renderSrv();updateBudget();applyI18n();
+if($('crashView'))$('crashView').onclick=()=>openDlg(tr('crash.view','看最近一次'),'<div class="attach" style="line-height:1.9">'+tr('crash.what1','出错时的窗口、版本、系统版本与出错前的操作步骤。')+'<br>'+tr('crash.state','未发送')+'</div>','crash_latest');
+if($('crashExport'))$('crashExport').onclick=()=>{$('crashState').textContent=tr('crash.local','只留在本地');log('ui','crash','export','OK','detail=local_only masked=true');};
+if($('setCrashMask'))$('setCrashMask').onchange=e=>log('ui','crash','mask','OK','detail='+(e.target.selectedIndex===0?'on':'off'));
 $('srvRecRefresh').onclick=()=>srvProbe(true);
 $('srvAdd').onclick=srvAdd;
 $('srvScan').onclick=srvScan;
@@ -1787,9 +1908,9 @@ for(const [d,a,t,r,x] of [
  ['ui','popup','close_all','OK','detail=11_catalog 0_open'],
  ['dispatcher','export','bundle','OK','detail=4_lines safe_mode'],
 ]) log(d,a,t,r,x);
-const hash=(location.hash.match(/view=([a-z-]+)/)||[])[1]||'home';
+const hash=(location.hash.match(/view=([a-z0-9-]+)/)||[])[1]||'home';
 show(hash);
-window.addEventListener('hashchange',()=>show((location.hash.match(/view=([a-z-]+)/)||[])[1]||'home'));
+window.addEventListener('hashchange',()=>show((location.hash.match(/view=([a-z0-9-]+)/)||[])[1]||'home'));
 </script>
 </body>
 </html>

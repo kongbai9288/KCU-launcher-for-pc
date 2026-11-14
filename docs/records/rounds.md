@@ -1927,3 +1927,72 @@ L3 落地：
 - 后端仓任何写请求
 - 浏览器内交互实测（截图为静态帧）、GUI 端到端、交叉编译
 - 1.20.5 / 1.21 是否改过 servers.dat 文件名或结构（未取得一手证据）
+
+## 023
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/23-round-023-instructions.txt | 逐字副本，1 行 698 字节，SHA-1 `a473ce3dfc83cad84b35991e6053358ccfbd234a` |
+| docs/decisions/023-architecture-answers.md | 三处偏差承认、六问逐条答复、9 层实现路线、H01-H06、Q01-Q04 |
+| docs/research/20-i18n-crash-identity.md | 18 个完整 URL 锚点、J01-J07、C05 标未证实 |
+| docs/design/ | stable-identity、i18n-policy、crash-reporting、implementation-strategy 四份 |
+| docs/features/ | F023-01 稳定标识 / F023-02 i18n 与崩溃设置 |
+| demos/ui-full-kcu-paper.html | 550+ i18n 标注点、中/EN 切换、sid 三分离、改名弹窗、同名两项、信号格延迟小字、崩溃反馈分组、许可表 22 组 |
+| demos/preview/ | 43 张产品视图 + 4 张内部证据图 + 总览，共 48 张 PNG |
+| 索引与规则 | decisions / features / research index、A97-A100、G23、docs/index 122 项必读、README、interface-log I67-I71 / RO75-RO81、push-scope、preview index、ux-logic-matrix U28 / C30-C34 / 023 自评 9.3 |
+| scripts/ | round023_ux.py、round023_i18n_cover.py、round023_docs.py、round023_index.py、render_ui.py 六个新场景 |
+| docs/verification/round-023.md | 第 023 轮独立验证报告 |
+
+用户六项质疑与处置：
+
+| 编号 | 质疑 | 处置 |
+| --- | --- | --- |
+| V01 | 同名服务器污染目录 | sid 三分离、目录 `C:\KCU\servers\<sid>`、白名单、改名不动 ID、同名两项演示 |
+| V02 | 文字硬编码 / i18n 选型 | 承认；演示层 `tr()` + 550+ 标注点 + 中/EN；实现层 Fluent `.ftl` + i18n-embed，源码零文案 |
+| V03 | 名字不能自定义 | 改名弹窗，取消 / ESC / × / 宿主可关，写 `sid unchanged=true` |
+| V04 | 信号格下标具体延迟 | 五格条下加 `42 ms` 等宽小字，连不上给「连不上」 |
+| V05 | 兼容性差，引入别人的崩溃分析系统 | 四层库映射、默认不外发、脱敏开、发送前确认、Win7 降级本地 dump、许可登记 |
+| V06 | 没按架构来，打算怎么实现 | 承认 L1-L3 纯 std 偏差；core 保留作底座，L4 起逐个能力接成熟库，trait 注入，9 层映射表与 H01-H06 |
+
+自评迭代：
+
+| 轮次 | 自评 | 发现的不足 | 补入 |
+| --- | --- | --- | --- |
+| 迭代 1 | 7.0 | 只答方案没改界面；目录键隐含名称；英文切换只覆盖导航 | sid 三分离、改名弹窗、i18n 字典初版 |
+| 迭代 2 | 8.5 | 英文界面一半中文；自动标注脚本生成多余尖括号与 `&gt;`；hash 正则吃掉场景名数字 | 扩到 550+ 标注点、修 HTML 形态、hash 正则支持数字 |
+| 迭代 3 | 9.3 | 补齐 18 个一手锚点、43 视图、崩溃分层与许可登记、实现路线 | Q01-Q04、U28、C30-C34，收口 |
+
+本轮真实缺陷与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E01 | 自动标注正则把 `>` 吞进 group3，生成 `data-i18n="&gt;中文"` 与多余 `>`，界面出现属性文本 | 改回 `([^>]*>)` 口径、删多余 `>`、还原 390 处属性与 91 处 value |
+| E02 | stack 说明 div 的属性被当裸文本插入 | 把属性移回标签内并补两条说明的 key |
+| E03 | 初始化 hash 正则 `view=([a-z-]+)` 把 `i18n-en` 截成 `i`，英文场景空白 | 改为 `view=([a-z0-9-]+)`，两处 |
+| E04 | 底部导航 `nav.settings` / `nav.about` 缺英文映射 | 补进 EN 字典 |
+| E05 | 首版英文截图设置卡片与说明仍中文 | 自动标注扩到 `.k` / `.hd` / `option` / `th` / `panel-title` / `panel-sub` / 说明 div |
+
+验证：
+
+| 命令 | 输出 | 四值 |
+| --- | --- | --- |
+| `python3 scripts/render_ui.py` | `render_ui OK shots=43`；`demos/preview/*.png` = 48 | 已证实 |
+| `node -e` 遍历 demos/*.html | ALL_JS_OK 18 | 已证实 |
+| `python3 -c compile` 脚本 | PY_OK | 已证实 |
+| `python3 scripts/p09_scan.py` | P09_HITS 0 | 已证实 |
+| `! grep -rqE 'gh[p]_' .` 与 `.git/config` | NO_CREDENTIAL / NO_TOKEN_IN_CONFIG | 已证实 |
+| 禁用词 / 品牌 / 外链 / 「同上」扫描 | 见验证报告 | 已证实 |
+| `grep -c 'data-i18n='` / `grep -c "sid:'sv-"` | 550+ / 10 | 已证实 |
+| `CARGO_INCREMENTAL=0 cargo test --offline` | 141 passed / 0 failed | 已证实 |
+| `git diff 832860d..HEAD -- src/ Cargo.lock` | 空 | 已证实 |
+| 真实 `.ftl` 集成、真实 minidump、真实上报、真实 Win7 构建、浏览器内点击 | 未实测 | 受阻 |
+| Q01-Q04 口径确认、用户按 43 张图给手感反馈 | 未发生 | 未证实 |
+
+阶段：D07 第 3 层 lightweight 已实现、已验证；023 轮只动演示层、设计层与文档，`src/` 与 Cargo.lock 无变化；L4 headless 及以下 6 层未启动。UI 实现按闸门等用户确认演示后进。
+
+未做：
+- UI 实现、真实 SLP 客户端、NBT 解析器、真实并发池与取消令牌
+- L4 headless 及以下 6 层、插件注册表与插件化更新实现、第三方依赖引入
+- CF F17 调用方法、X01-X04 逐条处置、特殊版代码、本项目 LICENSE
+- 后端仓任何写请求
+- 浏览器内交互实测（截图为静态帧）、GUI 端到端、交叉编译

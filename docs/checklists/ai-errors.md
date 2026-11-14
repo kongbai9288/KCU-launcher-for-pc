@@ -103,6 +103,10 @@
 | A94 | 服务器越多连接数越涨（关联 022 D02-D04） | `DEVICE` 档位表 limit / concurrency 双上限；新服仍占同一份额度，`buildPlan` 用 slice(0,limit) |
 | A95 | 把无成功记录的服务器沉底或反复重连（关联 022 D06） | `neverSuccess` 分组不进 probe 计划；`srvRank` 给 300 档中段；`37-servers-history.png` 可见 |
 | A96 | 取消后仍写新结果（关联 022 A04） | `applyResult` 前检查 `PROBE.cancelled`；取消后 inflight 归零、队列清空 |
+| A97 | 用显示名拼目录 / 缓存键（关联 023 Q1） | SERVERS 每项带 `sid`；`data-lock` / `data-join` / `data-rename` 全用 sid；`C:\KCU\servers\<sid>` 只含白名单字符 |
+| A98 | 界面文案写死在渲染代码里（关联 023 Q2） | `grep -c 'data-i18n='` > 500；动态文本走 `tr()`；`41-i18n-en.png` 英文可见 |
+| A99 | 崩溃信息默认外传（关联 023 Q5） | `setCrashOn` 默认不记录、`setCrashAddr` 可空、脱敏默认开、发送前确认 |
+| A100 | 拿第三方库不登记许可证（关联 023 H02） | 关于页 22 组、`THIRD-PARTY-NOTICES.md` 新增 6 组候选均标「未进构建」 |
 
 ## 输出结构
 

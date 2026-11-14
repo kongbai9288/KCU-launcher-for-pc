@@ -228,3 +228,23 @@ python3 scripts/render_ui.py
 ```
 
 022 手感回路不变：先看图 → 提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 与 Cargo.lock 无变化。
+
+## 023 增补
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| G23 | i18n / 改名 / 延迟 / 崩溃反馈 | 动界面轮次必须给语言切换证据、改名弹窗、信号格具体延迟、崩溃反馈设置分组各一张截图 |
+
+023 检查命令：
+
+```
+grep -c 'data-i18n=' demos/ui-full-kcu-paper.html
+grep -c "sid:'sv-" demos/ui-full-kcu-paper.html
+test -f demos/preview/41-i18n-en.png
+test -f demos/preview/39-servers-rename.png
+test -f demos/preview/42-settings-crash.png
+python3 scripts/p09_scan.py
+python3 scripts/render_ui.py
+```
+
+023 手感回路不变：先看图 → 提意见 → 先改演示与截图 → 确认后才改实现。本轮 `src/` 与 Cargo.lock 无变化。

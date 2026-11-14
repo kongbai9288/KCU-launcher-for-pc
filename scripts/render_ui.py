@@ -50,6 +50,12 @@ SCENES = [
     ("35-servers-locked", "servers-locked", "连不上沉底 · 锁定保持靠前"),
     ("36-servers-budget", "servers-budget", "设备连接范围 · 异步队列"),
     ("37-servers-history", "servers-history", "轻量档 · 无成功记录按权重排序"),
+    ("38-servers-latency", "servers", "信号格下标注具体延迟"),
+    ("39-servers-rename", "servers-rename", "服务器改名弹窗"),
+    ("40-servers-samenames", "servers-samenames", "同名服务器各自独立"),
+    ("41-i18n-en", "i18n-en", "界面语言切换 · English"),
+    ("42-settings-crash", "settings&tab=crash", "设置 · 崩溃反馈"),
+    ("43-licenses-updated", "licenses", "第三方许可 · 新增候选 6 组"),
 ]
 
 W, H = 1440, 900
@@ -93,7 +99,7 @@ def shots():
         for i, (name, scene, _title) in enumerate(SCENES):
             page.goto(HTML.as_uri() + "?r=" + str(i) + "#view=" + scene, wait_until="load")
             page.evaluate("document.fonts.ready")
-            page.wait_for_timeout(1200 if name in ("36-servers-budget", "37-servers-history") else 300)
+            page.wait_for_timeout(1200 if name in ("36-servers-budget", "37-servers-history") else 420)
             path = OUT / (name + ".png")
             page.screenshot(path=str(path))
             results.append((name, path))

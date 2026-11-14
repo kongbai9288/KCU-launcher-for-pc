@@ -53,6 +53,8 @@
 | F021-04 | 产品界面去工程化 | ui.demo / copy | 已实现、已验证（演示层） | ui-product-copy.md |
 | F022-01 | 异步探测与设备连接范围 | ui.demo / servers.probe | 已实现、已验证（演示层） | server-async-probe.md |
 | F022-02 | 失败历史分类与权重排序 | ui.demo / servers.rank | 已实现、已验证（演示层） | server-failure-history.md |
+| F023-01 | 稳定标识、同名与改名 | ui.demo / servers.identity | 已实现、已验证（演示层） | stable-identity-rename.md |
+| F023-02 | i18n 切换与崩溃反馈设置 | ui.demo / i18n + settings.crash | 已实现、已验证（演示层） | i18n-crash-settings.md |
 
 F001 状态含义：设计稿已获确认并逐字落盘；未实现、未进入构建。轻量模式排除见 docs/decisions/007-normal-ui.md。
 F002-F012 状态含义：需求条目已登记；未实现、未进入构建。
@@ -134,6 +136,9 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | G38 | 自动连接异步、并发有上限、队列有界、可取消；总额卡在设备档位内。 |
 | G39 | 新加服务器一定连一次但不扩总额度；范围外保留上次结果、不发请求。 |
 | G40 | 无成功案例且测过的不主动重连、按缓存权重排中段；曾成功但本轮失败沉底；锁定不受影响。 |
+| G41 | 显示名不进路径；目录与缓存按稳定 ID；同名允许、改名不动 ID。 |
+| G42 | 界面文案走 key，日志与诊断行不本地化；语言包可插件追加。 |
+| G43 | 崩溃库默认不外发、脱敏默认开、发送前二次确认；Win7 降级本地 dump。 |
 
 ## 018 轮纸质 UX 界面
 

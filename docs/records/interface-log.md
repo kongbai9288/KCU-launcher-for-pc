@@ -406,6 +406,26 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | RO73 | 37 张产品截图 / 4 张内部证据图 / 1 张总览；26 区块、26 逻辑条、88 symbol、9+9 tabs-panes。 |
 | RO74 | Q01-Q03 为本轮自主拍板口径，待用户确认，只落 docs/，不写进产品界面。 |
 
+## 023 标识 / i18n / 崩溃反馈
+
+| 编号 | 接口 | 输入 | 输出 | 错误 |
+| --- | --- | --- | --- | --- |
+| I67 | `tr(k, fb)` / `applyI18n()` / `setLang(l)` | key / locale | 本地化文本 | 缺 key 回退 fb |
+| I68 | `openRename(s)` / `data-rename` | sid | 改名弹窗 | 空名不保存 |
+| I69 | `setCrashOn` / `setCrashAddr` / `setCrashMask` | 值 | 崩溃策略 | 无 |
+| I70 | `crashView` / `crashExport` | 无 | 预览 / 本地导出 | 无 dump 空态 |
+| I71 | `servers-rename` / `servers-samenames` / `i18n-en` 路由别名 | 无 | 演示场景 | 无 |
+
+| 编号 | 内容 |
+| --- | --- |
+| RO75 | 023 对后端仓 0 个写请求，约束延续 RO01-RO74。 |
+| RO76 | spec 逐字副本 1 行 698 字节，SHA-1 `a473ce3dfc83cad84b35991e6053358ccfbd234a`。 |
+| RO77 | `sid = UUIDv5(KCU_NAMESPACE, normalize(ip:port))`；目录与缓存只按 sid；显示名可重复可改。 |
+| RO78 | 演示层 550+ 个 `data-i18n` 标注点；日志与 `[KCU]` 诊断行不进字典。 |
+| RO79 | 崩溃库四层候选全部标「未进构建」；默认不记录、脱敏开、发送前确认、Win7 降级本地 dump。 |
+| RO80 | 43 张产品截图 / 4 张内部证据图 / 1 张总览；26 区块、26 逻辑条、88 symbol、10 个设置 tab-pane。 |
+| RO81 | Q01-Q04 为本轮自主拍板口径，待用户确认，只落 docs/，不写进产品界面。 |
+
 ## 版本弃用
 
 | 接口 | 行为 |
