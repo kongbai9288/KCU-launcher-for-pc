@@ -2266,3 +2266,32 @@ L3 落地：
 | E27 | 自查抓到计数写错：签名数 19、命中文件 9 | 回 HEAD 逐文件复核得 15 个签名 / 8 个文件，全仓文档与演示统一；第 9 个模块是 launcher.rs 的调用面适配 |
 
 028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 034
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/34-round-034-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/034-semver-version-matching.md | D01-D09 依据与依赖、M01-M05 口径、用户逻辑推演、B10-B14 差异、E28-E29、四值 |
+| docs/verification/round-034.md | 14 条复跑证据 |
+| demos/round-034-semver.html | 13 步运行逻辑演示 |
+| src/core/instance.rs | 三处自写字符串比较换 `semver`，新增 8 个测试，240 行 |
+| vendor/semver/ + Cargo.toml/lock | 13 包 / 12 第三方，零传递依赖 |
+| docs/licenses/semver-LICENSE-*.txt | MIT 与 Apache-2.0 全文 |
+| demos/ui-full-kcu-paper.html | 关于页许可七列表新增 semver（11 → 12 组），计数 33 → 34 |
+| 索引与记录 | docs/index 166 项、README、decisions/index、licenses/index、ai-errors A85-A87、code-ownership-audit、implementation-strategy、THIRD-PARTY-NOTICES、interface-log、rounds |
+
+「干」继续替换自写代码：`core/instance.rs` 的 `==` / `contains` 三处版本字符串比较换成 `semver 1.0.28` 的 `Version::cmp_precedence` 与 `VersionReq::matches`。精确串相等保留（MC 快照版本）、普通三段版本不被当 caret 放宽、显式范围符号才走范围解析、解析失败不崩。用户指定实例排第一与习惯权重排序未动。
+
+**本轮是扩展，不是纯等价替换**：新增 `+build` 元数据归一与 `1.20.x` / `>=1.20.0, <1.21.0` 范围匹配；原有 5 个测试全部通过。带前缀版本名（如 `Paper 1.20.4`）当前仍走回退不匹配，标未证实，没有一手资料前不擅自 stripping。
+
+界面闸门**未触发**：本轮不动界面布局，只更新关于页许可表数据并重渲 4 张许可相关截图。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E28 | 首版用 `Version::eq` 判同版本，`build_metadata_is_ignored_by_the_library` 失败 | 独立小程复核 `==` 包含 build 元数据，改 `cmp_precedence(..) == Ordering::Equal`，161 / 0 |
+| E29 | 普通 `1.20.4` 交给 `VersionReq` 会当 `^1.20.4` 误匹配 `1.21.1` | 立 M04，只在显式带范围符号时走范围解析 |
+
+028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。

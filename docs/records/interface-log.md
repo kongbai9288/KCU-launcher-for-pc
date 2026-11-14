@@ -472,3 +472,10 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | --- | --- | --- |
 | I36 | 9 个模块的 `Result<T, String>` | 全部改 `anyhow::Result<T>`；`unwrap_err()` 调用面需 `.to_string()` |
 | S32 | 状态 | Q-031-01 已结案（A = answer 缩写）；031 / 032 口径不变；F028-03 实现层未启动 |
+
+## 034 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I37 | `core/instance.rs` | 新增 `versions_match`；`select_instance` 调用面不变，兼容判定口径扩展 |
+| S33 | 状态 | B11 / B12 已证实；B14 带前缀版本名未证实；F028-03 实现层未启动 |

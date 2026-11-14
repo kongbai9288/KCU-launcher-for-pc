@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 034 版本匹配交给 semver</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:112px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>034 运行逻辑</h1><div class="sub">版本匹配库化 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>替换对象</h3><p id="m1">未运行</p><span class="badge g">3 处字符串比较</span><span class="badge g">semver 1.0.28</span></div>
+<div class="mini"><h3>五条口径</h3><p id="m2">未运行</p><span class="badge r">普通版本不放宽</span><span class="badge r">解析失败不崩</span></div>
+<div class="mini"><h3>用户逻辑</h3><p id="m3">未运行</p><span class="badge g">用户指定排第一</span><span class="badge g">快照回退保留</span></div>
+<div class="mini"><h3>验证</h3><p id="m4">未运行</p><span class="badge g">161 / 0</span><span class="badge g">13 包 12 第三方</span></div>
+</div><div class="note" id="note">本轮是扩展，不是纯等价替换：新增 build 元数据归一与显式范围匹配；原有 5 个测试全部通过。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','读索引 166 项、033 结论、024 台账'],
+['02','逐字落盘','34-round-034-instructions.txt'],
+['03','选替换对象','instance.rs 三处 == / contains 版本字符串比较'],
+['04','核 semver','1.0.28 零传递依赖，MIT OR Apache-2.0'],
+['05','vendor 落盘','裁 optional serde / 恒假 target / dev / bench'],
+['06','精确串回退','23w31a 这类 MC 快照直接命中'],
+['07','范围符号判定','^ ~ > < = * , | x X 空格才走 VersionReq'],
+['08','同版本判定','Version::cmp_precedence 忽略 +build'],
+['09','不放宽普通串','1.20.4 不会被当 ^1.20.4'],
+['10','用户逻辑核对','锁定实例仍排第一，权重排序未动'],
+['11','E28 修复','== 含 build 元数据，改 cmp_precedence'],
+['12','测试回归','161 passed / 0 failed，新增 8 测试'],
+['13','提交推送','双扫描 → 本地提交 → 远端快照比对']];
+const DETAIL={'01':'REQ 166/166 OK','02':'SPEC cmp 0','03':'TARGET 3_string_compares','04':'VENDOR semver 1.0.28 transdeps=0','05':'UPSTREAM src_bytes_unchanged','06':'M01 exact_string_fallback','07':'M02 range_symbol_gate','08':'M03 cmp_precedence build_ignored','09':'M04 plain_version_not_caret','10':'USERLOCK first habit_kept','11':'E28 fixed eq_to_cmp_precedence','12':'TEST 161 passed 0 failed','13':'PUSH remote_snapshot ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'选替换对象','04':'依赖核查','05':'vendor 落盘','06':'回退口径','07':'范围口径','08':'同版本口径','09':'放宽防护','10':'用户逻辑','11':'失败修复','12':'测试回归','13':'提交推送'};
+const QN=new Set(['06','07','08','09','10']);
+const M={'03':['m1','`core/instance.rs` 三处 `==` / `contains` 自写字符串比较 → `semver 1.0.28`；权重打分、用户指定排第一仍是项目特有编排约 35 行。'],'09':['m2','M01 精确串先判；M02 仅显式范围符号走 `VersionReq`；M03 `cmp_precedence` 忽略 build；M04 普通 `1.20.4` 不当 caret；M05 解析失败返回 false 不崩。'],'10':['m3','双击进服的锁定实例仍排第一、习惯权重排序未动；服务器返回 `1.20.4+paper.381` 现在能匹配本地 `1.20.4`；快照 `23w31a` 走精确串回退。'],'12':['m4','153 → 161 / 0，新增 build 元数据、预发布、范围边界、通配符、快照、畸形串、不放宽、权重范围 8 个测试；13 包 / 12 第三方。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','core.target','core.vendor','core.upstream','q.fallback','q.range','q.precedence','q.guard','q.userflow','q.fix','core.test','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='版本匹配已库化，带前缀版本名仍标未证实；自动命令实现层与真实运行时仍等你。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='本轮是扩展，不是纯等价替换：新增 build 元数据归一与显式范围匹配；原有 5 个测试全部通过。';}
+</script></body></html>

@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 033 |
+| 当前轮次 | 034 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -143,3 +143,9 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 9 个模块共 15 个 `Result<T, String>` 换成 `anyhow 1.0.104` 的 `anyhow::Result<T>`，错误构造改 `anyhow::anyhow!`，`?` 直传保留原始错误类型。零传递依赖，`Cargo.lock` 12 包 / 11 第三方，`cargo test --offline` 153/0。
 
 032 预告的 `paths.rs → dirs` 核完不成立（语义不匹配 + Windows 分支不可验证），改走错误类型这块，理由见 `docs/decisions/033-answer-abbr-and-anyhow.md`。
+
+## 034 版本匹配交给 semver
+
+`core/instance.rs` 三处自写字符串比较换成 `semver 1.0.28`：精确串相等保留（MC 快照版本）、普通三段版本不被当 caret 放宽、显式范围符号才走 `VersionReq`、解析失败不崩。新增 `+build` 元数据归一与 `1.20.x` / `>=1.20.0, <1.21.0` 范围匹配；用户指定实例排第一与习惯权重排序未动。
+
+零传递依赖，`Cargo.lock` 13 包 / 12 第三方，`cargo test --offline` 161/0。带前缀版本名（如 `Paper 1.20.4`）当前仍走回退，标未证实。口径与行为差异见 `docs/decisions/034-semver-version-matching.md`。

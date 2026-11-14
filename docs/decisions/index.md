@@ -69,3 +69,5 @@
 | 032 | 用户可选松档；日志门面换 log crate | A 已落地、B 已实现 | 032-user-selectable-tiers.md |
 
 | 033 | Q-031-01 结案（A=answer 缩写）；错误处理换 anyhow | A 已结案、B 已实现 | 033-answer-abbr-and-anyhow.md |
+
+| 034 | 版本匹配交给 semver 1.0.28 | 已实现 | 034-semver-version-matching.md |

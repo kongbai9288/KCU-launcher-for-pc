@@ -195,3 +195,16 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | --- | --- |
 | N26 | 零传递依赖；`[dev-dependencies]` 裁掉，`src/` 与 `build.rs` 逐字节未改。 |
 | N27 | MIT 条款要求保留版权与许可声明，全文随发行物附上；Apache-2.0 全文一并保留供选择。 |
+
+## 034 新增已进构建依赖
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| semver | 1.0.28 | MIT OR Apache-2.0（按 MIT 用） | David Tolnay | 版本解析与范围匹配 | vendor/semver | 构建中已使用 |
+
+许可证全文：`docs/licenses/semver-LICENSE-MIT.txt`、`docs/licenses/semver-LICENSE-APACHE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N28 | 零传递依赖；裁掉 optional serde_core、恒假 target 段、dev-deps、bench 与元数据，`src/` 逐字节未改。 |
+| N29 | MIT 条款要求保留版权与许可声明，全文随发行物附上；Apache-2.0 全文一并保留供选择。 |
