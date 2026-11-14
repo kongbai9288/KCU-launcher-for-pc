@@ -178,3 +178,19 @@
 | 编号 | 文档 | 来源数 | 主题 |
 | --- | --- | --- | --- |
 | R20 | 20-server-log-events.md | 15 条来源 / 13 个独立 URL | 日志格式、实时读取、声明式正则、PlayerJoinEvent、活跃度饼图、脱敏约束 |
+
+## 029 轮新增
+
+| 编号 | 文档 | 主题 |
+| --- | --- | --- |
+| R21 | 029-cache-lru.md 的 T01-T04 / C01-C04 | 缓存库依赖闭包与 Send/Sync 的源码级核查 |
+
+完整 URL：
+
+- https://github.com/jeromefroe/lru-rs/tree/0.12.5
+- https://api.github.com/repos/jeromefroe/lru-rs/contents/Cargo.toml?ref=0.12.5
+- https://codeload.github.com/jeromefroe/lru-rs/tar.gz/refs/tags/0.12.5
+- https://github.com/moka-rs/mini-moka/tree/v0.10.3
+- https://github.com/arthurprs/quick-cache/tree/v0.6.18
+- https://github.com/contain-rs/linked-hash-map/tree/v0.5.6
+- https://api.github.com/repos/jeromefroe/lru-rs/tags?per_page=20

@@ -2104,3 +2104,30 @@ L3 落地：
 | E09 | 删除自写类型带走 2 个自带测试，141 → 139 | 如实登记差值，等价断言迁移到 `Arc::strong_count` / `Weak::upgrade` / `WaitGroup`，未降低验收项 |
 
 未做：三项功能实现、UI 实现、真实服务端联调、浏览器图表渲染、cache / launcher / lightweight 替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 029
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/29-round-029-instructions.txt | 逐字副本「干」 |
+| docs/decisions/029-cache-lru.md | T01-T04 mini-moka 失败回显、C01-C04 lru 落地、权属变化、B10-B14、四值 |
+| docs/verification/round-029.md | 14 条复跑证据 |
+| demos/round-029-cache.html | 13 步运行逻辑演示（含换轨分支） |
+| src/core/cache.rs | 手写 HashMap / VecDeque / HashSet / Condvar / 淘汰循环删除，换 `lru::LruCache` + `crossbeam-channel` |
+| src/core/leak.rs | `WeakRegistry` 补 `remove` / `clear`（std HashMap 薄封装） |
+| Cargo.toml / Cargo.lock / vendor/ | 9 包 8 第三方；删 mini-moka 闭包 4 目录，加 lru 单包 |
+| docs/licenses/lru-LICENSE.txt | MIT 全文 1071 字节 |
+| demos/ui-full-kcu-paper.html / demos/preview/ | 关于页 8 组「构建中已使用」，43 张截图重渲 |
+| 索引与记录 | docs/index 141 项、README、decisions/index、026 决策更新、research/index、licenses/index、ai-errors A70-A72、code-ownership-audit、implementation-strategy、THIRD-PARTY-NOTICES、rounds |
+
+「干」继续替换自写代码，按 026 留下的 N03（换更浅的缓存库）落地。
+
+本轮真实失败与换轨：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E10 | mini-moka 0.10.3 `unsync::Cache` 内部 `Rc<K>`，`Mutex<unsync::Cache>` 不是 `Sync`，`Arc<Cache>` 跨线程报 `E0277` | 判定已失败，不重走 `sync::Cache` 的 dashmap → libc 老路，按 N03 换 lru |
+| E11 | triomphe 裁掉 `[dependencies]` 后 `[features] default` 仍引用 serde / stable_deref_trait，cargo 拒绝解析 | 改写 features 段为 `default = ["std"]`（最终 lru 路线下该包已删除） |
+| E12 | 首次接入 mini-moka 后 `cache.rs` 仍 `use mini_moka`，编译报 unresolved crate | 换依赖后同步改源码 import，复跑通过 |
+
+未做：三项开服器新功能实现（028「只记文档」约束延续）、UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。

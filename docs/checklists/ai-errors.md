@@ -134,3 +134,11 @@
 | A67 | 日志格式不写死单一模式：版本 / 加载器 / 插件前缀不同，用多组正则 + 捕获组索引 + 用户自定义。 |
 | A68 | 事件与目录键用 sid，不用玩家名；名字可重复且可自定义。 |
 | A69 | 检索结果里 `github.org` 这类异常域名标未证实，不据此复制仓库或许可证。 |
+
+## 029 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A70 | 引入缓存/并发库前先核 `Send + Sync`：`unsync` 变体可能内部用 `Rc<K>`，外面套 `Mutex` 也不能跨 `Arc` 共享。 |
+| A71 | 裁 manifest 时删了 optional 依赖，必须同步删 `[features]` 里对它的引用，否则 cargo 报 `feature ... includes ... which is neither a dependency nor another feature`。 |
+| A72 | 单飞广播要留持久 `completed` 状态：只在完成时 drain waiters，后到等待者会挂到空队列上超时。 |

@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 028 |
+| 当前轮次 | 029 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -107,3 +107,9 @@
 玩家上线提醒、饼图分析活跃度、自动命令支持把服务器出现的命令文字作为触发条件，逐字登记并各写一份五字段功能 md，补 15 条来源标注与运行逻辑演示；`src/server` 不存在、UI 整页演示未触发。
 
 「干」继续替换自写代码：`src/core/leak.rs` 删掉自写 `Tracker` / `Tracked` 计数（191 → 99 行），测试迁移到 `Arc::strong_count` 与 027 的 `crossbeam_utils::sync::WaitGroup`；依赖仍 8 包 7 第三方，`cargo test --offline` 139 / 0。详见 `docs/decisions/028-server-features.md`。
+
+## 029 缓存块换成 lru
+
+`src/core/cache.rs` 的手写 `HashMap` 主存、`VecDeque` LRU 顺序、`HashSet` 去重、容量淘汰循环、`Mutex<bool> + Condvar` 单飞全部删除；容量与 LRU 交给 `lru 0.12.5`（单包、零传递依赖、MIT），等待/超时/唤醒交给 `crossbeam-channel`，弱引用表复用 028 的 `WeakRegistry`。`Cargo.lock` 9 包、8 个第三方 crate，`cargo test --offline` 141/0。
+
+中途试过 mini-moka 0.10.3 的 `unsync::Cache`：5 包闭包可构建，但内部 `Rc<K>` 不 `Send`，`Arc<Cache>` 跨线程编译失败，按 026 的 N03 换轨。`sync::Cache` 会回到 dashmap → libc 老路，未重走。详见 `docs/decisions/029-cache-lru.md`。

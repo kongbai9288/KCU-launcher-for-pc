@@ -120,3 +120,11 @@
 | crossbeam-utils-LICENSE-MIT.txt / crossbeam-utils-LICENSE-APACHE.txt | crossbeam-utils 0.8.23 | MIT OR Apache-2.0 |
 
 来源：crossbeam-rs/crossbeam 对应 tag 打包内的 LICENSE 文件，逐字副本。
+
+## 029 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| lru-LICENSE.txt | lru 0.12.5 | MIT |
+
+来源：jeromefroe/lru-rs tag `0.12.5` 内的 LICENSE，逐字副本，1071 字节。

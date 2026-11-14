@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 029 缓存替换运行逻辑</title>
+<style>
+:root{
+  --paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;
+  --line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:6px;max-height:680px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}
+.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.fail{border-color:var(--red);color:var(--red)}
+.node.on.fail{background:var(--red);color:#fff;border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}
+.node .t{font-weight:600}
+.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}
+button:hover{border-color:var(--teal)}
+button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}
+.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff;min-height:118px}
+.mini h3{font:600 13px Georgia,serif;margin:0 0 6px;color:var(--teal)}
+.mini p{margin:4px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}
+.badge.g{color:var(--teal);border-color:var(--teal)}
+.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:300px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>029 运行逻辑</h1>
+    <div class="sub">缓存替换 · 两次失败回显 · 非整页 UX 演示</div>
+    <div class="bar">
+      <button class="pri" onclick="run()">▶ 逐步执行</button>
+      <button onclick="reset()">重置</button>
+    </div>
+    <div class="flow" id="flow"></div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="kv">
+        <b>当前步骤</b><span id="step">—</span>
+        <b>阶段</b><span id="phase">待执行</span>
+        <b>统一信封</b><span id="env">—</span>
+      </div>
+      <div class="grid">
+        <div class="mini">
+          <h3>阶段一 · mini-moka unsync</h3>
+          <p id="m1">未运行</p>
+          <span class="badge g" id="b1">5 包闭包</span>
+          <span class="badge r">Rc&lt;K&gt; 不 Send</span>
+          <span class="badge r">E0277 已失败</span>
+        </div>
+        <div class="mini">
+          <h3>阶段二 · lru 0.12.5</h3>
+          <p id="m2">未运行</p>
+          <span class="badge g" id="b2">单包零依赖</span>
+          <span class="badge g">Send + Sync</span>
+          <span class="badge">MIT</span>
+        </div>
+        <div class="mini">
+          <h3>删掉的自写结构</h3>
+          <p id="m3">未运行</p>
+          <span class="badge r">HashMap 主存</span>
+          <span class="badge r">VecDeque 顺序</span>
+          <span class="badge r">HashSet 去重</span>
+          <span class="badge r">Condvar 单飞</span>
+        </div>
+        <div class="mini">
+          <h3>验证</h3>
+          <p id="m4">未运行</p>
+          <span class="badge g">141 / 0</span>
+          <span class="badge g">9 包 8 第三方</span>
+          <span class="badge">ALL_MATCH</span>
+        </div>
+      </div>
+      <div class="note" id="note">026 留下的 N03「换更浅的缓存库」落地；N01 / N02 未使用，保留为历史选项。</div>
+    </div>
+    <div class="card log">
+      <div class="tag">[KCU] 诊断行 / 统一信封</div>
+      <pre id="out">等待执行…</pre>
+    </div>
+  </div>
+</div>
+
+<script>
+const NODES = [
+  ['01','开工预检','读索引 141 项、024 替换映射、026 N01-N03'],
+  ['02','阶段一：mini-moka','关 default-features，裁 dashmap，补 4 个传递包'],
+  ['03','闭包构建','5 包可编译，无 libc / wasm / proc-macro'],
+  ['04','E11 失败','triomphe features 引用已删依赖，cargo 拒绝解析'],
+  ['05','E10 失败','unsync::Cache 内部 Rc<K>，Mutex 不 Sync，Arc 跨线程 E0277'],
+  ['06','换轨判定','sync::Cache 会回到 dashmap → libc 老路；选 N03'],
+  ['07','候选核查','quick-cache / lru / linked-hash-map tag manifest'],
+  ['08','选定 lru','0.12.5 关 hashbrown，纯 std HashMap，单包 Send/Sync'],
+  ['09','vendor 落地','精准提取 src + LICENSE，裁 manifest，上游源码未改'],
+  ['10','cache.rs 重写','LruCache 管容量淘汰，crossbeam 管等待唤醒'],
+  ['11','单飞边界','持久 completed 状态，后到等待者不挂空队列'],
+  ['12','测试回归','141 passed / 0 failed，原 8 断言未改 + 2 新测'],
+  ['13','许可与推送','MIT 全文、关于页 8 组、双扫描、远端快照']
+];
+const DETAIL = {
+  '01':'REQ 141/141 OK',
+  '02':'VENDOR mini-moka 5pkg dashmap=off',
+  '03':'BUILD 5pkg OK libc=absent',
+  '04':'ERR feature default includes serde',
+  '05':'ERR E0277 Rc<K> cannot be sent',
+  '06':'BRANCH N03 lru no libc_path',
+  '07':'DOC 3 candidates ttl_cache=404',
+  '08':'SELECT lru 0.12.5 deps=0 Send=1',
+  '09':'VENDOR 15863B src_unmodified=true',
+  '10':'CACHE LruCache+WeakRegistry condvar=0',
+  '11':'SINGLE_FLIGHT completed=persistent',
+  '12':'TEST 141 passed 0 failed',
+  '13':'PUSH remote_snapshot ALL_MATCH'
+};
+const PHASE = {
+  '01':'开工预检','02':'阶段一','03':'阶段一','04':'失败回显','05':'失败回显',
+  '06':'换轨判定','07':'阶段二','08':'阶段二','09':'阶段二','10':'代码重写',
+  '11':'边界测试','12':'测试回归','13':'提交推送'
+};
+const FAIL = new Set(['04','05']);
+const M = {
+  '04':['m1','b1','triomphe 裁掉 optional 依赖后 features 仍引用 serde，cargo 拒绝解析；改写 features 段。'],
+  '05':['m1','b1','unsync::Cache 用 Rc<K> 作键，Mutex 包裹仍不 Sync；Arc<Cache> 跨线程 E0277，判定已失败。'],
+  '08':['m2','b2','lru 0.12.5 关掉 hashbrown 默认特性后只用 std HashMap，单包零传递依赖、Send/Sync、MIT。'],
+  '10':['m3',null,'HashMap / VecDeque / HashSet / 淘汰循环 / Condvar 单飞全部删除；实现段约 190 → 140 行。'],
+  '12':['m4',null,'141 passed / 0 failed；Cargo.lock 9 包 8 第三方；新增 2 个并发边界测试。']
+};
+let lines = [];
+const flow = document.getElementById('flow');
+NODES.forEach((n,i)=>{
+  const d=document.createElement('div');
+  d.className='node'+(FAIL.has(n[0])?' fail':''); d.id='nd'+i;
+  d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';
+  d.onclick=()=>paint(i);
+  flow.appendChild(d);
+});
+function envelope(i){
+  const k=['core.start','core.vendor','core.build','core.err','core.err','core.branch',
+           'core.doc','core.select','core.vendor','core.cache','core.flight','core.test','core.push'];
+  return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' '+['OK','OK','OK','FAIL','FAIL','OK','OK','OK','OK','OK','OK','OK','OK'][i];
+}
+function paint(i){
+  document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));
+  const n=NODES[i];
+  document.getElementById('step').textContent=n[0]+' · '+n[1];
+  document.getElementById('phase').textContent=PHASE[n[0]];
+  document.getElementById('env').textContent=envelope(i);
+  const st=FAIL.has(n[0])?'FAIL':'OK';
+  const line='[KCU] '+n[0]+' '+['core','core','core','core','core','core','core','core','core','core','core','core','core'][i]+' '+n[0]+' '+st+' '+DETAIL[n[0]];
+  lines=lines.slice(0,i); lines.push(line);
+  document.getElementById('out').textContent=lines.join('\n');
+  for(let k=1;k<=i+1;k++){
+    const key=String(k).padStart(2,'0');
+    if(M[key]){
+      const [a,b,txt]=M[key];
+      document.getElementById(a).textContent=txt;
+      if(b) document.getElementById(b).textContent=key==='08'?'单包零依赖':'5 包闭包';
+    }
+  }
+  if(i===12) document.getElementById('note').textContent='N03 落地：手写缓存数据结构清零；mini-moka 的两次失败留痕未删除；src/ 里 launcher 与 lightweight 业务模块仍自写。';
+}
+function run(){
+  reset(); let i=0;
+  const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);
+}
+function reset(){
+  lines=[];
+  document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));
+  document.getElementById('step').textContent='—';
+  document.getElementById('phase').textContent='待执行';
+  document.getElementById('env').textContent='—';
+  ['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');
+  document.getElementById('out').textContent='等待执行…';
+  document.getElementById('note').textContent='026 留下的 N03「换更浅的缓存库」落地；N01 / N02 未使用，保留为历史选项。';
+}
+</script>
+</body>
+</html>

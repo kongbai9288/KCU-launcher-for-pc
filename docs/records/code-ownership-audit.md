@@ -147,3 +147,19 @@
 027 删掉的自写并发：`std::sync::mpsc` 多源竞速、`Arc<AtomicUsize>` + `LiveGuard` + Drop 递减、`Vec<JoinHandle>` 手工 join 循环；换成 `crossbeam_channel::unbounded/recv_timeout`、`crossbeam_utils::thread::scope`、`crossbeam_utils::sync::WaitGroup`。详见 `docs/decisions/027-crossbeam-replacement.md`。
 
 剩余自写模块：cache / leak / launcher / lightweight 与其余 core，按本文件映射继续推进。
+
+## 029 第三块替换后状态
+
+| 项 | 024 | 025 | 027 | 028 | 029 |
+| --- | --- | --- | --- | --- | --- |
+| 第三方 crate 进构建 | 0 | 5 | 7 | 7 | **8** |
+| `Cargo.lock` 包数 | 1 | 6 | 8 | 8 | 9 |
+| `dispatcher/json.rs` | 336 行手写解析器 | 77 行薄适配 | 77 | 77 | 77 |
+| `core/asynk.rs` | 258 行手写并发 | 258 | 250 行库化 | 250 | 250 |
+| `core/leak.rs` | 191 行自写计数 | 191 | 191 | 99 | 99（+2 薄封装方法） |
+| `core/cache.rs` | 304 行手写 LRU/TTL/单飞 | 304 | 304 | 304 | **327（实现段约 140）** |
+| `src/` 行数 | 4339 | 4081 | 4073 | 3986 | 4017 |
+
+029 删掉的自写数据结构：`HashMap` 主存、`VecDeque` LRU 顺序、`HashSet` 去重、`while len > capacity` 淘汰循环、手写 `Mutex<bool> + Condvar + Mutex<Option<V>>` 单飞。容量与 LRU 交给 `lru::LruCache`，等待/超时/唤醒交给 `crossbeam-channel`，弱引用表复用 028 的 `WeakRegistry`。TTL 保留 `Entry.expires_at` 惰性薄包装（约 10 行），单飞编排约 60 行属项目特有策略，均如实登记。
+
+剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135 与其余 core 业务模块，按本文件映射继续推进。

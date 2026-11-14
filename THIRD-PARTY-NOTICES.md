@@ -143,3 +143,16 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | --- | --- |
 | N18 | crossbeam 为 mono-repo，crate 子目录的 `no_atomic.rs` / `build-common.rs` 原本是指向仓库根的软链；vendor 时改为真实文件副本，上游 `src/` 未改。 |
 | N19 | 按 MIT 条款使用，Apache-2.0 全文同时随附。 |
+
+## 029 新增已进构建依赖
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| lru | 0.12.5 | MIT | Jerome Froelich (c) 2016 | 有界 LRU 容量与淘汰 | vendor/lru | 构建中已使用 |
+
+许可证全文：`docs/licenses/lru-LICENSE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N20 | 以 `default-features = false` 使用，避免引入 hashbrown；上游 `src/` 未改，manifest 裁掉 optional 依赖与 dev-deps 仅用于目录源构建。 |
+| N21 | MIT 条款要求保留版权与许可声明，全文随发行物附上。 |

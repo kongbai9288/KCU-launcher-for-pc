@@ -62,3 +62,7 @@
 ## 027 更新
 
 mini-moka 大闭包仍按 N01/N02/N03 挂着，未选定前不动 Cargo.toml。027 改用依赖闭包最浅的 crossbeam 两件套，把 `src/core/asynk.rs` 的手写并发原语替换完成，8 包 / 7 第三方、141 / 0 通过，详见 `docs/decisions/027-crossbeam-replacement.md`。
+
+## 029 更新：N03 已落地
+
+mini-moka 大闭包不再挂起。029 先试 mini-moka 0.10.3 的 `unsync::Cache`（关 `default-features`、裁掉 dashmap，5 包闭包可构建），但源码内部用 `Rc<K>`，`Mutex<unsync::Cache>` 不满足 `Sync`，`Arc<Cache>` 跨线程共享编译失败。按 N03 换成 `lru 0.12.5`（单包、零传递依赖、Send/Sync、MIT），`cargo test --offline` 141 / 0。详见 `docs/decisions/029-cache-lru.md`。N01 / N02 未使用，保留为历史选项。

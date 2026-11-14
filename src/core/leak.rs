@@ -35,6 +35,14 @@ where
         before - g.len()
     }
 
+    pub fn remove(&self, key: &K) -> Option<Weak<V>> {
+        self.map.lock().unwrap().remove(key)
+    }
+
+    pub fn clear(&self) {
+        self.map.lock().unwrap().clear();
+    }
+
     pub fn len(&self) -> usize {
         self.map.lock().unwrap().len()
     }

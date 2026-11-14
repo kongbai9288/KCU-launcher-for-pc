@@ -1,6 +1,10 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use crate::core::leak::WeakRegistry;
+use crossbeam_channel::{bounded, Sender};
+use lru::LruCache;
 use std::hash::Hash;
-use std::sync::{Arc, Condvar, Mutex, Weak};
+use std::num::NonZeroUsize;
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10,38 +14,39 @@ pub enum CacheError<E> {
     Cancelled,
 }
 
+type Reply<V> = Result<V, ()>;
+
 struct Entry<V> {
     value: V,
     expires_at: Instant,
 }
 
+struct FlightState<V> {
+    completed: Option<Reply<V>>,
+    waiters: Vec<Sender<Reply<V>>>,
+}
+
 struct Flight<V> {
-    done: Mutex<bool>,
-    value: Mutex<Option<V>>,
-    cv: Condvar,
+    state: Mutex<FlightState<V>>,
 }
 
 impl<V> Flight<V> {
     fn new() -> Self {
         Self {
-            done: Mutex::new(false),
-            value: Mutex::new(None),
-            cv: Condvar::new(),
+            state: Mutex::new(FlightState {
+                completed: None,
+                waiters: Vec::new(),
+            }),
         }
     }
 }
 
-struct Inner<K, V> {
-    entries: HashMap<K, Entry<V>>,
-    order: VecDeque<K>,
-    inflight: HashMap<K, Weak<Flight<V>>>,
-    evicted: u64,
-}
-
 pub struct Cache<K, V> {
-    inner: Mutex<Inner<K, V>>,
+    store: Mutex<LruCache<K, Entry<V>>>,
+    inflight: WeakRegistry<K, Flight<V>>,
     capacity: usize,
     ttl: Duration,
+    inserted: AtomicU64,
 }
 
 impl<K, V> Cache<K, V>
@@ -51,20 +56,31 @@ where
 {
     pub fn new(capacity: usize, ttl: Duration) -> Self {
         assert!(capacity > 0);
+        let cap = NonZeroUsize::new(capacity).expect("capacity > 0");
         Self {
-            inner: Mutex::new(Inner {
-                entries: HashMap::new(),
-                order: VecDeque::new(),
-                inflight: HashMap::new(),
-                evicted: 0,
-            }),
+            store: Mutex::new(LruCache::new(cap)),
+            inflight: WeakRegistry::new(),
             capacity,
             ttl,
+            inserted: AtomicU64::new(0),
         }
     }
 
+    fn lookup(&self, key: &K) -> Option<V> {
+        let mut s = self.store.lock().unwrap();
+        let now = Instant::now();
+        let hit = s
+            .get(key)
+            .filter(|e| e.expires_at > now)
+            .map(|e| e.value.clone());
+        if hit.is_none() && s.contains(key) {
+            s.pop(key);
+        }
+        hit
+    }
+
     pub fn len(&self) -> usize {
-        self.inner.lock().unwrap().entries.len()
+        self.store.lock().unwrap().len()
     }
 
     pub fn capacity(&self) -> usize {
@@ -72,22 +88,23 @@ where
     }
 
     pub fn evicted(&self) -> u64 {
-        self.inner.lock().unwrap().evicted
+        let len = self.store.lock().unwrap().len() as u64;
+        self.inserted.load(Ordering::Relaxed).saturating_sub(len)
     }
 
     pub fn inflight_count(&self) -> usize {
-        self.inner.lock().unwrap().inflight.len()
+        self.inflight.purge();
+        self.inflight.len()
     }
 
     pub fn order_len(&self) -> usize {
-        self.inner.lock().unwrap().order.len()
+        self.len()
     }
 
     pub fn clear(&self) {
-        let mut g = self.inner.lock().unwrap();
-        g.entries.clear();
-        g.order.clear();
-        g.inflight.clear();
+        self.store.lock().unwrap().clear();
+        self.inflight.clear();
+        self.inserted.store(0, Ordering::Relaxed);
     }
 
     pub fn get_or_load<F, E>(&self, key: K, timeout: Duration, loader: F) -> Result<V, CacheError<E>>
@@ -96,113 +113,81 @@ where
     {
         let deadline = Instant::now() + timeout;
         let mut loader = Some(loader);
-        loop {
-            let waiting = {
-                let mut g = self.inner.lock().unwrap();
-                self.purge_locked(&mut g);
-                if let Some(e) = g.entries.get(&key) {
-                    return Ok(e.value.clone());
-                }
-                match g.inflight.get(&key) {
-                    Some(w) => w.upgrade(),
-                    None => None,
-                }
-            };
 
-            if let Some(f) = waiting {
-                let guard = f.done.lock().unwrap();
-                let left = deadline.saturating_duration_since(Instant::now());
-                let (held, wait) = f.cv.wait_timeout_while(guard, left, |d| !*d).unwrap();
-                drop(held);
-                if wait.timed_out() {
-                    return Err(CacheError::TimedOut);
+        loop {
+            if let Some(v) = self.lookup(&key) {
+                return Ok(v);
+            }
+
+            self.inflight.purge();
+            if let Some(f) = self.inflight.get(&key) {
+                let (tx, rx) = bounded::<Reply<V>>(1);
+                let mut st = f.state.lock().unwrap();
+                if let Some(reply) = st.completed.clone() {
+                    return finish_reply(reply);
                 }
-                return f.value.lock().unwrap().clone().ok_or(CacheError::Cancelled);
+                st.waiters.push(tx);
+                drop(st);
+                let left = deadline.saturating_duration_since(Instant::now());
+                return match rx.recv_timeout(left) {
+                    Ok(reply) => finish_reply(reply),
+                    Err(_) => Err(CacheError::TimedOut),
+                };
             }
 
             let flight = Arc::new(Flight::new());
-            {
-                let mut g = self.inner.lock().unwrap();
-                self.purge_locked(&mut g);
-                if let Some(e) = g.entries.get(&key) {
-                    return Ok(e.value.clone());
-                }
-                if g.inflight.get(&key).and_then(Weak::upgrade).is_some() {
-                    continue;
-                }
-                g.inflight.insert(key.clone(), Arc::downgrade(&flight));
+            self.inflight.insert(key.clone(), &flight);
+
+            if let Some(v) = self.lookup(&key) {
+                self.inflight.remove(&key);
+                return Ok(v);
             }
 
             let load = (loader.take().expect("loader consumed once"))();
-            let mut g = self.inner.lock().unwrap();
-            g.inflight.remove(&key);
+            let reply: Reply<V> = match &load {
+                Ok(v) => Ok(v.clone()),
+                Err(_) => Err(()),
+            };
+            {
+                let mut st = flight.state.lock().unwrap();
+                st.completed = Some(reply.clone());
+                for tx in st.waiters.drain(..) {
+                    let _ = tx.send(reply.clone());
+                }
+            }
+            self.inflight.remove(&key);
+            drop(flight);
 
             match load {
                 Ok(value) => {
-                    *flight.value.lock().unwrap() = Some(value.clone());
-                    let mut done = flight.done.lock().unwrap();
-                    *done = true;
-                    flight.cv.notify_all();
-                    drop(done);
-                    self.insert_locked(&mut g, key, value.clone());
+                    let mut s = self.store.lock().unwrap();
+                    s.put(
+                        key,
+                        Entry {
+                            value: value.clone(),
+                            expires_at: Instant::now() + self.ttl,
+                        },
+                    );
+                    self.inserted.fetch_add(1, Ordering::Relaxed);
                     return Ok(value);
                 }
-                Err(e) => {
-                    let mut done = flight.done.lock().unwrap();
-                    *done = true;
-                    flight.cv.notify_all();
-                    drop(done);
-                    return Err(CacheError::Load(e));
-                }
+                Err(e) => return Err(CacheError::Load(e)),
             }
         }
     }
+}
 
-    fn purge_locked(&self, g: &mut Inner<K, V>) {
-        let now = Instant::now();
-        let expired: Vec<K> = g
-            .entries
-            .iter()
-            .filter(|(_, e)| e.expires_at <= now)
-            .map(|(k, _)| k.clone())
-            .collect();
-        for k in expired {
-            g.entries.remove(&k);
-        }
-        g.order.retain(|k| g.entries.contains_key(k));
-        let mut seen = HashSet::new();
-        g.order.retain(|k| seen.insert(k.clone()));
-    }
-
-    fn insert_locked(&self, g: &mut Inner<K, V>, key: K, value: V) {
-        let expires_at = Instant::now() + self.ttl;
-        if let Some(e) = g.entries.get_mut(&key) {
-            e.value = value;
-            e.expires_at = expires_at;
-            return;
-        }
-        g.entries.insert(key.clone(), Entry { value, expires_at });
-        g.order.push_back(key);
-        while g.entries.len() > self.capacity {
-            let mut removed = false;
-            while let Some(old) = g.order.pop_front() {
-                if g.entries.remove(&old).is_some() {
-                    g.evicted += 1;
-                    removed = true;
-                    break;
-                }
-            }
-            if !removed {
-                break;
-            }
-        }
+fn finish_reply<V, E>(reply: Reply<V>) -> Result<V, CacheError<E>> {
+    match reply {
+        Ok(v) => Ok(v),
+        Err(()) => Err(CacheError::Cancelled),
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::atomic::AtomicUsize;
     use std::thread;
 
     #[test]
@@ -300,5 +285,43 @@ mod tests {
     #[test]
     fn zero_capacity_is_rejected() {
         assert!(std::panic::catch_unwind(|| Cache::<u32, u32>::new(0, Duration::from_secs(1))).is_err());
+    }
+
+    #[test]
+    fn late_waiter_sees_completed_result() {
+        let c = Arc::new(Cache::<String, u32>::new(4, Duration::from_secs(60)));
+        let c2 = c.clone();
+        let h = thread::spawn(move || {
+            c2.get_or_load("k".to_string(), Duration::from_secs(2), || {
+                thread::sleep(Duration::from_millis(30));
+                Ok::<u32, ()>(5)
+            })
+            .unwrap()
+        });
+        thread::sleep(Duration::from_millis(5));
+        assert_eq!(
+            c.get_or_load("k".to_string(), Duration::from_secs(2), || Ok::<u32, ()>(99))
+                .unwrap(),
+            5
+        );
+        assert_eq!(h.join().unwrap(), 5);
+    }
+
+    #[test]
+    fn cancelled_waiters_get_cancelled_not_spurious_value() {
+        let c = Arc::new(Cache::<String, u32>::new(4, Duration::from_secs(60)));
+        let c2 = c.clone();
+        let h = thread::spawn(move || {
+            c2.get_or_load("k".to_string(), Duration::from_secs(2), || {
+                thread::sleep(Duration::from_millis(30));
+                Err::<u32, &str>("E02")
+            })
+        });
+        thread::sleep(Duration::from_millis(5));
+        assert_eq!(
+            c.get_or_load("k".to_string(), Duration::from_secs(2), || Ok::<u32, ()>(99)),
+            Err(CacheError::Cancelled)
+        );
+        assert_eq!(h.join().unwrap(), Err(CacheError::Load("E02")));
     }
 }

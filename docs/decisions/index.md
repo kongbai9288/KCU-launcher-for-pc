@@ -59,3 +59,6 @@
 | 027 | asynk 手写并发原语换 crossbeam 两件套，小闭包路线落地 | 已实现、已验证 | 027-crossbeam-replacement.md |
 
 | 028 | 开服器三项新功能只记文档；leak.rs 自写计数删除 | 已登记；新功能未实现 | 028-server-features.md |
+
+| 029 | 缓存块换 lru 0.12.5，mini-moka unsync 因 Rc 不 Send 换轨 | 已实现、已验证 | 029-cache-lru.md |
+
