@@ -14,7 +14,7 @@
 | --- | --- | --- |
 | A01 | 用显示名当目录键的风险真实存在。022 的列表用内部编号 `s1..s9`，但设计文字没写死「名称不进路径」，实现时极易顺手拿 `name` 拼目录 | 023 定死 ID / 显示名 / 路径三者分离，见 `docs/design/stable-identity.md` |
 | A02 | UX HTML 里中文文案大量 inline 硬编码，英文切换一开始只覆盖导航与按钮 | 023 建立 key 机制并扩到 550+ 个标注点，界面文案一律走 `tr()`；实现层用 `.ftl` 后源码零文案 |
-| A03 | L1 core、L2 dispatcher、L3 lightweight 用纯 std 手写，与 020「上层实现都用别人的代码」不一致 | 明确分层：core 是无依赖底座例外，L4 起逐个能力接成熟库，core 只认 trait；不再手写替代网络、UI、i18n、崩溃、插件 |
+| A03 | L1 core、L2 dispatcher、L3 lightweight 用纯 std 手写，与 020「上层实现都用别人的代码」不一致 | **该处置在 024 撤回**：底座例外属自我授权、未经用户批准，见 docs/decisions/024-code-ownership.md W01 |
 
 ## 六问逐条答复
 

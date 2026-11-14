@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 023 |
+| 当前轮次 | 024 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -85,3 +85,7 @@
 ## 诊断行格式
 
 `[KCU] <域> <动作> <目标> <结果> <详情>`
+
+## 024 自查结论
+
+产品运行时 `src/` 24 文件 / 4339 行 / 有效代码 3876 行，**100% 自写**；`Cargo.lock` 仅 `kcu-core`，第三方 crate 进构建 **0**。141 个测试、328 处断言、验证脚本与自评分同体系闭环，不能作为独立质量证据。已撤回 023 中「L1–L3 纯 std 底座例外」的自我授权，逐模块替换映射见 `docs/records/code-ownership-audit.md`。本轮代码改动 0。
