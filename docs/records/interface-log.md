@@ -465,3 +465,10 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I34 | `LogBuffer` | `push` / `flush` 移除；新增 `record` / `take_shards`，实现 `log::Log` |
 | I35 | `diagnostics` | `diag_line` 保留，新增 `emit` |
 | S31 | 状态 | 三档默认严格；Q-028-01 = Q1-C、Q-028-02 = Q2-A 仅适用于严格档；F028-03 实现层未启动 |
+
+## 033 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I36 | 9 个模块的 `Result<T, String>` | 全部改 `anyhow::Result<T>`；`unwrap_err()` 调用面需 `.to_string()` |
+| S32 | 状态 | Q-031-01 已结案（A = answer 缩写）；031 / 032 口径不变；F028-03 实现层未启动 |

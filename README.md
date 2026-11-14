@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 032 |
+| 当前轮次 | 033 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -135,3 +135,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `core/log.rs` 的自写 `push` / `flush` 全删，换成 `log 0.4.35` 的 `Log` trait；`diagnostics.rs` 新增 `emit`。零传递依赖，`Cargo.lock` 11 包 / 10 第三方，`cargo test --offline` 153/0。
 
 顺带把 031 分组里 27 处「中文当 i18n key」改成 `auto.*` 语义 key 并补英文条目。
+
+## 033 Q-031-01 结案，错误处理换 anyhow
+
+「两个问题A」里的 A 是 **answer 缩写**，不是 Q1-A 选项字母。031 的 Q1-C + Q2-A 判定与 032 的三档矩阵全部保留，不回退、不重做界面。
+
+9 个模块共 15 个 `Result<T, String>` 换成 `anyhow 1.0.104` 的 `anyhow::Result<T>`，错误构造改 `anyhow::anyhow!`，`?` 直传保留原始错误类型。零传递依赖，`Cargo.lock` 12 包 / 11 第三方，`cargo test --offline` 153/0。
+
+032 预告的 `paths.rs → dirs` 核完不成立（语义不匹配 + Windows 分支不可验证），改走错误类型这块，理由见 `docs/decisions/033-answer-abbr-and-anyhow.md`。

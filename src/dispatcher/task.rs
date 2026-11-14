@@ -63,10 +63,10 @@ impl Default for LaunchTask {
 }
 
 impl LaunchTask {
-    pub fn from_json(value: &Json) -> Result<Self, String> {
+    pub fn from_json(value: &Json) -> anyhow::Result<Self> {
         let obj = match value {
             Json::Object(_) => value,
-            _ => return Err("task root must be an object".to_string()),
+            _ => return Err(anyhow::anyhow!("task root must be an object")),
         };
         let mut t = Self::default();
         if let Some(v) = obj.string_field("id") {
@@ -116,7 +116,7 @@ impl LaunchTask {
         Ok(t)
     }
 
-    pub fn from_str(input: &str) -> Result<Self, String> {
+    pub fn from_str(input: &str) -> anyhow::Result<Self> {
         let value = super::json::parse(input)?;
         Self::from_json(&value)
     }
@@ -156,7 +156,7 @@ pub struct TaskSet {
 }
 
 impl TaskSet {
-    pub fn from_values(values: &[Json]) -> Result<Self, String> {
+    pub fn from_values(values: &[Json]) -> anyhow::Result<Self> {
         let mut tasks = Vec::with_capacity(values.len());
         for v in values {
             tasks.push(LaunchTask::from_json(v)?);
@@ -166,7 +166,7 @@ impl TaskSet {
         Ok(Self { tasks })
     }
 
-    pub fn from_texts(texts: &[&str]) -> Result<Self, String> {
+    pub fn from_texts(texts: &[&str]) -> anyhow::Result<Self> {
         let mut values = Vec::with_capacity(texts.len());
         for t in texts {
             values.push(super::json::parse(t)?);

@@ -20,8 +20,8 @@ impl PathResolver {
         Self { root: root.into() }
     }
 
-    pub fn from_env(key: &str) -> Result<Self, String> {
-        let value = std::env::var(key).map_err(|_| format!("{} unset", key))?;
+    pub fn from_env(key: &str) -> anyhow::Result<Self> {
+        let value = std::env::var(key).map_err(|_| anyhow::anyhow!("{} unset", key))?;
         Ok(Self::new(value))
     }
 
@@ -29,13 +29,13 @@ impl PathResolver {
         &self.root
     }
 
-    pub fn resolve(&self, logical: &str) -> Result<PathBuf, String> {
+    pub fn resolve(&self, logical: &str) -> anyhow::Result<PathBuf> {
         for (name, segment) in LOGICAL {
             if *name == logical {
                 return Ok(self.root.join(segment));
             }
         }
-        Err(format!("unknown logical name: {}", logical))
+        Err(anyhow::anyhow!("unknown logical name: {}", logical))
     }
 
     pub fn logical_names(&self) -> Vec<&'static str> {

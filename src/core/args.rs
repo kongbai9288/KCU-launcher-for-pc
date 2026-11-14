@@ -12,7 +12,7 @@ pub struct LaunchArgs {
 }
 
 impl LaunchArgs {
-    pub fn parse<I, S>(xs: I) -> Result<Self, String>
+    pub fn parse<I, S>(xs: I) -> anyhow::Result<Self>
     where
         I: IntoIterator<Item = S>,
         S: Into<String>,
@@ -20,7 +20,7 @@ impl LaunchArgs {
         let raw: Vec<String> = xs.into_iter().map(Into::into).collect();
         let mut parser = lexopt::Parser::from_args(raw);
         let mut a = Self::default();
-        while let Some(arg) = parser.next().map_err(|e| e.to_string())? {
+        while let Some(arg) = parser.next()? {
             match arg {
                 Long("server") | Long("join-server") => {
                     a.server = Some(value(&mut parser)?);
@@ -42,9 +42,9 @@ impl LaunchArgs {
                 }
                 Value(v) => a.extras.push(
                     v.into_string()
-                        .map_err(|_| "positional value is not valid unicode".to_string())?,
+                        .map_err(|_| anyhow::anyhow!("positional value is not valid unicode"))?,
                 ),
-                other => return Err(other.unexpected().to_string()),
+                other => return Err(anyhow::anyhow!("{}", other.unexpected())),
             }
         }
         Ok(a)
@@ -59,9 +59,9 @@ impl LaunchArgs {
     }
 }
 
-fn value(parser: &mut lexopt::Parser) -> Result<String, String> {
-    let v = parser.value().map_err(|e| e.to_string())?;
-    v.into_string().map_err(|_| "value is not valid unicode".to_string())
+fn value(parser: &mut lexopt::Parser) -> anyhow::Result<String> {
+    let v = parser.value()?;
+    v.into_string().map_err(|_| anyhow::anyhow!("value is not valid unicode"))
 }
 
 #[cfg(test)]

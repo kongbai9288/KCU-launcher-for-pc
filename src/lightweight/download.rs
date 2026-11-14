@@ -119,9 +119,9 @@ impl Downloader {
         false
     }
 
-    pub fn batch(&self, ids: &[String], cancel: &CancelToken) -> Result<BatchReply, String> {
+    pub fn batch(&self, ids: &[String], cancel: &CancelToken) -> anyhow::Result<BatchReply> {
         if cancel.is_cancelled() {
-            return Err("cancelled".to_string());
+            return Err(anyhow::anyhow!("cancelled"));
         }
         if ids.is_empty() {
             return Ok(BatchReply {
@@ -142,7 +142,7 @@ impl Downloader {
 
         for (page_index, chunk) in ids.chunks(page_size).enumerate() {
             if cancel.is_cancelled() {
-                return Err("cancelled".to_string());
+                return Err(anyhow::anyhow!("cancelled"));
             }
             let key = format!("{}:{}:{}", source.code(), page_index, chunk.join(","));
             let cache = Arc::clone(&self.cache);
@@ -151,9 +151,9 @@ impl Downloader {
             let _ = cache
                 .get_or_load(key.clone(), Duration::from_secs(5), || {
                     calls_inner.fetch_add(1, Ordering::SeqCst);
-                    Ok::<String, String>(joined.clone())
+                    Ok::<String, anyhow::Error>(joined.clone())
                 })
-                .map_err(|e| format!("{:?}", e))?;
+                .map_err(|e| anyhow::anyhow!("{:?}", e))?;
             for id in chunk {
                 items.push(BatchItem {
                     id: id.clone(),

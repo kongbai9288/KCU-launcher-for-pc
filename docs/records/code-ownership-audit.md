@@ -214,3 +214,20 @@
 log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 crate 的 features 行，上游 `src/` 未改。MIT 与 Apache-2.0 全文都落 `docs/licenses/`，按 MIT 用。
 
 剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135、`core/paths.rs`、`core/popup.rs`、`core/userflow.rs`、`core/instance.rs`。这些是模式判定、用户指定实例排第一、双击绑定一类项目特有编排，映射表里没有对应替换库，不硬换。
+
+## 033 第七块替换后状态
+
+| 项 | 024 | 025 | 027 | 029 | 030 | 031 | 032 | 033 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 第三方 crate 进构建 | 0 | 5 | 7 | 8 | 9 | 9 | 10 | **11** |
+| `Cargo.lock` 包数 | 1 | 6 | 8 | 9 | 10 | 10 | 11 | 12 |
+| `Result<T, String>` 签名 | 19 | 19 | 19 | 19 | 19 | 19 | 19 | **0** |
+| `src/` 行数 | 4339 | 4081 | 4073 | 4017 | 4046 | 4197 | 4285 | 约 4290 |
+
+033 删掉的自写错误处理：15 个 `Result<T, String>` 签名、`map_err(|e| e.to_string())` 丢来源写法、手写 `Err(format!(..))` 与 `ok_or_else(|| format!(..))` 字符串错误。统一为 `anyhow::Result<T>` + `anyhow::anyhow!`；`?` 直传保留原始错误类型。覆盖 9 个模块。
+
+`anyhow 1.0.104` 零传递依赖，上游 `src/` 与 `build.rs` 逐字节未改，裁掉 dev-dependencies。两份 LICENSE 全文落盘。
+
+**`dirs` 路线核完不成立**：`core/paths.rs` 是「注入 root + 逻辑名 → 子路径」映射，用户明确决定 `C:\KCU`；`dirs` 是系统目录定位，硬换会改默认行为，且 dirs-sys 的 Windows 分支依赖 windows-sys 大闭包，当前 Linux 工具链无法验证。改走错误类型这块，理由写在 033 决策 D04。
+
+剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135、`core/paths.rs`（逻辑名映射表约 20 行）、`core/popup.rs`（弹窗状态机）、`core/userflow.rs`、`core/instance.rs`。这些是模式判定、用户指定实例排第一、双击绑定一类项目特有编排；`paths.rs` 的路径拼接本身用的是 `std::path::PathBuf`，没有自写路径算法。映射表里没有对应替换库，不硬换。

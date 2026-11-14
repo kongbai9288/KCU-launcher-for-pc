@@ -22,11 +22,11 @@ impl Config {
         }
     }
 
-    pub fn from_json_str(s: &str) -> Result<Self, String> {
-        let v: Value = from_str(s).map_err(|e| e.to_string())?;
+    pub fn from_json_str(s: &str) -> anyhow::Result<Self> {
+        let v: Value = from_str(s)?;
         let root = v
             .as_object()
-            .ok_or_else(|| "config root is not an object".to_string())?
+            .ok_or_else(|| anyhow::anyhow!("config root is not an object"))?
             .clone();
         let mut data = root;
         data.entry("endpoints")
@@ -60,7 +60,7 @@ impl Config {
         })
     }
 
-    pub fn to_json_string(&self) -> Result<String, String> {
+    pub fn to_json_string(&self) -> anyhow::Result<String> {
         let mut root = self.data.clone();
         root.insert("os_class".to_string(), Value::String(self.os_class.clone()));
         root.insert("language".to_string(), Value::String(self.language.clone()));
@@ -71,7 +71,7 @@ impl Config {
         if let Some(r) = &self.region_override {
             root.insert("download_region".to_string(), Value::String(r.clone()));
         }
-        to_string(&Value::Object(root)).map_err(|e| e.to_string())
+        Ok(to_string(&Value::Object(root))?)
     }
 
     fn endpoints(&self) -> &Map<String, Value> {

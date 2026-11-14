@@ -11,6 +11,7 @@ crossbeam-utils = "0.8"
 lru = { version = "0.12.5", default-features = false }
 lexopt = "0.3.2"
 log = { version = "0.4.35", default-features = false, features = ["std"] }
+anyhow = "1.0.104"
 
 [lib]
 name = "kcu_core"

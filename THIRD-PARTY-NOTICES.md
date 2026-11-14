@@ -182,3 +182,16 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | --- | --- |
 | N24 | `default-features = false, features = ["std"]`，零传递依赖；vendor 裁掉 optional deps、dev deps 与外部 features 引用，`src/` 未改。 |
 | N25 | MIT 条款要求保留版权与许可声明，全文随发行物附上；Apache-2.0 全文一并保留供选择。 |
+
+## 033 新增已进构建依赖
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| anyhow | 1.0.104 | MIT OR Apache-2.0（按 MIT 用） | David Tolnay | 统一错误类型与上下文 | vendor/anyhow | 构建中已使用 |
+
+许可证全文：`docs/licenses/anyhow-LICENSE-MIT.txt`、`docs/licenses/anyhow-LICENSE-APACHE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N26 | 零传递依赖；`[dev-dependencies]` 裁掉，`src/` 与 `build.rs` 逐字节未改。 |
+| N27 | MIT 条款要求保留版权与许可声明，全文随发行物附上；Apache-2.0 全文一并保留供选择。 |

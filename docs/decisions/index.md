@@ -67,3 +67,5 @@
 | 031 | 两条 Q 按最严格拍板；配置与信封换 serde_json | A 已拍板、B 已实现 | 031-strict-policy-and-config.md |
 
 | 032 | 用户可选松档；日志门面换 log crate | A 已落地、B 已实现 | 032-user-selectable-tiers.md |
+
+| 033 | Q-031-01 结案（A=answer 缩写）；错误处理换 anyhow | A 已结案、B 已实现 | 033-answer-abbr-and-anyhow.md |

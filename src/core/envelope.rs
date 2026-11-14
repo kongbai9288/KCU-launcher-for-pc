@@ -50,7 +50,7 @@ impl Envelope {
         self.payload.get(key).and_then(Value::as_str)
     }
 
-    pub fn to_json_string(&self) -> Result<String, String> {
+    pub fn to_json_string(&self) -> anyhow::Result<String> {
         let mut m = self.payload.clone();
         m.insert(
             "request_id".to_string(),
@@ -64,11 +64,11 @@ impl Envelope {
         if let Some(e) = &self.error {
             m.insert("error".to_string(), Value::String(e.clone()));
         }
-        to_string(&Value::Object(m)).map_err(|e| e.to_string())
+        Ok(to_string(&Value::Object(m))?)
     }
 
-    pub fn from_json_str(s: &str) -> Result<Value, String> {
-        from_str(s).map_err(|e| e.to_string())
+    pub fn from_json_str(s: &str) -> anyhow::Result<Value> {
+        Ok(from_str(s)?)
     }
 }
 

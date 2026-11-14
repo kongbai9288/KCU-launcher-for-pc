@@ -1,7 +1,7 @@
 pub type Json = serde_json::Value;
 
-pub fn parse(input: &str) -> Result<Json, String> {
-    serde_json::from_str(input).map_err(|e| e.to_string())
+pub fn parse(input: &str) -> anyhow::Result<Json> {
+    Ok(serde_json::from_str(input)?)
 }
 
 pub trait StringField {
@@ -36,9 +36,9 @@ mod tests {
 
     #[test]
     fn parses_empty_containers_and_negative_numbers() {
-        assert_eq!(parse("{}"), Ok(Json::Object(serde_json::Map::new())));
-        assert_eq!(parse("[]"), Ok(Json::Array(Vec::new())));
-        assert_eq!(parse("-1.5e2"), Ok(serde_json::json!(-150.0)));
+        assert_eq!(parse("{}").unwrap(), Json::Object(serde_json::Map::new()));
+        assert_eq!(parse("[]").unwrap(), Json::Array(Vec::new()));
+        assert_eq!(parse("-1.5e2").unwrap(), serde_json::json!(-150.0));
     }
 
     #[test]

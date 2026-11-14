@@ -101,7 +101,7 @@ impl ModeSelection {
 pub struct ModeSelector;
 
 impl ModeSelector {
-    pub fn select(input: &ModeInput) -> Result<ModeSelection, String> {
+    pub fn select(input: &ModeInput) -> anyhow::Result<ModeSelection> {
         if input.force_headless {
             return Ok(ModeSelection::build(Mode::Headless, "forced_headless", input));
         }
@@ -114,7 +114,7 @@ impl ModeSelector {
                 if v.trim().is_empty() {
                     continue;
                 }
-                let mode = Mode::parse(v).ok_or_else(|| format!("invalid mode from {}: {}", source, v))?;
+                let mode = Mode::parse(v).ok_or_else(|| anyhow::anyhow!("invalid mode from {}: {}", source, v))?;
                 return Ok(ModeSelection::build(mode, "explicit_override", input));
             }
         }
@@ -197,7 +197,7 @@ mod tests {
     fn invalid_mode_is_zero_level_error() {
         let mut i = base();
         i.config_mode = Some("turbo".to_string());
-        assert!(ModeSelector::select(&i).unwrap_err().contains("invalid mode from config"));
+        assert!(ModeSelector::select(&i).unwrap_err().to_string().contains("invalid mode from config"));
     }
 
     #[test]

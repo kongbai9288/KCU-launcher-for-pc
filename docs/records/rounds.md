@@ -2231,3 +2231,38 @@ L3 落地：
 | E21 | 切到宽松档后，「命中以后」与「这样设置以后」仍显示严格档文案，界面自相矛盾 | 两块改为按档位动态渲染，三档各一套文案，补 `auto.ef.*` 英文条目；重渲 46 / 47 / 48 三图复核一致 |
 
 028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 033
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/33-round-033-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/033-answer-abbr-and-anyhow.md | A01/B01 边界、C01-C03 结案、D01-D09 依赖、B10-B14 差异、E22-E26、四值 |
+| docs/features/server-auto-command-log-trigger.md | 「待用户确认的歧义」→「已结案」，A = answer 缩写 |
+| docs/records/q028-decision-scenarios.md | 追加 033 结案段，032 段「没答复」改已结案 |
+| docs/verification/round-033.md | 14 条复跑证据 |
+| demos/round-033-anyhow.html | 13 步运行逻辑演示 |
+| src/ 9 个模块 | 15 个 `Result<T, String>` 换 `anyhow::Result<T>`，错误构造改 `anyhow::anyhow!` |
+| vendor/anyhow/ + Cargo.toml/lock | 12 包 / 11 第三方，零传递依赖 |
+| docs/licenses/anyhow-LICENSE-*.txt | MIT 与 Apache-2.0 全文 |
+| demos/ui-full-kcu-paper.html | 关于页许可七列表新增 anyhow（10 → 11 组），计数 32 → 33 |
+| 索引与记录 | docs/index 161 项、README、decisions/index、licenses/index、ai-errors A82-A84、code-ownership-audit、implementation-strategy、THIRD-PARTY-NOTICES、interface-log、rounds |
+
+「是answer缩写」结案 Q-031-01：031 那句的 A 是 answer 缩写，不是 Q1-A 选项字母。031 的 Q1-C + Q2-A 判定、P01–P07，032 的三档矩阵与 U01–U11 全部保留，不回退、不重做界面。界面闸门**未触发**。
+
+「干」继续替换自写代码：9 个模块共 15 个 `Result<T, String>` 签名换成 `anyhow 1.0.104` 的 `anyhow::Result<T>`，错误构造改 `anyhow::anyhow!`，`?` 直传保留原始错误类型。零传递依赖，153 / 0，原断言未删。
+
+032 预告的「paths.rs → dirs」核完**不成立**：paths.rs 是注入 root + 逻辑名映射，用户明确定了 `C:\KCU`；dirs 是系统目录定位，硬换改默认行为，且 dirs-sys 的 Windows 分支依赖 windows-sys 大闭包，当前 Linux 工具链无法验证。改走错误类型这块，理由写在 033 决策 D04，未静默跳过。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E22 | `tarfile.open(BytesIO)` 当文件名，TypeError | 改 `fileobj=` + `mode='r:gz'` |
+| E23 | `config.rs` 的 `ok_or_else(|| String)` 与 anyhow 不兼容 | 改 `anyhow::anyhow!` |
+| E24 | `launcher.rs` 缓存闭包错误契约是 String | 局部 `map_err(|e| e.to_string())`，不动 Cache |
+| E25 | `download.rs` 第二处 cancelled 漏改 | 按缩进定位补改 |
+| E26 | 三处 `assert_eq!(Result<Value, anyhow::Error>, Ok(..))` 触发 E0369 | 改 `unwrap()` 后比值 |
+| E27 | 自查抓到计数写错：签名数 19、命中文件 9 | 回 HEAD 逐文件复核得 15 个签名 / 8 个文件，全仓文档与演示统一；第 9 个模块是 launcher.rs 的调用面适配 |
+
+028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
