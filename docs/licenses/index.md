@@ -128,3 +128,11 @@
 | lru-LICENSE.txt | lru 0.12.5 | MIT |
 
 来源：jeromefroe/lru-rs tag `0.12.5` 内的 LICENSE，逐字副本，1071 字节。
+
+## 030 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| lexopt-LICENSE.txt | lexopt 0.3.2 | MIT |
+
+来源：blyxxyz/lexopt tag `v0.3.2` 内的 LICENSE，逐字副本，1055 字节。

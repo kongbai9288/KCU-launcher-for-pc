@@ -2131,3 +2131,41 @@ L3 落地：
 | E12 | 首次接入 mini-moka 后 `cache.rs` 仍 `use mini_moka`，编译报 unresolved crate | 换依赖后同步改源码 import，复跑通过 |
 
 未做：三项开服器新功能实现（028「只记文档」约束延续）、UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 030
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/30-round-030-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/030-args-and-q-scenarios.md | B01/B02 边界、C01-C05、B10-B14、S01-S06、四值 |
+| docs/records/q028-decision-scenarios.md | **两条 Q 的场景交代**（本轮用户重点） |
+| docs/verification/round-030.md | 13 条复跑证据 |
+| demos/round-030-args-q.html | 13 步运行逻辑演示（含场景分支） |
+| src/core/args.rs | 手写参数解析器删除，换 lexopt 0.3.2，91 → 120 行（新增 3 测试） |
+| vendor/lexopt/ + Cargo.toml/lock | 10 包 / 9 第三方 |
+| docs/licenses/lexopt-LICENSE.txt | MIT 全文 1055 字节 |
+| demos/ui-full-kcu-paper.html / demos/preview/ | 关于页 9 组「构建中已使用」，2 张截图重渲 |
+| 索引与记录 | docs/index 146 项、README、decisions/index、research/index、licenses/index、ai-errors A73-A75、code-ownership-audit、implementation-strategy、THIRD-PARTY-NOTICES、interface-log、rounds |
+
+「干」继续替换自写代码，按映射表落第四块 `core/args.rs`。选 lexopt 0.3.2 的理由：零依赖、单文件、MIT、无 proc-macro，Win7 Tier 3 / 多架构友好，不重撞 libc。
+
+「两个q交代下场景」按用户要求铺成可判断的画面，不代拍板：
+
+| 编号 | 场景 |
+| --- | --- |
+| Q1-A | 凌晨三点无人值守的卡顿预警（每次同意 → 自动化失效；不弹 → 可能写坏存档） |
+| Q1-B | 玩家公屏打字 `/op Steve` 诱导命中（日志里的命令文字是文本，不是授权） |
+| Q1-C | 模组每秒刷一行关键字（60 个弹窗 vs 冷却合并） |
+| Q1-D | 规则「测试」按钮只该预览，不该弹同意也不该真发命令 |
+| Q2 | 动作分 C1 只读 / C2 广播 / C3 服务器命令 / C4 启动器侧 / C5 外传；点名 `/save-all` 撞崩服、`/op` 撞诱导、`/stop` 撞刷屏、C5 撞脱敏 |
+
+另写出耦合矩阵与建议组合 `Q1-B + Q2-C` / `Q1-A + Q2-B`。倾向只写在场景文档，功能 md 结论栏仍为空。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E13 | 首版 `args.rs` 把 `Arg::Value(OsString)` 直接 push 进 `Vec<String>`，且把 `unexpected()` 当成 Parser 方法 | 改 `into_string()` 显式转换，`unexpected()` 属 `impl Arg` 不是 Parser；复跑 144 / 0 |
+| E14 | 029 的文档脚本重跑造成过重复追加，本轮脚本 `app()` 与 README 段全部改为幂等 | 030 脚本一次运行无重复 |
+
+028 的三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。

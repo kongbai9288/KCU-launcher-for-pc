@@ -26,9 +26,15 @@ version = "0.0.0"
 dependencies = [
  "crossbeam-channel",
  "crossbeam-utils",
+ "lexopt",
  "lru",
  "serde_json",
 ]
+
+[[package]]
+name = "lexopt"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "lru"

@@ -194,3 +194,16 @@
 - https://github.com/arthurprs/quick-cache/tree/v0.6.18
 - https://github.com/contain-rs/linked-hash-map/tree/v0.5.6
 - https://api.github.com/repos/jeromefroe/lru-rs/tags?per_page=20
+
+## 030 轮新增
+
+| 编号 | 文档 | 主题 |
+| --- | --- | --- |
+| R22 | q028-decision-scenarios.md | 日志命令文字触发的授权粒度与动作分级场景 |
+
+完整 URL：
+
+- https://github.com/blyxxyz/lexopt/tree/v0.3.2
+- https://api.github.com/repos/blyxxyz/lexopt/contents/Cargo.toml?ref=v0.3.2
+- https://codeload.github.com/blyxxyz/lexopt/tar.gz/refs/tags/v0.3.2
+- https://api.github.com/repos/blyxxyz/lexopt/tags?per_page=15

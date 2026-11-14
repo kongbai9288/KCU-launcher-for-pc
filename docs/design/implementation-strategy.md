@@ -96,3 +96,13 @@ registry 在本环境被 403 阻断，故采用 `vendor/` + `.cargo/config.toml`
 | 缓存容量 / LRU / 单飞 | **已落地（029，lru 0.12.5 + crossbeam-channel + WeakRegistry）** |
 | TTL | 库外薄包装（`Entry.expires_at`），未找到零依赖且内置 TTL 的成熟库，`rust-ttl_cache` 仓库 404 |
 | 配置 / 参数 / 路径 / 日志 / 网络 / UI / 崩溃 / 插件 | 未启动，仍为自写或候选 |
+
+## 030 进度
+
+| 层 | 状态 |
+| --- | --- |
+| JSON 解析 | 已落地（025，serde_json） |
+| 异步 / 线程同步 | 已落地（027，crossbeam） |
+| 缓存容量 / LRU / 单飞 | 已落地（029，lru 0.12.5） |
+| 命令行参数解析 | **已落地（030，lexopt 0.3.2）** |
+| 配置 / 路径 / 日志 / 真实网络 / UI / 崩溃 / 插件 | 未启动 |

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 030 参数库化与 Q 场景</title>
+<style>
+:root{
+  --paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;
+  --line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}
+.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}
+.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}
+.node .t{font-weight:600}
+.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}
+button:hover{border-color:var(--teal)}
+button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}
+.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:106px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}
+.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}
+.badge.g{color:var(--teal);border-color:var(--teal)}
+.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>030 运行逻辑</h1>
+    <div class="sub">参数库化 · Q 场景交代 · 非整页 UX 演示</div>
+    <div class="bar">
+      <button class="pri" onclick="run()">▶ 逐步执行</button>
+      <button onclick="reset()">重置</button>
+    </div>
+    <div class="flow" id="flow"></div>
+  </div>
+  <div>
+    <div class="card">
+      <div class="kv">
+        <b>当前步骤</b><span id="step">—</span>
+        <b>阶段</b><span id="phase">待执行</span>
+        <b>统一信封</b><span id="env">—</span>
+      </div>
+      <div class="grid">
+        <div class="mini">
+          <h3>B01 参数解析</h3>
+          <p id="m1">未运行</p>
+          <span class="badge g">lexopt 0.3.2</span>
+          <span class="badge g">10 包 9 第三方</span>
+          <span class="badge">144 / 0</span>
+        </div>
+        <div class="mini">
+          <h3>B02 Q-028-01</h3>
+          <p id="m2">未运行</p>
+          <span class="badge r">凌晨无人值守</span>
+          <span class="badge r">聊天文字诱导</span>
+          <span class="badge r">模组刷屏</span>
+        </div>
+        <div class="mini">
+          <h3>B02 Q-028-02</h3>
+          <p id="m3">未运行</p>
+          <span class="badge r">C1 只读 → C5 外传</span>
+          <span class="badge r">/save-all 撞崩服</span>
+          <span class="badge r">/op 撞诱导</span>
+        </div>
+        <div class="mini">
+          <h3>耦合与待答复</h3>
+          <p id="m4">未运行</p>
+          <span class="badge r">结论栏为空</span>
+          <span class="badge">Q1-B + Q2-C</span>
+          <span class="badge">Q1-A + Q2-B</span>
+        </div>
+      </div>
+      <div class="note" id="note">场景只铺画面与后果，不替用户拍板；功能 md 的「待拍板」结论栏保持为空。</div>
+    </div>
+    <div class="card log">
+      <div class="tag">[KCU] 诊断行 / 统一信封</div>
+      <pre id="out">等待执行…</pre>
+    </div>
+  </div>
+</div>
+
+<script>
+const NODES = [
+  ['01','开工预检','读索引 146 项、024 映射、028 两 Q'],
+  ['02','指令拆分','「干」= 继续替换；「交代场景」= 铺画面不拍板'],
+  ['03','逐字落盘','30-round-030-instructions.txt，cmp exit 0'],
+  ['04','候选核查','lexopt v0.3.2：零依赖、单文件、MIT、无 proc-macro'],
+  ['05','vendor 落地','tarball 精准提取，上游 src 未改，LICENSE 1055B'],
+  ['06','args.rs 重写','删 peekable / 前缀 match / 手写 6 条错误串'],
+  ['07','E13 修复','Arg::Value 是 OsString；unexpected() 属 impl Arg'],
+  ['08','测试回归','144 passed / 0 failed，原 5 断言未改'],
+  ['09','Q1 来历','013 的「每次请求」是 AI 接口，不是日志自动化'],
+  ['10','Q1 四场景','无人值守 / 文字诱导 / 刷屏 / 测试预览'],
+  ['11','Q2 五类','C1 只读 → C5 外传，四个具体风险画面'],
+  ['12','耦合矩阵','越不弹确认，动作白名单越得收紧；给建议组合'],
+  ['13','提交推送','双扫描 → 本地提交 → 远端快照比对']
+];
+const DETAIL = {
+  '01':'REQ 146/146 OK',
+  '02':'BRANCH B01=replace B02=scenarios_only',
+  '03':'SPEC cmp 0 sha1 ok',
+  '04':'SELECT lexopt 0.3.2 deps=0 macro=0',
+  '05':'VENDOR 29215B src_unmodified=true',
+  '06':'ARGS lexopt_parser peekable=0',
+  '07':'FIX OsString->String Arg::unexpected',
+  '08':'TEST 144 passed 0 failed',
+  '09':'Q1 origin=013-Q-D02 AI_scope_mismatch',
+  '10':'Q1 scenes=4 options=A/B/C',
+  '11':'Q2 classes=5 risks=4',
+  '12':'Q12 matrix=1 recommend=Q1B+Q2C',
+  '13':'PUSH remote_snapshot ALL_MATCH'
+};
+const PHASE = {
+  '01':'开工预检','02':'指令拆分','03':'逐字落盘','04':'候选核查','05':'vendor 落地',
+  '06':'代码重写','07':'失败回显','08':'测试回归','09':'场景交代','10':'场景交代',
+  '11':'场景交代','12':'场景交代','13':'提交推送'
+};
+const QN = new Set(['09','10','11','12']);
+const M = {
+  '08':['m1','删掉手写参数解析器；实现段 66 行是别名与业务判定，不是解析器。10 包 / 9 第三方，144 / 0。'],
+  '10':['m2','凌晨卡顿预警没人点确认 → 自动化失效；玩家聊天里的 /op 是文字不是授权；模组每秒刷屏会打爆弹窗。'],
+  '11':['m3','C1 只读 / C2 广播 / C3 服务器命令 / C4 启动器侧 / C5 外传；/save-all 撞崩服、/op 撞诱导、/stop 撞刷屏、C5 撞脱敏。'],
+  '12':['m4','两条耦合：建议一次拍 Q1-B + Q2-C 或 Q1-A + Q2-B。倾向只写在场景文档，功能 md 结论栏仍为空。']
+};
+let lines = [];
+const flow = document.getElementById('flow');
+NODES.forEach((n,i)=>{
+  const d=document.createElement('div');
+  d.className='node'+(QN.has(n[0])?' q':''); d.id='nd'+i;
+  d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';
+  d.onclick=()=>paint(i);
+  flow.appendChild(d);
+});
+function envelope(i){
+  const k=['core.start','core.branch','core.spec','core.doc','core.vendor','core.args',
+           'core.err','core.test','q.scope','q.q1','q.q2','q.matrix','core.push'];
+  return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';
+}
+function paint(i){
+  document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));
+  const n=NODES[i];
+  document.getElementById('step').textContent=n[0]+' · '+n[1];
+  document.getElementById('phase').textContent=PHASE[n[0]];
+  document.getElementById('env').textContent=envelope(i);
+  const dom=QN.has(n[0])?'q':'core';
+  const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];
+  lines=lines.slice(0,i); lines.push(line);
+  document.getElementById('out').textContent=lines.join('\n');
+  for(let k=1;k<=i+1;k++){
+    const key=String(k).padStart(2,'0');
+    if(M[key]) document.getElementById(M[key][0]).textContent=M[key][1];
+  }
+  if(i===12) document.getElementById('note').textContent='参数解析已库化；两条 Q 的场景、口径与耦合矩阵已交代，结论栏为空，等用户按编号答复。';
+}
+function run(){
+  reset(); let i=0;
+  const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);
+}
+function reset(){
+  lines=[];
+  document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));
+  document.getElementById('step').textContent='—';
+  document.getElementById('phase').textContent='待执行';
+  document.getElementById('env').textContent='—';
+  ['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');
+  document.getElementById('out').textContent='等待执行…';
+  document.getElementById('note').textContent='场景只铺画面与后果，不替用户拍板；功能 md 的「待拍板」结论栏保持为空。';
+}
+</script>
+</body>
+</html>

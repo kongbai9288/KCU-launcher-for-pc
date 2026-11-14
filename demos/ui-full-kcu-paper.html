@@ -993,7 +993,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
         <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="view.licenses">第三方许可</div><div class="panel-sub" data-i18n="清单生成 2026-11-14 · 离线可读 · 含 5 组已进构建依赖">清单生成 2026-11-14 · 离线可读 · 按许可证分组</div>
           <div class="panel-tools"><button class="btn tiny" id="licRefresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新清单</button><button class="btn tiny" id="licHard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新扫描</button><span class="badge ok" id="licTime">已同步 12 秒前</span></div></div>
-          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 30</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up" data-i18n="lic.group">按许可证分组</span></div>
+          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 31</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up" data-i18n="lic.group">按许可证分组</span></div>
           <table class="lic-table"><thead><tr><th data-i18n="项目">项目</th><th data-i18n="版本 / 分组">版本 / 分组</th><th data-i18n="许可证">许可证</th><th data-i18n="版权">版权</th><th data-i18n="用途">用途</th><th data-i18n="来源">来源</th><th data-i18n="说明">说明</th></tr></thead><tbody id="licBody"></tbody></table>
         </div>
         <div class="grid g2" style="margin-top:12px">
@@ -1593,6 +1593,7 @@ const LICENSE_ROWS=[
  ['crossbeam-channel','0.5.17','MIT OR Apache-2.0','crossbeam-rs','多源竞速结果通道','vendor/crossbeam-channel','构建中已使用','MIT'],
  ['crossbeam-utils','0.8.23','MIT OR Apache-2.0','crossbeam-rs','线程组与活跃归零','vendor/crossbeam-utils','构建中已使用','MIT'],
  ['lru','0.12.5','MIT','Jerome Froelich','有界 LRU 容量与淘汰','vendor/lru','构建中已使用','MIT'],
+ ['lexopt','0.3.2','MIT','Jan Verbeek','命令行参数解析','vendor/lexopt','构建中已使用','MIT'],
 ];
 let licFilter='all';
 function renderLic(){

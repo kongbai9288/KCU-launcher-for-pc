@@ -163,3 +163,20 @@
 029 删掉的自写数据结构：`HashMap` 主存、`VecDeque` LRU 顺序、`HashSet` 去重、`while len > capacity` 淘汰循环、手写 `Mutex<bool> + Condvar + Mutex<Option<V>>` 单飞。容量与 LRU 交给 `lru::LruCache`，等待/超时/唤醒交给 `crossbeam-channel`，弱引用表复用 028 的 `WeakRegistry`。TTL 保留 `Entry.expires_at` 惰性薄包装（约 10 行），单飞编排约 60 行属项目特有策略，均如实登记。
 
 剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135 与其余 core 业务模块，按本文件映射继续推进。
+
+## 030 第四块替换后状态
+
+| 项 | 024 | 025 | 027 | 028 | 029 | 030 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 第三方 crate 进构建 | 0 | 5 | 7 | 7 | 8 | **9** |
+| `Cargo.lock` 包数 | 1 | 6 | 8 | 8 | 9 | 10 |
+| `dispatcher/json.rs` | 336 | 77 | 77 | 77 | 77 | 77 |
+| `core/asynk.rs` | 258 | 258 | 250 | 250 | 250 | 250 |
+| `core/leak.rs` | 191 | 191 | 191 | 99 | 99 | 99 |
+| `core/cache.rs` | 304 | 304 | 304 | 304 | 327 | 327 |
+| `core/args.rs` | 91 行手写解析 | 91 | 91 | 91 | 91 | **120（实现段 66，含语义层）** |
+| `src/` 行数 | 4339 | 4081 | 4073 | 3986 | 4017 | 4046 |
+
+030 删掉的自写参数解析器：手工 `peekable` 游标、字符串前缀 match、`it.next()` 取值、手写 6 条错误串、`starts_with('-')` 未知 flag 判定。换成 `lexopt 0.3.2`（零依赖、单文件、MIT）。保留的 66 行是 6 个字段、别名、统一错误面、`joins_server()` / `headless()` 这类项目特有语义，不是解析器。
+
+剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135、`core/config.rs`（BTreeMap 注入）、`core/paths.rs`（逻辑名映射）、`core/log.rs`（分片缓冲）、`core/popup.rs`、`core/userflow.rs`、`core/instance.rs`、`core/envelope.rs`、`core/diagnostics.rs`。后两者是跨进程协议定义，不在替换映射内；其余按本文件映射继续推进。

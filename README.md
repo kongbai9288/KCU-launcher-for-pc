@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 029 |
+| 当前轮次 | 030 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -113,3 +113,9 @@
 `src/core/cache.rs` 的手写 `HashMap` 主存、`VecDeque` LRU 顺序、`HashSet` 去重、容量淘汰循环、`Mutex<bool> + Condvar` 单飞全部删除；容量与 LRU 交给 `lru 0.12.5`（单包、零传递依赖、MIT），等待/超时/唤醒交给 `crossbeam-channel`，弱引用表复用 028 的 `WeakRegistry`。`Cargo.lock` 9 包、8 个第三方 crate，`cargo test --offline` 141/0。
 
 中途试过 mini-moka 0.10.3 的 `unsync::Cache`：5 包闭包可构建，但内部 `Rc<K>` 不 `Send`，`Arc<Cache>` 跨线程编译失败，按 026 的 N03 换轨。`sync::Cache` 会回到 dashmap → libc 老路，未重走。详见 `docs/decisions/029-cache-lru.md`。
+
+## 030 参数解析换 lexopt，两条 Q 铺场景
+
+`src/core/args.rs` 的手写 `peekable` 游标、字符串前缀 match、`it.next()` 取值与 6 条错误串全部删除，换成 `lexopt 0.3.2`（零依赖、单文件、MIT）。`Cargo.lock` 10 包 / 9 第三方，`cargo test --offline` 144/0，原 5 个断言未改。
+
+Q-028-01 / Q-028-02 按你的要求铺成能判断的画面：凌晨无人值守的卡顿预警、玩家聊天文字诱导、模组刷屏、规则测试预览；动作分只读 / 广播 / 服务器命令 / 启动器侧 / 外传五类，点名 `/save-all` 撞崩服、`/op` 撞诱导、`/stop` 撞刷屏、外传撞脱敏。含耦合矩阵与建议组合，不代拍板。见 `docs/records/q028-decision-scenarios.md`。

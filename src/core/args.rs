@@ -1,3 +1,5 @@
+use lexopt::prelude::*;
+
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct LaunchArgs {
     pub server: Option<String>,
@@ -15,32 +17,34 @@ impl LaunchArgs {
         I: IntoIterator<Item = S>,
         S: Into<String>,
     {
+        let raw: Vec<String> = xs.into_iter().map(Into::into).collect();
+        let mut parser = lexopt::Parser::from_args(raw);
         let mut a = Self::default();
-        let mut it = xs.into_iter().map(Into::into).peekable();
-        while let Some(tok) = it.next() {
-            match tok.as_str() {
-                "--server" | "--join-server" => {
-                    a.server = Some(it.next().ok_or_else(|| "--server requires a value".to_string())?);
+        while let Some(arg) = parser.next().map_err(|e| e.to_string())? {
+            match arg {
+                Long("server") | Long("join-server") => {
+                    a.server = Some(value(&mut parser)?);
                 }
-                "--instance" => {
-                    a.instance = Some(it.next().ok_or_else(|| "--instance requires a value".to_string())?);
+                Long("instance") => {
+                    a.instance = Some(value(&mut parser)?);
                 }
-                "--mode" => {
-                    a.mode = Some(it.next().ok_or_else(|| "--mode requires a value".to_string())?);
+                Long("mode") => {
+                    a.mode = Some(value(&mut parser)?);
                 }
-                "--kculf" => {
-                    a.kculf = Some(it.next().ok_or_else(|| "--kculf requires a value".to_string())?);
+                Long("kculf") => {
+                    a.kculf = Some(value(&mut parser)?);
                 }
-                "--kculh" => {
-                    a.kculh = Some(it.next().ok_or_else(|| "--kculh requires a value".to_string())?);
+                Long("kculh") => {
+                    a.kculh = Some(value(&mut parser)?);
                 }
-                "--lang" => {
-                    a.lang = Some(it.next().ok_or_else(|| "--lang requires a value".to_string())?);
+                Long("lang") => {
+                    a.lang = Some(value(&mut parser)?);
                 }
-                other if other.starts_with('-') => {
-                    return Err(format!("unknown flag: {}", other));
-                }
-                other => a.extras.push(other.to_string()),
+                Value(v) => a.extras.push(
+                    v.into_string()
+                        .map_err(|_| "positional value is not valid unicode".to_string())?,
+                ),
+                other => return Err(other.unexpected().to_string()),
             }
         }
         Ok(a)
@@ -53,6 +57,11 @@ impl LaunchArgs {
     pub fn headless(&self) -> bool {
         self.kculh.is_some() || self.mode.as_deref() == Some("headless")
     }
+}
+
+fn value(parser: &mut lexopt::Parser) -> Result<String, String> {
+    let v = parser.value().map_err(|e| e.to_string())?;
+    v.into_string().map_err(|_| "value is not valid unicode".to_string())
 }
 
 #[cfg(test)]
@@ -87,5 +96,25 @@ mod tests {
         assert_eq!(a.kculf.as_deref(), Some("x.kculf"));
         assert_eq!(a.kculh.as_deref(), Some("y.kculh"));
         assert!(a.headless());
+    }
+
+    #[test]
+    fn equals_syntax_is_accepted() {
+        let a = LaunchArgs::parse(["--instance=alpha"]).unwrap();
+        assert_eq!(a.instance.as_deref(), Some("alpha"));
+    }
+
+    #[test]
+    fn double_dash_marks_remaining_as_positional() {
+        let a = LaunchArgs::parse(["--", "--server", "literal"]).unwrap();
+        assert_eq!(a.extras, vec!["--server".to_string(), "literal".to_string()]);
+        assert!(!a.joins_server());
+    }
+
+    #[test]
+    fn positional_extras_are_kept() {
+        let a = LaunchArgs::parse(["pack.mrpack", "--lang", "en-US"]).unwrap();
+        assert_eq!(a.extras, vec!["pack.mrpack".to_string()]);
+        assert_eq!(a.lang.as_deref(), Some("en-US"));
     }
 }

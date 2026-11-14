@@ -442,3 +442,10 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I29 | F028-02 | `server.activity.pie` / `sessions` / `export` |
 | I30 | F028-03 | `server.auto_cmd.rules` / `upsert` / `fire` / `audit` |
 | S28 | 状态 | 三项均为文档登记，未进入 `src/`，无函数实现 |
+
+## 030 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I31 | `LaunchArgs::parse` | 签名不变，内部实现换 lexopt；错误面仍 `Result<Self, String>` |
+| S29 | 状态 | 参数解析已库化；Q-028-01 / Q-028-02 仍待用户答复，功能 md 结论栏为空 |
