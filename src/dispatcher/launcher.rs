@@ -80,14 +80,14 @@ impl Dispatcher {
     pub fn reset(&mut self) {
         self.cache.clear();
         self.parse_calls.store(0, Ordering::SeqCst);
-        let _ = self.log.flush();
+        let _ = self.log.take_shards();
         self.failures = 0;
         self.safe_mode = false;
         self.diagnostic_ready = false;
     }
 
     pub fn flush_diagnostics(&mut self) -> Vec<Vec<String>> {
-        self.log.flush()
+        self.log.take_shards()
     }
 
     pub fn dispatch(&mut self, input: &DispatchInput, cancel: &CancelToken) -> LaunchOutcome {
@@ -97,7 +97,7 @@ impl Dispatcher {
 
         if cancel.is_cancelled() {
             diagnostics.push(diag_line("dispatcher", "dispatch", "launch", "CANCELLED", "detail=token_cancelled"));
-            self.log.push(diagnostics[0].clone());
+            self.log.record(format_args!("{}", diagnostics[0]), log::Level::Info, "kcu.dispatcher");
             return LaunchOutcome {
                 envelope: envelope.with_error("CANCELLED"),
                 mode: Mode::Safe,
@@ -255,7 +255,7 @@ impl Dispatcher {
 
         diagnostics.push(diag_line("dispatcher", "dispatch", "launch", "OK", &format!("detail=mode={} task={} fallback={}", selection.mode.code(), task.id, selection.fallback.code())));
         for d in &diagnostics {
-            self.log.push(d.clone());
+            self.log.record(format_args!("{}", d), log::Level::Info, "kcu.dispatcher");
         }
 
         envelope = envelope

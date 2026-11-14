@@ -2197,3 +2197,37 @@ L3 落地：
 | E16 | 高频命中撞「每次确认」会打爆弹窗 | 立 P05：一条待确认 + 累计计数，确认只作用当前一次，不改变严格口径 |
 
 028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 032
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/32-round-032-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/032-user-selectable-tiers.md | A01/B01 边界、三档矩阵、U01–U07、C01-C07、D01-D06、E17-E20、四值 |
+| docs/features/server-auto-command-log-trigger.md | R04 改写，新增 P08–P12 与「032 用户可选松档」段 |
+| docs/rules/auto-command-policy.md | 单一口径 → 默认严格 + 可选标准 / 宽松，U01–U11，后果更新 |
+| docs/records/q028-decision-scenarios.md | 追加 032 段与四场景对照 |
+| docs/verification/round-032.md | 14 条复跑证据 |
+| demos/round-032-tiers.html | 13 步运行逻辑演示 |
+| demos/ui-full-kcu-paper.html / preview | 三张档位卡、切档二次确认、非严格档五类勾选；3 张新预览图（46 / 47 / 48）；031 分组 27 处中文 key 改语义 key |
+| src/core/log.rs / diagnostics.rs | 自写日志 API 换 `log::Log`，新增 `emit` |
+| src/dispatcher/launcher.rs / lightweight/view.rs | 调用面同步 |
+| vendor/log/ + Cargo.toml/lock | 11 包 / 10 第三方 |
+| docs/licenses/log-LICENSE-*.txt | MIT 与 Apache-2.0 全文 |
+| 索引与记录 | docs/index 156 项、README、decisions/index、rules/index、licenses/index、ai-errors A79-A81、code-ownership-audit、implementation-strategy、THIRD-PARTY-NOTICES、interface-log、rounds |
+
+「用户可选松档」按「默认严格 + 用户主动切标准 / 宽松」落地。三档单调变松：严格 Q1-C + Q2-A → 标准 Q1-B + Q2-C → 宽松 Q1-A + Q2-D。七条不可变边界含默认回严格、切档二次确认与审计、C5 外传永远二次确认、插件不能替用户切档、黑名单逐条解锁。R01 夜间失效在标准 / 宽松档由用户自己打开；R04 严格档不发命令，勾选 C3 后才发。Q-031-01 字母歧义这次没答复，仍挂着。
+
+「干」继续替换自写代码：`core/log.rs` 的自写 `push` / `flush` 全删，换成 `log 0.4.35` 的 `Log` trait；`diagnostics.rs` 新增 `emit`。零传递依赖，153 / 0。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E17 | 裁 log manifest 后 `kv_unstable_serde` 仍引用已删 feature，整个目录源解析失败 | 重建 `[features]` 为 14 个零外部引用开关 |
+| E18 | `g.shards.push(std::mem::take(&mut g.current))` E0499 双可变借用 | 拆两步 |
+| E19 | 测试里 `format_args!` 链式构造 Record E0716 临时值提前释放 | `let args` 绑定延长生命周期 |
+| E20 | 档位初始化绑定被同名字符串误判已存在而跳过 | 换 init 段特有字符串作幂等判据，补插复验 |
+| E21 | 切到宽松档后，「命中以后」与「这样设置以后」仍显示严格档文案，界面自相矛盾 | 两块改为按档位动态渲染，三档各一套文案，补 `auto.ef.*` 英文条目；重渲 46 / 47 / 48 三图复核一致 |
+
+028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。

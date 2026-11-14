@@ -198,3 +198,19 @@
 本轮 **未新增第三方 crate**，这一点如实登记：做的是「把自写数据容器换成已有库的数据结构」，不是「引入新库」。映射表里「配置 → serde + toml」只落地了载荷层，toml 文件编解码仍待后续；真实网络 / UI / 崩溃 / 插件层仍未启动。
 
 剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135、`core/paths.rs`（逻辑名映射）、`core/log.rs`（分片缓冲）、`core/popup.rs`、`core/userflow.rs`、`core/instance.rs`。
+
+## 032 第六块替换后状态
+
+| 项 | 024 | 025 | 027 | 029 | 030 | 031 | 032 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 第三方 crate 进构建 | 0 | 5 | 7 | 8 | 9 | 9 | **10** |
+| `Cargo.lock` 包数 | 1 | 6 | 8 | 9 | 10 | 10 | 11 |
+| `core/config.rs` + `envelope.rs` | 双 BTreeMap | 同 | 同 | 同 | 同 | serde_json::Map | serde_json::Map |
+| `core/log.rs` | 56 行自写 API | 56 | 56 | 56 | 56 | 56 | **约 105（含 6 测试，分片策略约 30 行）** |
+| `src/` 行数 | 4339 | 4081 | 4073 | 4017 | 4046 | 4197 | 约 4270 |
+
+032 删掉的自写日志 API：`push(&mut self, ...)` / `flush(&mut self) -> Vec` / 直接字段与直接调用面。换成 `log 0.4.35` 的 `Log` trait：`log(&self, &Record)` 写缓冲、`flush(&self)` 走库契约、`take_shards()` 取分片；`diagnostics::emit` 经 `Record` 走门面。内部 `Mutex<Inner>` 与每 N 行分片是项目特有约 30 行，如实登记。
+
+log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 crate 的 features 行，上游 `src/` 未改。MIT 与 Apache-2.0 全文都落 `docs/licenses/`，按 MIT 用。
+
+剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135、`core/paths.rs`、`core/popup.rs`、`core/userflow.rs`、`core/instance.rs`。这些是模式判定、用户指定实例排第一、双击绑定一类项目特有编排，映射表里没有对应替换库，不硬换。

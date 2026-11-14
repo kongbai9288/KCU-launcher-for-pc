@@ -65,3 +65,5 @@
 | 030 | 参数解析换 lexopt；Q-028 两条问题铺场景 | 代码已实现；两 Q 待答复 | 030-args-and-q-scenarios.md |
 
 | 031 | 两条 Q 按最严格拍板；配置与信封换 serde_json | A 已拍板、B 已实现 | 031-strict-policy-and-config.md |
+
+| 032 | 用户可选松档；日志门面换 log crate | A 已落地、B 已实现 | 032-user-selectable-tiers.md |

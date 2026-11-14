@@ -58,6 +58,9 @@ SCENES = [
     ("43-licenses-updated", "licenses", "第三方许可 · 新增候选 6 组"),
     ("44-settings-auto", "settings&tab=auto", "设置 · 自动命令最严格口径"),
     ("45-auto-confirm", "auto-confirm", "命中确认 · 每次都先问过你"),
+    ("46-settings-tiers", "settings&tab=auto", "设置 · 宽严程度默认严格"),
+    ("47-tier-switch", "tier-switch", "切换宽严程度 · 二次确认"),
+    ("48-loose-actions", "loose-actions", "宽松档 · 动作逐项可勾"),
 ]
 
 W, H = 1440, 900

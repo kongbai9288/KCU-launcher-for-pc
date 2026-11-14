@@ -133,7 +133,7 @@ impl LightweightView {
     }
 
     fn push(&mut self, line: String) {
-        self.log.push(line.clone());
+        self.log.record(format_args!("{}", line), log::Level::Info, "kcu.lightweight");
         self.diagnostics.push(line);
     }
 
@@ -336,11 +336,11 @@ mod tests {
 
     #[test]
     fn log_is_bounded_by_shards() {
-        let mut v = LightweightView::new();
+        let v = LightweightView::new();
         for i in 0..250 {
-            v.log.push(format!("line-{}", i));
+            v.log.record(format_args!("line-{}", i), log::Level::Info, "kcu.test");
         }
-        let shards = v.log.flush();
+        let shards = v.log.take_shards();
         assert!(shards.len() >= 2);
         assert!(v.log.pending() <= LOG_LINES_PER_FILE);
     }

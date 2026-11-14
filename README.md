@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 031 |
+| 当前轮次 | 032 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -127,3 +127,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 设置内新增「自动命令」分组与命中确认弹窗，出 2 张预览图；不进一级导航。
 
 `core/config.rs` 与 `core/envelope.rs` 的自写 `BTreeMap` 容器换成已在构建中的 `serde_json::Map<String, Value>`，新增配置 JSON 往返与信封序列化；零新增第三方 crate，`cargo test --offline` 149/0。
+
+## 032 用户可选松档，日志门面换 log crate
+
+031 的最严格口径保留为**默认档**，设置里新增「宽严程度」三张档位卡：严格（每次问 + 只记录）/ 标准（记录免问 + 五类逐项）/ 宽松（授权一次后自动 + 全可开）。切档只能用户本人做，二次确认列清差异与风险，随时「恢复严格」；插件、更新、重置都不能替用户放宽。C5 外传永远二次确认且默认脱敏。规则全文见 `docs/rules/auto-command-policy.md`。
+
+`core/log.rs` 的自写 `push` / `flush` 全删，换成 `log 0.4.35` 的 `Log` trait；`diagnostics.rs` 新增 `emit`。零传递依赖，`Cargo.lock` 11 包 / 10 第三方，`cargo test --offline` 153/0。
+
+顺带把 031 分组里 27 处「中文当 i18n key」改成 `auto.*` 语义 key 并补英文条目。

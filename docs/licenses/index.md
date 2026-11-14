@@ -136,3 +136,12 @@
 | lexopt-LICENSE.txt | lexopt 0.3.2 | MIT |
 
 来源：blyxxyz/lexopt tag `v0.3.2` 内的 LICENSE，逐字副本，1055 字节。
+
+## 032 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| log-LICENSE-MIT.txt | log 0.4.35 | MIT |
+| log-LICENSE-APACHE.txt | log 0.4.35 | Apache-2.0 |
+
+来源：rust-lang/log tag `v0.4.35`，两份逐字副本，1071 / 10847 字节。许可声明为 `MIT OR Apache-2.0`，本项目按 MIT 条款使用，两份全文都随发行物附上。

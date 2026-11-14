@@ -169,3 +169,16 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | --- | --- |
 | N22 | 上游 tarball 的 `[profile.test]` 段对依赖无效，裁掉以免本地目录源解析告警；`src/lib.rs` 未改。 |
 | N23 | MIT 条款要求保留版权与许可声明，全文随发行物附上。 |
+
+## 032 新增已进构建依赖
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| log | 0.4.35 | MIT OR Apache-2.0（按 MIT 用） | The Rust Project Developers (c) 2014 | 日志门面 | vendor/log | 构建中已使用 |
+
+许可证全文：`docs/licenses/log-LICENSE-MIT.txt`、`docs/licenses/log-LICENSE-APACHE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N24 | `default-features = false, features = ["std"]`，零传递依赖；vendor 裁掉 optional deps、dev deps 与外部 features 引用，`src/` 未改。 |
+| N25 | MIT 条款要求保留版权与许可声明，全文随发行物附上；Apache-2.0 全文一并保留供选择。 |

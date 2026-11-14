@@ -457,3 +457,11 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I32 | `Config` | 新增 `from_json_str` / `to_json_string`；原有 9 个方法签名不变 |
 | I33 | `Envelope` | `payload` 类型换 `Map<String, Value>`；`with` / `field` 语义不变；新增 JSON 输出与解析 |
 | S30 | 状态 | Q-028-01 = Q1-C、Q-028-02 = Q2-A 已拍板；F028-03 实现层未启动 |
+
+## 032 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I34 | `LogBuffer` | `push` / `flush` 移除；新增 `record` / `take_shards`，实现 `log::Log` |
+| I35 | `diagnostics` | `diag_line` 保留，新增 `emit` |
+| S31 | 状态 | 三档默认严格；Q-028-01 = Q1-C、Q-028-02 = Q2-A 仅适用于严格档；F028-03 实现层未启动 |
