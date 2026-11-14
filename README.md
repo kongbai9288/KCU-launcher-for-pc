@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 025 |
+| 当前轮次 | 026 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -93,3 +93,7 @@
 ## 025 首次真正替换自写代码
 
 手写 336 行 JSON 解析器已换为 `serde_json`；`Cargo.lock` 从 1 包变为 6 包，其中 5 个是真实第三方 crate（serde_json / serde_core / itoa / ryu / memchr）。registry 端点在本环境被 403 阻断，改用 `vendor/` + `.cargo/config.toml` 目录源，`cargo build --offline` 与 `cargo test --offline` 通过（141/0）。9 份许可证全文落盘，关于页新增 5 组「构建中已使用」。剩余自写模块按 `docs/records/code-ownership-audit.md` 逐模块推进。
+
+## 026 受阻回退
+
+尝试把手写 `src/core/cache.rs` 换成 `mini-moka`，离线 vendor 闭包拉到 21 个上游包后卡在 `libc 0.2.191` 源码解压（沙盒 IO 超时）与工具层 502。已回退 `Cargo.toml` / `vendor/` / `Cargo.lock` 到 025 基线，`cargo build --offline` 与 `cargo test --offline` 复跑通过（141/0），`src/` 一行未动。详见 `docs/decisions/026-vendor-blocked.md`。

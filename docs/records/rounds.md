@@ -2039,3 +2039,17 @@ L3 落地：
 阶段：D07 第 3 层 lightweight 逻辑不变；本轮动的是 L2 dispatcher 的 JSON 解析实现。UI 演示层只改许可数据行并重渲截图，未改界面结构。
 
 未做：剩余自写模块替换、真实网络 / GUI / 跨平台构建、CF F17、特殊版代码、本项目 LICENSE、后端仓任何写请求。
+
+## 026
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/26-round-026-instructions.txt | 逐字副本（「干」+「好了吗？」） |
+| docs/decisions/026-vendor-blocked.md | A01-A04 尝试、B01-B04 卡点、R01-R05 回退、N01-N03 选项 |
+| docs/verification/round-026.md | 9 条复跑证据 |
+| scripts/round026_vendor.py | 自动闭包脚本，标注未跑通 |
+| docs/records/vendor-fetch-log.txt | 失败回显留痕 |
+
+用户问「好了吗」时，本轮状态是：mini-moka 依赖闭包未收敛（libc 0.2.191 解压受阻、工具层多次 502），已回退到 025 基线，`src/` 一行未动。如实答「没好」，不发通过标记。
+
+本轮未做：cache.rs / asynk.rs / leak.rs 替换、任何新依赖进构建、UI 演示、自评打分、后端仓写请求。

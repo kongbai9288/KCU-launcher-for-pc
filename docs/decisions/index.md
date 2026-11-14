@@ -53,3 +53,5 @@
 状态值：已批准 / 已实现 / 已验证 / 已合并 / 已进入构建 / 已部署 / 行为已确认。
 
 | 025 | 首次真正替换自写代码：手写 JSON 解析器换 serde_json，vendor 目录源，5 个第三方 crate 进构建 | 已实现、已验证 | 025-vendor-first-replacement.md |
+
+| 026 | mini-moka 替换缓存受阻并回退 025 基线，src 改动 0 | 受阻；已回退 | 026-vendor-blocked.md |
