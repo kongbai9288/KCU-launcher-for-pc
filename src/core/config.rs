@@ -11,8 +11,8 @@ pub struct Config {
 impl Config {
     pub fn empty(os_class: &str) -> Self {
         let mut data = Map::new();
-        data.insert("endpoints".to_string(), Value::Object(Map::new()));
-        data.insert("ports".to_string(), Value::Object(Map::new()));
+        Self::ensure_object(&mut data, "endpoints");
+        Self::ensure_object(&mut data, "ports");
         Self {
             os_class: os_class.to_string(),
             language: "zh-CN".to_string(),
@@ -29,10 +29,8 @@ impl Config {
             .ok_or_else(|| anyhow::anyhow!("config root is not an object"))?
             .clone();
         let mut data = root;
-        data.entry("endpoints")
-            .or_insert_with(|| Value::Object(Map::new()));
-        data.entry("ports")
-            .or_insert_with(|| Value::Object(Map::new()));
+        Self::ensure_object(&mut data, "endpoints");
+        Self::ensure_object(&mut data, "ports");
         let os_class = data
             .get("os_class")
             .and_then(Value::as_str)
@@ -74,51 +72,58 @@ impl Config {
         Ok(to_string(&Value::Object(root))?)
     }
 
-    fn endpoints(&self) -> &Map<String, Value> {
-        self.data["endpoints"].as_object().expect("endpoints object")
+    fn ensure_object(data: &mut Map<String, Value>, key: &str) {
+        let slot = data
+            .entry(key.to_string())
+            .or_insert_with(|| Value::Object(Map::new()));
+        if !slot.is_object() {
+            *slot = Value::Object(Map::new());
+        }
     }
 
-    fn endpoints_mut(&mut self) -> &mut Map<String, Value> {
-        self.data
-            .get_mut("endpoints")
-            .and_then(Value::as_object_mut)
-            .expect("endpoints object")
+    fn endpoints(&self) -> Option<&Map<String, Value>> {
+        self.data.get("endpoints").and_then(Value::as_object)
     }
 
-    fn ports(&self) -> &Map<String, Value> {
-        self.data["ports"].as_object().expect("ports object")
-    }
-
-    fn ports_mut(&mut self) -> &mut Map<String, Value> {
-        self.data
-            .get_mut("ports")
-            .and_then(Value::as_object_mut)
-            .expect("ports object")
+    fn ports(&self) -> Option<&Map<String, Value>> {
+        self.data.get("ports").and_then(Value::as_object)
     }
 
     pub fn set_endpoint(&mut self, key: &str, url: &str) {
-        self.endpoints_mut()
-            .insert(key.to_string(), Value::String(url.to_string()));
+        Self::ensure_object(&mut self.data, "endpoints");
+        if let Some(m) = self
+            .data
+            .get_mut("endpoints")
+            .and_then(Value::as_object_mut)
+        {
+            m.insert(key.to_string(), Value::String(url.to_string()));
+        }
     }
 
     pub fn endpoint(&self, key: &str) -> Option<&str> {
-        self.endpoints().get(key).and_then(Value::as_str)
+        self.endpoints()
+            .and_then(|m| m.get(key))
+            .and_then(Value::as_str)
     }
 
     pub fn set_port(&mut self, key: &str, port: u16) {
-        self.ports_mut()
-            .insert(key.to_string(), Value::from(port as u64));
+        Self::ensure_object(&mut self.data, "ports");
+        if let Some(m) = self.data.get_mut("ports").and_then(Value::as_object_mut) {
+            m.insert(key.to_string(), Value::from(port as u64));
+        }
     }
 
     pub fn port(&self, key: &str) -> Option<u16> {
         self.ports()
-            .get(key)
+            .and_then(|m| m.get(key))
             .and_then(Value::as_u64)
             .and_then(|n| u16::try_from(n).ok())
     }
 
     pub fn endpoint_keys(&self) -> Vec<String> {
-        self.endpoints().keys().cloned().collect()
+        self.endpoints()
+            .map(|m| m.keys().cloned().collect())
+            .unwrap_or_default()
     }
 
     pub fn set_download_region(&mut self, region: &str) {
@@ -130,7 +135,9 @@ impl Config {
     }
 
     pub fn has_policy_endpoint(&self) -> bool {
-        self.endpoints().keys().any(|k| k.starts_with("policy/"))
+        self.endpoints()
+            .map(|m| m.keys().any(|k| k.starts_with("policy/")))
+            .unwrap_or(false)
     }
 }
 
@@ -166,6 +173,34 @@ mod tests {
         let mut c = Config::empty("windows");
         c.language = "en-US".to_string();
         assert_eq!(c.language, "en-US");
+    }
+
+    #[test]
+    fn malformed_endpoints_is_normalised_not_panicking() {
+        let c = Config::from_json_str(r#"{"endpoints":"oops","ports":[1,2]}"#).unwrap();
+        assert_eq!(c.endpoint("a"), None);
+        assert_eq!(c.port("b"), None);
+        assert!(c.endpoint_keys().is_empty());
+        assert!(!c.has_policy_endpoint());
+    }
+
+    #[test]
+    fn writes_recover_after_malformed_input() {
+        let mut c = Config::from_json_str(r#"{"endpoints":null,"ports":false}"#).unwrap();
+        c.set_endpoint("download/java", "mirror-a");
+        c.set_port("ai/local", 8787);
+        assert_eq!(c.endpoint("download/java"), Some("mirror-a"));
+        assert_eq!(c.port("ai/local"), Some(8787));
+    }
+
+    #[test]
+    fn roundtrip_still_normalises_nested_objects() {
+        let mut c = Config::empty("windows");
+        c.set_endpoint("policy/mirror", "off");
+        let s = c.to_json_string().unwrap();
+        let back = Config::from_json_str(&s).unwrap();
+        assert_eq!(back.endpoint("policy/mirror"), Some("off"));
+        assert!(back.has_policy_endpoint());
     }
 
     #[test]

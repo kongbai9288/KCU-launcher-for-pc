@@ -246,3 +246,17 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 `semver 1.0.28` 零传递依赖；vendor 裁掉 optional serde_core、恒假 target 段、dev-deps、bench 与元数据，上游 `src/` 未改。两份 LICENSE 全文落盘。
 
 剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135、`core/paths.rs`（逻辑名映射表约 20 行）、`core/popup.rs`（弹窗状态机）、`core/userflow.rs`、`core/config.rs` / `envelope.rs` 的动态 Map 组装。这些是模式判定、弹窗关闭、流程编排一类项目特有逻辑；`core/instance.rs` 的打分与优先规则也保留。映射表里没有对应替换库，不硬换。
+
+## 035 映射表阶段性收敛
+
+| 项 | 024 | 025 | 027 | 029 | 030 | 031 | 032 | 033 | 034 | 035 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 第三方 crate 进构建 | 0 | 5 | 7 | 8 | 9 | 9 | 10 | 11 | 12 | **12（本轮 0 新增）** |
+| `Cargo.lock` 包数 | 1 | 6 | 8 | 9 | 10 | 10 | 11 | 12 | 13 | 13 |
+| 测试数 | 141 | 141 | 141 | 141 | 144 | 149 | 153 | 153 | 161 | 164 |
+
+035 核完三条挂账路线，全部不成立：`toml 0.25.19`（edition 2024 / MSRV 1.85 + indexmap/winnow 大闭包 + 会把 JSON 配置改成 TOML）、`tracing`（与已落地 `log` 门面重叠，subscriber 33 项依赖）、`thiserror`（proc-macro 链，且 5 个错误 enum 根本没有 Display/Error 实现可换）。一手 manifest 数据见 035 决策 R01–R03。
+
+改轨落地：`core/config.rs` 删掉 4 处 `expect` 与 2 处下标访问，新增 `ensure_object` 归一化，6 个公开读写方法全走 `serde_json` 的 `get`/`get_mut` + `as_object` 链。修掉「配置文件里 endpoints 被写坏 → 启动路径 panic」这个真实缺陷。用的是已在构建中的 serde_json + anyhow，零新依赖。
+
+**收敛口径**：结掉的是「自写通用算法换成熟库」这一项，不是项目做完。剩余 `launcher.rs` 547、`lightweight/*.rs` 1135、`core/paths.rs` 76、`popup.rs` 239、`userflow.rs` 196 等是项目特有编排（模式优先级、用户指定实例排第一、双击绑定、弹窗必可关、统一信封），无语义等价通用库。UI 宿主、真实网络、崩溃分析、插件 ABI、更新器仍标「未启动」。

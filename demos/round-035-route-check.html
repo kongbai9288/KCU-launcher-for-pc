@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 035 三条路线核完改轨</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:118px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>035 运行逻辑</h1><div class="sub">三条路线核完改轨 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>R01 toml</h3><p id="m1">未运行</p><span class="badge r">edition 2024 / MSRV 1.85</span><span class="badge r">JSON→TOML 行为变更</span></div>
+<div class="mini"><h3>R02 tracing / R03 thiserror</h3><p id="m2">未运行</p><span class="badge r">与 log 重叠</span><span class="badge r">subscriber 33 项</span><span class="badge r">无 Display 可删</span></div>
+<div class="mini"><h3>改轨：配置归一化</h3><p id="m3">未运行</p><span class="badge g">4 expect + 2 下标清除</span><span class="badge g">零新依赖</span></div>
+<div class="mini"><h3>验证与收敛</h3><p id="m4">未运行</p><span class="badge g">164 / 0</span><span class="badge g">13 包 12 第三方</span></div>
+</div><div class="note" id="note">收敛的是「自写通用算法换成熟库」，不是项目做完；UI / 网络 / 崩溃 / 插件仍标未启动。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','读索引 171 项、034 结尾两步、024 台账'],
+['02','逐字落盘','35-round-035-instructions.txt'],
+['03','探 toml manifest','v0.25.19 edition 2024 / MSRV 1.85，23 依赖行'],
+['04','R01 判定','indexmap+winnow 大闭包；JSON→TOML 属行为变更'],
+['05','探 tracing','tracing 浅，subscriber 33 项；与已落地 log 重叠'],
+['06','R02 判定','功能重叠不是替换；Win7 Tier3 下闭包未证实'],
+['07','探 thiserror','impl 依赖 proc-macro2 + quote + syn 3'],
+['08','R03 判定','5 个错误 enum 没有 Display/Error 实现可删'],
+['09','改轨选点','config.rs 4 expect + 2 下标，启动路径可 panic'],
+['10','归一化落地','ensure_object + get/get_mut + as_object 链'],
+['11','零新依赖核对','Cargo.toml / lock / vendor 一行未动'],
+['12','测试回归','164 passed / 0 failed，新增 3 测试'],
+['13','提交推送','双扫描 → 本地提交 → 远端快照比对']];
+const DETAIL={'01':'REQ 171/171 OK','02':'SPEC cmp 0','03':'R01 toml 0.25.19 edition2024 msrv1.85','04':'R01 FAIL format_change big_closure','05':'R02 tracing_subscriber deps=33','06':'R02 FAIL overlaps_log','07':'R03 thiserror_impl syn3 quote proc_macro2','08':'R03 FAIL no_display_to_remove','09':'TARGET 4_expect 2_index panic_path','10':'C01-C04 ensure_object safe_access','11':'DEPS unchanged 13pkg 12third','12':'TEST 164 passed 0 failed','13':'PUSH remote_snapshot ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'R01 探查','04':'R01 判定','05':'R02 探查','06':'R02 判定','07':'R03 探查','08':'R03 判定','09':'改轨选点','10':'归一化落地','11':'依赖核对','12':'测试回归','13':'提交推送'};
+const QN=new Set(['04','06','08','09','10']);
+const M={'04':['m1','toml 0.25.19 是 edition 2024 / rust-version 1.85，带 indexmap 2.13 + winnow 1.0 + foldhash；Win7 Tier 3 + build-std 下未证实。项目现用 JSON 配置，换 TOML 会改磁盘格式，是行为变更。'],'08':['m2','tracing 与 032 已落地的 `log 0.4.35` 门面重叠，subscriber 有 33 项依赖；thiserror 是 proc-macro 链，而 5 个错误 enum 根本没有 Display / Error 实现可删。三条都不成立。'],'10':['m3','`core/config.rs` 删掉 4 处 expect 与 2 处 `data["..."]` 下标，新增 `ensure_object` 归一化，6 个公开方法全走 serde_json 的 get/get_mut + as_object 链。配置文件写坏不再在启动路径 panic。'],'12':['m4','161 → 164 / 0，新增畸形输入不 panic、写可恢复、往返不丢字段 3 个测试；零新依赖，13 包 / 12 第三方不变。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','route.check','route.fail','route.check','route.fail','route.check','route.fail','core.target','core.harden','core.deps','core.test','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='三条路线核完改轨，配置 panic 缺陷已修；上层能力与自动命令实现层仍等你。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='收敛的是「自写通用算法换成熟库」，不是项目做完；UI / 网络 / 崩溃 / 插件仍标未启动。';}
+</script></body></html>

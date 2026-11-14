@@ -2264,6 +2264,7 @@ L3 落地：
 | E25 | `download.rs` 第二处 cancelled 漏改 | 按缩进定位补改 |
 | E26 | 三处 `assert_eq!(Result<Value, anyhow::Error>, Ok(..))` 触发 E0369 | 改 `unwrap()` 后比值 |
 | E27 | 自查抓到计数写错：签名数 19、命中文件 9 | 回 HEAD 逐文件复核得 15 个签名 / 8 个文件，全仓文档与演示统一；第 9 个模块是 launcher.rs 的调用面适配 |
+| E30 | 035 首版把 config 测试数写成「原 8 + 新 3 = 11」 | 回 HEAD 复核得原 7 + 新 3 = 10，决策 / 验证 V7 / rounds / 脚本统一 |
 
 028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
 
@@ -2295,3 +2296,24 @@ L3 落地：
 | E29 | 普通 `1.20.4` 交给 `VersionReq` 会当 `^1.20.4` 误匹配 `1.21.1` | 立 M04，只在显式带范围符号时走范围解析 |
 
 028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 035
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/35-round-035-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/035-route-check-and-config-hardening.md | R01-R03 一手数据、不换依据、C01-C04 改轨、缺陷对照、024 收敛表、四值 |
+| docs/verification/round-035.md | 13 条复跑证据 |
+| demos/round-035-route-check.html | 13 步运行逻辑演示 |
+| src/core/config.rs | 4 处 expect + 2 处下标删除，ensure_object 归一化，新增 3 测试 |
+| 索引与记录 | docs/index 171 项、README、decisions/index、ai-errors A88-A91、code-ownership-audit、implementation-strategy、interface-log、rounds |
+
+「干」按 034 结尾的两步走：核 `toml` / `tracing` / `thiserror` 三条挂账路线。三条都拿上游 manifest 一手数据判为**不成立** —— toml 0.25.19 是 edition 2024 / MSRV 1.85 且带 indexmap+winnow 大闭包，还会把现用 JSON 配置改成 TOML；tracing 与 032 已落地的 `log` 门面重叠，subscriber 有 33 项依赖；thiserror 是 proc-macro 链，而本地 5 个错误 enum 根本没有 Display/Error 实现可删。
+
+改轨落地：`core/config.rs` 的 4 处 `expect` 与 2 处 `self.data["..."]` 下标换成 `serde_json` 的 `get`/`get_mut` + `as_object` 链，新增 `ensure_object` 归一化。修掉真实缺陷：配置文件里 `endpoints` 被写坏时，034 版任何读写都会 panic，而配置来自 `C:\KCU` 磁盘、可能被手工编辑或插件写坏。**零新依赖**，13 包 / 12 第三方不变，`cargo test --offline` 161 → **164 / 0**，原 7 个 config 测试全过。
+
+**024 映射表阶段性收敛**：结掉的是「自写通用算法换成熟库」，不是项目做完。剩余 `launcher.rs` 547、`lightweight/*.rs` 1135、`paths/popup/userflow` 是项目特有编排；UI 宿主、真实网络、崩溃分析、插件 ABI、更新器仍标「未启动」，动到该层时按 023 逐项取 LICENSE 全文并登记关于页与 NOTICES。
+
+界面闸门**未触发**：本轮不动界面，关于页许可表仍 12 组 / 34，预览图未重渲。
+
+028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。

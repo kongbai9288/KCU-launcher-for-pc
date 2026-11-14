@@ -71,3 +71,5 @@
 | 033 | Q-031-01 结案（A=answer 缩写）；错误处理换 anyhow | A 已结案、B 已实现 | 033-answer-abbr-and-anyhow.md |
 
 | 034 | 版本匹配交给 semver 1.0.28 | 已实现 | 034-semver-version-matching.md |
+
+| 035 | 三条路线核完改轨；配置访问换 serde_json 安全 API | 改轨已实现 | 035-route-check-and-config-hardening.md |

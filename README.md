@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 034 |
+| 当前轮次 | 035 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -149,3 +149,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `core/instance.rs` 三处自写字符串比较换成 `semver 1.0.28`：精确串相等保留（MC 快照版本）、普通三段版本不被当 caret 放宽、显式范围符号才走 `VersionReq`、解析失败不崩。新增 `+build` 元数据归一与 `1.20.x` / `>=1.20.0, <1.21.0` 范围匹配；用户指定实例排第一与习惯权重排序未动。
 
 零传递依赖，`Cargo.lock` 13 包 / 12 第三方，`cargo test --offline` 161/0。带前缀版本名（如 `Paper 1.20.4`）当前仍走回退，标未证实。口径与行为差异见 `docs/decisions/034-semver-version-matching.md`。
+
+## 035 三条路线核完改轨；配置访问换成库的安全 API
+
+`toml 0.25.19`（edition 2024 / MSRV 1.85 + indexmap/winnow 大闭包 + 会把 JSON 配置改成 TOML）、`tracing`（与已落地的 `log` 门面重叠，subscriber 33 项依赖）、`thiserror`（proc-macro 链，本地错误 enum 没有 Display/Error 可删）三条路线核完均判不成立，一手 manifest 数据见 `docs/decisions/035-route-check-and-config-hardening.md`。
+
+改轨修复：`core/config.rs` 删掉 4 处 `expect` 与 2 处下标访问，新增 `ensure_object` 归一化，读写全走 `serde_json` 的 `get`/`get_mut` + `as_object` 链。配置文件写坏时不再在启动路径 panic。**零新依赖**，`cargo test --offline` 164/0。
+
+024 映射表阶段性收敛：结掉「自写通用算法换成熟库」，不是项目做完；UI 宿主、真实网络、崩溃分析、插件 ABI、更新器仍标未启动。
