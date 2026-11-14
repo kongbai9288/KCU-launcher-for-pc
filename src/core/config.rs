@@ -1,44 +1,124 @@
-use std::collections::BTreeMap;
+use serde_json::{from_str, to_string, Map, Value};
 
 pub struct Config {
     pub os_class: String,
     pub language: String,
     pub mirror_speedtest: bool,
-    endpoints: BTreeMap<String, String>,
-    ports: BTreeMap<String, u16>,
+    data: Map<String, Value>,
     region_override: Option<String>,
 }
 
 impl Config {
     pub fn empty(os_class: &str) -> Self {
+        let mut data = Map::new();
+        data.insert("endpoints".to_string(), Value::Object(Map::new()));
+        data.insert("ports".to_string(), Value::Object(Map::new()));
         Self {
             os_class: os_class.to_string(),
             language: "zh-CN".to_string(),
             mirror_speedtest: true,
-            endpoints: BTreeMap::new(),
-            ports: BTreeMap::new(),
+            data,
             region_override: None,
         }
     }
 
+    pub fn from_json_str(s: &str) -> Result<Self, String> {
+        let v: Value = from_str(s).map_err(|e| e.to_string())?;
+        let root = v
+            .as_object()
+            .ok_or_else(|| "config root is not an object".to_string())?
+            .clone();
+        let mut data = root;
+        data.entry("endpoints")
+            .or_insert_with(|| Value::Object(Map::new()));
+        data.entry("ports")
+            .or_insert_with(|| Value::Object(Map::new()));
+        let os_class = data
+            .get("os_class")
+            .and_then(Value::as_str)
+            .unwrap_or("windows")
+            .to_string();
+        let language = data
+            .get("language")
+            .and_then(Value::as_str)
+            .unwrap_or("zh-CN")
+            .to_string();
+        let mirror_speedtest = data
+            .get("mirror_speedtest")
+            .and_then(Value::as_bool)
+            .unwrap_or(true);
+        let region_override = data
+            .get("download_region")
+            .and_then(Value::as_str)
+            .map(str::to_string);
+        Ok(Self {
+            os_class,
+            language,
+            mirror_speedtest,
+            data,
+            region_override,
+        })
+    }
+
+    pub fn to_json_string(&self) -> Result<String, String> {
+        let mut root = self.data.clone();
+        root.insert("os_class".to_string(), Value::String(self.os_class.clone()));
+        root.insert("language".to_string(), Value::String(self.language.clone()));
+        root.insert(
+            "mirror_speedtest".to_string(),
+            Value::Bool(self.mirror_speedtest),
+        );
+        if let Some(r) = &self.region_override {
+            root.insert("download_region".to_string(), Value::String(r.clone()));
+        }
+        to_string(&Value::Object(root)).map_err(|e| e.to_string())
+    }
+
+    fn endpoints(&self) -> &Map<String, Value> {
+        self.data["endpoints"].as_object().expect("endpoints object")
+    }
+
+    fn endpoints_mut(&mut self) -> &mut Map<String, Value> {
+        self.data
+            .get_mut("endpoints")
+            .and_then(Value::as_object_mut)
+            .expect("endpoints object")
+    }
+
+    fn ports(&self) -> &Map<String, Value> {
+        self.data["ports"].as_object().expect("ports object")
+    }
+
+    fn ports_mut(&mut self) -> &mut Map<String, Value> {
+        self.data
+            .get_mut("ports")
+            .and_then(Value::as_object_mut)
+            .expect("ports object")
+    }
+
     pub fn set_endpoint(&mut self, key: &str, url: &str) {
-        self.endpoints.insert(key.to_string(), url.to_string());
+        self.endpoints_mut()
+            .insert(key.to_string(), Value::String(url.to_string()));
     }
 
     pub fn endpoint(&self, key: &str) -> Option<&str> {
-        self.endpoints.get(key).map(String::as_str)
+        self.endpoints().get(key).and_then(Value::as_str)
     }
 
     pub fn set_port(&mut self, key: &str, port: u16) {
-        self.ports.insert(key.to_string(), port);
+        self.ports_mut()
+            .insert(key.to_string(), Value::from(port as u64));
     }
 
     pub fn port(&self, key: &str) -> Option<u16> {
-        self.ports.get(key).copied()
+        self.ports()
+            .get(key)
+            .and_then(Value::as_u64)
+            .and_then(|n| u16::try_from(n).ok())
     }
 
     pub fn endpoint_keys(&self) -> Vec<String> {
-        self.endpoints.keys().cloned().collect()
+        self.endpoints().keys().cloned().collect()
     }
 
     pub fn set_download_region(&mut self, region: &str) {
@@ -50,7 +130,7 @@ impl Config {
     }
 
     pub fn has_policy_endpoint(&self) -> bool {
-        self.endpoints.keys().any(|k| k.starts_with("policy/"))
+        self.endpoints().keys().any(|k| k.starts_with("policy/"))
     }
 }
 
@@ -86,5 +166,36 @@ mod tests {
         let mut c = Config::empty("windows");
         c.language = "en-US".to_string();
         assert_eq!(c.language, "en-US");
+    }
+
+    #[test]
+    fn json_roundtrip_keeps_every_value() {
+        let mut c = Config::empty("windows");
+        c.language = "en-US".to_string();
+        c.mirror_speedtest = false;
+        c.set_endpoint("download/java", "java-source-a");
+        c.set_port("ai/local", 8080);
+        c.set_download_region("overseas");
+        let s = c.to_json_string().unwrap();
+        let d = Config::from_json_str(&s).unwrap();
+        assert_eq!(d.language, "en-US");
+        assert!(!d.mirror_speedtest);
+        assert_eq!(d.endpoint("download/java"), Some("java-source-a"));
+        assert_eq!(d.port("ai/local"), Some(8080));
+        assert_eq!(d.download_region(), Some("overseas"));
+    }
+
+    #[test]
+    fn malformed_json_is_rejected() {
+        assert!(Config::from_json_str("not json").is_err());
+        assert!(Config::from_json_str("[]").is_err());
+    }
+
+    #[test]
+    fn missing_sections_are_defaulted() {
+        let c = Config::from_json_str(r#"{"os_class":"linux"}"#).unwrap();
+        assert_eq!(c.os_class, "linux");
+        assert_eq!(c.endpoint_keys().len(), 0);
+        assert_eq!(c.port("ai/local"), None);
     }
 }

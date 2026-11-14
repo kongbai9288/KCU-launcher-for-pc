@@ -449,3 +449,11 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | --- | --- | --- |
 | I31 | `LaunchArgs::parse` | 签名不变，内部实现换 lexopt；错误面仍 `Result<Self, String>` |
 | S29 | 状态 | 参数解析已库化；Q-028-01 / Q-028-02 仍待用户答复，功能 md 结论栏为空 |
+
+## 031 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I32 | `Config` | 新增 `from_json_str` / `to_json_string`；原有 9 个方法签名不变 |
+| I33 | `Envelope` | `payload` 类型换 `Map<String, Value>`；`with` / `field` 语义不变；新增 JSON 输出与解析 |
+| S30 | 状态 | Q-028-01 = Q1-C、Q-028-02 = Q2-A 已拍板；F028-03 实现层未启动 |

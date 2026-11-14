@@ -180,3 +180,21 @@
 030 删掉的自写参数解析器：手工 `peekable` 游标、字符串前缀 match、`it.next()` 取值、手写 6 条错误串、`starts_with('-')` 未知 flag 判定。换成 `lexopt 0.3.2`（零依赖、单文件、MIT）。保留的 66 行是 6 个字段、别名、统一错误面、`joins_server()` / `headless()` 这类项目特有语义，不是解析器。
 
 剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135、`core/config.rs`（BTreeMap 注入）、`core/paths.rs`（逻辑名映射）、`core/log.rs`（分片缓冲）、`core/popup.rs`、`core/userflow.rs`、`core/instance.rs`、`core/envelope.rs`、`core/diagnostics.rs`。后两者是跨进程协议定义，不在替换映射内；其余按本文件映射继续推进。
+
+## 031 第五块替换后状态
+
+| 项 | 024 | 025 | 027 | 029 | 030 | 031 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 第三方 crate 进构建 | 0 | 5 | 7 | 8 | 9 | **9（未增）** |
+| `Cargo.lock` 包数 | 1 | 6 | 8 | 9 | 10 | 10 |
+| `core/cache.rs` | 304 | 304 | 304 | 327 | 327 | 327 |
+| `core/args.rs` | 91 | 91 | 91 | 91 | 120 | 120 |
+| `core/config.rs` | 60 行双 BTreeMap | 60 | 60 | 60 | 60 | **约 130（含 JSON 往返与 3 新测）** |
+| `core/envelope.rs` | 81 行 BTreeMap | 81 | 81 | 81 | 81 | **约 100（含 JSON 输出与 2 新测）** |
+| `src/` 行数 | 4339 | 4081 | 4073 | 4017 | 4046 | 约 4140 |
+
+031 删掉的自写数据结构：两张 `BTreeMap<String,String>` 配置表 + 手写 6 个 getter/setter、envelope 的 `BTreeMap` payload、两处「无文件编解码」的空缺。换成已在构建中的 `serde_json::Map<String, Value>`，配置读写与信封序列化交给库。行数上升是因为新增 JSON 往返与 5 个测试，实现段的自写容器确实清零。
+
+本轮 **未新增第三方 crate**，这一点如实登记：做的是「把自写数据容器换成已有库的数据结构」，不是「引入新库」。映射表里「配置 → serde + toml」只落地了载荷层，toml 文件编解码仍待后续；真实网络 / UI / 崩溃 / 插件层仍未启动。
+
+剩余自写模块：`dispatcher/launcher.rs` 541、`lightweight/*.rs` 1135、`core/paths.rs`（逻辑名映射）、`core/log.rs`（分片缓冲）、`core/popup.rs`、`core/userflow.rs`、`core/instance.rs`。

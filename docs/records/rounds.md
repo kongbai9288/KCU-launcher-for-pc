@@ -2169,3 +2169,31 @@ L3 落地：
 | E14 | 029 的文档脚本重跑造成过重复追加，本轮脚本 `app()` 与 README 段全部改为幂等 | 030 脚本一次运行无重复 |
 
 028 的三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 031
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/31-round-031-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/031-strict-policy-and-config.md | A01/B01 边界、Q 判定、C01-C04、B10-B13、四值 |
+| docs/features/server-auto-command-log-trigger.md | 待拍板 → 已拍板（Q1-C / Q2-A / P01–P07 / R01–R04 / Q-031-01） |
+| docs/records/q028-decision-scenarios.md | 追加「031 答复」段，状态改已答复 |
+| docs/rules/auto-command-policy.md | 最严格策略全文 |
+| docs/verification/round-031.md | 13 条复跑证据 |
+| demos/round-031-strict.html | 13 步运行逻辑演示 |
+| demos/ui-full-kcu-paper.html / demos/preview/ | 设置内「自动命令」分组 + 命中确认弹窗；2 张新预览图（44 / 45） |
+| src/core/config.rs / envelope.rs | 双 BTreeMap 与 payload 换 `serde_json::Map`，加 JSON 往返 |
+| 索引与记录 | docs/index 151 项、README、decisions/index、rules/index、research 索引、ai-errors A76-A78、code-ownership-audit、implementation-strategy、interface-log、rounds |
+
+「两个问题A：按最严格去执行」按 Q1-C（每次命中都手动同意）+ Q2-A（只允许 C1 只读）落地。字母 A 与 Q1 选项冲突，以「最严格」为准，登记 Q-031-01 待确认。后果如实写明：无人值守自动化失效；F028-03 不会真的向服务器发命令。
+
+「干」继续替换自写代码：`config.rs` 与 `envelope.rs` 的自写 `BTreeMap` 容器换 `serde_json::Map`，新增文件编解码；零新增第三方 crate，149 / 0。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E15 | 配置 `port()` 从 `u16` 变 `Value::as_u64` 后可能越界 | 改 `u16::try_from`，越界返回 None，不 panic |
+| E16 | 高频命中撞「每次确认」会打爆弹窗 | 立 P05：一条待确认 + 累计计数，确认只作用当前一次，不改变严格口径 |
+
+028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、launcher / lightweight 业务模块替换、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。

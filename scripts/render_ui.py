@@ -56,6 +56,8 @@ SCENES = [
     ("41-i18n-en", "i18n-en", "界面语言切换 · English"),
     ("42-settings-crash", "settings&tab=crash", "设置 · 崩溃反馈"),
     ("43-licenses-updated", "licenses", "第三方许可 · 新增候选 6 组"),
+    ("44-settings-auto", "settings&tab=auto", "设置 · 自动命令最严格口径"),
+    ("45-auto-confirm", "auto-confirm", "命中确认 · 每次都先问过你"),
 ]
 
 W, H = 1440, 900
