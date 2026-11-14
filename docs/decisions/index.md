@@ -73,3 +73,5 @@
 | 034 | 版本匹配交给 semver 1.0.28 | 已实现 | 034-semver-version-matching.md |
 
 | 035 | 三条路线核完改轨；配置访问换 serde_json 安全 API | 改轨已实现 | 035-route-check-and-config-hardening.md |
+
+| 036 | 上层第一块：Ed25519 签名校验交给 ed25519-compact | 已实现 | 036-updater-signature-on-ed25519-compact.md |

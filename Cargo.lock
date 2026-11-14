@@ -21,6 +21,11 @@ version = "0.8.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "ed25519-compact"
+version = "2.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "itoa"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -32,6 +37,7 @@ dependencies = [
  "anyhow",
  "crossbeam-channel",
  "crossbeam-utils",
+ "ed25519-compact",
  "lexopt",
  "log",
  "lru",

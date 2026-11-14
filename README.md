@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 035 |
+| 当前轮次 | 036 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -157,3 +157,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 改轨修复：`core/config.rs` 删掉 4 处 `expect` 与 2 处下标访问，新增 `ensure_object` 归一化，读写全走 `serde_json` 的 `get`/`get_mut` + `as_object` 链。配置文件写坏时不再在启动路径 panic。**零新依赖**，`cargo test --offline` 164/0。
 
 024 映射表阶段性收敛：结掉「自写通用算法换成熟库」，不是项目做完；UI 宿主、真实网络、崩溃分析、插件 ABI、更新器仍标未启动。
+
+## 036 上层能力第一块：Ed25519 签名校验交给库
+
+`ed25519-compact 2.6.1` 单 crate、零传递依赖、纯 Rust、无 libc / windows-sys / build.rs，关闭 default features 后由 cfg 门排除 PEM / X25519 / 随机数模块。点解码、非规范编码拒绝、小阶点检查、SHA-512 全部由库完成。
+
+新增 `src/updater/`：签名校验排在版本决策之前，默认只升、同版本与 build 元数据差异 Keep、回滚需显式目标 + 二次确认、任何失败都保留旧插件。版本决策复用 `semver::cmp_precedence`。
+
+`Cargo.lock` 14 包 / 13 第三方，`cargo test --offline` 179/0。LICENSE 全文、关于页、NOTICES 三处齐备后才进依赖。UI 宿主、真实网络、崩溃分析、插件 ABI 与更新器其余部分仍标未启动。

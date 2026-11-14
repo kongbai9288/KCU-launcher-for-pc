@@ -486,3 +486,10 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | --- | --- | --- |
 | I38 | `Config` 公开读写方法 | 签名不变；异常输入从 panic 改为返回 None / 空集合 / 归一化 |
 | S34 | 状态 | R01–R03 已失败；配置缺陷已修复；F028-03 实现层未启动 |
+
+## 036 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I39 | `src/updater` | 新增 `verify_detached` / `decide` / `verify_then_decide` / `Decision` / `UpdatePolicy` |
+| S35 | 状态 | U01–U07 已证实；公钥来源与插件包格式未证实；028 三项开服器功能实现层未启动 |

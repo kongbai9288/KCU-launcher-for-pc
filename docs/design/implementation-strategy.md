@@ -165,3 +165,13 @@ registry 在本环境被 403 阻断，故采用 `vendor/` + `.cargo/config.toml`
 | 路径 → dirs | 已失败（033 D04） |
 | 项目特有编排（dispatcher / lightweight / popup / userflow / paths） | 保留，无语义等价通用库 |
 | 上层能力：UI 宿主、真实网络、崩溃分析、插件 ABI、更新器 | **未启动**；动到该层时按 023 逐项取 LICENSE 全文并登记关于页与 NOTICES |
+
+## 036 上层启动
+
+| 层 | 状态 |
+| --- | --- |
+| L1–L3 通用算法 | 已全部换成熟库 |
+| 路径 → dirs、配置 → toml、日志 → tracing、错误枚举 → thiserror | 已失败（033 D04、035 R01–R03） |
+| 项目特有编排（dispatcher / lightweight / popup / userflow / paths） | 保留 |
+| 更新器签名校验 | **已启动（036，ed25519-compact 2.6.1）** |
+| UI 宿主、真实网络、崩溃分析、插件 ABI、更新器其余部分 | 未启动 |

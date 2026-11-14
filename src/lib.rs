@@ -11,3 +11,4 @@ pub use core::asynk::{CancelToken, TaskGroup, RaceResult, race};
 pub use core::leak::WeakRegistry;
 pub use dispatcher::{Dispatcher, DispatchInput, LaunchOutcome, LaunchTask, Mode, ModeSelector, TaskSet};
 pub use lightweight::{AuthKind, Downloader, LightweightView, LoaderRegistry, LoginSession, ProviderConfig, ViewAction};
+pub mod updater;

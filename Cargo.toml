@@ -13,6 +13,7 @@ lexopt = "0.3.2"
 log = { version = "0.4.35", default-features = false, features = ["std"] }
 anyhow = "1.0.104"
 semver = "1.0.28"
+ed25519-compact = { version = "2.6.1", default-features = false, features = ["std"] }
 
 [lib]
 name = "kcu_core"

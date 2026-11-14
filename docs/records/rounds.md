@@ -2317,3 +2317,35 @@ L3 落地：
 界面闸门**未触发**：本轮不动界面，关于页许可表仍 12 组 / 34，预览图未重渲。
 
 028 三项开服器功能仍按「只记文档」零实现。未做：UI 实现、真实运行时 / GUI / 跨平台构建、CF F17、特殊版代码、本项目 LICENSE、后端仓写请求。
+
+## 036
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/36-round-036-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/036-updater-signature-on-ed25519-compact.md | D01-D09 依据与依赖、U01-U07 口径、用户逻辑推演、E32-E34、四值 |
+| docs/verification/round-036.md | 13 条复跑证据 |
+| demos/round-036-updater-signature.html | 13 步运行逻辑演示 |
+| src/updater/ | 3 文件 202 行，15 个测试 |
+| vendor/ed25519-compact/ + Cargo.toml/lock | 14 包 / 13 第三方，零传递依赖 |
+| docs/licenses/ed25519-compact-LICENSE.txt | MIT 全文 1073 字节 |
+| demos/ui-full-kcu-paper.html | 关于页许可七列表新增 1 组（12 → 13），计数 34 → 35 |
+| 索引与记录 | docs/index 176 项、README、decisions/index、licenses/index、ai-errors A92-A95、code-ownership-audit、implementation-strategy、THIRD-PARTY-NOTICES、interface-log、rounds |
+
+「干」按 035 结尾进入**上层能力第一块**：从闭包最浅、最不碰 Windows 分支的更新器签名校验开始。`ed25519-compact 2.6.1` 单 crate 零传递依赖（3 项依赖全 optional，关 default features 后 pem.rs / x25519.rs 由 cfg 门排除）、纯 Rust、无 libc / windows-sys / build.rs。点解码、非规范编码拒绝、小阶点检查、SHA-512 全部交给库。
+
+口径 U01–U07：签名校验不可禁用且排在版本决策之前；默认只升；同版本与 `+build` 差异 Keep；回滚需显式目标 + 二次确认两个条件同时成立；签名失败 / 版本畸形 / 截断输入一律返回 Keep 保留旧插件，不 panic。项目侧只有长度检查、错误转 anyhow 与版本决策编排（复用 034 的 `cmp_precedence`）。
+
+`cargo test --offline` 164 → **179 / 0**，`Cargo.lock` 13 → 14 包 / 13 第三方。三处许可齐备（LICENSE 全文 / 关于页 / NOTICES）后才进 Cargo.toml。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E32 | 测试里 `Noise::default()` 报 E0599（impl 在 random feature 门下） | 改用 `None` 走确定性签名，验证不需要随机数 |
+| E33 | `assert_eq!(decide(..), Ok(Decision::X))` 触发 E0369 | 改 `.unwrap()` 后比值，断言强度不降 |
+| E34 | 首版 policy 用 `Version` 的 `>` / `==`，`+build` 差异被判不等 | 改 `cmp_precedence`，与 034 口径一致 |
+
+界面闸门**未触发**：本轮不动界面布局，只更新关于页许可表数据并重渲 4 张许可相关截图。
+
+**仍标未启动**：UI 宿主、真实网络、崩溃分析、插件 ABI、更新器其余部分（下载 / 安装 / 回滚执行 / 公钥分发）。028 三项开服器功能仍按「只记文档」零实现；CF F17、特殊版代码、本项目 LICENSE、Win7 交叉编译、后端仓写请求均未动。

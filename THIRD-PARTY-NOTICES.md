@@ -208,3 +208,16 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | --- | --- |
 | N28 | 零传递依赖；裁掉 optional serde_core、恒假 target 段、dev-deps、bench 与元数据，`src/` 逐字节未改。 |
 | N29 | MIT 条款要求保留版权与许可声明，全文随发行物附上；Apache-2.0 全文一并保留供选择。 |
+
+## 036 新增已进构建依赖
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| ed25519-compact | 2.6.1 | MIT | Frank Denis | 更新包 Ed25519 签名校验 | vendor/ed25519-compact | 构建中已使用 |
+
+许可证全文：`docs/licenses/ed25519-compact-LICENSE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N30 | 零传递依赖；3 项 optional 依赖全部裁掉，`default-features = false, features = ["std"]`；`src/` 逐字节未改。 |
+| N31 | MIT 全文随发行物附上；本项目只使用验证路径，不使用随机数生成与 PEM / X25519 模块。 |

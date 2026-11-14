@@ -163,3 +163,11 @@
 | semver-LICENSE-APACHE.txt | semver 1.0.28 | Apache-2.0 |
 
 来源：dtolnay/semver tag `1.0.28`，两份逐字副本，1023 / 9723 字节。许可声明为 `MIT OR Apache-2.0`，本项目按 MIT 条款使用，两份全文都随发行物附上。
+
+## 036 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| ed25519-compact-LICENSE.txt | ed25519-compact 2.6.1 | MIT |
+
+来源：jedisct1/rust-ed25519-compact tag `2.6.1`，逐字副本 1073 字节，Copyright (c) 2020-2026 Frank Denis。MIT 条款要求保留版权与许可声明，全文随发行物附上。
