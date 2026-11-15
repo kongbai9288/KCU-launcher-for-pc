@@ -201,3 +201,14 @@
 | rwh-LICENSE-ZLIB.md | raw-window-handle 0.6.2 | Zlib（836 B） |
 
 来源：rust-windowing/raw-window-handle tag `v0.6.2`，manifest 声明 `MIT OR Apache-2.0 OR Zlib`，三份逐字副本全部落盘。
+
+## 042 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| pe-LICENSE-MIT.txt | percent-encoding 2.3.1 | MIT（1072 B） |
+| pe-LICENSE-APACHE.txt | percent-encoding 2.3.1 | Apache-2.0（10847 B） |
+| hex-LICENSE-MIT.txt | hex 0.4.3 | MIT（1125 B） |
+| hex-LICENSE-APACHE.txt | hex 0.4.3 | Apache-2.0（11358 B） |
+
+来源：`servo/rust-url` tag `v2.5.0` 根 LICENSE、`KokaKiwi/rust-hex` tag `v0.4.3` 根 LICENSE，逐字副本。mono-repo 子 crate 的 LICENSE 是软链，tarball 取不到，走 contents API 直取。

@@ -535,3 +535,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I50 | `src/lightweight/view` | 新增 `LightweightView::host_surface()`，恒 headless |
 | I51 | `tests/window_handle_contract.rs` | 6 个集成测试 |
 | S40 | 状态 | U41–U48 已证实；Q-041 三选项待拍板；真实窗口 / WebView / 崩溃分析未启动；Q-037-01 仍挂 |
+
+## 042 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I52 | `src/core/http` | `build_request` 的 ids 改逐 id 百分号编码；新增 `ID_ENCODE_SET` |
+| I53 | `src/plugins/identity` | `identity_hash` 改 `hex::encode` |
+| I54 | `tests/http_construct` | 原有 7 项全过，未改断言 |
+| S41 | 状态 | U49–U57 已证实；Q-041 / Q-037-01 仍挂；真实网络 IO、UI、崩溃分析未启动 |

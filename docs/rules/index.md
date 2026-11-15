@@ -19,3 +19,5 @@
 | network-preconditions.md | 真实网络层 L1-L12 前置清单 | 040 |
 
 | ui-preconditions.md | UI 宿主与崩溃分析 L1-L12 前置清单 | 041 |
+
+| ui-preconditions.md | UI 宿主与崩溃分析 L1-L12 前置清单 | 041（042 沿用） |

@@ -338,3 +338,16 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 `RawWindowHandle` 变体分类、`WindowsDisplayHandle`、`DisplayHandle::windows()` 全交给库；项目侧 156 行只留两个构造、三个只读出口与信封字段。不实现 `HasWindowHandle`（unsafe，需有效句柄），不从句柄推导 WebView2 可用性。
 
 两条上层路线（wry/tao/slint 与 sentry/minidump）经真实 manifest 与官方平台文档核完判不成立：平台分支几十个 crate + C/系统库 + edition 2024 + WebView2 在 Win7 已终止支持 + CMake/C++17/MSVC2022。按 035 / 040 的规矩改轨，没偷偷塞依赖。
+
+## 042 编码层（+2 crate）
+
+| 项 | 041 | 042 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 20 | **22**（+percent-encoding、+hex） |
+| `Cargo.lock` 包数 | 21 | **23** |
+| `src/` 行数 | 5715 | **5811** |
+| 测试 | 237 单元 + 26 集成 = 263 | **244 单元 + 26 集成 = 270** |
+
+`src/core/http.rs` 的 `ids.join(",")` 自写 query 拼装换成 `utf8_percent_encode`（保留 unreserved，常见 id 请求串不变）；`src/plugins/identity.rs` 的 `format!("{:02x}", b)` 循环换成 `hex::encode`。两处都是通用编码算法，不是项目特有编排；独立回归常量由 Python hashlib 算出，不用本仓库实现自证。
+
+剩余自写仍是 `launcher.rs`、lightweight 系列与 `paths/popup/userflow` 等业务编排；035 已登记它们没有语义等价的库可换。

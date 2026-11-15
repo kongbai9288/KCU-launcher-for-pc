@@ -237,3 +237,15 @@ registry 在本环境被 403 阻断，故采用 `vendor/` + `.cargo/config.toml`
 | 真实窗口 / WebView / 渲染 / 崩溃捕获 | 未启动（L1–L12 见 ui-preconditions.md） |
 | 子进程插件隔离、插件 init | 未启动（039） |
 | 界面渲染 | 仍等 UX 手感确认与 Q-041 拍板 |
+
+## 042 编码层
+
+| 层 | 状态 |
+| --- | --- |
+| 窗口句柄契约（raw-window-handle） | 已实现（041） |
+| 批量请求 id 百分号编码（percent-encoding） | **已实现（042）** |
+| 插件身份哈希 hex（hex） | **已实现（042）** |
+| 真实窗口 / WebView / 渲染 / 崩溃分析 | 未启动（L1–L12 见 ui-preconditions.md） |
+| 真实网络 IO / TLS / 代理 / 响应解析 | 未启动（040 L1–L12） |
+| 子进程插件隔离、插件 init | 未启动（039） |
+| 界面渲染 | 仍等 UX 手感确认与 Q-041 拍板 |

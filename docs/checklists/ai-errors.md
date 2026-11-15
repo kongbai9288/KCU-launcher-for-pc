@@ -257,3 +257,14 @@
 | A125 | unsafe trait（`HasWindowHandle`）要求句柄真实有效；core 层没有窗口时不实现、不伪造。 |
 | A126 | 句柄类型层不得推导 WebView2 可用性；可用性由宿主注入的 probe 负责，两者独立。 |
 | A127 | 全量树超过 GitHub Git Data API 的处理上限时返回 422；用 `base_tree` 只传变化条目，删除条目传 `sha:null`，脚本修正后必须重新提交再推。 |
+
+## 042 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A128 | mono-repo 的 tag 名不等于 crate 版本；必须读子目录 manifest 的实值版本号再 vendor。 |
+| A129 | 批量参数里的每个值要独立编码；`join(",")` 前不编码会让 `&` / `#` / 逗号把请求切坏。 |
+| A130 | 用 `NON_ALPHANUMERIC` 会连 unreserved 的 `-` 也编码，破坏既有请求串；保留 unreserved 并复用原有集成断言，不改断言降标准。 |
+| A131 | 编码类替换要有独立实现算出的期望值（本轮 Python hashlib），不能用被换掉的库自证。 |
+| A132 | tarball 里的软链 `m.isfile()` 为 False；LICENSE 缺失时走 contents API 直取，不伪造许可文本。 |
+| A133 | 裁 vendor manifest 时 `[[bench]]` 双括号段、`[badges]`、optional 依赖与其源文件要一起处理。 |

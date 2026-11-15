@@ -267,3 +267,17 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | N38 | 上游 `src/` 逐字节未改；vendored manifest 只裁掉 dev-dependencies、docs.rs metadata、wasm 目标的 optional `wasm-bindgen` 依赖与引用它的 `wasm-bindgen-0-2` feature 行。 |
 | N39 | 该 crate 是 `#![no_std]` 纯类型层，不创建窗口、不渲染、不加载 WebView；项目不实现 unsafe 的 `HasWindowHandle`。 |
 | N40 | wry / tao / slint 三家 UI 宿主都依赖它，但本轮只落类型层，三家宿主均未进构建。 |
+
+## 042 新增已进构建依赖（编码层）
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| percent-encoding | 2.3.1 | MIT OR Apache-2.0 | The rust-url developers | 批量请求 id 的 UTF-8 百分号编码 | vendor/percent-encoding | 构建中已使用 |
+| hex | 0.4.3 | MIT OR Apache-2.0 | KokaKiwi | 插件身份哈希的小写十六进制编码 | vendor/hex | 构建中已使用 |
+
+许可证全文：`docs/licenses/pe-LICENSE-MIT.txt`、`docs/licenses/pe-LICENSE-APACHE.txt`、`docs/licenses/hex-LICENSE-MIT.txt`、`docs/licenses/hex-LICENSE-APACHE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N41 | percent-encoding 上游 `src/lib.rs` 逐字节未改；vendored manifest 只裁掉 docs.rs metadata。该 crate 版本取自 `v2.5.0` 子目录 manifest 的 2.3.1，不按 tag 名猜。 |
+| N42 | hex 上游 `src/lib.rs` / `src/error.rs` 逐字节未改；裁掉 optional serde、dev-dependencies、`[[bench]]`、docs.rs metadata，并删除只服务于 optional feature 的 `src/serde.rs`。 |

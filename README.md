@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 041 |
+| 当前轮次 | 042 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -203,3 +203,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 真实 manifest 核完 `wry 0.53.5` / `tao 0.34.5` / `slint 1.18.1`（edition 2024）与 `sentry 0.49.5` / `sentry-native`（CMake + C++17 + MSVC2022，Win10 以下未自动测试）/ `minidump` 闭包，两条上层路线都判不成立。改轨落 `raw-window-handle 0.6.2`：零依赖 no_std 类型层，MSRV 1.64，三家 UI 宿主共用。`src/core/window.rs` 156 行把句柄变体分类交给库，不实现 unsafe 的 `HasWindowHandle`，不从句柄推导 WebView2 可用性；轻量模式 `host_surface()` 恒 headless。`Cargo.lock` 21 包 / 20 第三方，关于页 20 组 / 42。
 
 `cargo test --offline` 合计 **263/0**（237 单元 + 26 集成），Windows GNU 交叉检查通过。界面与 56 张 PNG 只动了 4 张许可截图。
+
+## 042 批量请求 query 编码与身份哈希 hex 交给库
+
+041 收口：本地 `ac9af80` ↔ 远端 `599edc7`，**852/852 文件 ALL_MATCH True**，临时凭据已清理。
+
+`040` 把请求类型交给了 `http` crate，但 `ids` 仍是 `ids.join(",")` 自己拼：模组 id 带空格、`&`、`#`、逗号或中文就会把批量请求切坏。这轮落 `percent-encoding 2.3.1`（零依赖 / MSRV 1.51）逐 id 编码，编码集合保留 RFC 3986 unreserved，所以 `mod-a` 的请求串一字不变、原有集成断言没改；`037` 的手写 hex 循环换 `hex 0.4.3`，4 个期望值由 Python hashlib 独立算出。真实 manifest 核到一处坑：`v2.3.1` tag 的 manifest 是 2.2.0，2.3.1 对应 `v2.5.0`。
+
+`Cargo.lock` **23 包 / 22 第三方**，4 份 LICENSE 全文 + 关于页 22 组 / 44 + NOTICES 三处齐备。`cargo test --offline` 合计 **270/0**（244 单元 + 26 集成），Windows GNU 交叉检查通过。界面与 56 张 PNG 只动了 4 张许可截图。

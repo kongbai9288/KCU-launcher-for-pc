@@ -1,5 +1,33 @@
 use ::http::{HeaderMap, HeaderName, HeaderValue, Method, Request, Uri, Version};
 use anyhow::{anyhow, Result};
+use percent_encoding::{utf8_percent_encode, AsciiSet, CONTROLS};
+
+/// query 值里必须转义的字符；保留 RFC 3986 的 unreserved（字母数字 `-` `.` `_` `~`），
+/// 这样 `mod-a` 这类常见 id 的请求串与编码前完全一致。非 ASCII 字节由库按 UTF-8 转义。
+const ID_ENCODE_SET: &AsciiSet = &CONTROLS
+    .add(b' ')
+    .add(b'"')
+    .add(b'#')
+    .add(b'%')
+    .add(b'&')
+    .add(b'+')
+    .add(b',')
+    .add(b'/')
+    .add(b':')
+    .add(b';')
+    .add(b'<')
+    .add(b'=')
+    .add(b'>')
+    .add(b'?')
+    .add(b'@')
+    .add(b'[')
+    .add(b'\\')
+    .add(b']')
+    .add(b'^')
+    .add(b'`')
+    .add(b'{')
+    .add(b'|')
+    .add(b'}');
 
 pub const PAGE_SIZE: usize = 20;
 
@@ -23,10 +51,16 @@ pub fn validate_authority(authority: &str) -> Result<()> {
 }
 
 pub fn build_request(spec: &RequestSpec, page: usize, ids: &[String]) -> Result<Request<()>> {
+    // 每个 id 独立编码，逗号作为列表分隔符保留；id 内部的逗号、&、#、空格、非 ASCII
+    // 都由 percent-encoding 处理，不再自己拼 query。
+    let encoded: Vec<String> = ids
+        .iter()
+        .map(|id| utf8_percent_encode(id, ID_ENCODE_SET).to_string())
+        .collect();
     let query = if ids.is_empty() {
         format!("{}?page={}", spec.path, page)
     } else {
-        format!("{}?page={}&ids={}", spec.path, page, ids.join(","))
+        format!("{}?page={}&ids={}", spec.path, page, encoded.join(","))
     };
 
     let full = [spec.scheme.as_str(), "://", spec.authority.as_str(), query.as_str()].concat();
@@ -129,5 +163,49 @@ mod tests {
         s.headers.push(("Accept".into(), "application/json".into()));
         let r = build_request(&s, 1, &[]).unwrap();
         assert_eq!(r.headers()["accept"], "application/json");
+    }
+
+    #[test]
+    fn plain_ids_keep_existing_query_shape() {
+        let r = build_request(&spec(), 1, &vec!["a".into(), "b".into()]).unwrap();
+        assert!(r.uri().query().unwrap().contains("ids=a,b"));
+    }
+
+    #[test]
+    fn special_chars_are_percent_encoded_not_spliced_into_query() {
+        let ids = vec!["mod with space".into(), "a&b".into(), "甲,乙".into(), "x#y".into()];
+        let r = build_request(&spec(), 1, &ids).unwrap();
+        let q = r.uri().query().unwrap();
+        assert!(q.contains("mod%20with%20space"));
+        assert!(q.contains("a%26b"));
+        assert!(q.contains("%2C"));
+        assert!(q.contains("%23"));
+        // 只有 page 与 ids 两段，id 里的 & 不会再切出新参数
+        assert_eq!(q.split('&').count(), 2);
+    }
+
+    #[test]
+    fn comma_inside_id_does_not_create_an_extra_entry() {
+        let ids = vec!["a,b".into(), "c".into()];
+        let r = build_request(&spec(), 1, &ids).unwrap();
+        let q = r.uri().query().unwrap();
+        let list = q.rsplit("ids=").next().unwrap();
+        assert_eq!(list.split(',').count(), 2);
+        assert!(list.contains("a%2Cb"));
+    }
+
+    #[test]
+    fn encoded_ids_still_produce_a_valid_uri() {
+        let ids = vec!["插件·甲".into(), "x y".into()];
+        let r = build_request(&spec(), 3, &ids).unwrap();
+        assert_eq!(r.uri().host(), Some("mirror-a"));
+        assert_eq!(r.uri().path(), "/v1/batch");
+        assert!(r.uri().query().unwrap().starts_with("page=3&ids="));
+    }
+
+    #[test]
+    fn unicode_ids_are_encoded_as_utf8_bytes() {
+        let r = build_request(&spec(), 1, &vec!["甲".into()]).unwrap();
+        assert!(r.uri().query().unwrap().contains("%E7%94%B2"));
     }
 }

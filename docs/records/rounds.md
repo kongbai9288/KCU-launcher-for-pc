@@ -2539,3 +2539,39 @@ L3 落地：
 028 三项开服器功能仍按「只记文档」零实现；Q-037-01 未答复、继续挂；CF F17、特殊版代码、本项目 LICENSE、后端仓写请求均未动。
 
 041 推送时 `POST /git/trees` 整棵树 852 条返回 422「input was too large to process」，远端 ref 未动（E62）。`scripts/api_push.py` 改为基于父提交 `base_tree` 的增量树：只传变化条目、删除条目传 `sha:null`；脚本自身修正后重新提交再推，未强推、未重写历史。
+
+## 042
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/42-round-042-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/042-query-encoding-and-hex.md | F29-F31、U49-U57、V-A~V-E、E63-E66、四值 |
+| docs/verification/round-042.md | 19 条复跑证据 |
+| docs/features/query-encoding-contract.md | F042-01 五字段登记 |
+| docs/research/25-percent-encoding-hex.md | 8 个锚点 / R17-R20 |
+| src/core/http.rs + src/plugins/identity.rs | 编码层替换，7 个新增单测 |
+| vendor/ + Cargo.toml/lock | percent-encoding 2.3.1、hex 0.4.3，23 包 / 22 第三方 |
+| docs/licenses/ + 关于页 + NOTICES | 4 份全文、22 组、计数 44、N41-N42 |
+| demos/round-042-query-hex.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 211 项、README、四个 index、ai-errors A128-A133、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+先把 041 的尾收干净：上一轮工具结果不可用，这轮补跑远端比对 —— 本地 `ac9af80` ↔ 远端 `599edc7`，**852/852 文件逐项 ALL_MATCH True**，truncated=False；临时 PAT 已删，全仓 `NO_CREDENTIAL`、`.git/config` 干净。
+
+「干」继续按 024 台账把自写通用逻辑换成库。这轮挑的是两处**编码**：040 把请求类型交给了 `http` crate，但 `ids` 仍是 `ids.join(",")` 自己拼 —— 模组 id 只要带空格、`&`、`#`、逗号或中文，批量请求就会被切坏，一个 `a&b` 会变成新参数、后面的 id 直接丢。你之前点名过「每搜一个模组单发一次请求」的浪费，批量是对的，但 id 不编码就不成立。037 的插件身份哈希则是 `format!("{:02x}", b)` 手写循环。
+
+真实 manifest 核完：`percent-encoding 2.3.1`（rust-url mono-repo 的 `percent_encoding/` 子 crate，MIT OR Apache-2.0 / edition 2018 / MSRV 1.51 / 零依赖）与 `hex 0.4.3`（MIT OR Apache-2.0 / edition 2018 / 仅 optional serde）。**一处坑**：`v2.3.1` tag 里的 manifest 写的是 2.2.0，2.3.1 实际对应 `v2.5.0`；按 tag 名取版本会取错（A128）。
+
+落地：`build_request` 改成逐 id `utf8_percent_encode` 再 `join(",")`；编码集合由 `CONTROLS` 加 query 危险字符组成，**保留 RFC 3986 unreserved**，所以 `mod-a` 的请求串一字不变，原有集成断言没改。`identity_hash` 换 `hex::encode`，4 个期望值由 Python `hashlib.sha512` 独立算出写进测试，不靠本仓库实现自证。`Cargo.lock` 21 → **23 包 / 22 第三方**，4 份 LICENSE 全文、关于页 22 组 / 44、NOTICES N41–N42 三处齐了才进 Cargo.toml。
+
+验证：244 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0（36.19 s）+ 6 abi / 0（109.30 s）= **270 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。界面闸门未触发：只重渲 4 张许可截图，其余 52 张回退。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E63 | percent-encoding 的 LICENSE 在 tarball 里是软链，vendor 后缺文件、脚本崩在复制 | 与 027 crossbeam 同类；改 contents API 直取 4 份并回写 |
+| E64 | 首版用 `NON_ALPHANUMERIC` 把 `mod-a` 编成 `mod%2Da`，原有集成断言失败 | 改自定义集合保留 unreserved，**断言一字未改** |
+| E65 | hex manifest 的 `[[bench]]` 双括号段正则没裁掉 | 单独正则裁掉并删 `src/serde.rs` |
+| E66 | tag 名与 crate 版本不同步 | 逐 tag 读子目录 manifest 锁定 `v2.5.0` |
+
+041 挂着的 Q-041（Win7 UI 三选项）与 Q-037-01（哈希口径）仍待你答复；真实窗口 / WebView / 崩溃分析、真实网络 IO、028 三项开服器实现、CF F17、特殊版代码、本项目 LICENSE 均未动。
