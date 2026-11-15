@@ -191,3 +191,13 @@
 | fnv-LICENSE-MIT.txt / fnv-LICENSE-APACHE.txt | fnv 1.0.7 | Apache-2.0 / MIT（1056 / 10847 B，Copyright 2017 Contributors） |
 
 来源：hyperium/http tag `v1.3.1`、tokio-rs/bytes tag `v1.11.1`、servo/rust-fnv tag `v1.0.7`。均为逐字副本；`itoa 1.0.15` 复用 025 已存档的许可，未重复落盘。
+
+## 041 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| rwh-LICENSE-MIT.md | raw-window-handle 0.6.2 | MIT（1064 B） |
+| rwh-LICENSE-APACHE.md | raw-window-handle 0.6.2 | Apache-2.0（10174 B） |
+| rwh-LICENSE-ZLIB.md | raw-window-handle 0.6.2 | Zlib（836 B） |
+
+来源：rust-windowing/raw-window-handle tag `v0.6.2`，manifest 声明 `MIT OR Apache-2.0 OR Zlib`，三份逐字副本全部落盘。

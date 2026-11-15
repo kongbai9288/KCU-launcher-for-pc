@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 041 UI 宿主与崩溃分析核查、窗口句柄改轨</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:136px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>041 运行逻辑</h1><div class="sub">两条上层路线先核查再改轨 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>Win7 硬矛盾</h3><p id="m1">未运行</p><span class="badge r">Edge 109 终止</span><span class="badge r">SDK ≥1519 不支持</span><span class="badge r">Q-041 待拍板</span></div>
+<div class="mini"><h3>两条栈不成立</h3><p id="m2">未运行</p><span class="badge r">edition 2024</span><span class="badge r">C / 系统库</span><span class="badge r">CMake C++17</span></div>
+<div class="mini"><h3>改轨句柄类型层</h3><p id="m3">未运行</p><span class="badge g">零依赖 no_std</span><span class="badge g">MSRV 1.64</span><span class="badge g">三许可</span></div>
+<div class="mini"><h3>验证与自查</h3><p id="m4">未运行</p><span class="badge g">263 / 0</span><span class="badge g">NO_HARDCODE</span><span class="badge g">windows-gnu</span></div>
+</div><div class="note" id="note">真实窗口创建、WebView 加载、渲染、崩溃分析未启动；Q-041 三个选项等你拍板。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','读索引 199 项、040 结尾、011 Win7 路线、015 闸门'],
+['02','逐字落盘','41-round-041-instructions.txt'],
+['03','查 WebView2 官方口径','Edge 109 / Runtime 109 / SDK ≥1.0.1519.0 / Learn 列表'],
+['04','Q-041 摆台面','Win7 与正常模式 WebView2 冲突，三个选项不替用户选'],
+['05','拉 UI 宿主 manifest','wry 0.53.5 / tao 0.34.5 / slint 1.18.1'],
+['06','拉崩溃分析 manifest','sentry 0.49.5 / sentry-native / minidump 闭包'],
+['07','判两条都不成立','平台分支 + C 链 + edition 2024 + Win10 以下未自动测试'],
+['08','改轨浅闭包','raw-window-handle 0.6.2，三家 UI 宿主共用类型层'],
+['09','许可三处齐备','3 份全文 + 关于页 20 组 + NOTICES 后才进 Cargo.toml'],
+['10','U45–U47 落地','变体分类交给库，不实现 unsafe trait，轻量恒 headless'],
+['11','E57–E61 修复','Envelope.field / manifest 裁段 / 仓库路径 / 502 拆分'],
+['12','验证','263 测试、交叉检查、扫描、205 必读'],
+['13','提交推送','本地提交、远端快照、逐项哈希比对']];
+const DETAIL={'01':'REQ 199/199 OK','02':'SPEC cmp 0','03':'WINBLOG 109_ends MSLEARN win10plus','04':'Q041 A_B_C pending','05':'MANIFEST wry_tao_slint','06':'MANIFEST sentry_minidump','07':'U41_U42 not_viable','08':'VENDOR raw_window_handle','09':'LICENSE 3_places_ok then_dependency','10':'U45-U47 headless_contract','11':'E57-E61 fixed','12':'TEST 237+26 263_total 0_failed PUSH ALL_MATCH','13':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'官方口径','04':'矛盾登记','05':'UI 宿主 manifest','06':'崩溃分析 manifest','07':'改轨决策','08':'浅闭包落地','09':'许可闸门','10':'句柄契约','11':'失败修复','12':'验证','13':'提交推送'};
+const QN=new Set(['03','04','05','06','07','10','11']);
+const M={'04':['m1','你 011 定的是 Win7 起兼容。Microsoft 官方：Edge 109 / WebView2 Runtime 109 是最后支持 Win7 / 8.1 的版本，SDK ≥1.0.1519.0 不再支持，109 之后无安全更新，Fixed >109 在 Win7 无法启动；Learn 支持列表只剩 Win10 1709+ / Win11 / Server 2016+。而 wry 的 Windows 分支用 webview2-com 0.38 + windows 0.61。三选项写进 q041-win7-ui.md，本轮不替你选。'],'07':['m2','wry 0.53.5 带 webview2-com / windows 0.61 / webkit2gtk / gtk / objc2 / jni-ndk；tao 0.34.5 带 libc / windows 0.61 / gtk / objc2 / dlopen2；slint 1.18.1 是 edition 2024 + 大量 workspace 依赖。sentry 0.49.5 默认链含 reqwest / rustls / native-tls / tokio / sentry-minidump；sentry-native 是 CMake + C++17 + MSVC2022 + zlib，Windows 低于 Win10「应支持但未自动测试」。两条路线全部判不成立。'],'10':['m3','`raw-window-handle 0.6.2` 是 no_std 零依赖类型层，MSRV 1.64，MIT OR Apache-2.0 OR Zlib，wry/tao/slint 三家共用。`src/core/window.rs` 157 行：`RawWindowHandle` 变体分类、`WindowsDisplayHandle`、`DisplayHandle::windows()` 全交给库；不实现 unsafe 的 `HasWindowHandle`，不从句柄推导 WebView2 可用性；`LightweightView::host_surface()` 恒 headless。`Cargo.lock` 21 包 / 20 第三方，关于页 20 组 / 42。'],'12':['m4','237 单元 / 0 + 6 窗口契约 / 0 + 7 http_construct / 0 + 7 lifecycle / 0（43.18 s）+ 6 abi / 0（111.95 s）= **263 / 0**。`cargo check --offline --target x86_64-pc-windows-gnu` 通过，205 项必读非空，凭据 / 禁用词 / 同上 / P09 / hardcode 全零命中。界面闸门未触发，只重渲 4 张许可截图。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.research','q.decision','q.research','q.research','q.decision','q.vendor','q.license','q.construct','q.fix','core.verify','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='句柄类型层已落地；Q-041 三个选项、真实窗口与崩溃分析仍等你。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='真实窗口创建、WebView 加载、渲染、崩溃分析未启动；Q-041 三个选项等你拍板。';}
+</script></body></html>

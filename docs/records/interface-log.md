@@ -526,3 +526,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I47 | `src/lightweight/download` | 新增 `Downloader::plan()` / `validate_base()`；`batch()` 未改 |
 | I48 | `tests/http_construct.rs` | 7 个集成测试 |
 | S39 | 状态 | U30–U40 已证实；真实网络 IO / Win7 TLS / MSRV 冲突未启动或未证实；Q-037-01 仍挂 |
+
+## 041 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I49 | `src/core/window` | 新增 `HostSurface` / `headless` / `win32` / `has_window` / `has_display` / `platform` / `display_kind` / `display_handle` / `envelope` |
+| I50 | `src/lightweight/view` | 新增 `LightweightView::host_surface()`，恒 headless |
+| I51 | `tests/window_handle_contract.rs` | 6 个集成测试 |
+| S40 | 状态 | U41–U48 已证实；Q-041 三选项待拍板；真实窗口 / WebView / 崩溃分析未启动；Q-037-01 仍挂 |

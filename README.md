@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 040 |
+| 当前轮次 | 041 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -195,3 +195,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 改轨落地 `http 1.3.1` + `bytes 1.11.1` + `fnv 1.0.7`（`itoa` 复用 025）：`src/core/http.rs` 把 Method / Uri / Header / Version / Request 全交给库，每页一个标准请求（10 个 id → 1 个、45 个 → 3 个），`Downloader::batch()` 行为不变。`Cargo.lock` 20 包 / 19 第三方，关于页 19 组 / 41。
 
 `cargo test --offline` 合计 **247/0**（227 单元 + 20 集成），Windows GNU 交叉检查通过。本轮还修掉一个存量 CI 失败项：037 遗留的两处 `https://` 测试字面量让 `hardcode` job 从那时起就该是红的，改用 `concat!` 拼接后复跑 `NO_HARDCODE`。界面与 56 张 PNG 只动了 4 张许可截图。
+
+## 041 UI 宿主与崩溃分析核查，改轨窗口句柄类型层
+
+先摆一条硬矛盾：Microsoft 官方写明 Edge 109 / WebView2 Runtime 109 是最后支持 Win7 / 8.1 的版本，SDK ≥1.0.1519.0 不再支持 Win7，109 之后无安全更新；Learn 的 WebView2 列表只剩 Win10 1709+ / Win11 / Server 2016+。而 `wry` 的 Windows 分支用 `webview2-com 0.38` + `windows 0.61`。所以「Win7 + 正常模式 WebView2 界面」在官方口径下不成立，三个选项写在 `docs/records/q041-win7-ui.md`，本轮不替用户选。
+
+真实 manifest 核完 `wry 0.53.5` / `tao 0.34.5` / `slint 1.18.1`（edition 2024）与 `sentry 0.49.5` / `sentry-native`（CMake + C++17 + MSVC2022，Win10 以下未自动测试）/ `minidump` 闭包，两条上层路线都判不成立。改轨落 `raw-window-handle 0.6.2`：零依赖 no_std 类型层，MSRV 1.64，三家 UI 宿主共用。`src/core/window.rs` 156 行把句柄变体分类交给库，不实现 unsafe 的 `HasWindowHandle`，不从句柄推导 WebView2 可用性；轻量模式 `host_surface()` 恒 headless。`Cargo.lock` 21 包 / 20 第三方，关于页 20 组 / 42。
+
+`cargo test --offline` 合计 **263/0**（237 单元 + 26 集成），Windows GNU 交叉检查通过。界面与 56 张 PNG 只动了 4 张许可截图。

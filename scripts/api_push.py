@@ -77,16 +77,23 @@ def blob(content, local_sha, existing):
     return payload["sha"]
 
 
-def remote_blobs(parent):
+def remote_tree(parent):
+    """返回 (父提交的 tree sha, path->blob sha 映射)。"""
     if not parent:
-        return set()
+        return None, {}
     status, commit = request("GET", "/repos/" + REPO + "/git/commits/" + parent)
     if status != 200:
-        return set()
-    status, tree = request("GET", "/repos/" + REPO + "/git/trees/" + commit["tree"]["sha"] + "?recursive=1")
+        return None, {}
+    tree_sha = commit["tree"]["sha"]
+    status, tree = request("GET", "/repos/" + REPO + "/git/trees/" + tree_sha + "?recursive=1")
     if status != 200:
-        return set()
-    return set(x["sha"] for x in tree.get("tree", []) if x.get("type") == "blob")
+        return None, {}
+    out = {x["path"]: x["sha"] for x in tree.get("tree", []) if x.get("type") == "blob"}
+    return tree_sha, out
+
+
+def remote_blobs(parent):
+    return set(remote_tree(parent)[1].values())
 
 
 def bootstrap(branch):
@@ -145,7 +152,22 @@ def main():
         tree = list(pool.map(one, paths))
     log("blob", str(len(tree)), "OK", "concurrent=8 remote_reused=" + str(len(existing)))
 
-    status, tree_obj = request("POST", "/repos/" + REPO + "/git/trees", {"tree": tree})
+    parent_tree_sha, remote_map = remote_tree(parent)
+    local_map = {x["path"]: x["sha"] for x in tree}
+    if parent_tree_sha:
+        changes = []
+        for item in tree:
+            if remote_map.get(item["path"]) != item["sha"]:
+                changes.append(item)
+        for path in remote_map:
+            if path not in local_map:
+                changes.append({"path": path, "mode": "100644", "type": "blob", "sha": None})
+        body = {"base_tree": parent_tree_sha, "tree": changes}
+        log("tree", branch, "INCREMENTAL", "changes=" + str(len(changes)) + " base_tree=" + parent_tree_sha[:7])
+    else:
+        body = {"tree": tree}
+
+    status, tree_obj = request("POST", "/repos/" + REPO + "/git/trees", body)
     if status != 201:
         log("tree", branch, "FAIL", "http=" + str(status) + " " + json.dumps(tree_obj, ensure_ascii=False)[:300])
         return 1

@@ -1,0 +1,19 @@
+[package]
+name = "raw-window-handle"
+version = "0.6.2"
+authors = ["Osspial <osspial@gmail.com>"]
+edition = "2021"
+description = "Interoperability library for Rust Windowing applications."
+license = "MIT OR Apache-2.0 OR Zlib"
+repository = "https://github.com/rust-windowing/raw-window-handle"
+keywords = ["windowing"]
+readme = "README.md"
+documentation = "https://docs.rs/raw-window-handle"
+rust-version = "1.64"
+
+[features]
+alloc = []
+std = ["alloc"]
+
+# Allow conversion methods to/from WASM types using `wasm-bindgen` v0.2.
+

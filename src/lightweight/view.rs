@@ -112,6 +112,11 @@ impl Default for LightweightView {
 }
 
 impl LightweightView {
+    /// 轻量模式不加载 UI 宿主；窗口句柄描述符恒为 headless，由库类型表达。
+    pub fn host_surface(&self) -> crate::core::window::HostSurface {
+        crate::core::window::HostSurface::headless()
+    }
+
     pub fn new() -> Self {
         Self::default()
     }
@@ -353,5 +358,21 @@ mod tests {
             assert!(d.starts_with("[KCU] "));
             assert!(!d.contains('\n'));
         }
+    }
+
+    #[test]
+    fn lightweight_view_never_injects_a_window_handle() {
+        let v = LightweightView::default();
+        let s = v.host_surface();
+        assert!(!s.has_window());
+        assert!(!s.has_display());
+        assert_eq!(s.platform(), "none");
+    }
+
+    #[test]
+    fn host_surface_and_webview2_probe_are_independent() {
+        let v = LightweightView::default();
+        assert!(v.probe.available.is_none());
+        assert!(!v.host_surface().has_window());
     }
 }

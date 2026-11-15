@@ -325,3 +325,16 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 `Method` / `Uri` / `HeaderMap` / `HeaderName` / `HeaderValue` / `Version` / `Request` 全交给 `http`；项目侧只留分页切片、query 拼装与错误转 anyhow。`Downloader::batch()` 的单飞缓存与分页语义一行没动。真实网络 IO、TLS、密钥头、编码、代理全部未启动。
 
 三条真实 HTTP 栈（reqwest 0.12.28 / 0.13.5 / ureq 3.5.2）经 manifest 实核判不成立：大闭包 + MSRV 1.85 + C 构建链 + Win7 TLS 系统前置 + registry 403。按 035 的规矩改轨，没偷偷塞依赖。
+
+## 041 窗口句柄类型层（+1 crate）
+
+| 项 | 040 | 041 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 19 | **20**（+raw-window-handle） |
+| `Cargo.lock` 包数 | 20 | **21** |
+| `src/` 行数 | 5537 | **5715**（+`src/core/window.rs` 156 行 + lightweight 侧 2 个入口） |
+| 测试 | 227 单元 + 20 集成 | **237 单元 + 26 集成 = 263** |
+
+`RawWindowHandle` 变体分类、`WindowsDisplayHandle`、`DisplayHandle::windows()` 全交给库；项目侧 156 行只留两个构造、三个只读出口与信封字段。不实现 `HasWindowHandle`（unsafe，需有效句柄），不从句柄推导 WebView2 可用性。
+
+两条上层路线（wry/tao/slint 与 sentry/minidump）经真实 manifest 与官方平台文档核完判不成立：平台分支几十个 crate + C/系统库 + edition 2024 + WebView2 在 Win7 已终止支持 + CMake/C++17/MSVC2022。按 035 / 040 的规矩改轨，没偷偷塞依赖。

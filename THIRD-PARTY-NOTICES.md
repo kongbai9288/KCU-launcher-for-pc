@@ -253,3 +253,17 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | N35 | 上游 `src/` / `lib.rs` 逐字节未改；vendored manifest 只裁掉 `[workspace]`、`[lints]`、`[package.metadata]`、dev-dependencies 与 optional 的非默认依赖声明，脱离原 workspace 后无需这些段。 |
 | N36 | `http` 是纯类型 crate，不做网络 IO；真实 HTTPS 请求未启动，Win7 TLS 系统前置见 `docs/rules/network-preconditions.md`。 |
 | N37 | `itoa 1.0.15` 复用 025 已有 vendor 与许可全文，本轮未新增该 crate 的副本。 |
+
+## 041 新增已进构建依赖（窗口句柄类型层）
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| raw-window-handle | 0.6.2 | MIT OR Apache-2.0 OR Zlib | Osspial 及贡献者 | 宿主窗口 / 显示句柄变体与平台分类 | vendor/raw-window-handle | 构建中已使用 |
+
+许可证全文：`docs/licenses/rwh-LICENSE-MIT.md`、`docs/licenses/rwh-LICENSE-APACHE.md`、`docs/licenses/rwh-LICENSE-ZLIB.md`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N38 | 上游 `src/` 逐字节未改；vendored manifest 只裁掉 dev-dependencies、docs.rs metadata、wasm 目标的 optional `wasm-bindgen` 依赖与引用它的 `wasm-bindgen-0-2` feature 行。 |
+| N39 | 该 crate 是 `#![no_std]` 纯类型层，不创建窗口、不渲染、不加载 WebView；项目不实现 unsafe 的 `HasWindowHandle`。 |
+| N40 | wry / tao / slint 三家 UI 宿主都依赖它，但本轮只落类型层，三家宿主均未进构建。 |

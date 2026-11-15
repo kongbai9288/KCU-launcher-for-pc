@@ -2499,3 +2499,43 @@ L3 落地：
 | E56 | 039 没说明改轨后落什么 | 明确「真实 IO 未启动」与「构造层已落地」分开 |
 
 028 三项开服器功能仍按「只记文档」零实现；Q-037-01 未答复、继续挂；CF F17、特殊版代码、本项目 LICENSE、后端仓写请求均未动。
+
+## 041
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/41-round-041-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/041-ui-crash-stack-check-and-window-handle.md | F21-F28、U41-U48、V-A~V-F、E57-E61、四值 |
+| docs/verification/round-041.md | 18 条复跑证据 |
+| docs/records/q041-win7-ui.md | Q-041 三选项，待拍板 |
+| docs/features/window-handle-contract.md | F041-01 五字段登记 |
+| docs/rules/ui-preconditions.md | L1-L12 前置清单 |
+| docs/research/24-ui-host-win7-and-crash-stack.md | 13 个锚点 / 四值 |
+| src/core/window.rs + core/mod.rs + lightweight/view.rs | 156 行类型层 + 2 个入口，8 + 2 个单测 |
+| tests/window_handle_contract.rs | 6 个集成测试 |
+| vendor/ + Cargo.toml/lock | raw-window-handle 0.6.2，21 包 20 第三方 |
+| docs/licenses/ + 关于页 + NOTICES | 3 份全文、20 组、计数 42、N38-N40 |
+| demos/round-041-window-handle.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 205 项、README、四个 index、ai-errors A120-A126、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+「干」按 040 结尾把两条上层路线一起核完。**先摆一条硬矛盾**：你 011 定的是 Win7 起兼容，Microsoft 官方写明 Edge 109 / WebView2 Runtime 109 是最后支持 Win7 / 8.1 的版本、SDK ≥1.0.1519.0 不再支持、109 之后无安全更新、Fixed >109 在 Win7 上无法启动，Learn 支持列表只剩 Win10 1709+ / Win11 / Server 2016+。而 `wry` 的 Windows 分支用 `webview2-com 0.38` + `windows 0.61`，属于新 SDK 线。所以**「Win7 + 正常模式 WebView2 界面」在官方口径下不成立**，三个选项写进 `q041-win7-ui.md`，本轮不替你选。
+
+**真实 manifest 核查**：`wry 0.53.5`（MSRV 1.77，Windows 分支 webview2-com + windows 0.61，Linux 分支 webkit2gtk/gtk/soup3，macOS 分支 objc2 系列，Android 分支 jni/ndk）、`tao 0.34.5`（MSRV 1.74，libc + windows 0.61 + gtk + objc2 + dlopen2）、`slint 1.18.1`（**edition 2024** + 一堆 workspace 依赖 + wgpu/skia/femtovg）；崩溃分析侧 `sentry 0.49.5`（默认链含 reqwest/rustls/native-tls/tokio/sentry-minidump）、`sentry-native`（CMake + C++17 + MSVC2022 + zlib + Crashpad/Breakpad，Windows 低于 Win10「应支持但未自动测试」）、`minidump` / `minidump-writer`（十几项依赖 + libc/nix）。两条路线全部判**不成立**，按 035 / 040 的规矩改轨，没偷偷塞依赖。
+
+**改轨落地**：`raw-window-handle 0.6.2` 是 wry / tao / slint 三家共用的零依赖 no_std 类型层，MSRV 1.64、MIT OR Apache-2.0 OR Zlib。`src/core/window.rs` 156 行：`HostSurface` 只描述有没有窗口、哪种平台句柄，变体分类与 `DisplayHandle::windows()` 全交给库；**不实现 unsafe 的 `HasWindowHandle`**，也不从句柄推导 WebView2 可用性（那仍由 `WebView2Probe` 注入）。`LightweightView::host_surface()` 恒 headless，把「轻量模式不加载 UI 宿主」变成库类型的可测事实。`Cargo.lock` 20 → 21 包 / 20 第三方，关于页 19 → 20 组、计数 41 → 42，3 份 LICENSE 全文 + NOTICES N38–N40。
+
+**验证**：237 单元 / 0 + 6 窗口契约 / 0 + 7 http_construct / 0 + 7 lifecycle / 0（43.18 s）+ 6 abi / 0（111.95 s）= **263 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。界面闸门**未触发**：只更新关于页许可表数据并重渲 4 张许可截图，其余 52 张 PNG 回退到 HEAD。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E57 | `Envelope` 没有 `get()`，9 处测试报 E0599 | 按真实 API 改 `field()` |
+| E58 | vendor manifest 的 `wasm-bindgen-0-2` feature 引用被裁掉的 optional 依赖 | 连同 wasm target 段、dev-dependencies、docs.rs metadata 一起裁，N38 登记 |
+| E59 | `tauri-rs/tao`、`tauri-rs/wry`、`rust-minidump/minidump`、`rust-windowing/dpi` 全 404 | 改 `tauri-apps/tao` 等；`dpi 0.1` 两次 404 标受阻，不猜来源 |
+| E60 | 全量 `cargo test` 又一次网关 502 | 拆段跑通，未降断言 |
+| E61 | 039 / 040 结尾两个候选没定优先级 | 两条都核完，明确「都不成立」与「只落句柄类型层」 |
+
+028 三项开服器功能仍按「只记文档」零实现；Q-037-01 未答复、继续挂；CF F17、特殊版代码、本项目 LICENSE、后端仓写请求均未动。
+
+041 推送时 `POST /git/trees` 整棵树 852 条返回 422「input was too large to process」，远端 ref 未动（E62）。`scripts/api_push.py` 改为基于父提交 `base_tree` 的增量树：只传变化条目、删除条目传 `sha:null`；脚本自身修正后重新提交再推，未强推、未重写历史。

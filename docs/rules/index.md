@@ -17,3 +17,5 @@
 | plugin-isolation-boundary.md | 同进程 C ABI 隔离边界、卸载约束与子进程路线 | 039 |
 
 | network-preconditions.md | 真实网络层 L1-L12 前置清单 | 040 |
+
+| ui-preconditions.md | UI 宿主与崩溃分析 L1-L12 前置清单 | 041 |

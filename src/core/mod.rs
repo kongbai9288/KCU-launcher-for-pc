@@ -4,6 +4,7 @@ pub mod paths;
 pub mod config;
 pub mod log;
 pub mod http;
+pub mod window;
 pub mod args;
 pub mod instance;
 pub mod popup;

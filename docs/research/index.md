@@ -213,3 +213,5 @@
 | 22 | 22-ffi-unwind-and-library-lifecycle.md | 跨 FFI 展开与动态库生命周期 | 8 已证实 / 1 受阻 |
 
 | 23 | 23-network-stack-and-win7-tls.md | 真实网络栈与 Win7 TLS | 12 已证实 / 1 受阻 |
+
+| 24 | 24-ui-host-win7-and-crash-stack.md | UI 宿主、Win7 WebView2、崩溃分析闭包 | 12 已证实 / 1 受阻 |

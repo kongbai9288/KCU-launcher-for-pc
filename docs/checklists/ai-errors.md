@@ -244,3 +244,16 @@
 | A117 | 源码里出现 `https?://` 连续串会被 CI 拦；测试需要完整 URL 时用 `concat!` 分部件拼接，运行时值不变。 |
 | A118 | vendor 里带 `[workspace]` / `[lints] workspace = true` / dev-dependencies 的 crate 必须裁段，并登记裁了什么。 |
 | A119 | Win7 上 HTTPS 的前置不只在代码：KB3140245、DefaultSecureProtocols、SChannel 配置、rustls 的 ProcessPrng 补丁要分开登记，不能写成「编出来就能跑」。 |
+
+## 041 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A120 | 引 UI 宿主或崩溃分析前先拉真实 manifest 与官方平台支持页，核平台分支、C/系统库、MSRV、edition 与 Win7 运行时口径。 |
+| A121 | 官方写「最后支持版本 / 不再支持 / 未自动测试」时，不能写成「编出来应该能跑」；须把取舍摆给用户。 |
+| A122 | 用项目自有类型前先读它的真实方法名（本轮 `Envelope` 是 `field()` 不是 `get()`），不凭印象调。 |
+| A123 | 仓库路径要实核，组织改名后旧路径会 404；取不到就标受阻，不猜来源。 |
+| A124 | 裁 vendor manifest 时，optional 依赖与引用它的 feature 行要一起裁，否则目录源解析失败。 |
+| A125 | unsafe trait（`HasWindowHandle`）要求句柄真实有效；core 层没有窗口时不实现、不伪造。 |
+| A126 | 句柄类型层不得推导 WebView2 可用性；可用性由宿主注入的 probe 负责，两者独立。 |
+| A127 | 全量树超过 GitHub Git Data API 的处理上限时返回 422；用 `base_tree` 只传变化条目，删除条目传 `sha:null`，脚本修正后必须重新提交再推。 |

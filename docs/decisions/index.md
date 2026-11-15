@@ -83,3 +83,5 @@
 | 039 | 插件倒序卸载与隔离边界，同进程 C ABI 接不住崩溃 | 卸载已实现；隔离未启动 | 039-plugin-lifecycle-and-isolation.md |
 
 | 040 | 真实网络栈核查判不成立，改轨 http 类型层 | 构造层已实现；真实 IO 未启动 | 040-network-stack-check-and-http-types.md |
+
+| 041 | UI 宿主与崩溃分析核查，改轨窗口句柄类型层 | 类型层已实现；真实 UI 与崩溃分析未启动 | 041-ui-crash-stack-check-and-window-handle.md |
