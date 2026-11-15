@@ -2650,3 +2650,33 @@ Q-041（Win7 UI 三选项）与 Q-037-01（哈希口径）仍待答复；真实�
 | E78 | 新增 `src` 边界测试直接写外部 URL 字面量，触发 CI `hardcode` job（037 E53 同类） | 改 `concat!` 拼接，运行时值不变，复跑 `NO_HARDCODE`；立 A147 |
 
 Q-041（Win7 UI 三选项）与 Q-037-01（哈希口径）仍待答复；真实窗口 / WebView / 崩溃分析、真实网络 IO、子进程插件隔离、028 三项开服器实现、CF F17、特殊版代码、本项目 LICENSE 均未动。
+
+## 045
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/45-round-045-instructions.txt | 逐字副本 1 行 |
+| docs/records/pending-question-environments.md | **主交付**：EQ-01 ~ EQ-12 具体环境 |
+| docs/decisions/045-log-poison-and-environments.md | F42-F46、U73-U79、V-A~V-F、E79-E80、四值 |
+| docs/verification/round-045.md | 18 条复跑证据 |
+| docs/research/28-parking-lot-closure.md | 7 个锚点 / R29-R31 |
+| src/core/log.rs | 锁中毒修复，2 个新增单测 |
+| demos/round-045-environments.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 229 项、README、三个 index、ai-errors A148-A151、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+你指出「那几个问题没给具体环境」，且不要比喻。主交付 `pending-question-environments.md` 按 12 条 EQ 逐项列 OS 版本、组件版本、运行时条件、一手数据、要选的项、不选的后果，不铺场景：EQ-01 Win7 UI（SP1 x86/x64、WebView2 最低 Win10、rustc 1.99.1、gnu 通过 / msvc 未跑、Tier 3 + build-std）、EQ-02 插件哈希（内容哈希下升级确认不可达）、EQ-03 真实网络（403 / 200 通道、Win7 KB3140245 + `DefaultSecureProtocols=0x800`、reqwest/ureq 的 MSRV 1.85）、EQ-04 崩溃分析（四层候选许可、Sentry 官方矩阵）、EQ-05 子进程隔离（extern C panic abort、Child Drop 不 reap、.bat MSRV 1.81）、EQ-06 CF F17、EQ-07 特殊版私仓、EQ-08 LICENSE、EQ-09 028 三项、EQ-10 UX、EQ-11 验证受阻事实、EQ-12 本轮路线结论。
+
+「干」先核 `parking_lot 0.12.5` 闭包：tag 是 `parking_lot-v0.12.5`（`0.12.5` 404），MIT OR Apache-2.0 / edition 2021 / MSRV 1.71 / `default = []`；`lock_api 0.4.14` 只带 scopeguard；`parking_lot_core 0.9.12` 带 cfg-if + smallvec + **unix 分支 libc 0.2.95** + windows 分支 windows-link 0.2.0。cfg-if / windows-link 038 已有，但 unix 的 libc 是 026 mini-moka 已受阻项。判**不成立**：只换一个锁要拉 6 个新包并给 Win7 路线新增变量，按 035 / 040 的先例如实改轨，不偷偷塞依赖。
+
+改轨落地：`src/core/log.rs` 4 处 `.expect("log mutex")` 换成 `LogBuffer::lock()` = `self.inner.lock().unwrap_or_else(PoisonError::into_inner)`。原行为：任一线程持锁 panic 后，后续所有日志调用连锁 panic，日志路径把进程带崩。新增 2 个测试用 `std::thread::scope` 在持锁期间真的 `panic!` 毒化 Mutex，验证中毒后仍能写、`take_shards` 仍可取、分片与 flush 计数不变；044 版在这两个测试里会 panic。**如实登记**：这是标准库 API 用法修正，不是第三方库替换；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。
+
+验证：262 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0 + 6 abi / 0 = **288 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。界面闸门未触发，`demos/preview/` 与 `ui-full-kcu-paper.html` 零 diff。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E79 | parking_lot 用 `0.12.5` / `0.12.4` 查 contents 全 404 | 列真实 tags 锁定 `parking_lot-v0.12.5`，立 A148 |
+| E80 | 初版把换锁写成第三方库替换 | 回 026 / 035 先例复核后改口径，U75 明确登记 |
+
+Q-041 / Q-037-01 / CF F17 / 特殊版代码 / LICENSE / 028 实现 / UX 手感均已给具体环境（EQ-01 ~ EQ-10），仍待你拍板；真实网络 IO、UI 宿主、崩溃分析、子进程隔离未启动。

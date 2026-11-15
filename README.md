@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 044 |
+| 当前轮次 | 045 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -225,3 +225,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 037 的 `icon.rs` 用子串扫描判 XML：单引号 `href`、带前缀事件名、实体编码外链都能绕，文本里的 `&lt;script&gt;` 又会误杀正常图标。这轮落 `quick-xml 0.38.4`（MIT / MSRV 1.56 / 只依赖已在构建的 memchr，**零新增传递依赖**），词法、属性、实体解码、well-formed 全交给库，项目侧只留禁元素与 URI 策略。原 8 个断言未改全过，新增 11 个边界。
 
 `Cargo.lock` **26 包 / 25 第三方**，1 份 LICENSE 全文 + 关于页 25 组 / 47 + NOTICES 三处齐备。`cargo test --offline` 合计 **286/0**（260 单元 + 26 集成），Windows GNU 交叉检查通过。界面与 56 张 PNG 只动了 4 张许可截图。
+
+## 045 具体环境清单 + 日志锁中毒修复
+
+`docs/records/pending-question-environments.md` 把 12 组待拍板问题按 OS 版本 / 组件版本 / 运行时条件 / 一手数据 / 要选的项 / 不选的后果逐条列清，不铺场景、不做类比：Win7 UI、插件哈希口径、真实网络 TLS、崩溃分析、子进程隔离、CF API、特殊版私仓、LICENSE、028 三项、UX 手感、验证受阻事实、本轮路线结论。
+
+`parking_lot 0.12.5` 闭包核查后判不成立（unix 分支 libc 是 026 已受阻项），改轨用标准库 `PoisonError::into_inner` 消除 `src/core/log.rs` 4 处 `.expect("log mutex")` 的连锁 panic；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。新增 2 个毒化回归测试。
+
+`cargo test --offline` 合计 **288/0**（262 单元 + 26 集成），Windows GNU 交叉检查通过，界面与 56 张 PNG 零 diff。

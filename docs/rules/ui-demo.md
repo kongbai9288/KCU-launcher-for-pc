@@ -287,3 +287,7 @@ python3 scripts/render_ui.py
 ## 044 闸门判定
 
 本轮只更新关于页许可表数据（24 → 25 组，计数 46 → 47）并重渲 4 张许可相关截图，不改任何界面布局、控件或交互；`src/plugins/icon.rs` 是校验层，界面呈现仍是原来的 SVG / 问号兜底。沿用 036 / 038–043 的先例判**未触发**。其余 52 张 PNG 回退到 HEAD。
+
+## 045 闸门判定
+
+本轮改的是 `src/core/log.rs` 的锁中毒恢复路径，不产生任何界面变化；`demos/preview/` 与 `demos/ui-full-kcu-paper.html` 零 diff。沿用 036 / 038–044 的先例判**未触发**。

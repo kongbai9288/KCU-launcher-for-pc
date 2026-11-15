@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 045 具体环境清单与日志锁中毒修复</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:140px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>045 运行逻辑</h1><div class="sub">具体环境清单 + 日志锁中毒修复 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>主交付：12 条具体环境</h3><p id="m1">未运行</p><span class="badge g">EQ-01~12</span><span class="badge g">OS / 版本 / 组件</span><span class="badge g">无场景铺陈</span></div>
+<div class="mini"><h3>parking_lot 闭包核查</h3><p id="m2">未运行</p><span class="badge r">6 个新包</span><span class="badge r">unix libc 0.2.95</span><span class="badge r">026 已受阻</span></div>
+<div class="mini"><h3>真实缺陷：锁中毒连锁 panic</h3><p id="m3">未运行</p><span class="badge r">expect("log mutex")</span><span class="badge g">PoisonError::into_inner</span><span class="badge g">thread::scope 真毒化</span></div>
+<div class="mini"><h3>验证与自查</h3><p id="m4">未运行</p><span class="badge g">288 / 0</span><span class="badge g">零新增依赖</span><span class="badge g">windows-gnu</span></div>
+</div><div class="note" id="note">EQ-01 ~ EQ-10 仍待拍板；真实网络 IO、UI、崩溃分析未启动。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','读 044 收口、026 / 035 改轨先例'],
+['02','逐字落盘','45-round-045-instructions.txt'],
+['03','主交付','pending-question-environments.md 12 条'],
+['04','EQ 写法','只列参数 / 版本 / 组件 / 一手数据'],
+['05','核 parking_lot','tag parking_lot-v0.12.5'],
+['06','核三层 manifest','lock_api / core / libc 分支'],
+['07','判不成立','unix libc 是 026 受阻项，6 新包'],
+['08','改轨','标准库 PoisonError::into_inner'],
+['09','定位缺陷','4 处 expect 连锁 panic'],
+['10','修复落地','LogBuffer::lock() 统一入口'],
+['11','毒化回归','thread::scope 持锁期间 panic'],
+['12','验证','288 测试、零新增依赖、229 必读'],
+['13','提交推送','本地提交、远端快照、逐项哈希比对']];
+const DETAIL={'01':'REQ 223/223 OK 044_REMOTE 14a16cd ALL_MATCH True','02':'SPEC cmp 0','03':'EQ 12 groups parameters_only','04':'EQ no_analogy no_scene os_version component runtime','05':'TAG parking_lot-v0.12.5 msrv_1.71','06':'MANIFEST lock_api scopeguard core cfg_if smallvec libc_unix','07':'VERDICT 6_new_pkgs libc_026_blocked NO_VENDOR','08':'U74 std_PoisonError_into_inner not_third_party','09':'BUG expect_log_mutex poison_chain_panic','10':'U77 lock_helper 4_call_sites','11':'U78 thread_scope real_poison 2_tests','12':'TEST 262_lib + 26_int 288_total 0_failed WINDOWS_GNU_OK','13':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'主交付','04':'环境写法','05':'tag 核查','06':'闭包核查','07':'判定','08':'改轨','09':'缺陷定位','10':'修复落地','11':'毒化回归','12':'验证','13':'提交推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11']);
+const M={'03':['m1','`docs/records/pending-question-environments.md` 按 12 条 EQ 逐项列 OS 版本、组件版本、运行时条件、一手数据、要选的项、不选的后果：Win7 UI、插件哈希口径、真实网络 TLS、崩溃分析、子进程隔离、CF API、特殊版私仓、LICENSE、028 三项、UX 手感、验证受阻事实、本轮路线结论。不铺场景，不做类比。'],'07':['m2','`parking_lot 0.12.5` tag 是 `parking_lot-v0.12.5`（`0.12.5` 404），MIT OR Apache-2.0 / edition 2021 / MSRV 1.71 / default=[]。`lock_api 0.4.14` 只带 scopeguard；`parking_lot_core 0.9.12` 带 cfg-if + smallvec + **unix 分支 libc 0.2.95** + windows 分支 windows-link 0.2.0。cfg-if / windows-link 038 已有，但 unix libc 是 026 mini-moka 已受阻项。判**不成立**：只换一个锁拉 6 个新包并给 Win7 新增变量，按 035 / 040 先例如实改轨。'],'10':['m3','`src/core/log.rs` 原 4 处 `.expect("log mutex")`：任一线程持锁 panic 后，后续所有日志调用连锁 panic。改成 `LogBuffer::lock()` = `self.inner.lock().unwrap_or_else(PoisonError::into_inner)`。**如实登记**：标准库 API 用法修正，不是第三方库替换；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。新增 2 个测试用 `thread::scope` 在持锁期间真的毒化 Mutex。'],'12':['m4','262 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0 + 6 abi / 0 = **288 / 0**。`cargo check --offline --target x86_64-pc-windows-gnu` 通过，229 项必读非空，凭据 / 禁用词 / 同上 / P09 / hardcode 全零命中，26 包 / 25 第三方与 044 相同。界面闸门未触发：`demos/preview/` 与 `ui-full-kcu-paper.html` 零 diff。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','core.env','core.env','q.research','q.manifest','q.verdict','q.reroute','q.defect','q.construct','q.reference','core.verify','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='环境清单与锁中毒修复已落地；EQ-01 ~ EQ-10 仍等你按编号拍板。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='EQ-01 ~ EQ-10 仍待拍板；真实网络 IO、UI、崩溃分析未启动。';}
+</script></body></html>

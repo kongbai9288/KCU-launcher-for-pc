@@ -377,3 +377,16 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 `src/plugins/icon.rs` 的 `to_ascii_lowercase` + `contains` + 循环找 `href=\"` 字符串扫描换成 `quick_xml::Reader::from_str` 事件遍历；词法、属性格式、实体解码、well-formed 全交给库，项目侧只留禁止元素清单与三条策略。原 8 个断言未改全过，新增 11 个边界（单引号 href、`on*` 前缀、带前缀未枚举事件名、`src` 与 5 个额外禁元素、畸形 XML、DOCTYPE、重复属性、转义文本不劣化、自闭合根、实体编码外链、实体编码内部片段放行）。
 
 这是一次**真实安全性修复**，不只是换库：043 版单引号属性与带前缀事件名都能绕过检查。剩余自写仍是 `launcher.rs`、lightweight 系列与 `paths/popup/userflow` 等业务编排；035 已登记它们没有语义等价的库可换。
+
+## 045 锁中毒修复（零新增依赖）
+
+| 项 | 044 | 045 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 25 | **25**（不变） |
+| `Cargo.lock` 包数 | 26 | **26**（不变） |
+| `src/` 行数 | 6072 | **6116** |
+| 测试 | 260 单元 + 26 集成 = 286 | **262 单元 + 26 集成 = 288** |
+
+核查 `parking_lot 0.12.5` 闭包后判不成立（unix 分支 libc，026 已受阻），改轨用标准库 `PoisonError::into_inner` 消除 `src/core/log.rs` 4 处 `.expect("log mutex")` 的连锁 panic。**如实登记**：这是标准库 API 用法修正，不是第三方库替换，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。新增 2 个测试用 `thread::scope` 在持锁期间真的毒化 Mutex，验证中毒后日志路径仍可服务。
+
+`LogBuffer` 的分片策略仍是项目特有编排（035 已登记）。剩余自写为 `launcher.rs`、lightweight 系列、`paths/popup/userflow` 等业务编排。

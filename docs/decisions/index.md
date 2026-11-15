@@ -91,3 +91,5 @@
 | 043 | 统一信封 request_id 换成 UUID v5 | 已实现已验证；真实网络 IO 未启动 | 043-request-id-uuid-v5.md |
 
 | 044 | 插件侧栏 SVG 校验换成 quick-xml | 已实现已验证；真实网络 IO 未启动 | 044-plugin-icon-xml-parser.md |
+
+| 045 | 锁中毒修复 + 待拍板问题的具体环境 | 已实现已验证；第三方锁实现未启动 | 045-log-poison-and-environments.md |
