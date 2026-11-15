@@ -61,6 +61,9 @@ SCENES = [
     ("46-settings-tiers", "settings&tab=auto", "设置 · 宽严程度默认严格"),
     ("47-tier-switch", "tier-switch", "切换宽严程度 · 二次确认"),
     ("48-loose-actions", "loose-actions", "宽松档 · 动作逐项可勾"),
+    ("49-plugin-icons", "plugin-icons", "侧栏插件图标 · 自带 SVG / 问号兜底"),
+    ("50-plugin-upgrade", "plugin-upgrade", "升级确认 · 身份哈希一致需手动同意"),
+    ("51-plugin-fault", "plugin-fault", "插件故障 · 禁用继续 / 取消"),
 ]
 
 W, H = 1440, 900

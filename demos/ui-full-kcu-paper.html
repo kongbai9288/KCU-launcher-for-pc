@@ -219,7 +219,8 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 .mask{position:absolute;inset:0;background:rgba(30,30,28,.42);z-index:20;display:none;align-items:center;justify-content:center}
 .win[data-theme="dark"] .mask{background:rgba(10,10,10,.58)}
 .mask.on{display:flex}
-.modal{width:min(540px,86%);max-height:80%;overflow:auto;position:relative;z-index:21}
+.modal{width:min(540px,86%);max-height:80%;overflow:auto;position:relative;z-index:21;background:var(--paper-hi)}
+.win[data-theme="dark"] .modal{background:#323330}
 .modal .top{display:flex;align-items:flex-start;gap:10px;padding:16px 18px 11px;border-bottom:1px solid var(--line)}
 .modal .top h2{font-family:var(--serif);font-size:16px;font-weight:700}
 .modal .x{margin-left:auto;border:none;background:none;cursor:pointer;color:var(--ink-3);font-size:17px;line-height:1}
@@ -281,6 +282,10 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 .slot-plugin{margin:0 6px 6px;padding:7px 10px;border:1px solid var(--line);border-radius:var(--r-md)}
 .slot-plugin .sh{font-size:10px;color:var(--ink-3);margin-bottom:5px;display:flex;align-items:center;gap:5px}
 .slot-plugin .nav-item{height:30px;font-size:12px}
+.plug-svg{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0}
+.plug-svg svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.plug-q{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0;
+  border:1px dashed var(--ink-3);border-radius:5px;font-family:var(--serif);font-weight:700;font-size:12px;color:var(--ink-3)}
 .lock-b{font-size:9px;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:0 5px;margin-left:auto;white-space:nowrap}
 .win.narrow .slot-core .sh,.win.narrow .slot-plugin .sh{font-size:0}
 .win.narrow .lock-b{display:none}
@@ -634,8 +639,11 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
       <button class="nav-item" data-v="serverhost"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-terminal"></use></svg></span><span class="lb" data-i18n="nav.serverhost">开服器</span></button>
       <button class="nav-item" data-v="logs"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-scroll-text"></use></svg></span><span class="lb" data-i18n="nav.logs">日志诊断</span></button>
       <div class="nav-sep"></div>
-      <div class="slot-plugin"><div class="sh"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg> 扩展</div>
-        <button class="nav-item" data-gotab="plugins"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg></span><span class="lb" data-i18n="我的插件">我的插件</span><span class="cnt">2</span></button>
+      <div class="slot-plugin"><div class="sh"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg> <span data-i18n="扩展">扩展</span></div>
+        <button class="nav-item" data-gotab="plugins"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-puzzle"></use></svg></span><span class="lb" data-i18n="我的插件">我的插件</span><span class="cnt">3</span></button>
+        <button class="nav-item" data-gotab="plugins" title="插件自带 SVG"><span class="ic plug-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 16.4 6.7 19.2l1.1-5.9L3.5 9.2l5.9-.8z"/></svg></span><span class="lb" data-i18n="plugin.nav.recommend">推荐插件</span></button>
+        <button class="nav-item" data-gotab="plugins" title="插件自带 SVG"><span class="ic plug-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h3M8 17h6"/></svg></span><span class="lb" data-i18n="plugin.nav.status">状态面板</span></button>
+        <button class="nav-item" data-gotab="plugins" title="未提供 SVG"><span class="ic plug-q">?</span><span class="lb" data-i18n="plugin.nav.legacy">旧版插件</span></button>
         <button class="nav-item" data-gotab="plugins"><span class="ic"><svg class="li" aria-hidden="true"><use href="#i-activity"></use></svg></span><span class="lb" data-i18n="更新与状态">更新与状态</span></button>
       </div>
       <div class="nav-foot">
@@ -854,7 +862,10 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 <span class="k" data-i18n="范围">范围</span><span><select class="sel"><option value="只选版本兼容的实例" data-i18n="只选版本兼容的实例">只选版本兼容的实例</option></select></span>
 <span class="k" data-i18n="锁定实例">锁定实例</span><span><select class="sel"><option value="按锁定的来" data-i18n="按锁定的来">按锁定的来</option></select></span></div></div></div>
 <div class="panel" style="margin-top:12px"><div class="panel-head"><div class="panel-title" data-i18n="现在读到的">现在读到的</div><div class="panel-sub" data-i18n="来自游戏自己保存的服务器列表">来自游戏自己保存的服务器列表</div><div class="panel-tools"><button class="btn tiny" id="setSrvScan">重新读取</button><span class="badge ok" id="setSrvState">3 个实例目录 · 5 台服务器</span></div></div>
-<div class="stack" style="font-size:12px;color:var(--ink-2)"><div data-i18n="服务器名字、地址、图标都在游戏目录的 servers.dat 里；加过服务器或进过服以后游戏会自动生成。">服务器名字、地址、图标都在游戏目录的 servers.dat 里；加过服务器或进过服以后游戏会自动生成。</div><div>列表分「可见」和「隐藏」两份，快速进入过的地址会进隐藏那份；这里只读、不改游戏的文件。</div><div data-i18n="srv.note1">连不上也从没成功过的，按原来的权重留在列表里，不再反复占用连接；锁定过的始终排最前。</div><div data-i18n="srv.note2">名字可以重复、也可以随时改；同名服务器各归各，改一个不会动到另一个。</div></div></div></div><div class="tabpane" data-pane="ai"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="AI 容器接口">AI 容器接口</div><div class="kv"><span class="k" data-i18n="接口地址">接口地址</span><span><input class="txt" id="setAiAddr" placeholder="用户自填，留空未启用"></span><span class="k" data-i18n="连接状态">连接状态</span><span><span class="badge off" id="setAiState">未配置</span></span><span class="k" data-i18n="确认粒度">确认粒度</span><span><select class="sel"><option value="每次请求单独确认" data-i18n="每次请求单独确认">每次请求单独确认</option></select></span><span class="k" data-i18n="删除权限">删除权限</span><span><select class="sel"><option value="不给" data-i18n="不给">不给</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="边界">边界</div><div class="kv"><span class="k" data-i18n="请求正文">请求正文</span><span><span class="badge off">不缓存</span></span><span class="k" data-i18n="审计">审计</span><span><span class="badge up">统一记录</span></span><span class="k" data-i18n="关页">关页</span><span><span class="badge ok">即停请求</span></span><span class="k" data-i18n="失败分类">失败分类</span><span><span class="mini">地址 / 认证 / 网络 三类</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="测试">测试</div><div class="panel-tools"><button class="btn tiny" data-v="ai">打开独立页</button></div></div><div class="row"><button class="btn primary tiny" id="setAiTest"><svg class="li" aria-hidden="true"><use href="#i-zap"></use></svg> 测试连接</button><span class="badge ok" id="setAiResult">待命</span></div><div class="mut" style="font-size:11px;margin-top:9px">地址由你自己填；不填就不会连接。</div></div></div></div><div class="tabpane" data-pane="plugins"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="auto.source.plugin">插件</div><div class="kv"><span class="k" data-i18n="插件目录">插件目录</span><span><input class="txt" value="C:\KCU\plugins" readonly></span><span class="k" data-i18n="槽位规则">槽位规则</span><span><select class="sel"><option value="插件只能加自己的位置" data-i18n="插件只能加自己的位置">插件只能加自己的位置</option></select></span><span class="k" data-i18n="清单校验">清单校验</span><span><select class="sel"><option value="校验来源与版本" data-i18n="校验来源与版本">校验来源与版本</option></select></span><span class="k" data-i18n="隔离">隔离</span><span><select class="sel"><option value="插件单独运行，不影响启动器" data-i18n="插件单独运行，不影响启动器">插件单独运行，不影响启动器</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="插件化更新">插件化更新</div><div class="kv"><span class="k" data-i18n="更新通道">更新通道</span><span><select class="sel"><option value="稳定 / 预览 / 插件化" data-i18n="稳定 / 预览 / 插件化">稳定 / 预览 / 插件化</option></select></span><span class="k" data-i18n="签名校验">签名校验</span><span><select class="sel"><option value="不可禁用" data-i18n="不可禁用">不可禁用</option></select></span><span class="k" data-i18n="版本比较">版本比较</span><span><select class="sel"><option value="只更新到新版本，可回滚" data-i18n="只更新到新版本，可回滚">只更新到新版本，可回滚</option></select></span><span class="k" data-i18n="失败降级">失败降级</span><span><select class="sel"><option value="失败保留原来的插件" data-i18n="失败保留原来的插件">失败保留原来的插件</option></select></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="已装插件与更新模拟">已装插件与更新模拟</div><div class="panel-tools"><button class="btn tiny" data-gotab="plugins">查看插件</button></div></div><table class="rec-tb"><thead><tr><th data-i18n="auto.source.plugin">插件</th><th data-i18n="槽位">槽位</th><th data-i18n="许可证">许可证</th><th data-i18n="状态">状态</th></tr></thead><tbody><tr><td>推荐插件</td><td>推荐位</td><td>MIT</td><td><span class="badge ok">启用</span></td></tr><tr><td>状态面板</td><td>状态显示</td><td>Apache-2.0</td><td><span class="badge ok">启用</span></td></tr></tbody></table><div class="row" style="margin-top:9px"><button class="btn tiny" id="plugUpdate">模拟插件化更新</button><button class="btn tiny" id="plugRollback">模拟回滚</button><span class="badge up" id="plugState">启动器本体未改动</span></div></div></div></div><div class="tabpane" data-pane="crash"><div class="grid g2">
+<div class="stack" style="font-size:12px;color:var(--ink-2)"><div data-i18n="服务器名字、地址、图标都在游戏目录的 servers.dat 里；加过服务器或进过服以后游戏会自动生成。">服务器名字、地址、图标都在游戏目录的 servers.dat 里；加过服务器或进过服以后游戏会自动生成。</div><div>列表分「可见」和「隐藏」两份，快速进入过的地址会进隐藏那份；这里只读、不改游戏的文件。</div><div data-i18n="srv.note1">连不上也从没成功过的，按原来的权重留在列表里，不再反复占用连接；锁定过的始终排最前。</div><div data-i18n="srv.note2">名字可以重复、也可以随时改；同名服务器各归各，改一个不会动到另一个。</div></div></div></div><div class="tabpane" data-pane="ai"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="AI 容器接口">AI 容器接口</div><div class="kv"><span class="k" data-i18n="接口地址">接口地址</span><span><input class="txt" id="setAiAddr" placeholder="用户自填，留空未启用"></span><span class="k" data-i18n="连接状态">连接状态</span><span><span class="badge off" id="setAiState">未配置</span></span><span class="k" data-i18n="确认粒度">确认粒度</span><span><select class="sel"><option value="每次请求单独确认" data-i18n="每次请求单独确认">每次请求单独确认</option></select></span><span class="k" data-i18n="删除权限">删除权限</span><span><select class="sel"><option value="不给" data-i18n="不给">不给</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="边界">边界</div><div class="kv"><span class="k" data-i18n="请求正文">请求正文</span><span><span class="badge off">不缓存</span></span><span class="k" data-i18n="审计">审计</span><span><span class="badge up">统一记录</span></span><span class="k" data-i18n="关页">关页</span><span><span class="badge ok">即停请求</span></span><span class="k" data-i18n="失败分类">失败分类</span><span><span class="mini">地址 / 认证 / 网络 三类</span></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="测试">测试</div><div class="panel-tools"><button class="btn tiny" data-v="ai">打开独立页</button></div></div><div class="row"><button class="btn primary tiny" id="setAiTest"><svg class="li" aria-hidden="true"><use href="#i-zap"></use></svg> 测试连接</button><span class="badge ok" id="setAiResult">待命</span></div><div class="mut" style="font-size:11px;margin-top:9px">地址由你自己填；不填就不会连接。</div></div></div></div><div class="tabpane" data-pane="plugins"><div class="grid g2"><div class="set-card"><div class="hd" data-i18n="auto.source.plugin">插件</div><div class="kv"><span class="k" data-i18n="插件目录">插件目录</span><span><input class="txt" value="C:\KCU\plugins" readonly></span><span class="k" data-i18n="槽位规则">槽位规则</span><span><select class="sel"><option value="插件只能加自己的位置" data-i18n="插件只能加自己的位置">插件只能加自己的位置</option></select></span><span class="k" data-i18n="清单校验">清单校验</span><span><select class="sel"><option value="校验来源与版本" data-i18n="校验来源与版本">校验来源与版本</option></select></span><span class="k" data-i18n="隔离">隔离</span><span><select class="sel"><option value="插件单独运行，不影响启动器" data-i18n="插件单独运行，不影响启动器">插件单独运行，不影响启动器</option></select></span></div></div><div class="set-card"><div class="hd" data-i18n="插件化更新">插件化更新</div><div class="kv"><span class="k" data-i18n="更新通道">更新通道</span><span><select class="sel"><option value="稳定 / 预览 / 插件化" data-i18n="稳定 / 预览 / 插件化">稳定 / 预览 / 插件化</option></select></span><span class="k" data-i18n="签名校验">签名校验</span><span><select class="sel"><option value="不可禁用" data-i18n="不可禁用">不可禁用</option></select></span><span class="k" data-i18n="版本比较">版本比较</span><span><select class="sel"><option value="只更新到新版本，可回滚" data-i18n="只更新到新版本，可回滚">只更新到新版本，可回滚</option></select></span><span class="k" data-i18n="失败降级">失败降级</span><span><select class="sel"><option value="失败保留原来的插件" data-i18n="失败保留原来的插件">失败保留原来的插件</option></select></span>
+<span class="k" data-i18n="plugin.set.upgrade">升级</span><span><select class="sel"><option value="手动同意才安装" data-i18n="plugin.set.upgrade.v">手动同意才安装</option></select></span>
+<span class="k" data-i18n="plugin.set.fault">插件有问题时</span><span><select class="sel"><option value="报告 · 禁用继续 · 取消" data-i18n="plugin.set.fault.v">报告 · 禁用继续 · 取消</option></select></span>
+<span class="k" data-i18n="plugin.set.icon">侧边栏图标</span><span><select class="sel"><option value="插件 SVG · 没有就用问号" data-i18n="plugin.set.icon.v">插件 SVG · 没有就用问号</option></select></span></div></div><div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="已装插件与更新模拟">已装插件与更新模拟</div><div class="panel-tools"><button class="btn tiny" data-gotab="plugins">查看插件</button></div></div><table class="rec-tb"><thead><tr><th data-i18n="auto.source.plugin">插件</th><th data-i18n="槽位">槽位</th><th data-i18n="许可证">许可证</th><th data-i18n="状态">状态</th></tr></thead><tbody><tr><td>推荐插件</td><td>推荐位</td><td>MIT</td><td><span class="badge ok">启用</span></td></tr><tr><td>状态面板</td><td>状态显示</td><td>Apache-2.0</td><td><span class="badge ok">启用</span></td></tr></tbody></table><div class="row" style="margin-top:9px"><button class="btn tiny" id="plugUpdate">模拟插件化更新</button><button class="btn tiny" id="plugRollback">模拟回滚</button><span class="badge up" id="plugState">启动器本体未改动</span></div></div></div></div><div class="tabpane" data-pane="crash"><div class="grid g2">
 <div class="set-card"><div class="hd" data-i18n="crash.card">崩溃反馈</div><div class="kv">
 <span class="k" data-i18n="crash.enable">出问题时记录</span><span><select class="sel" id="setCrashOn"><option value="off" data-i18n="crash.off">先问我，再发送</option><option value="local" data-i18n="crash.local">只留在本地</option><option value="off2" data-i18n="crash.never">不记录</option></select></span>
 <span class="k" data-i18n="crash.addr">接收地址</span><span><input class="txt" id="setCrashAddr" placeholder="由用户自己填写，留空不外发" data-i18n-ph="crash.addrph"></span>
@@ -1305,6 +1316,8 @@ const POPUPS=[
  ['error','错误','失败可见、可诊断、可回退，不崩溃。'],
  ['ai-confirm','AI 请求确认','每次请求单独确认；接口由用户自填。'],
  ['extension','扩展安装','扩展安装确认，可关闭。'],
+ ['plugin-upgrade','升级确认','身份哈希一致 → 比对版本 → 你手动同意才安装。'],
+ ['plugin-fault','插件故障','报告问题，底部可禁用继续尝试启动 / 取消。'],
 ];
 const INS=[['生存季','1.21.4','Fabric 0.16.10','42','2 分钟前','ok','正常'],['纯原版','1.21.4','Vanilla','0','昨天','ok','正常'],
  ['旧存档','1.20.1','Forge 47.2.0','18','3 天前','up','可更新'],['测试服','1.21.1','NeoForge','7','上周','off','被锁'],
@@ -1378,7 +1391,20 @@ const EN={
  'auto.tier.switch':'Change strictness','auto.tier.cancel':'Keep current','auto.tier.ok':'Change',
  'auto.risk.c2':'Interrupts every player online','auto.risk.c3':'Changes server state and writes your world',
  'auto.risk.c4':'Touches files and the running instance','auto.risk.c5':'Sends logs outside; a separate confirm still applies',
- 'auto.risk.blacklist':'These stay locked unless you unlock them one by one, each with its own confirm.'
+ 'auto.risk.blacklist':'These stay locked unless you unlock them one by one, each with its own confirm.',
+ 'plugin.nav.recommend':'Recommended plugins','plugin.nav.status':'Status panel','plugin.nav.legacy':'Legacy plugin',
+ 'plugin.upgrade.title':'Confirm plugin upgrade','plugin.upgrade.p1':'The installed plugin and the candidate share the same identity hash, so they are the same plugin.',
+ 'plugin.upgrade.p2':'Version 1.2.3 to 1.3.0; signature verified. Upgrading needs your manual consent, otherwise the old plugin stays.',
+ 'plugin.upgrade.attach':'Identity a3f1…c9 · Signature OK · Old plugin can be restored',
+ 'plugin.upgrade.later':'Not now','plugin.upgrade.ok':'Upgrade',
+ 'plugin.fault.title':'Plugin failed to load','plugin.fault.p1':'Plugin "Legacy plugin" could not load: entry symbol missing.',
+ 'plugin.fault.p2':'You can disable it and retry startup, or cancel this startup.',
+ 'plugin.fault.attach':'Diagnostic line recorded · Disable affects this startup only · Other plugins are unaffected',
+ 'plugin.fault.hint':'You can also click the top-right × or press Esc to cancel.',
+ 'plugin.fault.cancel':'Cancel','plugin.fault.retry':'Disable and retry startup',
+ 'plugin.set.upgrade':'Upgrade','plugin.set.upgrade.v':'Manual consent required',
+ 'plugin.set.fault':'On plugin fault','plugin.set.fault.v':'Report, disable & retry, or cancel',
+ 'plugin.set.icon':'Sidebar icon','plugin.set.icon.v':'Plugin SVG, or ? if missing'
 };
 const EN_TEXT={"常规":"General","启动与实例":"Startup & instances","界面语言":"Language","主题":"Theme","数据目录":"Data folder","公告提示":"Notices","使用说明":"How it works","EULA":"EULA","崩溃后":"After a crash","旧版 jar":"Old jars","用户指定":"User pick","设备连接范围":"Connection budget","双击进服":"Double-click to join","推荐与排序":"Recommend & rank","服务器状态":"Server status","自动连接":"Auto connect","排序规则":"Sorting","缓存与刷新":"Cache & refresh","下载与镜像":"Downloads & mirrors","AI 容器接口":"AI container","插件与更新":"Plugins & updates","崩溃反馈":"Crash reports","隐私与诊断":"Privacy & diagnostics","实验性":"Labs","已改 3 项":"Changed 3","恢复默认":"Reset all","扩展":"Extensions","我的插件":"My plugins","更新与状态":"Updates & status","设置":"Settings","关于":"About","收起侧栏":"Collapse","公告中心":"Notices","实例与版本":"Instances","服务器":"Servers","下载中心":"Downloads","模组管理":"Mods","账号登录":"Accounts","开服器":"Server Host","日志诊断":"Logs","首页":"Home","桌面端":"Desktop","简体中文":"简体中文","English":"English","纸质浅色（默认）":"Paper light (default)","深色纸质":"Paper dark","跟随系统":"Follow system","启动前写入":"Write before launch","按日志自动重启":"Restart on crash log","写 lockfile 禁用":"Disable with lockfile","永远排第一":"Always first","未读时铃铛提示":"Bell for unread","静默":"Silent","每次自动连几台":"Servers per round","同时连接":"Concurrent","轻量机器":"Light machines","新加的服务器":"Newly added","范围外的":"Outside the round","一定连，但占同一份额度":"Always connect, inside the same budget","保留上次结果，不主动连":"Keep last result, no request","4 台（推荐）":"4 (recommended)","2 台":"2","6 台":"6","全部":"All","3 路":"3","2 路":"2","1 路":"1","自动降到 2 台 / 2 路":"Auto: 2 / 2","与标准一致":"Same as standard","上次玩这个服用的实例":"Last instance for this server","上次用过的实例":"Last used instance","版本兼容范围":"Compatible versions","自动选定":"Selected","只读，不改游戏文件":"Read only","SLP + 手动覆盖":"SLP + manual override","仅手动":"Manual only","插件提供":"From plugin","在线":"Online","维护中":"Maintenance","离线":"Offline","满员":"Full","私有":"Private","自定义":"Custom","超时标灰，回退缓存":"Grey on timeout, fall back to cache","协议被禁用时给可见提示":"Visible notice when protocol is off","不静默重试":"No silent retry","项目":"Project","版本 / 分组":"Version / group","许可证":"License","版权":"Copyright","用途":"Use","来源":"Source","说明":"Notes","状态":"Status","名称":"Name","地址":"Address","操作":"Actions","类型":"Type","时间":"Time","内容":"Content","数量":"Count","结果":"Result","已就绪":"Ready","待刷新":"Pending","就绪":"Ready","已保存":"Saved","未配置":"Not set","未发送":"Not sent","启用":"Enabled","正常":"OK","可更新":"Update","被锁":"Locked","刷新":"Refresh","重新获取":"Reload","刷新清单":"Refresh list","重新扫描":"Rescan","新建实例":"New instance","列表":"List","网格":"Grid","取消":"Cancel","保存":"Save","稍后":"Later","知道了":"Got it","不再提示":"Do not show again","知道了 ":"Got it","看最近一次":"View latest","导出诊断包":"Export diagnostics","查看插件":"View plugins","模拟插件化更新":"Simulate plugin update","模拟回滚":"Simulate rollback","重新读取":"Rescan","停止本次同步":"Stop","切到轻量档":"Lighter mode","切回标准档":"Standard mode","上次更新":"Updated","仅清过期":"Clear expired","仅本地":"Local only","关于 KCU Launcher":"About KCU Launcher","第三方许可":"Third-party licenses","连接范围":"Connection budget","自动同步":"Auto sync","四层缓存":"Four-layer cache","刷新机制":"Refresh triggers","推荐位":"Recommendations","服务器列表":"Server list","推荐服务器":"Recommended servers","运行状态":"Status","已装插件与更新模拟":"Installed plugins & update demo","会记下什么":"What is recorded","按许可证分组":"Grouped by license","离线可读":"Readable offline","改动立即生效":"Applied instantly","容量有界":"Bounded","单飞去重":"Single-flight","失败回退上次缓存":"Fall back to last cache","取消 0 副作用":"Cancel has no side effects","流程结束 0 残留":"No dialogs left open","改动立即生效；保存失败会保留原来的值并给出提示。":"Applied instantly. If saving fails, the old value stays and you get a visible notice.","「已改 3 项」只看动过的地方，每项都能单独恢复默认。":"Changed-only view lists just what you touched; each item resets on its own.","插件可以加自己的设置分组，不会改动原有的设置。":"Plugins can add their own settings groups without touching the built-in ones."};
 let LOCALE='zh-CN';
@@ -1434,7 +1460,7 @@ const VIEW_META={home:['首页','本地 7 个实例 · 上次同步 2 分钟前 
  instances:['实例与服务器','7 个实例 · 3 个服务器 · 用户指定排第一'],download:['下载中心','批量请求 · 每页 20 · 单飞去重'],
  mods:['模组管理','110 个模组 · 启用 41'],login:['账号登录','三种方式 · 外置 → 内置 → 连接码'],
  logs:['日志诊断','[KCU] 单行诊断 · 每 100 行分片'],settings:['设置','改动立即生效 · 可搜索 · 一键恢复默认'],
- about:['关于','版本 · 开源许可 · 致谢'],popups:['弹窗全集','11 类 · 每类有关闭路径'],
+ about:['关于','版本 · 开源许可 · 致谢'],popups:['弹窗全集','13 类 · 每类有关闭路径'],
  lightweight:['轻量模式','≤2GiB 首次启动自动进入 · 单主题'],error:['异常与边界状态','空 / 加载 / 错误 / 被锁 / 安全模式 / 离线'],
  onboarding:['首次启动','4 步向导 · 可返回、可关闭'],cardgrid:['实例网格','网格视图 · 与列表同源'],
  servers:['服务器','自动连接 · 结果缓存为排序权重 · 双击直接进服'],
@@ -1448,7 +1474,10 @@ const VIEW_META={home:['首页','本地 7 个实例 · 上次同步 2 分钟前 
  slots:['插件槽位与锁定','内部设计证据 · 不进产品导航'],
  recommendations:['推荐位总览','内部设计证据 · 不进产品导航'],
  handoff:['底层交接基线','内部设计证据 · 不进产品导航'],
- upperstack:['上层实现候选','内部设计证据 · 不进产品导航']};
+ upperstack:['上层实现候选','内部设计证据 · 不进产品导航'],
+ pluginicons:['插件侧栏图标','插件自带 SVG · 没有就用问号'],
+ pluginupgrade:['插件升级确认','身份哈希一致 · 比对版本 · 手动同意'],
+ pluginfault:['插件故障报告','禁用并继续尝试启动 / 取消']};
 
 function openDlg(title,body,id){
   $('mdTitle').textContent=title;$('mdId').textContent='id='+id;$('mdBody').innerHTML=body;
@@ -1457,6 +1486,25 @@ function openDlg(title,body,id){
   $('mask').classList.add('on');dlgOpen=true;
 }
 function closeDlg(r){if(!dlgOpen)return;$('mask').classList.remove('on');dlgOpen=false;log('ui','popup','close','OK','detail='+r);}
+function openUpgradeDlg(){
+  const body='<p>'+tr('plugin.upgrade.p1','已装的「推荐插件」与候选包身份哈希一致，属于同一个插件。')+'</p>'+
+   '<p>'+tr('plugin.upgrade.p2','版本 1.2.3 → 1.3.0，签名校验已通过。升级需要你手动同意；没同意就保留旧插件，不会自动安装。')+'</p>'+
+   '<div class="attach">'+tr('plugin.upgrade.attach','身份哈希 a3f1…c9 · 签名通过 · 原插件可回滚')+'</div>';
+  openDlg(tr('plugin.upgrade.title','确认升级插件'),body,'plugin_upgrade');
+  $('mdActs').innerHTML='<button class="btn" id="mdCancel">'+tr('plugin.upgrade.later','暂不升级')+'</button><button class="btn primary" id="mdOk">'+tr('plugin.upgrade.ok','升级')+'</button>';
+  $('mdCancel').onclick=()=>{closeDlg('keep_old');log('plugin','upgrade','keep','OK','detail=not_confirmed');};
+  $('mdOk').onclick=()=>{closeDlg('user_confirmed_upgrade');log('plugin','upgrade','install','OK','detail=manual_consent');};
+}
+function openFaultDlg(){
+  const body='<p>'+tr('plugin.fault.p1','插件「旧版插件」没能正常加载：入口符号缺失。')+'</p>'+
+   '<p>'+tr('plugin.fault.p2','可以先禁用它再继续尝试启动；也可以取消本次启动。')+'</p>'+
+   '<div class="attach">'+tr('plugin.fault.attach','诊断行已记录 · 禁用只影响本次启动 · 其他插件不受影响')+'</div>'+
+   '<div class="mut" style="font-size:10.5px">'+tr('plugin.fault.hint','也可以点右上角 × 或按 Esc 取消。')+'</div>';
+  openDlg(tr('plugin.fault.title','插件加载失败'),body,'plugin_fault');
+  $('mdActs').innerHTML='<button class="btn" id="mdCancel">'+tr('plugin.fault.cancel','取消')+'</button><button class="btn primary" id="mdOk">'+tr('plugin.fault.retry','禁用并继续尝试启动')+'</button>';
+  $('mdCancel').onclick=()=>{closeDlg('cancel_startup');log('plugin','fault','cancel','OK','detail=startup_aborted');};
+  $('mdOk').onclick=()=>{closeDlg('disable_and_retry');log('plugin','fault','disable','OK','detail=retry_startup');};
+}
 let TIER='strict';
 const TIER_LABEL={strict:'严格',standard:'标准',loose:'宽松'};
 const TIER_EN={strict:'Strict',standard:'Standard',loose:'Loose'};
@@ -1586,6 +1634,9 @@ function show(v){
   if(v==='tier-switch'){show('settings');setTab('auto');setTimeout(()=>openTierConfirm('standard'),40);return;}
   if(v==='loose-actions'){show('settings');setTab('auto');setTimeout(()=>{setTier('loose');const rows=$('autoActionRows');if(rows)rows.querySelectorAll('input[data-act]').forEach(c=>{if(c.dataset.act!=='c1'){c.checked=true;TIER_ALLOW.loose[c.dataset.act]=true;}});renderTier();},40);return;}
 
+  if(v==='plugin-icons'){show('home');return;}
+  if(v==='plugin-upgrade'){show('settings');setTab('plugins');setTimeout(openUpgradeDlg,40);return;}
+  if(v==='plugin-fault'){show('home');setTimeout(openFaultDlg,40);return;}
   if(v==='i18n-en'){setLang('en-US');show('settings');setTab('general');return;}
   document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.dataset.view===v));
   document.querySelectorAll('.nav-item[data-v]').forEach(x=>x.classList.toggle('active',x.dataset.v===v));

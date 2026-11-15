@@ -7,6 +7,8 @@ s = t.read_text()
 s = re.sub(r"<script>[\s\S]*?</script>", "", s)
 s = re.sub(r"<style>[\s\S]*?</style>", "", s)
 s = re.sub(r'<section class="view" data-internal="1"[^>]*>[\s\S]*?</section>', "", s)
+# 只扫可见文本：标签属性里的 i18n key / title 不是界面上的工程话
+s = re.sub(r"<[^>]+>", " ", s)
 hits = re.findall(
     r"slot:|core\.[a-z]|plugin\.[a-z]|@modified|setid|未进构建|交接基线|新对话|"
     r"独立验证|四值|SHA-1|命中率|方案待定|演示构建|locked",

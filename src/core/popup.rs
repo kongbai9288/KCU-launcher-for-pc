@@ -23,6 +23,8 @@ pub enum PopupKind {
     Error,
     AiConfirm,
     ExtensionInstall,
+    PluginUpgradeConfirm,
+    PluginFault,
 }
 
 #[derive(Debug, Clone)]
@@ -170,6 +172,8 @@ pub fn catalog() -> Vec<Popup> {
         Popup::new("error", PopupKind::Error, "error"),
         Popup::new("ai-confirm", PopupKind::AiConfirm, "ai_request"),
         Popup::new("extension", PopupKind::ExtensionInstall, "extension_install"),
+        Popup::new("plugin-upgrade", PopupKind::PluginUpgradeConfirm, "plugin_upgrade"),
+        Popup::new("plugin-fault", PopupKind::PluginFault, "plugin_fault"),
     ]
 }
 
@@ -183,7 +187,7 @@ mod tests {
         for p in catalog() {
             r.open(p);
         }
-        assert_eq!(r.len(), 11);
+        assert_eq!(r.len(), 13);
         assert!(r.missing_close_path().is_empty());
     }
 
@@ -233,7 +237,7 @@ mod tests {
         for p in catalog() {
             r.open(p);
         }
-        assert_eq!(r.force_close_all(), 11);
+        assert_eq!(r.force_close_all(), 13);
         assert!(r.all_closed());
     }
 }

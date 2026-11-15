@@ -75,3 +75,5 @@
 | 035 | 三条路线核完改轨；配置访问换 serde_json 安全 API | 改轨已实现 | 035-route-check-and-config-hardening.md |
 
 | 036 | 上层第一块：Ed25519 签名校验交给 ed25519-compact | 已实现 | 036-updater-signature-on-ed25519-compact.md |
+
+| 037 | 身份哈希升级 / 插件故障三动作 / 侧栏 SVG 与问号 | 业务层已实现，界面层仅演示 | 037-plugin-upgrade-fault-icon.md |

@@ -281,7 +281,7 @@ mod tests {
     fn every_catalog_popup_closes_and_none_remain() {
         let mut v = LightweightView::new();
         v.open_popups_for_state(ViewState::Ready);
-        assert_eq!(v.popups.len(), 11);
+        assert_eq!(v.popups.len(), 13);
         assert_eq!(v.close_all_popups(), 0);
         assert!(v.popups.all_closed());
     }

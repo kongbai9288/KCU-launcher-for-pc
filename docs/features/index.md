@@ -236,3 +236,11 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | F028-03 | 自动命令：服务器出现的命令文字作为触发条件 | normal.server | 已批准 · 未实现 · 未进入构建 | server-auto-command-log-trigger.md |
 
 三项均挂 012 轮开服器台账下，不另起框架；界面形态等手感轮再出整页 UX 演示。
+
+## 037 新增
+
+| 编号 | 文件 | 状态 |
+| --- | --- | --- |
+| F037-01 | plugin-upgrade-consent.md | 业务层已实现；界面层仅演示 |
+| F037-02 | plugin-fault-recovery.md | 业务层已实现；界面层仅演示 |
+| F037-03 | plugin-sidebar-icon.md | 业务层已实现；界面层仅演示 |

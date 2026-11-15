@@ -2349,3 +2349,40 @@ L3 落地：
 界面闸门**未触发**：本轮不动界面布局，只更新关于页许可表数据并重渲 4 张许可相关截图。
 
 **仍标未启动**：UI 宿主、真实网络、崩溃分析、插件 ABI、更新器其余部分（下载 / 安装 / 回滚执行 / 公钥分发）。028 三项开服器功能仍按「只记文档」零实现；CF F17、特殊版代码、本项目 LICENSE、Win7 交叉编译、后端仓写请求均未动。
+
+## 037
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/37-round-037-instructions.txt | 当轮指令逐字副本 1 行 |
+| docs/decisions/037-plugin-upgrade-fault-icon.md | P01-P03 落点、口径解读、U08-U13 / F01-F06 / I01-I05、E35-E39、四值 |
+| docs/verification/round-037.md | 14 条复跑证据 |
+| docs/features/ | F037-01 / 02 / 03 三份五字段登记 |
+| src/plugins/ | 4 模块 474 行、28 个测试 |
+| src/core/popup.rs、src/lightweight/view.rs | catalog 11 → 13 类，计数断言同步 |
+| demos/ui-full-kcu-paper.html | 侧栏 3 插件（2 SVG + 1 问号）、两个弹窗、设置三条口径、弹窗全集 13 类 |
+| demos/preview/ | 51 张 PNG 全量重渲，新增 49 / 50 / 51 |
+| 索引与记录 | docs/index 181 项、README、decisions/index、features/index、ai-errors A96-A100、code-ownership-audit、implementation-strategy、ui-demo 触发记录、interface-log、rounds |
+
+「干」继续上层；本轮把三条新需求拆成**业务层落地**与**界面层演示**两轨：
+
+1. **升级手动同意**：身份哈希（`sha512(plugin_id)` 前 16 字节 hex）一致才比对版本；签名校验仍排最前不可禁用；版本更高也**必须用户手动同意**才 Install，否则保留旧插件。这**覆盖 036 U02 的自动安装**，已显式登记撤回。不同身份 / 无已装版本属新装，不叫升级；降级仍要显式目标 + 回滚确认 + 手动同意三者齐备。
+2. **插件故障**：弹窗报告插件名与原因，底部「禁用并继续尝试启动」「取消」，× / Esc 等同取消；禁用只跳过该插件，其他照常加载，全禁用后不再空转。catalog 从 11 → **13 类**，两类新弹窗都必可关、流程后 0 残留。
+3. **侧栏图标**：插件自带 SVG 直接显示，没给 / 格式不对 / 超 16 KiB / 含脚本外链 → 虚线框问号 `?`。不做内容白名单（按你「留高度自定义」的口径），`href="#..."` 内部片段放行，渲染层用 `<img data:>` 隔离。
+
+**零新增第三方 crate**：SHA-512 用 036 的 ed25519-compact、版本比较用 034 的 semver、签名用 036 的 updater::verify。`cargo test --offline` 179 → **207 / 0**，`Cargo.lock` 仍 14 包 / 13 第三方。
+
+**UI 闸门本轮触发**：整页 UX 演示与 51 张 PNG 已交（重点看 49 / 50 / 51）；按 `docs/rules/ui-demo.md`，**界面渲染实现未写**，`src/` 里只有身份哈希、决策编排与数据层。等手感确认后才写进实现。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E35 | `UpgradeRequest` derive Default 报 E0277 | `Identity` 加 Default |
+| E36 | raw string 被内部 `"#` 截断，3 处语法错 | 改 `r##"..."##` |
+| E37 | 首版把 `href="#i-puzzle"` 判成外链 | 遍历 href 值，只放行 `#` 开头 |
+| E38 | 新增两类弹窗后轻量视图硬编码 11 的断言失败 | 同步 13 |
+| E39 | `.modal` 半透明，背后文字透进弹窗 | 改不透明纸质底，51 张图全量重渲 |
+
+028 三项开服器功能仍按「只记文档」零实现；CF F17、特殊版代码、本项目 LICENSE、真实运行时 / GUI / 跨平台、后端仓写请求均未动。
+| E40 | P09 报 9 处 `plugin.n` / `plugin.s` 命中 | 复核为新增 `data-i18n="plugin.nav.*"` 属性值误入扫描域；`scripts/p09_scan.py` 改为只扫可见文本，断言与正则未改，注入自检通过 |
