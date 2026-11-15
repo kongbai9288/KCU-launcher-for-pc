@@ -237,3 +237,19 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | N32 | 上游 `src/` 逐字节未改；vendored manifest 只裁掉 dev-dependencies、cfg-if 的 optional `rustc-std-workspace-core` 与 `[features]`、windows-link 的 `[lints] workspace = true`（脱离原 workspace 后无法解析）。 |
 | N33 | `Library::new` 默认 flags=0 走 `LoadLibraryExW`，不依赖 `LOAD_LIBRARY_SEARCH_*`；Win7 的 KB2533623 只在显式启用搜索目录标志时才相关，本项目当前不用这些标志。 |
 | N34 | Windows 分支已在 `cargo check --offline --target x86_64-pc-windows-gnu` 通过；MSVC 目标与 Win7 运行时行为未证实。 |
+
+## 040 新增已进构建依赖（HTTP 请求构造层）
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| http | 1.3.1 | MIT OR Apache-2.0 | http-rs authors | 批量请求的 Method / Uri / Header / Version 类型 | vendor/http | 构建中已使用 |
+| bytes | 1.11.1 | MIT | Carl Lerche、Sean McArthur | http crate 的字节容器 | vendor/bytes | 构建中已使用 |
+| fnv | 1.0.7 | Apache-2.0 / MIT | Alex Crichton | http crate 的 HeaderMap 哈希 | vendor/fnv | 构建中已使用 |
+
+许可证全文：`docs/licenses/http-LICENSE-MIT.txt`、`docs/licenses/http-LICENSE-APACHE.txt`、`docs/licenses/bytes-LICENSE.txt`、`docs/licenses/fnv-LICENSE-MIT.txt`、`docs/licenses/fnv-LICENSE-APACHE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N35 | 上游 `src/` / `lib.rs` 逐字节未改；vendored manifest 只裁掉 `[workspace]`、`[lints]`、`[package.metadata]`、dev-dependencies 与 optional 的非默认依赖声明，脱离原 workspace 后无需这些段。 |
+| N36 | `http` 是纯类型 crate，不做网络 IO；真实 HTTPS 请求未启动，Win7 TLS 系统前置见 `docs/rules/network-preconditions.md`。 |
+| N37 | `itoa 1.0.15` 复用 025 已有 vendor 与许可全文，本轮未新增该 crate 的副本。 |

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 040 真实网络栈核查与请求构造改轨</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:132px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>040 运行逻辑</h1><div class="sub">真实网络层先核查再改轨 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>三条栈不成立</h3><p id="m1">未运行</p><span class="badge r">MSRV 1.85</span><span class="badge r">C 构建链</span><span class="badge r">registry 403</span></div>
+<div class="mini"><h3>Win7 TLS 硬前置</h3><p id="m2">未运行</p><span class="badge r">KB3140245</span><span class="badge r">0x800</span><span class="badge r">ProcessPrng</span></div>
+<div class="mini"><h3>改轨 http 类型层</h3><p id="m3">未运行</p><span class="badge g">3 crate</span><span class="badge g">MSRV 1.49</span><span class="badge g">itoa 复用</span></div>
+<div class="mini"><h3>验证与自查</h3><p id="m4">未运行</p><span class="badge g">247 / 0</span><span class="badge g">NO_HARDCODE</span><span class="badge g">windows-gnu</span></div>
+</div><div class="note" id="note">真实 HTTPS IO 未启动；密钥头、编码、代理、响应解析逐项挂在 L1–L12 前置清单里。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','读索引 193 项、039 结尾、011 Win7 路线、013 批量约束'],
+['02','逐字落盘','40-round-040-instructions.txt'],
+['03','拉真实 manifest','reqwest 0.12.28 / 0.13.5、ureq 3.5.2、rustls 0.23.46'],
+['04','闭包判定','hyper + tokio + tower 系列 + TLS 后端，20+ crate'],
+['05','MSRV 判定','0.13.5 与 ureq 3.5.2 都是 1.85 / edition 2024'],
+['06','Win7 TLS','WinHTTP 默认不启用 TLS 1.1/1.2，KB3140245 + 0x800'],
+['07','rustls 在 Win7','aws-lc-rs 缺 ProcessPrng，需 BCryptGenRandom 补丁'],
+['08','U30 判不成立','大闭包 + C 链 + 系统前置 + registry 403，改轨不塞依赖'],
+['09','改轨浅闭包','http 1.3.1 + bytes 1.11.1 + fnv 1.0.7，itoa 复用'],
+['10','许可三处齐备','5 份全文 + 关于页 19 组 + NOTICES 后才进 Cargo.toml'],
+['11','U31–U37 落地','Method / Uri / Header / Version 全交给库，每页一个请求'],
+['12','E52–E56 修复','Uri::from_str 严格解析、CI 存量 hardcode、vendor 裁段、502 拆分'],
+['13','验证与推送','247 测试、交叉检查、双扫描、本地提交、远端快照']];
+const DETAIL={'01':'REQ 193/193 OK','02':'SPEC cmp 0','03':'MANIFEST 4 repos real_tags','04':'CLOSURE 20plus_crates','05':'MSRV 1.85 edition2024','06':'WINHTTP KB3140245 0x800','07':'RUSTLS ProcessPrng BCryptGenRandom','08':'U30 not_viable reroute','09':'VENDOR 3 crates itoa_reused','10':'LICENSE 3_places_ok then_dependency','11':'U31-U37 one_request_per_page','12':'E52-E56 fixed','13':'TEST 227+7+7+6 247_total 0_failed PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'真实 manifest','04':'闭包判定','05':'MSRV 判定','06':'Win7 TLS','07':'rustls 运行时','08':'改轨决策','09':'浅闭包落地','10':'许可闸门','11':'请求构造','12':'失败修复','13':'验证推送'};
+const QN=new Set(['04','05','06','07','08','11','12']);
+const M={'08':['m1','`reqwest 0.12.28` 默认带 hyper / hyper-util / tokio / tower 系列 + TLS 后端；`reqwest 0.13.5` 与 `ureq 3.5.2` 的 MSRV 都是 **1.85**（ureq 还是 edition 2024）；`rustls` 的 aws-lc-rs 是 C 构建链。加上 crates registry 403，三条栈全部判不成立，按 035 的规矩如实改轨，没偷偷塞进 Cargo.toml。'],'07':['m2','Microsoft Learn 与 KB3140245 文档：Win7 / Server 2012 的 WinHTTP **默认不启用 TLS 1.1 / 1.2**，须装更新并设 `DefaultSecureProtocols=0x00000800`，SChannel 组件也要配。社区验证 rustls 的 aws-lc-rs 在 Win7 缺 `ProcessPrng`，要把 `bcryptprimitives` 换成 `bcrypt.dll!BCryptGenRandom` 才跑得起来。这些是系统侧前置，不由启动器代改。'],'11':['m3','`http 1.3.1` 只依赖 `bytes` + `fnv` + `itoa`（itoa 已在 025 进构建），MSRV 1.49、纯 Rust 无 C。`src/core/http.rs` 133 行把 Method / Uri / HeaderMap / HeaderValue / Version / Request 全交给库；`Uri::from_str` 严格解析完整串、`HeaderValue::from_str` 校验值。10 个 id → 1 个请求、45 个 → 3 个。`Downloader::batch()` 单飞缓存与分页语义一行没动。'],'13':['m4','227 单元 / 0 + 7 http_construct / 0 + 7 lifecycle / 0（43.27 s）+ 6 abi / 0 = **247 / 0**。`cargo check --offline --target x86_64-pc-windows-gnu` 通过。`Cargo.lock` 20 包 / 19 第三方，关于页 19 组 / 41。按 CI job 内容实跑发现 037 遗留的两处 `https://` 字面量，`concat!` 拼接修复后 NO_HARDCODE。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.research','q.closure','q.msrv','q.win7','q.rustls','q.decision','q.vendor','q.license','q.construct','q.fix','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='请求构造层已落地；真实 HTTPS IO、Win7 TLS 前置、密钥头与响应解析仍等你。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='真实 HTTPS IO 未启动；密钥头、编码、代理、响应解析逐项挂在 L1–L12 前置清单里。';}
+</script></body></html>

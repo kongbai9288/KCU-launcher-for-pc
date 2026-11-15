@@ -2462,3 +2462,40 @@ L3 落地：
 | E51 | 初版两个纯函数只被单测调用 | 删除，验证移到真加载集成测试 |
 
 028 三项开服器功能仍按「只记文档」零实现；Q-037-01（身份哈希解读）未答复、继续挂；CF F17、特殊版代码、本项目 LICENSE、后端仓写请求均未动。
+
+## 040
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/40-round-040-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/040-network-stack-check-and-http-types.md | F13-F20、U30-U40、V-A~V-G、E52-E56、四值 |
+| docs/verification/round-040.md | 18 条复跑证据 |
+| docs/features/http-request-plan.md | F040-01 五字段登记 |
+| docs/rules/network-preconditions.md | L1-L12 真实网络层前置清单 |
+| docs/research/23-network-stack-and-win7-tls.md | 13 个锚点 / 四值 |
+| src/core/http.rs + core/mod.rs + lightweight/download.rs | 133 行构造层 + 3 个新入口，8 + 3 个单测 |
+| tests/http_construct.rs | 7 个集成测试 |
+| vendor/ + Cargo.toml/lock | http 1.3.1 / bytes 1.11.1 / fnv 1.0.7，20 包 19 第三方 |
+| docs/licenses/ + 关于页 + NOTICES | 5 份全文、19 组、计数 41、N35-N37 |
+| demos/round-040-network.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 199 项、README、四个 index、ai-errors A114-A119、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+「干」按 039 结尾走**真实网络层**。先把 api.github.com 上每个候选的真实 manifest 拉下来逐字段核完：`reqwest 0.12.28`（MSRV 1.64，但默认带 hyper/hyper-util/tokio/tower 系列 + TLS 后端）、`reqwest 0.13.5`（**MSRV 1.85**）、`ureq 3.5.2`（**edition 2024 / MSRV 1.85**，ureq-proto + rustls 0.23.46 + getrandom 0.4 + Windows 分支 winreg）、`rustls 0.23.46`（aws-lc-rs 的 C 构建链）。再查 Win7 TLS：Microsoft Learn 与 KB3140245 文档写明 Win7 的 WinHTTP **默认不启用 TLS 1.1/1.2**，须装更新并设 `DefaultSecureProtocols=0x800`；社区验证 aws-lc-rs 在 Win7 缺 `ProcessPrng`，要换 `BCryptGenRandom` 补丁。加上 crates registry 403，三条栈全部判**不成立**，按 035 的规矩改轨，没偷偷塞依赖。
+
+**改轨落地**：`http 1.3.1` 是纯类型 crate，只依赖 `bytes` + `fnv` + `itoa`（`itoa 1.0.15` 已在 025 进构建，直接复用），三者纯 Rust 无 C、MSRV 1.49。`src/core/http.rs` 133 行：`Method` / `Uri` / `HeaderMap` / `HeaderValue` / `Version` / `Request` 全交给库，项目侧只留分页切片、query 拼装与错误转 anyhow。10 个 id → 1 个请求、45 个 id → 3 个请求，不是每模组单发一次。`Downloader::plan()` / `validate_base()` 新增，`batch()` 的单飞缓存与分页语义一行没动。**真实网络 IO 未启动**：密钥头、百分号编码、重定向、超时、代理、连接池、响应解析、TLS 全写进 `network-preconditions.md` 的 L1–L12。
+
+**验证**：227 单元 / 0 + 7 http_construct / 0 + 7 lifecycle / 0（43.27 s）+ 6 abi / 0 = **247 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。`Cargo.lock` 17 → 20 包 / 19 第三方，关于页 16 → 19 组、计数 38 → 41，5 份 LICENSE 全文 + NOTICES N35–N37。
+
+界面闸门**未触发**：只更新关于页许可表数据并重渲 4 张许可截图，其余 52 张 PNG 回退到 HEAD。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E52 | `Uri::builder().authority("bad host/name")` 构造成功，两个测试失败 | 改 `Uri::from_str` 严格解析，登记「builder 的 authority 不做严格校验」 |
+| E53 | 按 CI `hardcode` job 实跑命中 `src/plugins/icon.rs` 两处 037 遗留字面量，这个 job 从 037 起就该是红的 | `concat!` 分部件拼接，运行时值不变；复跑 NO_HARDCODE。**存量 CI 失败项，不是本轮引入** |
+| E54 | vendor 里 `[workspace]` / `[lints]` / dev-dependencies 让目录源解析失败 | 统一裁段并在 N35 登记 |
+| E55 | 全量 `cargo test` 又一次网关 502 | 拆三段执行，夹具沿用 OnceLock 缓存，未降断言 |
+| E56 | 039 没说明改轨后落什么 | 明确「真实 IO 未启动」与「构造层已落地」分开 |
+
+028 三项开服器功能仍按「只记文档」零实现；Q-037-01 未答复、继续挂；CF F17、特殊版代码、本项目 LICENSE、后端仓写请求均未动。

@@ -248,3 +248,5 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | F038-01 | plugin-dynamic-abi.md | 业务层已实现；界面闸门未触发 |
 
 | F039-01 | plugin-lifecycle.md | 卸载生命周期已实现；子进程隔离未启动 |
+
+| F040-01 | http-request-plan.md | 请求构造层已实现；真实网络 IO 未启动 |

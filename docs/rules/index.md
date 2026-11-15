@@ -15,3 +15,5 @@
 | plugin-abi-contract.md | 插件 C ABI 符号、版本闸门与 Windows 边界 | 038 |
 
 | plugin-isolation-boundary.md | 同进程 C ABI 隔离边界、卸载约束与子进程路线 | 039 |
+
+| network-preconditions.md | 真实网络层 L1-L12 前置清单 | 040 |

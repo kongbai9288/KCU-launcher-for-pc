@@ -81,3 +81,5 @@
 | 038 | 插件 ABI 契约与 libloading 动态加载，Windows GNU 可编译 | 已实现 | 038-plugin-abi-libloading.md |
 
 | 039 | 插件倒序卸载与隔离边界，同进程 C ABI 接不住崩溃 | 卸载已实现；隔离未启动 | 039-plugin-lifecycle-and-isolation.md |
+
+| 040 | 真实网络栈核查判不成立，改轨 http 类型层 | 构造层已实现；真实 IO 未启动 | 040-network-stack-check-and-http-types.md |

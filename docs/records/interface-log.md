@@ -517,3 +517,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I44 | `src/plugins/lifecycle` | 新增 `PluginSet` / `UnloadReport` / `push` / `load_many` / `probe_scoped` / `unload_all` |
 | I45 | `tests/plugin_lifecycle_load.rs` | 7 个集成测试，`OnceLock` 缓存 2 个夹具 |
 | S38 | 状态 | U20–U29 已证实；子进程隔离 / 插件 init / 真实 dll / MSVC / Win7 运行时未启动或未证实；Q-037-01 仍挂 |
+
+## 040 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I46 | `src/core/http` | 新增 `RequestSpec` / `PAGE_SIZE` / `validate_authority` / `build_request` / `plan` |
+| I47 | `src/lightweight/download` | 新增 `Downloader::plan()` / `validate_base()`；`batch()` 未改 |
+| I48 | `tests/http_construct.rs` | 7 个集成测试 |
+| S39 | 状态 | U30–U40 已证实；真实网络 IO / Win7 TLS / MSRV 冲突未启动或未证实；Q-037-01 仍挂 |

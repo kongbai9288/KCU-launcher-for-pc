@@ -119,6 +119,22 @@ impl Downloader {
         false
     }
 
+    /// 把配置的镜像地址交给 http crate 的 Uri 解析器校验，不自己写主机名规则。
+    pub fn validate_base(&self) -> anyhow::Result<()> {
+        crate::core::http::validate_authority(&self.config.base)
+    }
+
+    /// 每页构造一个标准 HTTP 请求；真实网络 IO 未启动。
+    pub fn plan(&self, ids: &[String]) -> anyhow::Result<Vec<::http::Request<()>>> {
+        let spec = crate::core::http::RequestSpec {
+            scheme: "https".into(),
+            authority: self.config.base.clone(),
+            path: "/v1/batch".into(),
+            headers: Vec::new(),
+        };
+        crate::core::http::plan(&spec, ids, self.config.page_size.max(1))
+    }
+
     pub fn batch(&self, ids: &[String], cancel: &CancelToken) -> anyhow::Result<BatchReply> {
         if cancel.is_cancelled() {
             return Err(anyhow::anyhow!("cancelled"));
@@ -295,5 +311,25 @@ mod tests {
             assert!(x.starts_with("[KCU] "));
             assert!(!x.contains('\n'));
         }
+    }
+
+    #[test]
+    fn plan_matches_batch_page_count() {
+        let d = Downloader::new(ProviderConfig::bmclapi("mirror-a"));
+        let ids = ids(45);
+        assert_eq!(d.plan(&ids).unwrap().len(), d.batch(&ids, &CancelToken::new()).unwrap().pages);
+    }
+
+    #[test]
+    fn plan_never_emits_one_request_per_id() {
+        let d = Downloader::new(ProviderConfig::mojang("official-a"));
+        assert_eq!(d.plan(&ids(10)).unwrap().len(), 1);
+        assert_eq!(d.plan(&ids(45)).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn base_is_validated_by_http_library() {
+        assert!(Downloader::new(ProviderConfig::bmclapi("mirror-a")).validate_base().is_ok());
+        assert!(Downloader::new(ProviderConfig::bmclapi("bad host/name")).validate_base().is_err());
     }
 }

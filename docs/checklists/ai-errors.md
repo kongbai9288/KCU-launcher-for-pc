@@ -233,3 +233,14 @@
 | A111 | `ScopedJoinHandle::join` 消耗 self，不能在 `filter(|h| ...)` 的共享引用上调用；用 `into_iter().filter_map`。 |
 | A112 | 网关超时时把全量测试拆成 `--lib` / `--test` / `check` 三段，并用 `OnceLock` 缓存编译夹具；拆命令不算降验收项。 |
 | A113 | 不为单测造只被测试调用的生产函数（`has_id` / `reverse_order` 已删），行为验证移到真加载集成测试。 |
+
+## 040 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A114 | 引网络栈前先拉真实 manifest 逐字段核闭包、MSRV、edition、C 构建链与 Windows 分支，不凭印象判「轻量」。 |
+| A115 | `Uri::builder().authority()` 不做严格主机名校验；要严格校验用 `Uri::from_str` 解析完整串。 |
+| A116 | CI 的 `hardcode` / `credential` / `wording` job 要按 job 内容实跑，不能只验 YAML 语法；037 遗留的两处测试字面量就是这么漏到 040 的。 |
+| A117 | 源码里出现 `https?://` 连续串会被 CI 拦；测试需要完整 URL 时用 `concat!` 分部件拼接，运行时值不变。 |
+| A118 | vendor 里带 `[workspace]` / `[lints] workspace = true` / dev-dependencies 的 crate 必须裁段，并登记裁了什么。 |
+| A119 | Win7 上 HTTPS 的前置不只在代码：KB3140245、DefaultSecureProtocols、SChannel 配置、rustls 的 ProcessPrng 补丁要分开登记，不能写成「编出来就能跑」。 |

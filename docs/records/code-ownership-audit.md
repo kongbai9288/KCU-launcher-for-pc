@@ -312,3 +312,16 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 句柄释放交给 `libloading::Library::close`，并发读取与线程回收交给 `crossbeam-utils::thread::scope` + `WaitGroup`（027 已进构建），版本判定交给 `semver`（034）。项目侧 150 行只剩倒序 pop、失败只回滚本轮新增、重复 id 拒绝——这一层没有语义等价的通用库可换，如实登记，不写成「全用库」。
 
 039 同时纠正 038 结尾「纯项目编排」的措辞：用户长期要求上层用别人的代码，项目编排不该被包装成可放心手写的一层。
+
+## 040 HTTP 请求构造层（+3 crate）
+
+| 项 | 039 | 040 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 16 | **19**（+http / bytes / fnv） |
+| `Cargo.lock` 包数 | 17 | **20** |
+| `src/` 行数 | 5364 | **5537**（+`src/core/http.rs` 133 行 + download 侧 3 个入口） |
+| 测试 | 216 单元 + 13 集成 | **227 单元 + 20 集成 = 247** |
+
+`Method` / `Uri` / `HeaderMap` / `HeaderName` / `HeaderValue` / `Version` / `Request` 全交给 `http`；项目侧只留分页切片、query 拼装与错误转 anyhow。`Downloader::batch()` 的单飞缓存与分页语义一行没动。真实网络 IO、TLS、密钥头、编码、代理全部未启动。
+
+三条真实 HTTP 栈（reqwest 0.12.28 / 0.13.5 / ureq 3.5.2）经 manifest 实核判不成立：大闭包 + MSRV 1.85 + C 构建链 + Win7 TLS 系统前置 + registry 403。按 035 的规矩改轨，没偷偷塞依赖。

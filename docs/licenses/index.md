@@ -181,3 +181,13 @@
 | windows-link-LICENSE-MIT.txt / windows-link-LICENSE-APACHE.txt | windows-link 0.2.1 | MIT OR Apache-2.0 |
 
 来源：nagisa/rust_libloading tag `0.8.9`、alexcrichton/cfg-if tag `v1.0.5`、microsoft/windows-rs commit `ec79074f76aa`（crates/libs/link，version 0.2.1）。均为逐字副本；MIT / Apache-2.0 / ISC 版权与许可声明随发行物附上。
+
+## 040 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| http-LICENSE-MIT.txt / http-LICENSE-APACHE.txt | http 1.3.1 | MIT OR Apache-2.0（1059 / 10835 B，Copyright 2017 http-rs authors） |
+| bytes-LICENSE.txt | bytes 1.11.1 | MIT（1055 B，Copyright 2018 Carl Lerche、Sean McArthur） |
+| fnv-LICENSE-MIT.txt / fnv-LICENSE-APACHE.txt | fnv 1.0.7 | Apache-2.0 / MIT（1056 / 10847 B，Copyright 2017 Contributors） |
+
+来源：hyperium/http tag `v1.3.1`、tokio-rs/bytes tag `v1.11.1`、servo/rust-fnv tag `v1.0.7`。均为逐字副本；`itoa 1.0.15` 复用 025 已存档的许可，未重复落盘。

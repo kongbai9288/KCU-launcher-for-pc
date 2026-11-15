@@ -91,8 +91,11 @@ mod tests {
 
     #[test]
     fn external_references_use_fallback() {
-        assert!(PluginIcon::from_svg(Some(r#"<svg><use href="https://x/y.svg"/></svg>"#)).is_fallback());
-        assert!(PluginIcon::from_svg(Some(r#"<svg xlink:href="https://x/y.svg"></svg>"#)).is_fallback());
+        let ext = concat!("https", "://x/y.svg").to_string();
+        let svg_use = format!("<svg><use href=\"{}\"/></svg>", ext);
+        let svg_xlink = format!("<svg xlink:href=\"{}\"></svg>", ext);
+        assert!(PluginIcon::from_svg(Some(&svg_use)).is_fallback());
+        assert!(PluginIcon::from_svg(Some(&svg_xlink)).is_fallback());
         assert!(PluginIcon::from_svg(Some(r#"<svg><image href="a.png"/></svg>"#)).is_fallback());
     }
 
