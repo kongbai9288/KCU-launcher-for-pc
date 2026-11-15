@@ -217,3 +217,5 @@
 | 24 | 24-ui-host-win7-and-crash-stack.md | UI 宿主、Win7 WebView2、崩溃分析闭包 | 12 已证实 / 1 受阻 |
 
 | 25 | 25-percent-encoding-hex.md | batch query 编码与 hex 库一手资料 | 8 已证实 |
+
+| 26 | 26-uuid-v5.md | UUID v5、uuid / sha1_smol 闭包与 RFC 9562 | 9 已证实 |

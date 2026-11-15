@@ -87,3 +87,5 @@
 | 041 | UI 宿主与崩溃分析核查，改轨窗口句柄类型层 | 类型层已实现；真实 UI 与崩溃分析未启动 | 041-ui-crash-stack-check-and-window-handle.md |
 
 | 042 | 批量 query 编码与身份哈希 hex 交给库 | 已实现已验证；真实网络 IO 未启动 | 042-query-encoding-and-hex.md |
+
+| 043 | 统一信封 request_id 换成 UUID v5 | 已实现已验证；真实网络 IO 未启动 | 043-request-id-uuid-v5.md |

@@ -1,0 +1,44 @@
+[package]
+authors = [
+    "Ashley Mannix<ashleymannix@live.com.au>",
+    "Dylan DPC<dylan.dpc@gmail.com>",
+    "Hunar Roop Kahlon<hunar.roop@gmail.com>"
+]
+categories = [
+    "data-structures",
+    "no-std",
+    "parser-implementations",
+    "wasm"
+]
+description = "A library to generate and parse UUIDs."
+documentation = "https://docs.rs/uuid"
+edition = "2018"
+include = [
+    "src",
+    "README.md",
+    "LICENSE-APACHE",
+    "LICENSE-MIT",
+]
+keywords = [
+    "guid",
+    "unique",
+    "uuid"
+]
+license = "Apache-2.0 OR MIT"
+homepage = "https://github.com/uuid-rs/uuid"
+name = "uuid"
+readme = "README.md"
+repository = "https://github.com/uuid-rs/uuid"
+version = "1.18.1" # remember to update html_root_url in lib.rs
+rust-version = "1.63.0"
+
+[features]
+default = ["std"]
+std = []
+v5 = ["sha1"]
+sha1 = ["dep:sha1_smol"]
+
+[dependencies.sha1_smol]
+version = "1"
+default-features = false
+optional = true

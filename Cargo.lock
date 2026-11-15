@@ -78,6 +78,7 @@ dependencies = [
  "raw-window-handle",
  "semver",
  "serde_json",
+ "uuid",
 ]
 
 [[package]]
@@ -143,6 +144,19 @@ dependencies = [
  "memchr",
  "ryu",
  "serde_core",
+]
+
+[[package]]
+name = "sha1_smol"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "uuid"
+version = "1.18.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "sha1_smol",
 ]
 
 [[package]]

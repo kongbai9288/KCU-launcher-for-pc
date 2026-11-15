@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 042 |
+| 当前轮次 | 043 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -211,3 +211,9 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `040` 把请求类型交给了 `http` crate，但 `ids` 仍是 `ids.join(",")` 自己拼：模组 id 带空格、`&`、`#`、逗号或中文就会把批量请求切坏。这轮落 `percent-encoding 2.3.1`（零依赖 / MSRV 1.51）逐 id 编码，编码集合保留 RFC 3986 unreserved，所以 `mod-a` 的请求串一字不变、原有集成断言没改；`037` 的手写 hex 循环换 `hex 0.4.3`，4 个期望值由 Python hashlib 独立算出。真实 manifest 核到一处坑：`v2.3.1` tag 的 manifest 是 2.2.0，2.3.1 对应 `v2.5.0`。
 
 `Cargo.lock` **23 包 / 22 第三方**，4 份 LICENSE 全文 + 关于页 22 组 / 44 + NOTICES 三处齐备。`cargo test --offline` 合计 **270/0**（244 单元 + 26 集成），Windows GNU 交叉检查通过。界面与 56 张 PNG 只动了 4 张许可截图。
+
+## 043 统一信封 request_id 换成 UUID v5
+
+`src/core/envelope.rs` 原来用进程内 `AtomicU64` 生成 `kcu-00000001`，重启就重复，诊断包与 F010 跨进程统一信封会串会话。这轮落 `uuid 1.18.1`（只开 `std` + `v5`）+ `sha1_smol 1.0.1`：**零随机数源、零平台分支、零 C 链**，Win7 Tier 3 友好。SHA-1、128 位截断、version / variant 位布局全交给库，name 输入带 pid 与启动纳秒，跨进程与 pid 复用都不撞 ID；4 个期望值由 Python 标准库 `uuid.uuid5` 独立算出。
+
+`Cargo.lock` **25 包 / 24 第三方**，3 份 LICENSE 全文 + 关于页 24 组 / 46 + NOTICES 三处齐备。`cargo test --offline` 合计 **275/0**（249 单元 + 26 集成），`cargo check` 零 warning，Windows GNU 交叉检查通过。界面与 56 张 PNG 只动了 4 张许可截图。

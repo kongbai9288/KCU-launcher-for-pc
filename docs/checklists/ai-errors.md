@@ -268,3 +268,15 @@
 | A131 | 编码类替换要有独立实现算出的期望值（本轮 Python hashlib），不能用被换掉的库自证。 |
 | A132 | tarball 里的软链 `m.isfile()` 为 False；LICENSE 缺失时走 contents API 直取，不伪造许可文本。 |
 | A133 | 裁 vendor manifest 时 `[[bench]]` 双括号段、`[badges]`、optional 依赖与其源文件要一起处理。 |
+
+## 043 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A134 | GitHub 仓库的 tag 前缀要实核（uuid 是 `v1.18.1`，不是 `1.18.1`）；404 时列真实 tags，不猜。 |
+| A135 | 只启用需要的 feature；先核每个依赖是否 `optional = true`，别把 `rng` / `getrandom` 这类未启用依赖当成闭包的一部分。 |
+| A136 | 裁 vendor manifest 时，`[workspace] members`、`[target.*]`、`[lints]`、`[badges]`、metadata 与引用被裁依赖的 feature 行要一起处理。 |
+| A137 | 只在测试里用的导入要移进 `#[cfg(test)]` 模块，非 test 编译不许留 unused_imports warning。 |
+| A138 | ID 生成类替换要有独立实现算出的期望值（本轮 Python 标准库 uuid5），并验证 version / variant / 长度。 |
+| A139 | 仓库 API 的 `license.spdx_id` 为 NOASSERTION 时，按 crate manifest 声明的许可证用并落全部 LICENSE 全文，不据此跳过登记。 |
+| A140 | 网关 502 中断会留下 `.git/index.lock`；回退或提交前先检查并清理残留，不带着脏锁继续跑。 |

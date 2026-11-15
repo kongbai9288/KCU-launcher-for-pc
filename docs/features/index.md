@@ -254,3 +254,5 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | F041-01 | window-handle-contract.md | 句柄类型层已实现；真实窗口未启动 |
 
 | F042-01 | query-encoding-contract.md | 请求构造层已实现；真实网络 IO 未启动 |
+
+| F043-01 | request-id-contract.md | 已实现已验证；真实网络 IO 未启动 |

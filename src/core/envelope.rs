@@ -1,7 +1,27 @@
 use serde_json::{from_str, to_string, Map, Value};
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::OnceLock;
+use std::time::{SystemTime, UNIX_EPOCH};
+use uuid::Uuid;
 
 static SEQ: AtomicU64 = AtomicU64::new(0);
+
+/// 进程启动时取一次纳秒时间戳，参与 name，避免 pid 复用 + 计数归零时跨启动撞 ID。
+fn session_seed() -> u128 {
+    static SEED: OnceLock<u128> = OnceLock::new();
+    *SEED.get_or_init(|| {
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_nanos())
+            .unwrap_or(0)
+    })
+}
+
+/// 由库实现 RFC 9562 的版本 5 命名空间 UUID：SHA-1(namespace || name)，
+/// 再设置 version=5 与 RFC 4122 variant 位。项目侧不手写摘要与位操作。
+pub fn derive_id(name: &str) -> String {
+    Uuid::new_v5(&Uuid::NAMESPACE_OID, name.as_bytes()).to_string()
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Kind {
@@ -22,8 +42,16 @@ pub struct Envelope {
 impl Envelope {
     pub fn new(kind: Kind, target: &str) -> Self {
         let n = SEQ.fetch_add(1, Ordering::Relaxed) + 1;
+        let name = format!(
+            "kcu/{}/{}/{}/{:?}/{}",
+            std::process::id(),
+            session_seed(),
+            n,
+            kind,
+            target
+        );
         Self {
-            request_id: format!("kcu-{:08x}", n),
+            request_id: derive_id(&name),
             kind,
             target: target.to_string(),
             payload: Map::new(),
@@ -75,6 +103,7 @@ impl Envelope {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use uuid::{Variant, Version};
 
     #[test]
     fn ids_are_unique() {
@@ -117,5 +146,61 @@ mod tests {
         let e = Envelope::new(Kind::Response, "core.args").with_error("E02");
         let v = Envelope::from_json_str(&e.to_json_string().unwrap()).unwrap();
         assert_eq!(v["error"], "E02");
+    }
+
+    // 期望值由 Python 标准库 uuid.uuid5(uuid.NAMESPACE_OID, name) 独立算出，
+    // 不依赖本仓库的 uuid / sha1_smol 实现，用于换库前后行为对齐。
+    #[test]
+    fn matches_independent_uuid_v5_reference() {
+        assert_eq!(
+            derive_id("kcu-fixture-0001"),
+            "d4bf11e5-29b6-5b3f-a553-5701cc26efd5"
+        );
+        assert_eq!(
+            derive_id("kcu-fixture-0002"),
+            "04f2fd33-d7a7-540a-9552-31d9ec50d344"
+        );
+        assert_eq!(
+            derive_id("core.start/1"),
+            "fb682a9c-378d-5faf-919a-502fb45585db"
+        );
+        assert_eq!(
+            derive_id(""),
+            "0a68eb57-c88a-5f34-9e9d-27f85e68af4f"
+        );
+    }
+
+    #[test]
+    fn request_id_is_a_parseable_rfc4122_v5_uuid() {
+        let e = Envelope::new(Kind::Request, "core.window");
+        let u = Uuid::parse_str(&e.request_id).unwrap();
+        assert_eq!(u.get_version(), Some(Version::Sha1));
+        assert_eq!(u.get_variant(), Variant::RFC4122);
+        assert_eq!(e.request_id.len(), 36);
+        assert_eq!(e.request_id.chars().filter(|c| *c == '-').count(), 4);
+    }
+
+    #[test]
+    fn derive_id_is_deterministic_and_name_sensitive() {
+        assert_eq!(derive_id("same"), derive_id("same"));
+        assert_ne!(derive_id("same"), derive_id("other"));
+    }
+
+    #[test]
+    fn json_output_carries_the_uuid_request_id() {
+        let e = Envelope::new(Kind::Event, "core.diag");
+        let v = Envelope::from_json_str(&e.to_json_string().unwrap()).unwrap();
+        assert_eq!(v["request_id"], e.request_id);
+        assert!(Uuid::parse_str(v["request_id"].as_str().unwrap()).is_ok());
+    }
+
+    #[test]
+    fn different_kinds_and_targets_do_not_share_ids() {
+        let a = Envelope::new(Kind::Request, "core.paths");
+        let b = Envelope::new(Kind::Response, "core.paths");
+        let c = Envelope::new(Kind::Request, "core.log");
+        assert_ne!(a.request_id, b.request_id);
+        assert_ne!(a.request_id, c.request_id);
+        assert_ne!(b.request_id, c.request_id);
     }
 }

@@ -2575,3 +2575,39 @@ L3 落地：
 | E66 | tag 名与 crate 版本不同步 | 逐 tag 读子目录 manifest 锁定 `v2.5.0` |
 
 041 挂着的 Q-041（Win7 UI 三选项）与 Q-037-01（哈希口径）仍待你答复；真实窗口 / WebView / 崩溃分析、真实网络 IO、028 三项开服器实现、CF F17、特殊版代码、本项目 LICENSE 均未动。
+
+## 043
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/43-round-043-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/043-request-id-uuid-v5.md | F32-F36、U58-U65、V-A~V-E、E67-E70、四值 |
+| docs/verification/round-043.md | 19 条复跑证据 |
+| docs/features/request-id-contract.md | F043-01 五字段登记 |
+| docs/research/26-uuid-v5.md | 9 个锚点 / R21-R24 |
+| src/core/envelope.rs | ID 生成层替换，5 个新增单测 |
+| vendor/ + Cargo.toml/lock | uuid 1.18.1、sha1_smol 1.0.1，25 包 / 24 第三方 |
+| docs/licenses/ + 关于页 + NOTICES | 3 份全文、24 组、计数 46、N43-N44 |
+| demos/round-043-request-id.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 217 项、README、四个 index、ai-errors A134-A139、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+「干」继续按 024 台账换自写通用算法。这轮挑的是 `src/core/envelope.rs` 的 `request_id`：原来是 `static SEQ: AtomicU64` + `format!("kcu-{:08x}", n)`，**只在单个进程内单调**。诊断包、审计日志、F010 的跨进程统一信封都用它，进程一重启就从 `kcu-00000001` 重新计数，两次启动的请求在日志里完全撞车。不是风格问题，是可追溯性缺陷。
+
+真实 manifest 核完：`uuid 1.18.1`（tag 是 **`v1.18.1`**，不带 v 的 404；Apache-2.0 OR MIT / edition 2018 / MSRV 1.63；`v5=["sha1"]`、`sha1=["dep:sha1_smol"]`、`v4=["rng"]`、`rng=["dep:getrandom"]`；**所有依赖都 optional**）与 `sha1_smol 1.0.1`（BSD-3-Clause / minimal dependency-free / 零依赖）。只开 `std` + `v5` 时闭包只有 1 个传递依赖，**无 rng、无平台分支、无 C 链**，Win7 Tier 3 路线不受 040 查到的 `ProcessPrng` 问题影响；v4 / v7 会拉 getrandom 0.3，本轮不选，也不假设「应该能跑」。
+
+落地：`derive_id(name)` 调 `Uuid::new_v5(&Uuid::NAMESPACE_OID, …)`，SHA-1、128 位截断、version / variant 位布局全由库完成；name 输入是 `pid / 启动纳秒 / 序号 / kind / target`，启动纳秒用 `OnceLock` 取一次，跨进程、重启后 pid 复用都不再撞 ID。4 个期望值由 Python 标准库 `uuid.uuid5` 独立算出写进测试，另测可解析、`Version::Sha1`、`Variant::RFC4122`、36 字符 4 连字符、JSON 带同一个 ID。`Cargo.lock` 23 → **25 包 / 24 第三方**，3 份 LICENSE 全文、关于页 24 组 / 46、NOTICES N43–N44 三处齐了才进 Cargo.toml。
+
+验证：249 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0（36.03 s）+ 6 abi / 0（104.96 s）= **275 / 0**；`cargo check --offline` 零 warning，`cargo check --offline --target x86_64-pc-windows-gnu` 通过。界面闸门未触发：只重渲 4 张许可截图，其余 52 张回退。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E67 | uuid 先用不带 `v` 的 tag `1.18.1` / `1.17.0`，全 404 | 列真实 tags 锁定 `v1.18.1`，立 A134 |
+| E68 | 上游 `[workspace] members` 指向未 vendor 的 macros / rng / examples，optional target 依赖一堆 | 按 041 E58 先例裁段，`std` feature 去掉被裁依赖引用，N43 登记 |
+| E69 | `Variant` / `Version` 只在测试用，非 test 编译 unused_imports warning | 导入移进 `#[cfg(test)]`，`cargo check` 零 warning |
+| E70 | 全量 `cargo test` 再次网关 502 | 拆段跑通，未降断言 |
+
+Q-041（Win7 UI 三选项）与 Q-037-01（哈希口径）仍待答复；真实窗口 / WebView / 崩溃分析、真实网络 IO、子进程插件隔离、028 三项开服器实现、CF F17、特殊版代码、本项目 LICENSE 均未动。
+
+043 收尾时渲染脚本重跑后 `.git/index.lock` 残留导致 52 张非许可 PNG 回退失败（E71），删残留锁并重跑后 `demos/preview/` 只剩 4 张许可截图有 diff；网关连续两次 502 均留痕，未跳过回退。

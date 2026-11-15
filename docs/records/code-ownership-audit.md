@@ -351,3 +351,16 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 `src/core/http.rs` 的 `ids.join(",")` 自写 query 拼装换成 `utf8_percent_encode`（保留 unreserved，常见 id 请求串不变）；`src/plugins/identity.rs` 的 `format!("{:02x}", b)` 循环换成 `hex::encode`。两处都是通用编码算法，不是项目特有编排；独立回归常量由 Python hashlib 算出，不用本仓库实现自证。
 
 剩余自写仍是 `launcher.rs`、lightweight 系列与 `paths/popup/userflow` 等业务编排；035 已登记它们没有语义等价的库可换。
+
+## 043 统一信封 ID（+2 crate）
+
+| 项 | 042 | 043 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 22 | **24**（+uuid、+sha1_smol） |
+| `Cargo.lock` 包数 | 23 | **25** |
+| `src/` 行数 | 5811 | **5896** |
+| 测试 | 244 单元 + 26 集成 = 270 | **249 单元 + 26 集成 = 275** |
+
+`src/core/envelope.rs` 的 `AtomicU64` + `format!("kcu-{:08x}", n)` 换 `Uuid::new_v5`；SHA-1、128 位截断、version / variant 位布局全交给库，项目侧只提供 name 输入（pid / 启动纳秒 / 序号 / kind / target）。4 个期望值由 Python 标准库 `uuid.uuid5` 独立算出，不用本仓库实现自证。
+
+修复了一个真实缺陷：原 ID 只在单进程内单调，重启即重复，F010 跨进程统一信封的日志会串会话。剩余自写仍是 `launcher.rs`、lightweight 系列与 `paths/popup/userflow` 等业务编排；035 已登记它们没有语义等价的库可换。

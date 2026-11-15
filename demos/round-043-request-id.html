@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 043 统一信封 request_id 换成 UUID v5</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:140px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>043 运行逻辑</h1><div class="sub">统一信封 ID 交给库 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>缺陷：重启即重复</h3><p id="m1">未运行</p><span class="badge r">kcu-00000001</span><span class="badge r">跨进程撞车</span><span class="badge r">诊断包串会话</span></div>
+<div class="mini"><h3>只开 v5，不碰 RNG</h3><p id="m2">未运行</p><span class="badge g">uuid 1.18.1</span><span class="badge g">sha1_smol 1.0.1</span><span class="badge g">零平台分支</span></div>
+<div class="mini"><h3>独立期望值</h3><p id="m3">未运行</p><span class="badge g">Python uuid5</span><span class="badge g">RFC 9562 v5</span><span class="badge g">36 字符</span></div>
+<div class="mini"><h3>验证与自查</h3><p id="m4">未运行</p><span class="badge g">275 / 0</span><span class="badge g">零 warning</span><span class="badge g">windows-gnu</span></div>
+</div><div class="note" id="note">真实网络 IO、UI、崩溃分析未启动；Q-041 与 Q-037-01 仍等你答复。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','读 042 收口、024 台账、F010 跨进程统一信封'],
+['02','逐字落盘','43-round-043-instructions.txt'],
+['03','定位自写 ID','envelope.rs 的 AtomicU64 + kcu-{:08x}'],
+['04','复现缺陷','重启归零，两次会话撞同一个 ID'],
+['05','查真实 manifest','uuid v1.18.1 / sha1_smol 1.0.1'],
+['06','核 feature 闭包','v5 只带 sha1_smol；v4 / v7 才拉 getrandom'],
+['07','核 RFC 与标准值','RFC 9562 §5.5、NAMESPACE_OID'],
+['08','vendor 与裁剪','裁 optional / target / workspace / dev / lints'],
+['09','许可三处齐备','3 份全文 + 关于页 24 组 + NOTICES 后才进 Cargo.toml'],
+['10','ID 落地','Uuid::new_v5 + pid / 启动纳秒 / 序号 / kind / target'],
+['11','独立回归','Python uuid5 四个期望值 + version / variant / 长度'],
+['12','验证','275 测试、零 warning、交叉检查、217 必读'],
+['13','提交推送','本地提交、远端快照、逐项哈希比对']];
+const DETAIL={'01':'REQ 211/211 OK 042_REMOTE 770bafd ALL_MATCH True','02':'SPEC cmp 0','03':'SELF_WRITTEN atomic_seq kcu_hex','04':'BUG restart_collision cross_process_trace','05':'MANIFEST uuid_v1.18.1 sha1_smol_1.0.1','06':'FEATURES std_v5 only optional_rng_not_enabled','07':'RFC9562_5.5 NAMESPACE_OID 6ba7b812','08':'VENDOR no_platform_branch no_c_chain','09':'LICENSE 3_places_ok then_dependency','10':'U63-U64 Uuid_new_v5 session_seed OnceLock','11':'U65 hashlib_equiv uuid5 reference 4_values','12':'TEST 249_lib + 26_int 275_total 0_failed ZERO_WARNING','13':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'定位自写代码','04':'缺陷复现','05':'真实 manifest','06':'feature 闭包','07':'规范核查','08':'vendor 裁剪','09':'许可闸门','10':'ID 落地','11':'独立回归','12':'验证','13':'提交推送'};
+const QN=new Set(['03','04','05','06','07','08','10','11']);
+const M={'04':['m1','`src/core/envelope.rs` 原来用 `static SEQ: AtomicU64` + `format!("kcu-{:08x}", n)` 生成 ID，**只在单个进程内单调**。诊断包、审计日志、F010 的跨进程统一信封都用它；进程一重启就从 kcu-00000001 重新计数，两次启动的请求在日志里完全撞车，追溯时把不同会话串成一条。不是风格问题，是可追溯性缺陷。'],'08':['m2','`uuid 1.18.1` tag 是 v1.18.1（不带 v 的 404）；crate manifest 写 Apache-2.0 OR MIT / edition 2018 / MSRV 1.63；`v5=["sha1"]`、`sha1=["dep:sha1_smol"]`、`v4=["rng"]`、`rng=["dep:getrandom"]`，**所有依赖都 optional**。`sha1_smol 1.0.1` 是 BSD-3-Clause / minimal dependency-free。只开 std + v5 时闭包只有 1 个传递依赖，无 rng、无平台分支、无 C 链，Win7 Tier 3 不受 040 的 ProcessPrng 问题影响。'],'11':['m3','用 Python 标准库 `uuid.uuid5(uuid.NAMESPACE_OID, name)` 独立算出 4 个期望值写进测试：kcu-fixture-0001 → d4bf11e5-29b6-5b3f-a553-5701cc26efd5。另测 `Uuid::parse_str` 可解析、Version::Sha1、Variant::RFC4122、36 字符 4 个连字符、JSON 里带同一个 ID。不靠被换掉的库自证。'],'12':['m4','249 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0（36.03 s）+ 6 abi / 0（104.96 s）= **275 / 0**。`cargo check --offline` 零 warning，`cargo check --offline --target x86_64-pc-windows-gnu` 通过，217 项必读非空，凭据 / 禁用词 / 同上 / P09 / hardcode 全零命中。界面闸门未触发，只重渲 4 张许可截图。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','core.audit','q.defect','q.research','q.features','q.rfc','q.vendor','q.license','q.construct','q.reference','core.verify','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='ID 层已落地；Q-041 三选项、真实网络 IO 与崩溃分析仍等你。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='真实网络 IO、UI、崩溃分析未启动；Q-041 与 Q-037-01 仍等你答复。';}
+</script></body></html>

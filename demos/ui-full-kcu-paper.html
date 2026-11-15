@@ -1021,7 +1021,7 @@ input.txt,select.sel{width:100%;border:1px solid var(--line);border-radius:var(-
 
         <div class="panel"><div class="panel-head"><div class="panel-title" data-i18n="view.licenses">第三方许可</div><div class="panel-sub" data-i18n="清单生成 2026-11-14 · 离线可读 · 含 5 组已进构建依赖">清单生成 2026-11-14 · 离线可读 · 按许可证分组</div>
           <div class="panel-tools"><button class="btn tiny" id="licRefresh"><svg class="li" aria-hidden="true"><use href="#i-refresh-cw"></use></svg> 刷新清单</button><button class="btn tiny" id="licHard"><svg class="li" aria-hidden="true"><use href="#i-rotate-ccw"></use></svg> 重新扫描</button><span class="badge ok" id="licTime">已同步 12 秒前</span></div></div>
-          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 44</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up" data-i18n="lic.group">按许可证分组</span></div>
+          <div class="row" style="margin-bottom:11px"><span class="chip on" data-lic="all">全部 46</span><span class="chip" data-lic="ISC">ISC</span><span class="chip" data-lic="MIT">MIT</span><span class="chip" data-lic="Apache-2.0">Apache-2.0</span><span class="chip" data-lic="GPL">GPL 系</span><span class="chip" data-lic="NOASSERTION">NOASSERTION</span><span class="badge up" data-i18n="lic.group">按许可证分组</span></div>
           <table class="lic-table"><thead><tr><th data-i18n="项目">项目</th><th data-i18n="版本 / 分组">版本 / 分组</th><th data-i18n="许可证">许可证</th><th data-i18n="版权">版权</th><th data-i18n="用途">用途</th><th data-i18n="来源">来源</th><th data-i18n="说明">说明</th></tr></thead><tbody id="licBody"></tbody></table>
         </div>
         <div class="grid g2" style="margin-top:12px">
@@ -1806,6 +1806,8 @@ const LICENSE_ROWS=[
  ['raw-window-handle','0.6.2','MIT OR Apache-2.0 OR Zlib','Osspial','宿主窗口与显示句柄变体','vendor/raw-window-handle','构建中已使用','MIT'],
  ['percent-encoding','2.3.1','MIT OR Apache-2.0','rust-url developers','批量请求 id 的 UTF-8 百分号编码','vendor/percent-encoding','构建中已使用','MIT'],
  ['hex','0.4.3','MIT OR Apache-2.0','KokaKiwi','插件身份哈希的十六进制编码','vendor/hex','构建中已使用','MIT'],
+ ['uuid','1.18.1','Apache-2.0 OR MIT','uuid-rs contributors','统一信封 request_id 的 UUID v5','vendor/uuid','构建中已使用','MIT'],
+ ['sha1_smol','1.0.1','BSD-3-Clause','Armin Ronacher','uuid v5 的 SHA-1 摘要','vendor/sha1_smol','构建中已使用','BSD'],
 ];
 let licFilter='all';
 function renderLic(){

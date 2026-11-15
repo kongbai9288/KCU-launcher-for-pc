@@ -212,3 +212,13 @@
 | hex-LICENSE-APACHE.txt | hex 0.4.3 | Apache-2.0（11358 B） |
 
 来源：`servo/rust-url` tag `v2.5.0` 根 LICENSE、`KokaKiwi/rust-hex` tag `v0.4.3` 根 LICENSE，逐字副本。mono-repo 子 crate 的 LICENSE 是软链，tarball 取不到，走 contents API 直取。
+
+## 043 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| uuid-LICENSE-APACHE.txt | uuid 1.18.1 | Apache-2.0（10847 B） |
+| uuid-LICENSE-MIT.txt | uuid 1.18.1 | MIT（1157 B） |
+| sha1_smol-LICENSE.txt | sha1_smol 1.0.1 | BSD-3-Clause（2719 B） |
+
+来源：`uuid-rs/uuid` tag `v1.18.1`、`mitsuhiko/sha1-smol` tag `1.0.1`，逐字副本。uuid 仓库 GitHub API 的 SPDX 是 NOASSERTION（两份 LICENSE 并存），按 crate manifest 的 `Apache-2.0 OR MIT` 用，两份全文都落盘。

@@ -544,3 +544,11 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I53 | `src/plugins/identity` | `identity_hash` 改 `hex::encode` |
 | I54 | `tests/http_construct` | 原有 7 项全过，未改断言 |
 | S41 | 状态 | U49–U57 已证实；Q-041 / Q-037-01 仍挂；真实网络 IO、UI、崩溃分析未启动 |
+
+## 043 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I55 | `src/core/envelope` | 新增 `derive_id` / `session_seed`；`Envelope::new` 的 request_id 改 UUID v5 |
+| I56 | `vendor/uuid` / `vendor/sha1_smol` | 两个零平台分支 crate 进构建 |
+| S42 | 状态 | U58–U65 已证实；Q-041 / Q-037-01 仍挂；真实网络 IO、UI、崩溃分析未启动 |

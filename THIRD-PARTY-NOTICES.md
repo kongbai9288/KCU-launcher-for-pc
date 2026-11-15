@@ -281,3 +281,17 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | --- | --- |
 | N41 | percent-encoding 上游 `src/lib.rs` 逐字节未改；vendored manifest 只裁掉 docs.rs metadata。该 crate 版本取自 `v2.5.0` 子目录 manifest 的 2.3.1，不按 tag 名猜。 |
 | N42 | hex 上游 `src/lib.rs` / `src/error.rs` 逐字节未改；裁掉 optional serde、dev-dependencies、`[[bench]]`、docs.rs metadata，并删除只服务于 optional feature 的 `src/serde.rs`。 |
+
+## 043 新增已进构建依赖（统一信封 ID）
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| uuid | 1.18.1 | Apache-2.0 OR MIT | Ashley Mannix、Dylan DPC、Hunar Roop Kahlon 及 Rust Project Developers | RFC 9562 v5 命名空间 UUID 生成与解析 | vendor/uuid | 构建中已使用 |
+| sha1_smol | 1.0.1 | BSD-3-Clause | Armin Ronacher | uuid v5 的 SHA-1 摘要 | vendor/sha1_smol | 构建中已使用 |
+
+许可证全文：`docs/licenses/uuid-LICENSE-APACHE.txt`、`docs/licenses/uuid-LICENSE-MIT.txt`、`docs/licenses/sha1_smol-LICENSE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N43 | uuid 上游 `src/` 逐字节未改；vendored manifest 裁掉未启用的 optional 依赖（getrandom / rand / md-5 / bytemuck / serde / slog / arbitrary / zerocopy / borsh / atomic / uuid-macro-internal）、`[target.*]` 段、`[dev-dependencies]`、`[workspace]`、`[badges]`、`[lints]`、docs.rs 与 playground metadata；`std` feature 简化为空数组（去掉被裁掉的 `wasm-bindgen?/std`、`js-sys?/std` 引用）。只保留 `default` / `std` / `v5` / `sha1` 四个 feature 与 `[dependencies.sha1_smol]`。 |
+| N44 | sha1_smol 上游 `src/` 逐字节未改；vendored manifest 裁掉 optional serde、dev-dependencies 与 docs.rs metadata，只保留 `std` / `alloc` 两个 feature。两个 crate 均未启用任何随机数源或平台分支。 |
