@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 046 毒化恢复全覆盖与 CI 守卫</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:140px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>046 运行逻辑</h1><div class="sub">毒化恢复全覆盖 + 协议字段 + CI 守卫 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>045 收口</h3><p id="m1">未运行</p><span class="badge g">53c9ed8</span><span class="badge g">976 文件</span><span class="badge g">工作区干净</span></div>
+<div class="mini"><h3>审计命中</h3><p id="m2">未运行</p><span class="badge r">cache 8 处</span><span class="badge r">leak 6 处</span><span class="badge r">envelope Debug 协议</span></div>
+<div class="mini"><h3>标准库恢复入口</h3><p id="m3">未运行</p><span class="badge g">LockResult</span><span class="badge g">PoisonError::into_inner</span><span class="badge g">零新增依赖</span></div>
+<div class="mini"><h3>反向验证与机器约束</h3><p id="m4">未运行</p><span class="badge r">换回 unwrap → 3 FAILED</span><span class="badge g">恢复后 3 PASS</span><span class="badge g">CI panic_guard</span></div>
+</div><div class="note" id="note">EQ-01 ~ EQ-12 具体环境仍待拍板；上层未启动。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','核 045 远端、清临时凭据'],
+['02','逐字落盘','46-round-046-instructions.txt'],
+['03','全量审计','src/ 36 文件非测试段 panic 点'],
+['04','命中定位','cache 8 / leak 6 / envelope 1'],
+['05','查 std 原文','Mutex::lock 与 PoisonError::into_inner'],
+['06','判不引库','045 已核 parking_lot libc 受阻'],
+['07','落地恢复入口','3 个 lock helper，14 处调用点'],
+['08','loader 分支','loader.take 改 TimedOut'],
+['09','协议字段','Kind::code 显式三值'],
+['10','CI 守卫','panic_guard.py 扫 6 类危险调用'],
+['11','反向验证','换回 unwrap → 3 个测试 FAILED'],
+['12','验证','292 测试、零新增依赖、235 必读'],
+['13','提交推送','本地提交、远端快照、逐项哈希比对']];
+const DETAIL={'01':'V045 53c9ed8 976_files CLEAN','02':'SPEC cmp 0','03':'AUDIT 36_files non_test panic_points','04':'HIT cache_8 leak_6 envelope_debug_kind','05':'STD LockResult PoisonError_into_inner advisory','06':'VERDICT no_third_party_lock libc_026_blocked','07':'U87_U88 3_helpers 14_call_sites','08':'U89 loader_take TimedOut','09':'U90 Kind_code Request_Response_Event','10':'U91_U92 panic_guard CI_scan_step','11':'NEGATIVE 3_FAILED cache_64_45 leak_22 then_RESTORED_3_PASS','12':'TEST 266_lib + 26_int 292_total 0_failed WINDOWS_GNU_OK','13':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'全量审计','04':'命中定位','05':'std 原文','06':'判定','07':'恢复入口','08':'loader 分支','09':'协议字段','10':'CI 守卫','11':'反向验证','12':'验证','13':'提交推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11']);
+const M={'01':['m1','远端 `53c9ed8`、message `round 045 environments and log poison`，本地 `c2a1461` / 976 文件，工作区干净；临时凭据核查后删除，全仓零凭据。'],'04':['m2','扫 `src/` 36 个文件非测试段：`cache.rs` 8 处（`store` 主存 5、在飞 `f.state` 1、本地 `flight.state` 1、`loader.take().expect` 1）、`leak.rs` 6 处。045 只修了 `log.rs`，这两块正是最早点名的缓存与泄漏模块。另查到 `envelope.rs` 用 `format!("{:?}", self.kind)` 把派生 Debug 写进 `kind` 协议字段。'],'07':['m3','`Mutex::lock` 返回 `LockResult<MutexGuard>`，持锁线程 panic 后锁进入 poisoned，官方写明「Poisoning is only advisory: the `PoisonError` type has an `into_inner` method which will return the guard」。`leak.rs` 加 `WeakRegistry::lock()`，`cache.rs` 加 `Cache::store_lock()` 与 `Flight::lock()`，全部 `unwrap_or_else(PoisonError::into_inner)`。**零新增第三方依赖**，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。'],'11':['m4','反向验证真跑：把恢复入口临时换回 `.unwrap()`，`poisoned_store_still_serves_cache` / `poisoned_flight_state_does_not_crash_waiters` / `poisoned_registry_still_serves` 全 FAILED，回显 `cache.rs:64:27`、`45:27`、`leak.rs:22:25` 三处连锁 panic；恢复后全通过。CI 加 `panic_guard` step，后续运行时 unwrap 由机器拦截。292 / 0，235 必读非空，26 包 / 25 第三方不变。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','core.audit','q.defect','q.research','q.verdict','q.construct','q.construct','q.construct','q.construct','q.reference','core.verify','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='底座健壮性收尾已落地；EQ-01 ~ EQ-12 具体环境仍等你按编号拍板。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='EQ-01 ~ EQ-12 具体环境仍待拍板；上层未启动。';}
+</script></body></html>

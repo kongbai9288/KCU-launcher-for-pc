@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::hash::Hash;
-use std::sync::{Arc, Mutex, Weak};
+use std::sync::{Arc, Mutex, MutexGuard, PoisonError, Weak};
 
 pub struct WeakRegistry<K, V> {
     map: Mutex<HashMap<K, Weak<V>>>,
@@ -16,35 +16,37 @@ where
         }
     }
 
+    /// 锁中毒时拿回被污染的表继续服务。恢复入口由标准库提供，
+    /// 项目侧不自己判定中毒状态，也不让注册表把调用方带崩。
+    fn lock(&self) -> MutexGuard<'_, HashMap<K, Weak<V>>> {
+        self.map.lock().unwrap_or_else(PoisonError::into_inner)
+    }
+
     pub fn insert(&self, key: K, value: &Arc<V>) {
-        self.map.lock().unwrap().insert(key, Arc::downgrade(value));
+        self.lock().insert(key, Arc::downgrade(value));
     }
 
     pub fn get(&self, key: &K) -> Option<Arc<V>> {
-        self.map
-            .lock()
-            .unwrap()
-            .get(key)
-            .and_then(Weak::upgrade)
+        self.lock().get(key).and_then(Weak::upgrade)
     }
 
     pub fn purge(&self) -> usize {
-        let mut g = self.map.lock().unwrap();
+        let mut g = self.lock();
         let before = g.len();
         g.retain(|_, w| w.upgrade().is_some());
         before - g.len()
     }
 
     pub fn remove(&self, key: &K) -> Option<Weak<V>> {
-        self.map.lock().unwrap().remove(key)
+        self.lock().remove(key)
     }
 
     pub fn clear(&self) {
-        self.map.lock().unwrap().clear();
+        self.lock().clear();
     }
 
     pub fn len(&self) -> usize {
-        self.map.lock().unwrap().len()
+        self.lock().len()
     }
 }
 
@@ -103,5 +105,26 @@ mod tests {
         drop(b);
         assert!(wa.upgrade().is_none());
         assert!(wb.upgrade().is_none());
+    }
+
+
+    #[test]
+    fn poisoned_registry_still_serves() {
+        let reg = WeakRegistry::<String, u32>::new();
+        std::thread::scope(|s| {
+            let r = s.spawn(|| {
+                let _g = reg.map.lock().unwrap();
+                panic!("poison weak registry");
+            });
+            assert!(r.join().is_err());
+        });
+        // 045 版这里会 panic：map.lock().unwrap() 中毒后连锁崩
+        let v = Arc::new(7u32);
+        reg.insert("k".to_string(), &v);
+        assert_eq!(reg.get(&"k".to_string()), Some(Arc::new(7u32)));
+        assert_eq!(reg.len(), 1);
+        drop(v);
+        assert_eq!(reg.purge(), 1);
+        assert_eq!(reg.len(), 0);
     }
 }

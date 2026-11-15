@@ -39,6 +39,18 @@ pub struct Envelope {
     pub error: Option<String>,
 }
 
+impl Kind {
+    /// 协议字段用显式字符串，不依赖派生 Debug 的输出；
+    /// 变体改名不会静默改掉线上信封格式。
+    pub fn code(&self) -> &'static str {
+        match self {
+            Kind::Request => "Request",
+            Kind::Response => "Response",
+            Kind::Event => "Event",
+        }
+    }
+}
+
 impl Envelope {
     pub fn new(kind: Kind, target: &str) -> Self {
         let n = SEQ.fetch_add(1, Ordering::Relaxed) + 1;
@@ -86,7 +98,7 @@ impl Envelope {
         );
         m.insert(
             "kind".to_string(),
-            Value::String(format!("{:?}", self.kind)),
+            Value::String(self.kind.code().to_string()),
         );
         m.insert("target".to_string(), Value::String(self.target.clone()));
         if let Some(e) = &self.error {
@@ -202,5 +214,16 @@ mod tests {
         assert_ne!(a.request_id, b.request_id);
         assert_ne!(a.request_id, c.request_id);
         assert_ne!(b.request_id, c.request_id);
+    }
+
+
+    #[test]
+    fn kind_code_is_explicit_and_stable() {
+        assert_eq!(Kind::Request.code(), "Request");
+        assert_eq!(Kind::Response.code(), "Response");
+        assert_eq!(Kind::Event.code(), "Event");
+        let e = Envelope::new(Kind::Event, "core.paths");
+        let v: Value = from_str(&e.to_json_string().unwrap()).unwrap();
+        assert_eq!(v["kind"], "Event");
     }
 }

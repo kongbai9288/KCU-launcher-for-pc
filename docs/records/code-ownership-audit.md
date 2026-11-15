@@ -390,3 +390,19 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 核查 `parking_lot 0.12.5` 闭包后判不成立（unix 分支 libc，026 已受阻），改轨用标准库 `PoisonError::into_inner` 消除 `src/core/log.rs` 4 处 `.expect("log mutex")` 的连锁 panic。**如实登记**：这是标准库 API 用法修正，不是第三方库替换，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。新增 2 个测试用 `thread::scope` 在持锁期间真的毒化 Mutex，验证中毒后日志路径仍可服务。
 
 `LogBuffer` 的分片策略仍是项目特有编排（035 已登记）。剩余自写为 `launcher.rs`、lightweight 系列、`paths/popup/userflow` 等业务编排。
+
+## 046 健壮性收尾（零新增依赖）
+
+| 项 | 045 | 046 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 25 | **25**（不变） |
+| `Cargo.lock` 包数 | 26 | **26**（不变） |
+| `src/` 文件 | 36 | **36** |
+| `src/` 行数 | 6116 | **6212** |
+| 测试 | 262 单元 + 26 集成 = 288 | **266 单元 + 26 集成 = 292** |
+
+全量审计 `src/` 非测试段的运行时 panic 点：命中 `cache.rs` 8 处、`leak.rs` 6 处 `.lock().unwrap()` / `.expect(`。045 只修了 `log.rs`，这两块正是最早点名的缓存与泄漏模块。全部换成标准库 `PoisonError::into_inner` 恢复入口；`loader.take().expect` 改走 `CacheError::TimedOut`。另修 `envelope.rs` 用派生 Debug 输出当 `kind` 协议字段的缺陷，加 `Kind::code()` 与三条断言。
+
+**如实登记**：标准库 API 用法修正 + 协议字段修正 + CI 约束，不是第三方库替换；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。新增 `scripts/panic_guard.py` 与 CI step，后续运行时 unwrap 会被机器挡住。
+
+反向验证真跑：临时换回 `.unwrap()` 后 3 个毒化测试全 FAILED，恢复后全通过。自写通用算法已收敛；剩余 `launcher.rs`、lightweight 系列、`paths/popup/userflow` 是项目特有编排（035 已登记无语义等价库可换）。

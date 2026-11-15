@@ -291,3 +291,7 @@ python3 scripts/render_ui.py
 ## 045 闸门判定
 
 本轮改的是 `src/core/log.rs` 的锁中毒恢复路径，不产生任何界面变化；`demos/preview/` 与 `demos/ui-full-kcu-paper.html` 零 diff。沿用 036 / 038–044 的先例判**未触发**。
+
+## 046 闸门判定
+
+本轮改的是 `src/core/cache.rs` / `leak.rs` / `envelope.rs` 与 CI 脚本，不产生任何界面变化；`demos/preview/` 与 `demos/ui-full-kcu-paper.html` 零 diff。沿用 036 / 038–045 的先例判**未触发**。

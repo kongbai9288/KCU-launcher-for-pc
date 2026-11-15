@@ -4,7 +4,7 @@ use lru::LruCache;
 use std::hash::Hash;
 use std::num::NonZeroUsize;
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
 use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -39,6 +39,11 @@ impl<V> Flight<V> {
             }),
         }
     }
+
+    /// 等待者持锁 panic 后不连锁崩掉所有在飞请求；标准库提供恢复入口。
+    fn lock(&self) -> MutexGuard<'_, FlightState<V>> {
+        self.state.lock().unwrap_or_else(PoisonError::into_inner)
+    }
 }
 
 pub struct Cache<K, V> {
@@ -54,6 +59,11 @@ where
     K: Eq + Hash + Clone,
     V: Clone,
 {
+    /// 主存锁中毒后继续服务；标准库提供恢复入口。
+    fn store_lock(&self) -> MutexGuard<'_, LruCache<K, Entry<V>>> {
+        self.store.lock().unwrap_or_else(PoisonError::into_inner)
+    }
+
     pub fn new(capacity: usize, ttl: Duration) -> Self {
         assert!(capacity > 0);
         let cap = NonZeroUsize::new(capacity).expect("capacity > 0");
@@ -67,7 +77,7 @@ where
     }
 
     fn lookup(&self, key: &K) -> Option<V> {
-        let mut s = self.store.lock().unwrap();
+        let mut s = self.store_lock();
         let now = Instant::now();
         let hit = s
             .get(key)
@@ -80,7 +90,7 @@ where
     }
 
     pub fn len(&self) -> usize {
-        self.store.lock().unwrap().len()
+        self.store_lock().len()
     }
 
     pub fn capacity(&self) -> usize {
@@ -88,7 +98,7 @@ where
     }
 
     pub fn evicted(&self) -> u64 {
-        let len = self.store.lock().unwrap().len() as u64;
+        let len = self.store_lock().len() as u64;
         self.inserted.load(Ordering::Relaxed).saturating_sub(len)
     }
 
@@ -102,7 +112,7 @@ where
     }
 
     pub fn clear(&self) {
-        self.store.lock().unwrap().clear();
+        self.store_lock().clear();
         self.inflight.clear();
         self.inserted.store(0, Ordering::Relaxed);
     }
@@ -122,7 +132,7 @@ where
             self.inflight.purge();
             if let Some(f) = self.inflight.get(&key) {
                 let (tx, rx) = bounded::<Reply<V>>(1);
-                let mut st = f.state.lock().unwrap();
+                let mut st = f.lock();
                 if let Some(reply) = st.completed.clone() {
                     return finish_reply(reply);
                 }
@@ -143,13 +153,16 @@ where
                 return Ok(v);
             }
 
-            let load = (loader.take().expect("loader consumed once"))();
+            let load = match loader.take() {
+                Some(f) => f(),
+                None => return Err(CacheError::TimedOut),
+            };
             let reply: Reply<V> = match &load {
                 Ok(v) => Ok(v.clone()),
                 Err(_) => Err(()),
             };
             {
-                let mut st = flight.state.lock().unwrap();
+                let mut st = flight.lock();
                 st.completed = Some(reply.clone());
                 for tx in st.waiters.drain(..) {
                     let _ = tx.send(reply.clone());
@@ -160,7 +173,7 @@ where
 
             match load {
                 Ok(value) => {
-                    let mut s = self.store.lock().unwrap();
+                    let mut s = self.store_lock();
                     s.put(
                         key,
                         Entry {
@@ -323,5 +336,42 @@ mod tests {
             Err(CacheError::Cancelled)
         );
         assert_eq!(h.join().unwrap(), Err(CacheError::Load("E02")));
+    }
+
+
+    #[test]
+    fn poisoned_store_still_serves_cache() {
+        let c = Cache::<u32, u32>::new(4, Duration::from_secs(60));
+        std::thread::scope(|s| {
+            let r = s.spawn(|| {
+                let _g = c.store.lock().unwrap();
+                panic!("poison cache store");
+            });
+            assert!(r.join().is_err());
+        });
+        // 045 版这里会 panic：store.lock().unwrap() 中毒后连锁崩
+        assert_eq!(
+            c.get_or_load(1, Duration::from_secs(1), || Ok::<u32, ()>(10)).unwrap(),
+            10
+        );
+        assert_eq!(c.len(), 1);
+        c.clear();
+        assert_eq!(c.len(), 0);
+    }
+
+    #[test]
+    fn poisoned_flight_state_does_not_crash_waiters() {
+        let c = Cache::<u32, u32>::new(4, Duration::from_secs(60));
+        let f = Arc::new(Flight::<u32>::new());
+        c.inflight.insert(1, &f);
+        std::thread::scope(|s| {
+            let r = s.spawn(|| {
+                let _g = f.state.lock().unwrap();
+                panic!("poison flight state");
+            });
+            assert!(r.join().is_err());
+        });
+        let r = c.get_or_load(1, Duration::from_millis(20), || Ok::<u32, ()>(5));
+        assert!(matches!(r, Err(CacheError::TimedOut)));
     }
 }

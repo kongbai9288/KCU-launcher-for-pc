@@ -2680,3 +2680,39 @@ Q-041（Win7 UI 三选项）与 Q-037-01（哈希口径）仍待答复；真实�
 | E80 | 初版把换锁写成第三方库替换 | 回 026 / 035 先例复核后改口径，U75 明确登记 |
 
 Q-041 / Q-037-01 / CF F17 / 特殊版代码 / LICENSE / 028 实现 / UX 手感均已给具体环境（EQ-01 ~ EQ-10），仍待你拍板；真实网络 IO、UI 宿主、崩溃分析、子进程隔离未启动。
+
+## 046
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/46-round-046-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/046-poison-guard-and-envelope-code.md | V-045-A~C、U85-U93、反向验证、V-A~V-F、E81-E84、四值 |
+| docs/verification/round-046.md | 20 条复跑证据 |
+| docs/research/29-std-mutex-poison.md | 5 个锚点 / R32-R35 |
+| src/core/cache.rs / leak.rs / envelope.rs | 毒化恢复全覆盖、协议字段显式化、4 个新增测试 |
+| scripts/panic_guard.py + .github/workflows/ci.yml | CI `panic_guard` step |
+| demos/round-046-poison-guard.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 235 项、README、两个 index、ai-errors A152-A156、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+先核 045 收口：远端 `53c9ed8`、message `round 045 environments and log poison`，本地 `c2a1461` / 976 文件，工作区干净；临时凭据核查后删除，全仓零凭据。
+
+「干」继续按台账收尾。扫 `src/` 36 个文件非测试段，命中集中在两处：`cache.rs` 8 处（`store` 主存 5、在飞 `f.state` 1、本地 `flight.state` 1、`loader.take().expect` 1）、`leak.rs` 6 处。045 只修了 `log.rs`，这两块正是最早点名怕出问题的缓存与泄漏模块，任一把锁被毒化后缓存读写、在飞注册表、等待者路径会连锁 panic。另查到 `envelope.rs` 用 `format!("{:?}", self.kind)` 把派生 Debug 输出写进 `kind` 协议字段，变体改名会静默改线上格式。
+
+一手资料取到两条 std 原文：`Mutex::lock` 返回 `LockResult<MutexGuard>`，持锁线程 panic 后锁进入 poisoned 且「all other threads are unable to access the data by default」；`PoisonError::into_inner(self) -> T` 是标准库明确写的恢复入口（「Poisoning is only advisory」）。045 已核 parking_lot 0.12.5 闭包（6 个新包、unix libc 0.2.95 是 026 受阻项），本轮不重走、不引第三方锁。
+
+落地：`leak.rs` 加 `WeakRegistry::lock()`；`cache.rs` 加 `Cache::store_lock()` 与 `Flight::lock()`；`loader.take().expect` 改成 `None => Err(CacheError::TimedOut)`；`envelope.rs` 加 `Kind::code()` 显式返回 `Request` / `Response` / `Event` 并用三条断言锁死。`scripts/panic_guard.py` 扫非测试段 6 类危险调用，白名单只列 `cache.rs` 构造函数的 `NonZeroUsize::new(capacity).expect`（前一行 `assert!(capacity > 0)` 保证）；CI scan job 加 `panic_guard` step，后续新写的运行时 unwrap 会被机器挡住。
+
+**反向验证真跑**，不靠推断：把恢复入口临时换回 `.unwrap()`，三个毒化测试全 FAILED，回显 `panicked at src/core/cache.rs:64:27`、`45:27`、`src/core/leak.rs:22:25` 三处连锁 panic；恢复后全通过。临时备份已删。
+
+验证：266 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0（28.45 s）+ 6 abi / 0（69.88 s）= **292 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过；`PANIC_GUARD_OK files 36 hits 0`。`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。界面闸门未触发，`demos/preview/` 与 `ui-full-kcu-paper.html` 零 diff。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E81 | `leak.rs` 的 `get()` 把 `.lock()` 与 `.unwrap()` 拆成两行，首轮替换漏掉，`panic_guard.py` 立刻报命中 | 改写成单行 `self.lock().get(key)...`，复跑守卫通过 |
+| E82 | 白名单用整行相等比对，`let cap = ...` 永远匹配不上，误报 1 处 | 改成「文件 + 子串包含」，立 A152 |
+| E83 | 全量 `cargo test --tests` 与交叉检查连续网关 502、工具结果不可用 | 拆段跑通，断言没降 |
+| E84 | `envelope.rs` 协议字段靠派生 Debug | 加 `Kind::code()` 与三条断言锁死 |
+
+EQ-01 ~ EQ-12 具体环境仍待拍板（045 已交）；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。

@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 045 |
+| 当前轮次 | 046 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -233,3 +233,13 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `parking_lot 0.12.5` 闭包核查后判不成立（unix 分支 libc 是 026 已受阻项），改轨用标准库 `PoisonError::into_inner` 消除 `src/core/log.rs` 4 处 `.expect("log mutex")` 的连锁 panic；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。新增 2 个毒化回归测试。
 
 `cargo test --offline` 合计 **288/0**（262 单元 + 26 集成），Windows GNU 交叉检查通过，界面与 56 张 PNG 零 diff。
+
+## 046 毒化恢复全覆盖 + CI 守卫
+
+扫出 `cache.rs` 8 处、`leak.rs` 6 处运行时 `.lock().unwrap()` / `.expect(`：045 只修了 `log.rs`，这两块锁被毒化后会连锁 panic。全部换成标准库 `PoisonError::into_inner` 恢复入口（`Mutex::lock` 返回 `LockResult`，文档写明 poisoning 仅为 advisory）；`loader.take()` 改走 `CacheError::TimedOut`。另修 `envelope.rs` 用派生 Debug 输出当 `kind` 协议字段，加 `Kind::code()` 显式锁死三个值。
+
+`scripts/panic_guard.py` 扫 `src/` 非测试段 6 类危险调用，CI scan job 新增 `panic_guard` step，后续运行时 unwrap 由机器拦截。
+
+反向验证真跑：临时换回 `.unwrap()` 后 3 个毒化测试全 FAILED，恢复后全通过。`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。**如实登记：标准库 API 用法修正 + 协议字段修正 + CI 约束，不是第三方库替换。**
+
+`cargo test --offline` 合计 **292/0**（266 单元 + 26 集成），Windows GNU 交叉检查通过，界面与 56 张 PNG 零 diff。

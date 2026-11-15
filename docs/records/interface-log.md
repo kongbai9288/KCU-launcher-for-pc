@@ -568,3 +568,13 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I59 | `src/core/log` | 新增 `LogBuffer::lock()`；4 处 `expect` 换 `PoisonError::into_inner` |
 | I60 | `docs/records/pending-question-environments.md` | EQ-01 ~ EQ-12 具体环境清单 |
 | S44 | 状态 | U73–U79 已证实；第三方锁实现未启动；EQ-01 ~ EQ-10 待拍板 |
+
+## 046 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I61 | `src/core/cache` | 新增 `store_lock()` / `Flight::lock()`；`loader.take()` 改返回 TimedOut |
+| I62 | `src/core/leak` | 新增 `WeakRegistry::lock()`；6 处调用点统一 |
+| I63 | `src/core/envelope` | 新增 `Kind::code()`；`to_json_string` 不再用派生 Debug |
+| I64 | CI | scan job 加 `panic_guard` step，脚本 `scripts/panic_guard.py` |
+| S45 | 状态 | U85–U93 已证实；零新增依赖；EQ-01 ~ EQ-12 待拍板 |

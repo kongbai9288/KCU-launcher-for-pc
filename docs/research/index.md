@@ -223,3 +223,5 @@
 | 27 | 27-quick-xml.md | quick-xml 0.38.4 闭包、Reader / Attributes API | 9 已证实 |
 
 | 28 | 28-parking-lot-closure.md | parking_lot 0.12.5 闭包与 libc 受阻项 | 5 已证实 |
+
+| 29 | 29-std-mutex-poison.md | std Mutex poisoning 与 into_inner 恢复入口 | 5 已证实 |

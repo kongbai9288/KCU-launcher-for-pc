@@ -93,3 +93,5 @@
 | 044 | 插件侧栏 SVG 校验换成 quick-xml | 已实现已验证；真实网络 IO 未启动 | 044-plugin-icon-xml-parser.md |
 
 | 045 | 锁中毒修复 + 待拍板问题的具体环境 | 已实现已验证；第三方锁实现未启动 | 045-log-poison-and-environments.md |
+
+| 046 | 毒化恢复全覆盖 + 信封协议字段 + CI 守卫 | 已实现已验证；上层未启动 | 046-poison-guard-and-envelope-code.md |
