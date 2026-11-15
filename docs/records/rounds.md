@@ -2716,3 +2716,41 @@ Q-041 / Q-037-01 / CF F17 / 特殊版代码 / LICENSE / 028 实现 / UX 手感�
 | E84 | `envelope.rs` 协议字段靠派生 Debug | 加 `Kind::code()` 与三条断言锁死 |
 
 EQ-01 ~ EQ-12 具体环境仍待拍板（045 已交）；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。
+
+## 047
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/47-round-047-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/047-rollback-version-precedence.md | V-046-A~C、U94-U98、双向验证、V-A~V-G、E85-E88、四值 |
+| docs/verification/round-047.md | 21 条复跑证据 |
+| src/updater/policy.rs / launcher.rs | 回滚判定修正、3 个新增测试、裸索引改局部变量 |
+| scripts/semver_guard.py + .github/workflows/ci.yml | CI `semver_guard` step |
+| docs/records/pending-question-environments.md | EQ-13（Q-047-01 具体环境） |
+| demos/round-047-semver-guard.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 241 项、README、两个 index、ai-errors A157-A160、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+先核 046 收口：远端 `4e059dc`、message `round 046 poison guard and envelope kind code`，本地 `bbfd106` / 983 文件，工作区干净；临时凭据核查后删除，全仓零凭据。
+
+「干」继续收尾。046 把非测试段 panic 点清零后，改扫索引 / 截断 / 边界 / 相等判定。全量核 3 个版本判定文件，查到一处口径分叉：`instance.rs:45` 与 `upgrade.rs:42/55` 都用 `cmp_precedence`，但 `policy.rs:30` 的回滚目标匹配仍是 `v == b`。034 E28 原文明确：「`semver::Version` 的 `==` 包含 build 元数据，`cmp_precedence` 才忽略」。036 引入 policy.rs 时主比较改了、回滚目标分支漏改；037 用了正确写法，于是两条路径对同一操作分叉。
+
+可达后果：`current="1.3.0"` / `candidate="1.2.2+hotfix.1"` / `explicit_target="1.2.2"` / `rollback_confirmed=true` 时，046 的 `decide` 返回 `Reject`（用户已填目标并二次确认仍静默装不上），037 的 `decide_upgrade` 返回 `Install`。`+hotfix.1` 是插件打包常见写法。
+
+落地：`policy.rs` 改成 `v.cmp_precedence(&b) == Ordering::Equal`；新增 3 个测试（build 元数据回滚应 Install、不同优先级仍 Reject、verify_then_decide 同优先级 +build 差异 Keep）；`launcher.rs` 取消分支 `diagnostics[0]` 裸索引改局部变量；新增 `scripts/semver_guard.py` 扫 3 个版本判定文件非测试段的裸 `==` 形态，白名单只列 `instance.rs:35` 的 `&str` 精确串相等（034 口径），CI scan job 加 `semver_guard` step。
+
+**双向验证真跑**：注入 `v == b` → 守卫 `SEMVER_GUARD_HIT policy.rs:30 == b)` FAIL 1、行为测试 FAILED（`left: Reject / right: Install`）；恢复 → 守卫 `OK version_files 3 hits 0`、`updater::policy` 12/0。临时备份已删。
+
+验证：269 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0（62.31 s）+ 6 abi / 0（121.15 s）= **295 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过；`PANIC_GUARD_OK files 36 hits 0`、`SEMVER_GUARD_OK version_files 3 hits 0`。`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。界面闸门未触发，`demos/preview/` 与 `ui-full-kcu-paper.html` 零 diff。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E85 | 首版 `semver_guard.py` 用复杂正则，双向验证时既漏判又误报 | 重写成直接字面形态 + 显式白名单，双向验证后才接 CI |
+| E86 | 守卫把 `instance.rs:35` 的 `&str` 精确串相等误报成版本比较 | 加 `(file, line)` 白名单并注明 034 口径，立 A157 |
+| E87 | 全量 `cargo test --tests` 与交叉检查连续网关 502 | 拆段跑通，断言没降 |
+| E88 | 036 主比较改了却漏回滚目标分支，037 与 036 分叉 | U94 统一口径、U97 加守卫防复发 |
+
+另交 **EQ-13 / Q-047-01**：`decide`（036）回滚要 2 个条件，`decide_upgrade`（037）要 3 个（多 `user_confirmed_upgrade`），同一输入给出 `Install` / `Reject` 相反结果。本轮只统一了 `+build` 相等判定，**没改条件数量**，具体环境与三个选项已列进环境清单，等你拍板。
+
+EQ-01 ~ EQ-12 具体环境仍待拍板（045 已交）；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。

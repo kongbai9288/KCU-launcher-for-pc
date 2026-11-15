@@ -95,3 +95,5 @@
 | 045 | 锁中毒修复 + 待拍板问题的具体环境 | 已实现已验证；第三方锁实现未启动 | 045-log-poison-and-environments.md |
 
 | 046 | 毒化恢复全覆盖 + 信封协议字段 + CI 守卫 | 已实现已验证；上层未启动 | 046-poison-guard-and-envelope-code.md |
+
+| 047 | 回滚目标版本比较缺陷 + 双守卫 | 已实现已验证；上层未启动 | 047-rollback-version-precedence.md |

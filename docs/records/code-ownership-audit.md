@@ -406,3 +406,19 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 **如实登记**：标准库 API 用法修正 + 协议字段修正 + CI 约束，不是第三方库替换；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。新增 `scripts/panic_guard.py` 与 CI step，后续运行时 unwrap 会被机器挡住。
 
 反向验证真跑：临时换回 `.unwrap()` 后 3 个毒化测试全 FAILED，恢复后全通过。自写通用算法已收敛；剩余 `launcher.rs`、lightweight 系列、`paths/popup/userflow` 是项目特有编排（035 已登记无语义等价库可换）。
+
+## 047 版本判定口径统一（零新增依赖）
+
+| 项 | 046 | 047 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 25 | **25**（不变） |
+| `Cargo.lock` 包数 | 26 | **26**（不变） |
+| `src/` 文件 | 36 | **36** |
+| `src/` 行数 | 6212 | **6245** |
+| 测试 | 266 单元 + 26 集成 = 292 | **269 单元 + 26 集成 = 295** |
+
+046 清零 panic 点后改扫相等判定，全量核 3 个版本判定文件：`policy.rs` 回滚目标分支仍是 `v == b`（034 E28 已登记 `Version::eq` 含 build 元数据），而 037 的 `upgrade.rs` 用 `cmp_precedence`，两条路径分叉。改成统一写法，新增 3 个测试；`launcher.rs` 裸索引改局部变量；新增 `scripts/semver_guard.py` 与 CI step。
+
+双向验证真跑：注入 `v == b` 后守卫 FAIL、行为测试 FAILED（`left: Reject / right: Install`），恢复后守卫 OK、policy 12/0。
+
+**如实登记**：项目内比较写法修正 + 机器约束，不是第三方库替换；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。自写通用算法已收敛，剩余是项目特有编排。

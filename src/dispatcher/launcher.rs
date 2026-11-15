@@ -96,8 +96,9 @@ impl Dispatcher {
         let mut failed = false;
 
         if cancel.is_cancelled() {
-            diagnostics.push(diag_line("dispatcher", "dispatch", "launch", "CANCELLED", "detail=token_cancelled"));
-            self.log.record(format_args!("{}", diagnostics[0]), log::Level::Info, "kcu.dispatcher");
+            let line = diag_line("dispatcher", "dispatch", "launch", "CANCELLED", "detail=token_cancelled");
+            self.log.record(format_args!("{}", line), log::Level::Info, "kcu.dispatcher");
+            diagnostics.push(line);
             return LaunchOutcome {
                 envelope: envelope.with_error("CANCELLED"),
                 mode: Mode::Safe,

@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 046 |
+| 当前轮次 | 047 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -243,3 +243,13 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 反向验证真跑：临时换回 `.unwrap()` 后 3 个毒化测试全 FAILED，恢复后全通过。`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。**如实登记：标准库 API 用法修正 + 协议字段修正 + CI 约束，不是第三方库替换。**
 
 `cargo test --offline` 合计 **292/0**（266 单元 + 26 集成），Windows GNU 交叉检查通过，界面与 56 张 PNG 零 diff。
+
+## 047 回滚目标版本比较缺陷 + 双守卫
+
+全量核 3 个版本判定文件，查到 `src/updater/policy.rs:30` 的回滚目标匹配仍是 `v == b`；034 E28 已登记 `semver::Version` 的 `==` 含 build 元数据。036 主比较改了 `cmp_precedence` 却漏了这处，037 的 `upgrade.rs` 用了正确写法，两条路径分叉：`candidate="1.2.2+hotfix.1"` + 显式目标 `"1.2.2"` + 二次确认时，046 给 `Reject`、037 给 `Install`。
+
+改成 `v.cmp_precedence(&b) == Ordering::Equal`，新增 3 个测试；`launcher.rs` 裸索引改局部变量；新增 `scripts/semver_guard.py` 与 CI `semver_guard` step，白名单只列 `instance.rs` 的 `&str` 精确串相等。
+
+双向验证真跑：注入 `v == b` 后守卫 FAIL、行为测试 FAILED（`left: Reject / right: Install`），恢复后守卫 OK、policy 12/0。`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。
+
+`cargo test --offline` 合计 **295/0**（269 单元 + 26 集成），Windows GNU 交叉检查通过，界面与 56 张 PNG 零 diff。另交 **EQ-13 / Q-047-01**：两条回滚路径条件数不同（2 个 vs 3 个），本轮只统一相等判定、没改条件数量，等你拍板。

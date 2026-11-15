@@ -144,3 +144,17 @@
 要选：若坚持第三方锁实现，需先给 libc 0.2.x 的可用通道（tag 通道已核到 `rust-lang/libc 0.2.177` 可读，但未 vendor）。
 
 不选：锁实现保持标准库 `Mutex`，仅中毒恢复路径由 `PoisonError::into_inner` 接管。
+
+---
+
+**EQ-13 回滚是否要求第三条件（Q-047-01）**
+
+环境：两条判定路径并存。`src/updater/policy.rs::decide`（036）：回滚条件 = `explicit_target` 与候选优先级相等 + `rollback_confirmed`（**2 个条件**），返回 `Install`。`src/plugins/upgrade.rs::decide_upgrade`（037）：回滚条件 = `explicit_target` + `rollback_confirmed` + `user_confirmed_upgrade`（**3 个条件**）。升级路径 037 已用 `user_confirmed_upgrade` 覆盖 036 的「默认只升自动安装」。
+
+一手数据：031 定最严格档（每次确认 + 只允许只读）为默认；032 加三档可选松档；037 你要求「两个插件哈希一致，对比版本号后用户得手动同意才能安装（这叫升级）」。`+build` 差异按 034 走 `cmp_precedence`，047 U94 已把两条路径的相等判定统一。
+
+具体分叉：输入 `current="1.3.0"` / `candidate="1.2.2"` / `explicit_target="1.2.2"` / `rollback_confirmed=true` / `user_confirmed_upgrade=false` 时，`decide` → `Install`，`decide_upgrade` → `Reject`。
+
+要选：① 回滚也要求 `user_confirmed_upgrade`（统一为 3 个条件）② 回滚保持 2 个条件（显式目标 + 二次确认已足够）③ 由更新器插件自己在调用前弹确认，两处都不判。
+
+不选：两条路径对同一操作给出相反结果，Q-047-01 悬空；047 只统一了 `+build` 相等判定，未改条件数量。单页见 `docs/records/eq13-rollback-conditions.md`。

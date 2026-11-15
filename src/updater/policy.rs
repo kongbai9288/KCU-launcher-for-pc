@@ -27,7 +27,7 @@ pub fn decide(current: &str, candidate: &str, policy: &UpdatePolicy) -> Result<D
     let target_matches = policy
         .explicit_target
         .as_deref()
-        .map(|t| Version::parse(t).map(|v| v == b).unwrap_or(false))
+        .map(|t| Version::parse(t).map(|v| v.cmp_precedence(&b) == Ordering::Equal).unwrap_or(false))
         .unwrap_or(false);
     if target_matches && policy.rollback_confirmed {
         return Ok(Decision::Install);
@@ -119,6 +119,38 @@ mod tests {
         let (pk, sig) = signed(b"plugin");
         assert_eq!(
             verify_then_decide(&pk, b"plugin", &sig, "bad", "1.2.4", &UpdatePolicy::default()),
+            Decision::Keep
+        );
+    }
+
+
+    #[test]
+    fn rollback_target_with_build_metadata_matches_by_precedence() {
+        // 046 版用 `v == b`，semver::Version 的 == 包含 build 元数据，
+        // 显式目标与候选差一个 +build 时回滚被静默 Reject。
+        let current = "1.3.0";
+        let candidate = "1.2.2+hotfix.1";
+        let policy = UpdatePolicy {
+            explicit_target: Some("1.2.2".into()),
+            rollback_confirmed: true,
+        };
+        assert_eq!(decide(current, candidate, &policy).unwrap(), Decision::Install);
+    }
+
+    #[test]
+    fn rollback_target_with_different_precedence_is_rejected() {
+        let policy = UpdatePolicy {
+            explicit_target: Some("1.2.1".into()),
+            rollback_confirmed: true,
+        };
+        assert_eq!(decide("1.3.0", "1.2.2", &policy).unwrap(), Decision::Reject);
+    }
+
+    #[test]
+    fn verify_then_decide_keeps_same_precedence_build_diff() {
+        let (pk, sig) = signed(b"plugin-1.2.2+hotfix.1");
+        assert_eq!(
+            verify_then_decide(&pk, b"plugin-1.2.2+hotfix.1", &sig, "1.2.2+old", "1.2.2+hotfix.1", &UpdatePolicy::default()),
             Decision::Keep
         );
     }

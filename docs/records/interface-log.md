@@ -578,3 +578,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I63 | `src/core/envelope` | 新增 `Kind::code()`；`to_json_string` 不再用派生 Debug |
 | I64 | CI | scan job 加 `panic_guard` step，脚本 `scripts/panic_guard.py` |
 | S45 | 状态 | U85–U93 已证实；零新增依赖；EQ-01 ~ EQ-12 待拍板 |
+
+## 047 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I65 | `src/updater/policy` | `target_matches` 改 `cmp_precedence(&b) == Ordering::Equal`；3 个新增测试 |
+| I66 | `src/dispatcher/launcher` | 取消分支 `diagnostics[0]` 裸索引改局部变量 |
+| I67 | CI | scan job 加 `semver_guard` step，脚本 `scripts/semver_guard.py` |
+| S46 | 状态 | U94–U98 已证实；零新增依赖；Q-047-01 / EQ-13 待拍板 |

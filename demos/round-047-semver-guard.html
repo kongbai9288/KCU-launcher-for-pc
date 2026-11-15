@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 047 回滚版本比较缺陷与双守卫</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:140px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>047 运行逻辑</h1><div class="sub">回滚版本比较缺陷 + 双守卫 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>046 收口</h3><p id="m1">未运行</p><span class="badge g">4e059dc</span><span class="badge g">983 文件</span><span class="badge g">工作区干净</span></div>
+<div class="mini"><h3>审计：3 文件 8 处比较</h3><p id="m2">未运行</p><span class="badge r">policy.rs:30 v == b</span><span class="badge r">034 E28 已登记</span><span class="badge r">036/037 分叉</span></div>
+<div class="mini"><h3>可达后果</h3><p id="m3">未运行</p><span class="badge r">046 Reject</span><span class="badge g">037 Install</span><span class="badge r">用户已确认仍装不上</span></div>
+<div class="mini"><h3>双向验证与双守卫</h3><p id="m4">未运行</p><span class="badge r">注入 → FAIL / FAILED</span><span class="badge g">恢复 → OK / 12-0</span><span class="badge g">panic_guard + semver_guard</span></div>
+</div><div class="note" id="note">EQ-13 / Q-047-01 新增：两条回滚路径条件数不同，本轮未改，等你拍板。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','核 046 远端、清临时凭据'],
+['02','逐字落盘','47-round-047-instructions.txt'],
+['03','全量审计','索引 / 截断 / 边界 / 相等判定'],
+['04','核版本比较','3 文件 8 处 parse 与 cmp_precedence'],
+['05','定位分叉','policy.rs:30 仍是 v == b'],
+['06','查 034 E28','Version::eq 含 build 元数据'],
+['07','复现后果','1.2.2+hotfix.1 显式目标被 Reject'],
+['08','落地修正','cmp_precedence(&b) == Ordering::Equal'],
+['09','补测试','3 个新增，原 9 个未改'],
+['10','裸索引','launcher diagnostics[0] 改局部变量'],
+['11','双守卫','semver_guard.py + CI step'],
+['12','双向验证','注入 FAIL / 恢复 OK / 295 测试'],
+['13','提交推送','本地提交、远端快照、逐项哈希比对']];
+const DETAIL={'01':'V046 4e059dc 983_files CLEAN','02':'SPEC cmp 0','03':'AUDIT 36_files index_cast_eq','04':'VERSION_SITES 3_files 8_points','05':'HIT policy_30 v_eq_b 036_missed 037_correct','06':'E28 Version_eq_includes_build cmp_precedence_ignores','07':'REPRO current_1.3.0 candidate_1.2.2_hotfix decide_Reject upgrade_Install','08':'U94 cmp_precedence_eq_Ordering_Equal','09':'U95 3_new_tests 9_original_unchanged','10':'U96 diagnostics_0 to_local_line','11':'U97 semver_guard CI_step whitelist_instance_35','12':'NEGATIVE guard_FAIL_1 behavior_FAILED left_Reject_right_Install RESTORED guard_OK policy_12_0','13':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'全量审计','04':'版本比较核查','05':'定位分叉','06':'查 E28','07':'复现后果','08':'落地修正','09':'补测试','10':'裸索引','11':'双守卫','12':'双向验证','13':'提交推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12']);
+const M={'01':['m1','远端 `4e059dc`、message `round 046 poison guard and envelope kind code`，本地 `bbfd106` / 983 文件，工作区干净；临时凭据核查后删除，全仓零凭据。'],'05':['m2','全量核版本比较点：`instance.rs:45` 与 `upgrade.rs:42/55` 都用 `cmp_precedence`，但 `policy.rs:30` 的回滚目标匹配仍是 `v == b`。034 E28 原文明确 `semver::Version` 的 `==` 包含 build 元数据。036 引入 policy.rs 时主比较改了、回滚目标分支漏改；037 用了正确写法，两条路径分叉。'],'07':['m3','输入 `current="1.3.0"` / `candidate="1.2.2+hotfix.1"` / `explicit_target="1.2.2"` / `rollback_confirmed=true`：046 的 `decide` 返回 `Reject`（用户已填目标并二次确认仍静默装不上），037 的 `decide_upgrade` 返回 `Install`。`+hotfix.1` 是插件打包常见写法。同一操作两个入口给出相反结果。'],'12':['m4','双向验证真跑：注入 `v == b` → 守卫 `SEMVER_GUARD_HIT policy.rs:30 == b)` FAIL 1、行为测试 FAILED（`left: Reject / right: Install`）；恢复 → 守卫 `OK version_files 3 hits 0`、`updater::policy` 12/0。295 / 0（`269` 单元 + `26` 集成），Windows GNU 通过，`PANIC_GUARD_OK`、`SEMVER_GUARD_OK`，26 包 / 25 第三方不变，241 项必读非空。临时备份已删。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','core.audit','q.audit','q.defect','q.research','q.repro','q.construct','q.reference','q.construct','q.construct','q.reference','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='底座正确性收尾已落地；EQ-01 ~ EQ-13 具体环境仍等你按编号拍板。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='EQ-13 / Q-047-01 新增：两条回滚路径条件数不同，本轮未改，等你拍板。';}
+</script></body></html>

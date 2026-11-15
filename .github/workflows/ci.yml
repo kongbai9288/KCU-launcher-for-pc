@@ -77,3 +77,5 @@ jobs:
           if grep -rE 'https?://|C:\\|x-api-key' src/; then echo "HARDCODE_FOUND"; exit 1; else echo "NO_HARDCODE"; fi
       - name: panic_guard
         run: python3 scripts/panic_guard.py
+      - name: semver_guard
+        run: python3 scripts/semver_guard.py
