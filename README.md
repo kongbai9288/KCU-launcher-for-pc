@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 037 |
+| 当前轮次 | 038 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -175,3 +175,9 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 - 插件自带 SVG 显示侧栏，没有就用问号；不做内容白名单，内部片段引用放行。
 
 零新增依赖，`cargo test --offline` 207/0。51 张预览图全量重渲，重点看 `49-plugin-icons` / `50-plugin-upgrade` / `51-plugin-fault`。按 UI 闸门规则，界面渲染实现等你确认后才写。
+
+## 038 插件 ABI 与库化动态加载
+
+`libloading 0.8.9` + `cfg-if 1.0.5`（Unix）+ `windows-link 0.2.1`（Windows）三个 crate 零传递闭包进构建，LICENSE 全文 / 关于页 / NOTICES 三处齐备。契约：插件导出 `kcu_plugin_abi_major` / `kcu_plugin_abi_minor` / 可选 `kcu_plugin_init`，major 严格相等、minor 不超宿主才放行；签名、升级同意、ABI 协商三道闸门互不替代。
+
+`cargo test --offline` 218/0（含 6 个真 `.so` 加载集成测试），`cargo check --offline --target x86_64-pc-windows-gnu` 通过，CI 加了 Windows 交叉检查。MSVC / Win7 运行时、子进程隔离仍标未证实；界面闸门未触发。

@@ -171,3 +171,13 @@
 | ed25519-compact-LICENSE.txt | ed25519-compact 2.6.1 | MIT |
 
 来源：jedisct1/rust-ed25519-compact tag `2.6.1`，逐字副本 1073 字节，Copyright (c) 2020-2026 Frank Denis。MIT 条款要求保留版权与许可声明，全文随发行物附上。
+
+## 038 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| libloading-LICENSE.txt | libloading 0.8.9 | ISC（736 B，Copyright © 2015 Simonas Kazlauskas） |
+| cfg-if-LICENSE-MIT.txt / cfg-if-LICENSE-APACHE.txt | cfg-if 1.0.5 | MIT OR Apache-2.0 |
+| windows-link-LICENSE-MIT.txt / windows-link-LICENSE-APACHE.txt | windows-link 0.2.1 | MIT OR Apache-2.0 |
+
+来源：nagisa/rust_libloading tag `0.8.9`、alexcrichton/cfg-if tag `v1.0.5`、microsoft/windows-rs commit `ec79074f76aa`（crates/libs/link，version 0.2.1）。均为逐字副本；MIT / Apache-2.0 / ISC 版权与许可声明随发行物附上。

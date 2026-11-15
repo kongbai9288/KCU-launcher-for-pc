@@ -221,3 +221,19 @@ MIT 原文对应段落见 https://lucide.dev/license 的 Feather 派生列表；
 | --- | --- |
 | N30 | 零传递依赖；3 项 optional 依赖全部裁掉，`default-features = false, features = ["std"]`；`src/` 逐字节未改。 |
 | N31 | MIT 全文随发行物附上；本项目只使用验证路径，不使用随机数生成与 PEM / X25519 模块。 |
+
+## 038 新增已进构建依赖（插件 ABI）
+
+| 项目 | 版本 | 许可证 | 版权 | 用途 | 来源 | 状态 |
+| --- | --- | --- | --- | --- | --- | --- |
+| libloading | 0.8.9 | ISC | Simonas Kazlauskas | 插件动态库加载与符号解析 | vendor/libloading | 构建中已使用 |
+| cfg-if | 1.0.5 | MIT OR Apache-2.0 | Alex Crichton | libloading 的 Unix 条件编译 | vendor/cfg-if | 构建中已使用 |
+| windows-link | 0.2.1 | MIT OR Apache-2.0 | Microsoft | libloading 的 Windows 链接宏 | vendor/windows-link | 构建中已使用 |
+
+许可证全文：`docs/licenses/libloading-LICENSE.txt`、`docs/licenses/cfg-if-LICENSE-MIT.txt`、`docs/licenses/cfg-if-LICENSE-APACHE.txt`、`docs/licenses/windows-link-LICENSE-MIT.txt`、`docs/licenses/windows-link-LICENSE-APACHE.txt`。
+
+| 编号 | 约束 |
+| --- | --- |
+| N32 | 上游 `src/` 逐字节未改；vendored manifest 只裁掉 dev-dependencies、cfg-if 的 optional `rustc-std-workspace-core` 与 `[features]`、windows-link 的 `[lints] workspace = true`（脱离原 workspace 后无法解析）。 |
+| N33 | `Library::new` 默认 flags=0 走 `LoadLibraryExW`，不依赖 `LOAD_LIBRARY_SEARCH_*`；Win7 的 KB2533623 只在显式启用搜索目录标志时才相关，本项目当前不用这些标志。 |
+| N34 | Windows 分支已在 `cargo check --offline --target x86_64-pc-windows-gnu` 通过；MSVC 目标与 Win7 运行时行为未证实。 |

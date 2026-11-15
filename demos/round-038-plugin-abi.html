@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 038 插件 ABI 契约与库化动态加载</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:118px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>038 运行逻辑</h1><div class="sub">上层第三块 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>选这块的依据</h3><p id="m1">未运行</p><span class="badge g">3 crate</span><span class="badge g">零传递闭包</span></div>
+<div class="mini"><h3>依赖与许可</h3><p id="m2">未运行</p><span class="badge g">5 份全文</span><span class="badge g">16 组</span><span class="badge r">Windows 也进 lock</span></div>
+<div class="mini"><h3>U14–U19 契约</h3><p id="m3">未运行</p><span class="badge r">三道闸门</span><span class="badge r">Symbol 不存长期</span><span class="badge g">flags=0</span></div>
+<div class="mini"><h3>验证</h3><p id="m4">未运行</p><span class="badge g">218 / 0</span><span class="badge g">真 .so 加载</span><span class="badge g">windows-gnu check</span></div>
+</div><div class="note" id="note">MSVC 与 Win7 运行时、子进程隔离仍标未证实；界面闸门本轮未触发。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','读索引 187 项、037 结尾、020 插件化更新约束'],
+['02','逐字落盘','38-round-038-instructions.txt'],
+['03','核 0.8.9 闭包','Unix→cfg-if / Windows→windows-link，无 libc 无 build.rs'],
+['04','核三个 manifest','裁 dev / optional core / workspace lints'],
+['05','vendor 落盘','3 crate、上游 src 逐字节未改'],
+['06','许可三处齐备','5 份全文 + 关于页 16 组 + NOTICES 后才进 Cargo.toml'],
+['07','U14 契约','三个 C ABI 符号，init 可选'],
+['08','U15–U17 闸门','major 严格 / minor 不超 / Symbol 不留存'],
+['09','U18 Windows','flags=0 → LoadLibraryExW 基础路径'],
+['10','E41–E45 修复','duplicate readme / 502 / 重复用例 / 夹具耗时 / 构建锁'],
+['11','真加载测试','rustc 现编 6 个 cdylib，libloading 逐个打开'],
+['12','交叉检查','cargo check --target x86_64-pc-windows-gnu 通过'],
+['13','提交推送','双扫描 → 本地提交 → 远端快照比对']];
+const DETAIL={'01':'REQ 187/187 OK','02':'SPEC cmp 0','03':'CLOSURE libloading cfg-if windows-link transdeps=0','04':'MANIFEST trimmed dev optional_core workspace_lints','05':'VENDOR 3 crates src_bytes_unchanged','06':'LICENSE 3_places_ok then_dependency','07':'U14 three_c_symbols','08':'U15-U17 three_gates no_dangling_symbol','09':'U18 flags=0 loadlibraryexw','10':'E41-E45 fixed','11':'TEST 212_unit 6_integration 218_total 0_failed','12':'CROSS windows-gnu cargo_check OK','13':'PUSH remote_snapshot ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'闭包核查','04':'manifest 核查','05':'vendor 落盘','06':'许可闸门','07':'ABI 契约','08':'版本闸门','09':'Windows 路径','10':'失败修复','11':'真加载测试','12':'交叉检查','13':'提交推送'};
+const QN=new Set(['06','07','08','09','10']);
+const M={'03':['m1','`libloading 0.8.9` ISC / MSRV 1.71；Unix 只依赖 `cfg-if 1`，Windows 只依赖 `windows-link 0.2`。3 个 crate 零传递闭包，比 0.8.8 的 windows-targets 轻得多。'],'06':['m2','Windows 目标依赖在 Linux 仍进 lock 解析，所以三个 crate 全放 vendor。5 份 LICENSE 全文（ISC / MIT / Apache-2.0）、关于页 16 组、NOTICES N32–N34 齐了才写进 Cargo.toml。'],'10':['m3','签名校验（036）→ 身份哈希与升级同意（037）→ ABI 协商（038）三道闸门互不替代；major 严格相等、minor 不超宿主；Symbol 只在 Library 存活期内取出数值；默认 flags=0 不启用搜索目录标志。'],'12':['m4','212 单元 / 0 失败 + 6 集成 / 0 失败 = 218；集成段现编 6 个 cdylib 真加载，两次复跑 117–134 s。`cargo check --offline --target x86_64-pc-windows-gnu` 通过，CI 加了同一步。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','upper.closure','core.manifest','core.vendor','core.license','q.abi','q.gate','q.win','q.fix','core.test','core.cross','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='插件 ABI 契约与库化加载已落地；MSVC / Win7 运行时 / 子进程隔离仍等你。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='MSVC 与 Win7 运行时、子进程隔离仍标未证实；界面闸门本轮未触发。';}
+</script></body></html>

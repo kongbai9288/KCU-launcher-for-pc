@@ -244,3 +244,5 @@ F013-01..09 状态含义：013 轮 D07 第一层 core 已落地，`cargo build -
 | F037-01 | plugin-upgrade-consent.md | 业务层已实现；界面层仅演示 |
 | F037-02 | plugin-fault-recovery.md | 业务层已实现；界面层仅演示 |
 | F037-03 | plugin-sidebar-icon.md | 业务层已实现；界面层仅演示 |
+
+| F038-01 | plugin-dynamic-abi.md | 业务层已实现；界面闸门未触发 |

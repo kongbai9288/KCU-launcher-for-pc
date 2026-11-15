@@ -210,3 +210,14 @@
 | A98 | 插件 SVG 检查只做格式与外链兜底，不加内容白名单；`href="#..."` 内部片段必须放行。 |
 | A99 | 弹窗 catalog 新增类型后，所有硬编码弹窗数的断言要一起核（`core/popup.rs`、`lightweight/view.rs`）。 |
 | A100 | 动界面的轮次，`src/` 里只能落业务逻辑；渲染层留在 UX 演示等确认，不能把演示 HTML 当成实现完成。 |
+
+## 038 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A101 | vendor 里带 `[lints] workspace = true` 或 optional `rustc-std-workspace-core` 的 crate，脱离原 workspace 后 cargo 解析会失败，必须裁段并在决策里登记裁了什么。 |
+| A102 | 往上游 manifest 插字段前先查键是否已存在；`readme` 重复键会让整个目录源解析失败。 |
+| A103 | Windows 目标依赖在 Linux 仍进 lock 解析，vendor 不能只放 Unix 侧那几个 crate。 |
+| A104 | `libloading::Symbol` 只可在 `Library` 存活期内用；存进长期结构体就是悬垂句柄，取数值后让 Library 自行 Drop。 |
+| A105 | `cargo check --target` 只证明编译，不能写成「Win7 运行时已验证」；MSVC 与运行时要分开登记。 |
+| A106 | 集成测试用 rustc 现编 cdylib 属验证脚手架，不进产品启动路径，耗时也要如实写进报告。 |

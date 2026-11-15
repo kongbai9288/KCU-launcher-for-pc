@@ -11,3 +11,5 @@
 | 文档 | 变化 |
 | --- | --- |
 | docs/rules/auto-command-policy.md | 从单一最严格口径改为「默认严格 + 用户可选标准 / 宽松」三档矩阵，新增 U01–U11 |
+
+| plugin-abi-contract.md | 插件 C ABI 符号、版本闸门与 Windows 边界 | 038 |

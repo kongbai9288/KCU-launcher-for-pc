@@ -288,3 +288,14 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 | 弹窗 catalog | 11 类 | 13 类 |
 
 037 新增 `src/plugins/` 4 模块：`identity.rs`（SHA-512 身份哈希，复用 ed25519-compact）、`upgrade.rs`（手动同意升级，复用 semver + updater::verify）、`fault.rs`（故障三动作决策）、`icon.rs`（SVG 数据与问号兜底）。这些是项目特有编排，不是自写通用算法回潮；哈希、签名、版本比较全部走已进构建的库。
+
+## 038 插件 ABI 库化
+
+| 项 | 037 | 038 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 13 | **16**（+libloading / cfg-if / windows-link） |
+| `Cargo.lock` 包数 | 14 | 17 |
+| `src/` 行数 | 5109 | 5212（+`src/plugins/abi.rs` 101 行） |
+| 测试 | 207 单元 | 212 单元 + 6 集成 = 218（集成段两次 117.35 s / 133.97 s） |
+
+动态库打开、符号查找、句柄生命周期全部交给 `libloading`；项目侧只留三个符号名常量、`PluginAbi` 数据、版本比较编排与错误转 anyhow。`tests/plugin_abi_load.rs` 是验证脚手架（现编 6 个 cdylib 真加载），不进产品。Windows 分支首次 `cargo check --offline --target x86_64-pc-windows-gnu` 通过。

@@ -2386,3 +2386,41 @@ L3 落地：
 
 028 三项开服器功能仍按「只记文档」零实现；CF F17、特殊版代码、本项目 LICENSE、真实运行时 / GUI / 跨平台、后端仓写请求均未动。
 | E40 | P09 报 9 处 `plugin.n` / `plugin.s` 命中 | 复核为新增 `data-i18n="plugin.nav.*"` 属性值误入扫描域；`scripts/p09_scan.py` 改为只扫可见文本，断言与正则未改，注入自检通过 |
+
+## 038
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/38-round-038-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/038-plugin-abi-libloading.md | D01-D11 依据、U14-U19 契约、V-A~V-D、E41-E45、四值 |
+| docs/verification/round-038.md | 15 条复跑证据 |
+| docs/features/plugin-dynamic-abi.md | F038-01 五字段登记 |
+| docs/rules/plugin-abi-contract.md | C ABI 符号、版本闸门、Windows 边界 |
+| docs/research/21-libloading-abi.md | 6 个锚点 / 四值 |
+| src/plugins/abi.rs + mod.rs | 98 行契约层，5 个单测 |
+| tests/plugin_abi_load.rs | 6 个集成测试，现编 6 个 cdylib 真加载 |
+| vendor/ + Cargo.toml/lock | libloading 0.8.9 / cfg-if 1.0.5 / windows-link 0.2.1，17 包 16 第三方 |
+| docs/licenses/ + 关于页 + NOTICES | 5 份全文、16 组、计数 38、N32-N34 |
+| .github/workflows/ci.yml | core job 加 windows-abi-check |
+| demos/round-038-plugin-abi.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 187 项、README、四个 index、ai-errors A101-A106、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+「干」按 037 结尾继续走**插件 ABI**。三条路线（toml / tracing / thiserror）035 已判不成立，本轮先核真实闭包：`libloading 0.8.9` Unix 只依赖 cfg-if、Windows 只依赖 windows-link，三个 crate 零传递闭包，比 0.8.8 的 windows-targets 轻得多。
+
+落 `src/plugins/abi.rs`：插件导出 `kcu_plugin_abi_major` / `kcu_plugin_abi_minor` / `kcu_plugin_init`（可选）；宿主 major 严格相等、minor 不超自身才 `Compatible`，否则 `RejectMajor` / `RejectMinor`。动态库打开、符号查找、句柄生命周期全交给 libloading；项目侧只有符号名、数据结构、比较编排与错误转 anyhow。签名校验（036）、升级同意（037）、ABI 协商（038）三条闸门互不替代，任一不过保留旧插件。
+
+**真验证**：`cargo test --offline` **212 单元 / 0 失败 + 6 集成 / 0 失败 = 218**；集成测试用 rustc 现编 6 个 cdylib 再真加载（ABI 一致、major=2 拒、minor=99 拒、缺 init 可选、缺符号报错、verdict 一致），两次复跑 117.35 s / 133.97 s 已登记。`cargo check --offline --target x86_64-pc-windows-gnu` **通过**，windows-link 与 `libloading::os::windows` 首次在 Windows GNU 目标下可编译；CI 的 core job 同步加了这一步。MSVC 与 Win7 运行时仍标未证实。
+
+界面闸门**未触发**：只更新关于页许可表（13 → 16 组，计数 35 → 38）并重渲 4 张许可截图，其余 52 张 PNG 回退到 HEAD。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E41 | windows-link manifest 插入 `readme` 与上游已有键重复，cargo 报 duplicate key | 去掉重复键，保留上游原值 |
+| E42 | 注册 abi 模块的工具调用连续 3 次 502，但服务端已落盘 | 先读文件确认再继续，未重复写 |
+| E43 | `older_minor_is_compatible` 在宿主 minor=0 时与首条用例重复 | 换常量与符号名 NUL 检查 |
+| E44 | 集成段现编 6 个 cdylib 耗时 117–134 s | 保留真加载证据，登记为脚手架开销 |
+| E45 | 交叉检查等构建目录锁 1m26s | 并发锁等待，非失败，输出保留 |
+
+028 三项开服器功能仍按「只记文档」零实现；Q-037-01（身份哈希解读）未答复、继续挂；CF F17、特殊版代码、本项目 LICENSE、后端仓写请求均未动。

@@ -207,3 +207,5 @@
 - https://api.github.com/repos/blyxxyz/lexopt/contents/Cargo.toml?ref=v0.3.2
 - https://codeload.github.com/blyxxyz/lexopt/tar.gz/refs/tags/v0.3.2
 - https://api.github.com/repos/blyxxyz/lexopt/tags?per_page=15
+
+| 21 | 21-libloading-abi.md | 插件动态加载一手资料 | 4 已证实 / 1 未证实 / 1 受阻 |

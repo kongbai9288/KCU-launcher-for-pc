@@ -501,3 +501,11 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I40 | `src/plugins` | 新增 identity_hash / decide_upgrade / handle_fault / PluginIcon |
 | I41 | `core::popup::catalog` | 11 → 13 类，新增 PluginUpgradeConfirm / PluginFault |
 | S36 | 状态 | U08–U13 / F01–F06 / I01–I05 已证实；界面实现未启动 |
+
+## 038 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I42 | `src/plugins/abi` | 新增 `ABI_MAJOR` / `ABI_MINOR` / `PluginAbi` / `AbiVerdict` / `open` / `read_abi` / `read_init` / `check` / `compatible` |
+| I43 | `tests/plugin_abi_load.rs` | 6 个集成测试，现编 6 个 cdylib 夹具 |
+| S37 | 状态 | U14–U19 已证实；MSVC / Win7 运行时 / 子进程隔离未证实；Q-037-01 仍挂 |
