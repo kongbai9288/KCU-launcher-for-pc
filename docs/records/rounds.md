@@ -2424,3 +2424,41 @@ L3 落地：
 | E45 | 交叉检查等构建目录锁 1m26s | 并发锁等待，非失败，输出保留 |
 
 028 三项开服器功能仍按「只记文档」零实现；Q-037-01（身份哈希解读）未答复、继续挂；CF F17、特殊版代码、本项目 LICENSE、后端仓写请求均未动。
+
+## 039
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/39-round-039-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/039-plugin-lifecycle-and-isolation.md | 措辞纠正、F07-F12、U20-U29、V-A~V-F、E46-E51、四值 |
+| docs/verification/round-039.md | 15 条复跑证据 |
+| docs/features/plugin-lifecycle.md | F039-01 五字段登记 |
+| docs/rules/plugin-isolation-boundary.md | 同进程 C ABI 边界、卸载约束、子进程路线 |
+| docs/research/22-ffi-unwind-and-library-lifecycle.md | 9 个锚点 / 四值 |
+| src/plugins/lifecycle.rs + mod.rs | 150 行，4 个单测 |
+| tests/plugin_lifecycle_load.rs | 7 个集成测试，OnceLock 缓存 2 个 cdylib |
+| demos/round-039-lifecycle.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 193 项、README、四个 index、ai-errors A107-A113、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+「干」按 038 的 U19 继续收尾插件生命周期。**先纠 038 的一处措辞**：038 结尾把下一轮写成「纯项目编排」，和你一直强调的「上层实现都用别人的代码」「对你的代码没有信心」冲突，本轮把措辞改掉，能交给库的全部交出去。
+
+**查到的硬事实**：`extern "C"` 边界上 Rust panic 会让整个进程安全 abort（Nomicon / RFC 2945）；`catch_unwind` 只抓 unwinding panic、不抓 abort，且与 foreign exception 交互是 UB。所以**同进程 C ABI 动态库接不住插件崩溃**，设置页「插件单独运行，不影响启动器」目前只是演示，不是已实现。`kcu_plugin_init` 因此不在宿主进程执行；插件 init 与主逻辑要放子进程边界才谈得上隔离，标**未启动**。子进程若走 `Command`：参数不经 shell，但 `Child` 的 Drop 既不 kill 也不 reap（错误路径会泄漏运行中的进程），Windows `.bat` / `.cmd` 例外要求 MSRV ≥ 1.81.0，与 Win7 Tier 3 路线冲突，未证实。
+
+**落地**：`src/plugins/lifecycle.rs` 150 行。句柄释放用 `libloading::Library::close`，并发读符号与线程回收用 `crossbeam-utils::thread::scope` + `WaitGroup`（027 已进构建），版本判定用 `semver`（034）；项目侧只剩倒序 pop、失败只回滚本轮新增、重复 id 拒绝这几条顺序策略，如实标「这一层没有语义等价的通用库可换」。**零新增第三方**，仍 17 包 / 16 第三方，关于页 16 组 / 38、NOTICES、CI 全未改。
+
+**验证**：216 单元 / 0 + 7 生命周期集成 / 0（50.50 s）+ 6 的 ABI 集成 / 0（125.71 s）= **229 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。夹具改 `OnceLock` 缓存，集成段从 10 次 rustc 编译降到 2 次，50.50 s 对比 038 的 133.97 s。
+
+界面闸门**未触发**：`demos/ui-full-kcu-paper.html` 与 56 张 PNG 全部无 diff；设置页隔离项不加「未实现」标签，真实状态只在文档登记。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E46 | `Result<u32, anyhow::Error> == Ok(..)` 报 E0369 | 改 `matches!` |
+| E47 | `ScopedJoinHandle::join` 消耗 self，报 E0507 | 改 `into_iter().filter_map` |
+| E48 | `Loaded` 缺 Debug 导致 derive 失败 | 补 `#[derive(Debug)]` |
+| E49 | 单测缺 `mut` 报 E0596 | 补 `let mut` |
+| E50 | 全量 `cargo test` 连续 4 次网关 502 | 拆三段执行 + 夹具缓存，未降断言 |
+| E51 | 初版两个纯函数只被单测调用 | 删除，验证移到真加载集成测试 |
+
+028 三项开服器功能仍按「只记文档」零实现；Q-037-01（身份哈希解读）未答复、继续挂；CF F17、特殊版代码、本项目 LICENSE、后端仓写请求均未动。

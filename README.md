@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 038 |
+| 当前轮次 | 039 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -181,3 +181,9 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `libloading 0.8.9` + `cfg-if 1.0.5`（Unix）+ `windows-link 0.2.1`（Windows）三个 crate 零传递闭包进构建，LICENSE 全文 / 关于页 / NOTICES 三处齐备。契约：插件导出 `kcu_plugin_abi_major` / `kcu_plugin_abi_minor` / 可选 `kcu_plugin_init`，major 严格相等、minor 不超宿主才放行；签名、升级同意、ABI 协商三道闸门互不替代。
 
 `cargo test --offline` 218/0（含 6 个真 `.so` 加载集成测试），`cargo check --offline --target x86_64-pc-windows-gnu` 通过，CI 加了 Windows 交叉检查。MSVC / Win7 运行时、子进程隔离仍标未证实；界面闸门未触发。
+
+## 039 插件卸载顺序与隔离边界
+
+`src/plugins/lifecycle.rs` 150 行：句柄释放交给 `libloading`，并发符号读取与线程回收交给 `crossbeam-utils::thread::scope` + `WaitGroup`，项目侧只留倒序 pop、失败只回滚本轮新增、重复 id 拒绝。零新增第三方，仍 17 包 / 16 第三方。
+
+查到一条硬事实并如实登记：`extern "C"` 边界上 Rust panic 会 abort 整个进程，`catch_unwind` 抓不到，所以**同进程 C ABI 动态库接不住插件崩溃**；设置页「插件单独运行，不影响启动器」目前只是演示，`kcu_plugin_init` 不在宿主进程执行，子进程隔离标未启动。`cargo test --offline` 合计 229/0（216 单元 + 7 生命周期 + 6 ABI 集成），Windows GNU 交叉检查通过。界面与 56 张 PNG 全未动。

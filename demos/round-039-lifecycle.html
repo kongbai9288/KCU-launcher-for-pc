@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 039 插件卸载顺序与隔离边界</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:126px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>039 运行逻辑</h1><div class="sub">上层第三块收尾 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>措辞纠正</h3><p id="m1">未运行</p><span class="badge r">038 写了「纯项目编排」</span><span class="badge g">能交库的交出去</span></div>
+<div class="mini"><h3>硬事实 F07–F12</h3><p id="m2">未运行</p><span class="badge r">extern C panic → abort</span><span class="badge r">隔离未启动</span></div>
+<div class="mini"><h3>卸载顺序 U25–U29</h3><p id="m3">未运行</p><span class="badge g">倒序 close</span><span class="badge g">只回滚本轮</span><span class="badge g">scope 归零</span></div>
+<div class="mini"><h3>验证</h3><p id="m4">未运行</p><span class="badge g">229 / 0</span><span class="badge g">OnceLock 缓存</span><span class="badge g">windows-gnu check</span></div>
+</div><div class="note" id="note">设置页「插件单独运行，不影响启动器」目前只是演示；界面与 56 张 PNG 本轮全未动。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','读索引 187 项、038 的 U19、020 插件化更新约束'],
+['02','逐字落盘','39-round-039-instructions.txt'],
+['03','纠 038 措辞','撤回「纯项目编排」，生命周期交给已进构建的库'],
+['04','查 F07-F09','Nomicon / RFC 2945 / catch_unwind 一手原文'],
+['05','查 F10-F12','libloading 句柄、dlclose 平台差异、Command 与 Child'],
+['06','U20 决策','kcu_plugin_init 不在宿主进程执行'],
+['07','U21 边界','子进程隔离标未启动，设置页口径保持原样'],
+['08','U25 push','同 id 先拒；一次打开复用同一句柄判 ABI'],
+['09','U26 回滚','记 base，失败只倒序释放本轮新增'],
+['10','U27 归零','scope 内并发读符号，WaitGroup 确认无在飞使用'],
+['11','U28 倒序','pop + Library::close，错误登记不中断，二次调用幂等'],
+['12','E46-E51 修复','E0369 / E0507 / Debug / mut / 502 / 测试用纯函数'],
+['13','验证与推送','229 测试、交叉检查、双扫描、本地提交、远端快照']];
+const DETAIL={'01':'REQ 187/187 OK','02':'SPEC cmp 0','03':'W01 措辞撤回','04':'NOMICON panic_abort RFC2945 catch_unwind','05':'LIBLOADING dlclose COMMAND child_drop','06':'U20 no_host_init','07':'U21 isolation_not_started ui_unchanged','08':'U25 one_open duplicate_reject','09':'U26 rollback_to_base','10':'U27 scope_join wg_wait','11':'U28 lifo_close idempotent','12':'E46-E51 fixed','13':'TEST 216+7+6 229_total 0_failed PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'措辞纠正','04':'一手资料 A','05':'一手资料 B','06':'宿主边界','07':'隔离边界','08':'加载','09':'回滚','10':'归零','11':'倒序卸载','12':'失败修复','13':'验证推送'};
+const QN=new Set(['04','05','06','07','11','12']);
+const M={'03':['m1','038 结尾把下一轮写成「纯项目编排」，与「上层用别人的代码」冲突。039 把句柄释放交给 libloading、并发与回收交给 crossbeam-utils（027 已进构建）、版本判定交给 semver（034），项目侧 150 行只剩顺序策略，如实标没有语义等价的通用库可换。'],'07':['m2','`extern "C"` 边界上 Rust panic 会安全 abort 整个进程；`catch_unwind` 只抓 unwinding panic，与 foreign exception 交互是 UB。同进程 C ABI 接不住插件崩溃，设置页「插件单独运行，不影响启动器」只是演示；init 与插件主逻辑须放子进程边界，未启动。`close()` 成功也不等于已卸载（musl / macOS TLS）。'],'11':['m3','`push` 同 id 先拒、一次 dlopen 复用句柄判 ABI；`load_many` 记 base，失败倒序释放本轮新增，之前可用的保持；`probe_scoped` 在 scope 内并发读符号、WaitGroup 归零后才卸载；`unload_all` 倒序 `Library::close()`，错误登记不中断，二次调用幂等。'],'13':['m4','216 单元 / 0 + 7 生命周期集成 / 0（50.50 s）+ 6 ABI 集成 / 0（125.71 s）= 229。`OnceLock` 缓存 2 个 cdylib，集成段从 10 次 rustc 编译降到 2 次。`cargo check --offline --target x86_64-pc-windows-gnu` 通过。零新增第三方，仍 17 包 / 16 第三方。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','core.wording','q.research','q.research','q.boundary','q.boundary','q.load','q.rollback','q.scope','q.unload','q.fix','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='卸载生命周期已落地；子进程隔离、插件 init 执行、真实 dll 与 Win7 运行时仍等你。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='设置页「插件单独运行，不影响启动器」目前只是演示；界面与 56 张 PNG 本轮全未动。';}
+</script></body></html>

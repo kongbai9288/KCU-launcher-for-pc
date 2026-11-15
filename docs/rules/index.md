@@ -13,3 +13,5 @@
 | docs/rules/auto-command-policy.md | 从单一最严格口径改为「默认严格 + 用户可选标准 / 宽松」三档矩阵，新增 U01–U11 |
 
 | plugin-abi-contract.md | 插件 C ABI 符号、版本闸门与 Windows 边界 | 038 |
+
+| plugin-isolation-boundary.md | 同进程 C ABI 隔离边界、卸载约束与子进程路线 | 039 |

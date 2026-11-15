@@ -299,3 +299,16 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 | 测试 | 207 单元 | 212 单元 + 6 集成 = 218（集成段两次 117.35 s / 133.97 s） |
 
 动态库打开、符号查找、句柄生命周期全部交给 `libloading`；项目侧只留三个符号名常量、`PluginAbi` 数据、版本比较编排与错误转 anyhow。`tests/plugin_abi_load.rs` 是验证脚手架（现编 6 个 cdylib 真加载），不进产品。Windows 分支首次 `cargo check --offline --target x86_64-pc-windows-gnu` 通过。
+
+## 039 卸载生命周期（零新增依赖）
+
+| 项 | 038 | 039 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 16 | **16（本轮 0 新增）** |
+| `Cargo.lock` 包数 | 17 | 17 |
+| `src/` 行数 | 5212 | **5364**（+`src/plugins/lifecycle.rs` 150 行） |
+| 测试 | 212 单元 + 6 集成 | **216 单元 + 7 + 6 集成 = 229** |
+
+句柄释放交给 `libloading::Library::close`，并发读取与线程回收交给 `crossbeam-utils::thread::scope` + `WaitGroup`（027 已进构建），版本判定交给 `semver`（034）。项目侧 150 行只剩倒序 pop、失败只回滚本轮新增、重复 id 拒绝——这一层没有语义等价的通用库可换，如实登记，不写成「全用库」。
+
+039 同时纠正 038 结尾「纯项目编排」的措辞：用户长期要求上层用别人的代码，项目编排不该被包装成可放心手写的一层。

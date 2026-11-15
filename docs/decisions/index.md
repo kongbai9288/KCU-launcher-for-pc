@@ -79,3 +79,5 @@
 | 037 | 身份哈希升级 / 插件故障三动作 / 侧栏 SVG 与问号 | 业务层已实现，界面层仅演示 | 037-plugin-upgrade-fault-icon.md |
 
 | 038 | 插件 ABI 契约与 libloading 动态加载，Windows GNU 可编译 | 已实现 | 038-plugin-abi-libloading.md |
+
+| 039 | 插件倒序卸载与隔离边界，同进程 C ABI 接不住崩溃 | 卸载已实现；隔离未启动 | 039-plugin-lifecycle-and-isolation.md |

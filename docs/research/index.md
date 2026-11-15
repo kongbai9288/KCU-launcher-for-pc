@@ -209,3 +209,5 @@
 - https://api.github.com/repos/blyxxyz/lexopt/tags?per_page=15
 
 | 21 | 21-libloading-abi.md | 插件动态加载一手资料 | 4 已证实 / 1 未证实 / 1 受阻 |
+
+| 22 | 22-ffi-unwind-and-library-lifecycle.md | 跨 FFI 展开与动态库生命周期 | 8 已证实 / 1 受阻 |

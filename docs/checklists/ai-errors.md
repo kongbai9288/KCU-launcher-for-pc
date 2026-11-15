@@ -221,3 +221,15 @@
 | A104 | `libloading::Symbol` 只可在 `Library` 存活期内用；存进长期结构体就是悬垂句柄，取数值后让 Library 自行 Drop。 |
 | A105 | `cargo check --target` 只证明编译，不能写成「Win7 运行时已验证」；MSVC 与运行时要分开登记。 |
 | A106 | 集成测试用 rustc 现编 cdylib 属验证脚手架，不进产品启动路径，耗时也要如实写进报告。 |
+
+## 039 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A107 | `extern "C"` 边界上 Rust panic 会 abort 整个进程，`catch_unwind` 抓不到；不要把「同进程动态库」写成「崩溃隔离」。 |
+| A108 | `catch_unwind` 与 foreign exception 交互是 UB；跨 FFI 的符号只读取数值，不在宿主进程执行插件函数。 |
+| A109 | `Library::close()` 成功不等于已卸载（musl / macOS TLS）；错误要登记，Drop 的静默忽略不能当成功。 |
+| A110 | `Child` 没有 Drop 实现，错误路径早返回会泄漏运行中的进程；子进程路线必须显式 `wait` 或 `kill`。 |
+| A111 | `ScopedJoinHandle::join` 消耗 self，不能在 `filter(|h| ...)` 的共享引用上调用；用 `into_iter().filter_map`。 |
+| A112 | 网关超时时把全量测试拆成 `--lib` / `--test` / `check` 三段，并用 `OnceLock` 缓存编译夹具；拆命令不算降验收项。 |
+| A113 | 不为单测造只被测试调用的生产函数（`has_id` / `reverse_order` 已删），行为验证移到真加载集成测试。 |
