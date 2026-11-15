@@ -89,3 +89,5 @@
 | 042 | 批量 query 编码与身份哈希 hex 交给库 | 已实现已验证；真实网络 IO 未启动 | 042-query-encoding-and-hex.md |
 
 | 043 | 统一信封 request_id 换成 UUID v5 | 已实现已验证；真实网络 IO 未启动 | 043-request-id-uuid-v5.md |
+
+| 044 | 插件侧栏 SVG 校验换成 quick-xml | 已实现已验证；真实网络 IO 未启动 | 044-plugin-icon-xml-parser.md |

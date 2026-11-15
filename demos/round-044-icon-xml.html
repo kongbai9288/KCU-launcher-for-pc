@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 044 插件 SVG 校验换成 XML 解析器</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:140px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>044 运行逻辑</h1><div class="sub">子串扫描 → XML 解析器 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>043 收口补验</h3><p id="m1">未运行</p><span class="badge g">8bb96d6</span><span class="badge g">922 / 922</span><span class="badge g">ALL_MATCH</span></div>
+<div class="mini"><h3>缺陷：子串扫描判 XML</h3><p id="m2">未运行</p><span class="badge r">单引号绕过</span><span class="badge r">带前缀事件名漏</span><span class="badge r">实体内部片段误杀</span><span class="badge r">src / 元素不查</span></div>
+<div class="mini"><h3>零新增传递依赖</h3><p id="m3">未运行</p><span class="badge g">quick-xml 0.38.4</span><span class="badge g">memchr 复用</span><span class="badge g">MSRV 1.56</span></div>
+<div class="mini"><h3>验证与自查</h3><p id="m4">未运行</p><span class="badge g">286 / 0</span><span class="badge g">原 8 断言未改</span><span class="badge g">windows-gnu</span></div>
+</div><div class="note" id="note">真实网络 IO、UI、崩溃分析未启动；Q-041 与 Q-037-01 仍等你答复。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','清理 043 残留 index.lock、读 024 台账'],
+['02','043 推送补验','远端 ref message + 完整 tree 逐项比对'],
+['03','逐字落盘','44-round-044-instructions.txt'],
+['04','定位自写扫描','icon.rs 的 contains / href=" 循环'],
+['05','复现五处缺口','单引号、前缀、实体、DOCTYPE、文本误杀'],
+['06','查真实 manifest','quick-xml v0.38.4 / memchr 已在构建'],
+['07','核 Reader API','from_str / read_event / attributes / unescape_value'],
+['08','vendor 与裁剪','裁 3 个 optional / dev / bench / features'],
+['09','许可三处齐备','1 份全文 + 关于页 25 组 + NOTICES 后才进 Cargo.toml'],
+['10','校验落地','事件遍历 + 禁元素清单 + on* + # 片段策略'],
+['11','边界回归','原 8 断言未改 + 9 个新边界'],
+['12','验证','286 测试、交叉检查、扫描、223 必读'],
+['13','提交推送','本地提交、远端快照、逐项哈希比对']];
+const DETAIL={'01':'REQ 217/217 OK LOCK_CLEAN','02':'V043 8bb96d6 REMOTE 922 LOCAL 922 ALL_MATCH True','03':'SPEC cmp 0','04':'SELF_WRITTEN contains href_quote_loop','05':'BUG single_quote unenumerated_on src doctype entity_fragment_false_reject','06':'MANIFEST quick_xml_v0.38.4 memchr_reuse zero_transitive','07':'API from_str read_event attributes unescape_value with_checks','08':'VENDOR optional_trim empty_features_declared','09':'LICENSE 3_places_ok then_dependency','10':'U70 Reader_events FORBIDDEN_ELEMENTS local_lower','11':'TEST 8_original_unchanged 11_new 19_icon','12':'TEST 260_lib + 26_int 286_total 0_failed WINDOWS_GNU_OK','13':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'043 补验','03':'逐字落盘','04':'定位自写代码','05':'缺陷复现','06':'真实 manifest','07':'API 核查','08':'vendor 裁剪','09':'许可闸门','10':'校验落地','11':'边界回归','12':'验证','13':'提交推送'};
+const QN=new Set(['04','05','06','07','08','10','11']);
+const M={'02':['m1','043 推送调用的工具结果被网关截断，这轮查远端 ref 是 `8bb96d6`、commit message `round 043 request id uuid v5`，完整树比对 REMOTE 922 LOCAL 922 MISSING 0 EXTRA 0 MISMATCH 0 **ALL_MATCH True**、truncated=False。内容已完整落盘，没重复推送、没强推、没重写历史；临时凭据已删。'],'05':['m2','037 版 `icon.rs` 是 `to_ascii_lowercase()` + `contains()` + 循环找 `href="` 的字符串扫描。回原码逐用例复核：单引号 `href` 绕过、只枚举三个事件名（`onmouseover` / `svg:onfocus` 漏）、`src` 与 `object` / `embed` 等元素完全不查、畸形标签 / DOCTYPE 不校验；实体编码的内部片段 `&#35;i-puzzle` 反被误杀。`OnLoad` / `svg:onclick` 旧版其实能挡，文本 `&lt;script&gt;` 旧版恰好也放行 —— 这两条只作不劣化回归。'],'08':['m3','`quick-xml 0.38.4` tag `v0.38.4`：MIT / edition 2021 / MSRV 1.56 / `default = []`；`[dependencies]` 只有 `memchr = "2.1"` 非 optional，`encoding_rs` / `serde` / `tokio` 全 optional。memchr 2.7.6 从 025 起已在构建，所以 `Cargo.lock` 25 → 26 包 / 25 第三方，**零新增传递依赖**。裁段后还要显式声明五个空 feature，否则上游 cfg 触发 unexpected_cfgs。'],'12':['m4','260 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0（36.78 s）+ 6 abi / 0（114.64 s）= **286 / 0**。`cargo check --offline --target x86_64-pc-windows-gnu` 通过，223 项必读非空，凭据 / 禁用词 / 同上 / P09 / hardcode 全零命中。界面闸门未触发，只重渲 4 张许可截图。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.verify','core.spec','core.audit','q.defect','q.research','q.api','q.vendor','q.license','q.construct','q.reference','core.verify','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='SVG 校验层已落地；Q-041 三选项、真实网络 IO 与崩溃分析仍等你。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='真实网络 IO、UI、崩溃分析未启动；Q-041 与 Q-037-01 仍等你答复。';}
+</script></body></html>

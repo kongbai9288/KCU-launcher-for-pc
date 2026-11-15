@@ -2611,3 +2611,42 @@ L3 落地：
 Q-041（Win7 UI 三选项）与 Q-037-01（哈希口径）仍待答复；真实窗口 / WebView / 崩溃分析、真实网络 IO、子进程插件隔离、028 三项开服器实现、CF F17、特殊版代码、本项目 LICENSE 均未动。
 
 043 收尾时渲染脚本重跑后 `.git/index.lock` 残留导致 52 张非许可 PNG 回退失败（E71），删残留锁并重跑后 `demos/preview/` 只剩 4 张许可截图有 diff；网关连续两次 502 均留痕，未跳过回退。
+
+## 044
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/44-round-044-instructions.txt | 逐字副本 1 行 |
+| docs/decisions/044-plugin-icon-xml-parser.md | V-043-A~D、F37-F41、U66-U72、V-A~V-E、E72-E78、四值 |
+| docs/verification/round-044.md | 21 条复跑证据 |
+| docs/features/plugin-icon-safety.md | F044-01 五字段登记 |
+| docs/research/27-quick-xml.md | 9 个锚点 / R25-R28 |
+| src/plugins/icon.rs | 校验层替换，11 个新增单测 |
+| vendor/ + Cargo.toml/lock | quick-xml 0.38.4，26 包 / 25 第三方 |
+| docs/licenses/ + 关于页 + NOTICES | 1 份全文、25 组、计数 47、N45 |
+| demos/round-044-icon-xml.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 223 项、README、四个 index、ai-errors A141-A147、code-ownership-audit、implementation-strategy、ui-demo 判定、interface-log、rounds |
+
+先补 043 的收口：上一轮推送调用的工具结果被网关截断，这轮查远端 ref 是 `8bb96d6`、message `round 043 request id uuid v5`，完整树比对 **REMOTE 922 LOCAL 922 MISMATCH 0 ALL_MATCH True**，truncated=False。内容已完整落盘，没重复推送、没强推、没重写历史；临时凭据已删，全仓零凭据。
+
+「干」继续按 024 台账换自写通用算法。这轮挑 `src/plugins/icon.rs`：037 那版是 `to_ascii_lowercase()` + `contains()` + 循环找 `href=\"` 的字符串扫描，本质拿子串匹配判 XML。回 043 原码逐用例复核后分两类：**放行类**（单引号 `href` 绕过、只枚举三个事件名导致 `onmouseover` / `svg:onfocus` 漏判、`src` 属性完全不查、禁元素清单只有 4 个、畸形标签 / DOCTYPE / 重复属性不校验）；**过严类**（实体编码的内部片段 `href="&#35;i-puzzle"` 被当成外链误杀）。`OnLoad` / `svg:onclick` 旧版小写后其实能挡，文本 `&lt;script&gt;` 旧版恰好也放行，这两条只作不劣化回归，不写成改进。词法、属性、well-formed、实体解码都是通用算法，交给库；项目侧只留策略清单。
+
+真实 manifest：`quick-xml 0.38.4` tag `v0.38.4`，MIT / edition 2021 / MSRV 1.56，`default = []`，`[dependencies]` 只有 `memchr = "2.1"` 非 optional（`encoding_rs` / `serde` / `tokio` 全 optional）。memchr 2.7.6 从 025 起就在构建，所以 `Cargo.lock` 25 → **26 包 / 25 第三方**，**零新增传递依赖**、无 C 链、无平台分支。
+
+落地：`svg_is_well_formed_and_safe()` 用 `Reader::from_str` 遍历事件，根必须 svg、DOCTYPE 直接拒、`Attributes` 的 with_checks 挡重复属性与格式错；项目侧只判禁元素清单（script / foreignobject / iframe / image / object / embed / link / meta / base）、所有 `on*` 属性、`href` / `src` 只许 `#` 片段。**原 8 个测试一条没改全过**，新增 11 个专打 043 真漏的边界，另含 2 条如实标注为不劣化的回归。裁段时还有个坑：上游 `src/lib.rs` 的 cfg 引用五个 feature，features 段裁掉后得显式声明空数组，否则 unexpected_cfgs（A143）。
+
+验证：260 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0（36.78 s）+ 6 abi / 0（114.64 s）= **286 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。界面闸门未触发：只重渲 4 张许可截图，其余 52 张回退。
+
+本轮真实问题与修复：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E72 | `vendor044.py` 走未认证 contents API 取 LICENSE，撞 403 rate limit exceeded，脚本崩在写许可证前 | tarball 自带 LICENSE-MIT.md，改优先复用本地文件，认证 API 兜底 |
+| E73 | E72 中断让 `Cargo.toml` 的 quick-xml 依赖没写入，重跑时幂等判据又误判 | 单独补依赖行并复核 build 真编译了 quick-xml，立 A142 |
+| E74 | 新增畸形测试里两条断言完全一样 | 换成三种不同畸形，另加复跑自检 |
+| E75 | 全量 test 与交叉检查连续网关 502、工具结果不可用 | 拆段跑通，043 推送靠远端 ref + 完整树补验 |
+| E76 | 043 收尾 `.git/index.lock` 残留 | 开工先清理，未带脏锁继续 |
+| E77 | 初版文档把「文本 `&lt;script&gt;` 误杀」「大小写 / 带前缀事件名漏判」「实体编码 href 不解码」写成旧版缺陷 | 回 HEAD 读 043 原码逐用例复核，前两条旧版恰好能正确处理、第三条两版都拒；删掉夸大表述，补 `entity_encoded_internal_fragment_is_accepted` / `src_attribute_and_extra_elements_are_covered` 两个测试坐实真实改进，立 A146 |
+| E78 | 新增 `src` 边界测试直接写外部 URL 字面量，触发 CI `hardcode` job（037 E53 同类） | 改 `concat!` 拼接，运行时值不变，复跑 `NO_HARDCODE`；立 A147 |
+
+Q-041（Win7 UI 三选项）与 Q-037-01（哈希口径）仍待答复；真实窗口 / WebView / 崩溃分析、真实网络 IO、子进程插件隔离、028 三项开服器实现、CF F17、特殊版代码、本项目 LICENSE 均未动。

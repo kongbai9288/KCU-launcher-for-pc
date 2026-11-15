@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 043 |
+| 当前轮次 | 044 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -217,3 +217,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `src/core/envelope.rs` 原来用进程内 `AtomicU64` 生成 `kcu-00000001`，重启就重复，诊断包与 F010 跨进程统一信封会串会话。这轮落 `uuid 1.18.1`（只开 `std` + `v5`）+ `sha1_smol 1.0.1`：**零随机数源、零平台分支、零 C 链**，Win7 Tier 3 友好。SHA-1、128 位截断、version / variant 位布局全交给库，name 输入带 pid 与启动纳秒，跨进程与 pid 复用都不撞 ID；4 个期望值由 Python 标准库 `uuid.uuid5` 独立算出。
 
 `Cargo.lock` **25 包 / 24 第三方**，3 份 LICENSE 全文 + 关于页 24 组 / 46 + NOTICES 三处齐备。`cargo test --offline` 合计 **275/0**（249 单元 + 26 集成），`cargo check` 零 warning，Windows GNU 交叉检查通过。界面与 56 张 PNG 只动了 4 张许可截图。
+
+## 044 插件侧栏 SVG 校验换成 quick-xml
+
+043 推送的工具结果被网关截断，本轮补验：远端 `8bb96d6` / message `round 043 request id uuid v5`，**922/922 文件 ALL_MATCH True**，内容完整落盘。
+
+037 的 `icon.rs` 用子串扫描判 XML：单引号 `href`、带前缀事件名、实体编码外链都能绕，文本里的 `&lt;script&gt;` 又会误杀正常图标。这轮落 `quick-xml 0.38.4`（MIT / MSRV 1.56 / 只依赖已在构建的 memchr，**零新增传递依赖**），词法、属性、实体解码、well-formed 全交给库，项目侧只留禁元素与 URI 策略。原 8 个断言未改全过，新增 11 个边界。
+
+`Cargo.lock` **26 包 / 25 第三方**，1 份 LICENSE 全文 + 关于页 25 组 / 47 + NOTICES 三处齐备。`cargo test --offline` 合计 **286/0**（260 单元 + 26 集成），Windows GNU 交叉检查通过。界面与 56 张 PNG 只动了 4 张许可截图。

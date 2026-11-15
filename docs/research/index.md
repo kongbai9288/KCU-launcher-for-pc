@@ -219,3 +219,5 @@
 | 25 | 25-percent-encoding-hex.md | batch query 编码与 hex 库一手资料 | 8 已证实 |
 
 | 26 | 26-uuid-v5.md | UUID v5、uuid / sha1_smol 闭包与 RFC 9562 | 9 已证实 |
+
+| 27 | 27-quick-xml.md | quick-xml 0.38.4 闭包、Reader / Attributes API | 9 已证实 |

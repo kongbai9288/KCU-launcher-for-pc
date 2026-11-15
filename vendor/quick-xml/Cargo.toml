@@ -1,0 +1,33 @@
+[package]
+name = "quick-xml"
+version = "0.38.4"
+description = "High performance xml reader and writer"
+edition = "2021"
+
+documentation = "https://docs.rs/quick-xml"
+repository = "https://github.com/tafia/quick-xml"
+
+keywords = ["xml", "serde", "parser", "writer", "html"]
+categories = ["asynchronous", "encoding", "parsing", "parser-implementations"]
+license = "MIT"
+rust-version = "1.56"
+# We exclude tests & examples & benches to reduce the size of a package.
+# Unfortunately, this is source of warnings in latest cargo when packaging:
+# > warning: ignoring {context} `{name}` as `{path}` is not included in the published package
+# That may become unnecessary once https://github.com/rust-lang/cargo/issues/13491
+# will be resolved
+include = ["src/*", "LICENSE-MIT.md", "README.md"]
+
+[dependencies]
+memchr = "2.7"
+
+[features]
+default = []
+serialize = []
+serde-types = []
+encoding = []
+async-tokio = []
+overlapped-lists = []
+
+[lints.rust]
+unexpected_cfgs = { level = "allow" }

@@ -364,3 +364,16 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 `src/core/envelope.rs` 的 `AtomicU64` + `format!("kcu-{:08x}", n)` 换 `Uuid::new_v5`；SHA-1、128 位截断、version / variant 位布局全交给库，项目侧只提供 name 输入（pid / 启动纳秒 / 序号 / kind / target）。4 个期望值由 Python 标准库 `uuid.uuid5` 独立算出，不用本仓库实现自证。
 
 修复了一个真实缺陷：原 ID 只在单进程内单调，重启即重复，F010 跨进程统一信封的日志会串会话。剩余自写仍是 `launcher.rs`、lightweight 系列与 `paths/popup/userflow` 等业务编排；035 已登记它们没有语义等价的库可换。
+
+## 044 插件 SVG 校验（+1 crate）
+
+| 项 | 043 | 044 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 24 | **25**（+quick-xml） |
+| `Cargo.lock` 包数 | 25 | **26**（零新增传递依赖，memchr 复用） |
+| `src/` 行数 | 5896 | **6072** |
+| 测试 | 249 单元 + 26 集成 = 275 | **260 单元 + 26 集成 = 286** |
+
+`src/plugins/icon.rs` 的 `to_ascii_lowercase` + `contains` + 循环找 `href=\"` 字符串扫描换成 `quick_xml::Reader::from_str` 事件遍历；词法、属性格式、实体解码、well-formed 全交给库，项目侧只留禁止元素清单与三条策略。原 8 个断言未改全过，新增 11 个边界（单引号 href、`on*` 前缀、带前缀未枚举事件名、`src` 与 5 个额外禁元素、畸形 XML、DOCTYPE、重复属性、转义文本不劣化、自闭合根、实体编码外链、实体编码内部片段放行）。
+
+这是一次**真实安全性修复**，不只是换库：043 版单引号属性与带前缀事件名都能绕过检查。剩余自写仍是 `launcher.rs`、lightweight 系列与 `paths/popup/userflow` 等业务编排；035 已登记它们没有语义等价的库可换。

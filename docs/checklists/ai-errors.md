@@ -280,3 +280,15 @@
 | A138 | ID 生成类替换要有独立实现算出的期望值（本轮 Python 标准库 uuid5），并验证 version / variant / 长度。 |
 | A139 | 仓库 API 的 `license.spdx_id` 为 NOASSERTION 时，按 crate manifest 声明的许可证用并落全部 LICENSE 全文，不据此跳过登记。 |
 | A140 | 网关 502 中断会留下 `.git/index.lock`；回退或提交前先检查并清理残留，不带着脏锁继续跑。 |
+
+## 044 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A141 | tarball 里已带 LICENSE 时优先复用本地文件，未认证 contents API 会撞 403 限流，不该让脚本崩在写许可证这一步。 |
+| A142 | vendor 脚本分段失败后，要复核后续副作用（如 Cargo.toml 依赖写入）是否真的执行；幂等判据可能误以为已完成。 |
+| A143 | 裁掉 features 段后，上游 `#[cfg(feature = "...")]` 引用的 feature 名仍要显式声明为空数组，否则 unexpected_cfgs。 |
+| A144 | 子串扫描不等于格式校验；遇到 XML / HTML / JSON 类输入，先换解析器再谈策略清单，别用 contains 堆黑名单。 |
+| A145 | 推送工具结果被网关截断时，用远端 ref message + 完整 tree 比对补验，不重复推送、不强推、不重写历史。 |
+| A146 | 写「旧版缺陷」前回 HEAD 读原码逐用例复核；把「恰好也能挡」写成改进属于夸大，只作不劣化回归。 |
+| A147 | 新增测试里的外部地址字面量会触发 CI hardcode 扫描；用 concat 拼接，别等验证者来抓。 |

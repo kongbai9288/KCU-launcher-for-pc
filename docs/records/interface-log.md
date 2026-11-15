@@ -552,3 +552,11 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I55 | `src/core/envelope` | 新增 `derive_id` / `session_seed`；`Envelope::new` 的 request_id 改 UUID v5 |
 | I56 | `vendor/uuid` / `vendor/sha1_smol` | 两个零平台分支 crate 进构建 |
 | S42 | 状态 | U58–U65 已证实；Q-041 / Q-037-01 仍挂；真实网络 IO、UI、崩溃分析未启动 |
+
+## 044 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I57 | `src/plugins/icon` | 新增 `svg_is_well_formed_and_safe` / `local_lower` / `element_ok`；`from_svg` 改走 quick-xml |
+| I58 | `vendor/quick-xml` | 零新增传递依赖，memchr 复用 025 已有 |
+| S43 | 状态 | U66–U72 已证实；Q-041 / Q-037-01 仍挂；真实网络 IO、UI、崩溃分析未启动 |

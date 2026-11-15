@@ -222,3 +222,11 @@
 | sha1_smol-LICENSE.txt | sha1_smol 1.0.1 | BSD-3-Clause（2719 B） |
 
 来源：`uuid-rs/uuid` tag `v1.18.1`、`mitsuhiko/sha1-smol` tag `1.0.1`，逐字副本。uuid 仓库 GitHub API 的 SPDX 是 NOASSERTION（两份 LICENSE 并存），按 crate manifest 的 `Apache-2.0 OR MIT` 用，两份全文都落盘。
+
+## 044 新增（已进构建依赖）
+
+| 文件 | 项目 | 许可证 |
+| --- | --- | --- |
+| quick-xml-LICENSE-MIT.txt | quick-xml 0.38.4 | MIT（1082 B） |
+
+来源：`tafia/quick-xml` tag `v0.38.4` 根 `LICENSE-MIT.md`，逐字副本。未认证 contents API 撞 403 限流，改用 codeload tarball 内自带的同名文件，内容一致。
