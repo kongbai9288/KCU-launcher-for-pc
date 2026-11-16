@@ -281,3 +281,5 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `src/core/endpoints.rs`：`plan()` 从 `config.endpoints["download/batch"]` 取 scheme / authority / path，缺省才回内置常量。完整 URL 由 `http::Uri` 解析，8 类不可用配置回退并带 `reason`，不 panic。`ProviderConfig` 加 `with_endpoint` / `with_app_config`，`Downloader::endpoint()` 暴露来源。
 
 `cargo test --offline --lib` **298 / 0**（新增 18），全量 **324 / 0**，`cargo check --target x86_64-pc-windows-gnu` 通过，四守卫零命中。零新增依赖，仍 **26 包 / 25 第三方**。UI 闸门未触发，UX HTML 与 56 张 PNG 零 diff。
+
+| 交付快照 | 本地 `9a32d4d` ↔ 远端 `15a0e3d`，1014 文件 ALL_MATCH True |

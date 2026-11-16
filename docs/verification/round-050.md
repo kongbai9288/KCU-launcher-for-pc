@@ -43,3 +43,15 @@
 | GUI 端到端、真实 HTTP、浏览器渲染遍历 | 受阻 |
 
 限制：改动作者未代改验证结论，未降低验收项；324 个测试是回归，不作质量结论。
+
+## 交付快照
+
+| 项 | 值 |
+| --- | --- |
+| 本地主快照 | `9a32d4d` |
+| 远端主快照 | `15a0e3d`（`round 050 endpoint config resolves B03 hardcoded scheme and path`） |
+| 远端 tree | `0d970f0` |
+| 文件数 | 本地 1014 / 远端 blob 1014 |
+| 逐项比对 | `ALL_MATCH True`，DIFF 0，EXTRA 0，tree `truncated=false` |
+| 通道 | GitHub Git Data API，8 线程并发、复用远端已有 blob 906 个、增量 19 项 |
+| 凭据 | 临时载体在仓库外，核对后删除；全仓 `NO_CREDENTIAL`，`.git/config` 干净 |
