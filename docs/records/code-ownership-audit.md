@@ -422,3 +422,17 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 双向验证真跑：注入 `v == b` 后守卫 FAIL、行为测试 FAILED（`left: Reject / right: Install`），恢复后守卫 OK、policy 12/0。
 
 **如实登记**：项目内比较写法修正 + 机器约束，不是第三方库替换；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。自写通用算法已收敛，剩余是项目特有编排。
+
+## 048 健壮性与文案归位（零新增依赖）
+
+| 项 | 047 | 048 |
+| --- | --- | --- |
+| 第三方 crate 进构建 | 25 | **25**（不变） |
+| `Cargo.lock` 包数 | 26 | **26**（不变） |
+| `src/` 文件 | 36 | **37**（+ `core/robust.rs`） |
+| `src/` 行数 | 6245 | **6526** |
+| 测试 | 269 单元 + 26 集成 = 295 | **280 单元 + 26 集成 = 306** |
+
+`src/core/robust.rs` 241 行：文本/id 边界、基于 `std::path::Component` 的路径策略、文件被删或损坏的回退、必需文件明确报错、`OpBudget` 高频限流。接入 `http::plan` 与 `PathResolver::resolve_relative`。`src/plugins/fault.rs` 4 处产品层中文改成语义 key。
+
+**如实登记**：标准库 API 用法 + 项目策略清单 + 文案归位，不是第三方库替换；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。新增 `scripts/i18n_guard.py` 与 CI step。自写通用算法已收敛，剩余是项目特有编排与业务规则。

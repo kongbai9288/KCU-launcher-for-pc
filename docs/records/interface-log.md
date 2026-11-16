@@ -587,3 +587,14 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I66 | `src/dispatcher/launcher` | 取消分支 `diagnostics[0]` 裸索引改局部变量 |
 | I67 | CI | scan job 加 `semver_guard` step，脚本 `scripts/semver_guard.py` |
 | S46 | 状态 | U94–U98 已证实；零新增依赖；Q-047-01 / EQ-13 待拍板 |
+
+## 048 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I68 | `src/core/robust` | 新增模块：文本/id 边界、`safe_join`、`read_or_default`、`require_file`、`OpBudget` |
+| I69 | `src/core/http` / `paths` | `plan` 接 `check_ids`；新增 `resolve_relative` |
+| I70 | `src/plugins/fault` | 4 处产品层中文改 5 个语义 key + `body_args` |
+| I71 | `demos/ui-full-kcu-paper.html` | 399 中文 key + 405 裸节点收敛为 659 组 `ZH_TEXT`/`EN_TEXT` |
+| I72 | CI | scan job 加 `i18n_guard` step，脚本 `scripts/i18n_guard.py` |
+| S47 | 状态 | U99–U103 已证实；零新增依赖；EQ-14 / EQ-15 待拍板 |

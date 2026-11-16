@@ -22,19 +22,21 @@ pub struct StartupPlan {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FaultReport {
-    pub title: String,
-    pub body: String,
-    pub primary: String,
-    pub secondary: String,
+    pub title_key: String,
+    pub body_key: String,
+    pub body_args: Vec<String>,
+    pub primary_key: String,
+    pub secondary_key: String,
     pub closable: bool,
 }
 
 pub fn fault_report(fault: &PluginFault) -> FaultReport {
     FaultReport {
-        title: "插件加载失败".to_string(),
-        body: format!("插件 {} 没能正常加载：{}。", fault.plugin_id, fault.reason),
-        primary: "禁用并继续尝试启动".to_string(),
-        secondary: "取消".to_string(),
+        title_key: "fault.title".to_string(),
+        body_key: "fault.body".to_string(),
+        body_args: vec![fault.plugin_id.clone(), fault.reason.clone()],
+        primary_key: "fault.action.disable".to_string(),
+        secondary_key: "fault.action.cancel".to_string(),
         closable: true,
     }
 }
@@ -83,9 +85,11 @@ mod tests {
     #[test]
     fn report_has_the_two_actions_and_is_closable() {
         let r = fault_report(&fault());
-        assert!(r.body.contains("b"));
-        assert_eq!(r.primary, "禁用并继续尝试启动");
-        assert_eq!(r.secondary, "取消");
+        assert_eq!(r.title_key, "fault.title");
+        assert_eq!(r.body_key, "fault.body");
+        assert_eq!(r.body_args[0], "b");
+        assert_eq!(r.primary_key, "fault.action.disable");
+        assert_eq!(r.secondary_key, "fault.action.cancel");
         assert!(r.closable);
     }
 
@@ -131,6 +135,6 @@ mod tests {
     #[test]
     fn reason_is_carried_into_report() {
         let r = fault_report(&PluginFault { plugin_id: "x".into(), reason: "签名校验失败".into() });
-        assert!(r.body.contains("签名校验失败"));
+        assert_eq!(r.body_args[1], "签名校验失败");
     }
 }

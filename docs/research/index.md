@@ -225,3 +225,5 @@
 | 28 | 28-parking-lot-closure.md | parking_lot 0.12.5 闭包与 libc 受阻项 | 5 已证实 |
 
 | 29 | 29-std-mutex-poison.md | std Mutex poisoning 与 into_inner 恢复入口 | 5 已证实 |
+
+| 30 | 30-input-hardening.md | 路径穿越与破坏性输入一手资料 | 7 已证实 |

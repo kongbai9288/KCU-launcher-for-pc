@@ -158,3 +158,23 @@
 要选：① 回滚也要求 `user_confirmed_upgrade`（统一为 3 个条件）② 回滚保持 2 个条件（显式目标 + 二次确认已足够）③ 由更新器插件自己在调用前弹确认，两处都不判。
 
 不选：两条路径对同一操作给出相反结果，Q-047-01 悬空；047 只统一了 `+build` 相等判定，未改条件数量。单页见 `docs/records/eq13-rollback-conditions.md`。
+
+---
+
+**EQ-14 演示数据源语言包迁移（048）**
+
+环境：`demos/ui-full-kcu-paper.html` 的 `<script>` 段有 `NOTICES` / `POPUPS` / `INS` / `SRV` / `AUTH` / `OB` / `CREDITS` / `AUTO_EFFECT` 等常量数组，298 行含中文（671 个单引号字符串 / 503 唯一、11 个模板串、36 个双引号片段）。023 定的实现方案是 Project Fluent `.ftl` + `i18n-embed`，语言包放 `C:\KCU\i18n\<locale>\`，插件可追加。当前 `src/` 无 Fluent 依赖（`Cargo.lock` 26 包 / 25 第三方）。英文态 `EN_TEXT` 有 567 条回退中文。
+
+要选：① 实现层按 023 落 Fluent，演示层只保留 key 与最小占位数据 ② 演示层先拆出独立 `demos/lang/*.json`，中文/英文各一份，`setLang` 时重建数组 ③ 演示数据源维持现状，明确标注「仅中文演示数据」，不承诺英文态。
+
+不选：英文态切语言后公告正文、弹窗描述、表格行仍是中文。详见 `docs/records/requirement-compliance-audit.md`。
+
+---
+
+**EQ-15 端点配置化（048）**
+
+环境：`src/lightweight/download.rs::plan` 硬编码 `scheme = "https"`、`path = "/v1/batch"`；`src/core/config.rs` 已有 `endpoints` 表与 `set_endpoint` / `endpoint`，但 `plan()` 没读它。00-requirements 第 7.3 节「禁止硬编码环境假设」，11-features-input「尽量不要 api 写死…那些联网他们有可能后面会更新相关的端口」。
+
+要选：① `plan()` 改从 `Config::endpoint` 取 scheme / authority / path，缺省才回内置 ② 保持代码内常量，但集中到 `src/core/endpoints.rs` 单文件 ③ 维持现状，登记为已知偏差。
+
+不选：B03 保持未遵守。详见 `docs/records/requirement-compliance-audit.md`。

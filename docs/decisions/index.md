@@ -97,3 +97,5 @@
 | 046 | 毒化恢复全覆盖 + 信封协议字段 + CI 守卫 | 已实现已验证；上层未启动 | 046-poison-guard-and-envelope-code.md |
 
 | 047 | 回滚目标版本比较缺陷 + 双守卫 | 已实现已验证；上层未启动 | 047-rollback-version-precedence.md |
+
+| 048 | 硬编码清零、破坏性输入防护、原始需求合规核对 | 已实现已验证；上层未启动 | 048-hardening-i18n-compliance.md |

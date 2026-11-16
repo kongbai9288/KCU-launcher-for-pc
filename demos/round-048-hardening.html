@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 048 硬编码清零、破坏性防护与合规核对</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:310px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:148px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>048 运行逻辑</h1><div class="sub">硬编码清零 / 破坏性防护 / 合规核对 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>硬编码核查</h3><p id="m1">未运行</p><span class="badge r">fault.rs 4 处</span><span class="badge r">399 中文 key</span><span class="badge r">405 裸节点</span></div>
+<div class="mini"><h3>文案归位</h3><p id="m2">未运行</p><span class="badge g">659 组字典</span><span class="badge g">i18n_guard</span><span class="badge r">298 行数据源未抽离</span></div>
+<div class="mini"><h3>破坏性防护</h3><p id="m3">未运行</p><span class="badge g">路径穿越 / 保留名</span><span class="badge g">id 洪泛 / 超长</span><span class="badge g">删文件回退 / 限流</span></div>
+<div class="mini"><h3>合规核对</h3><p id="m4">未运行</p><span class="badge r">B 类 10 条未遵守</span><span class="badge r">C 类 10 条擅自定默认</span><span class="badge r">D 类 9 组未启动</span></div>
+</div><div class="note" id="note">EQ-14 / EQ-15 新增；B/C/D 三类偏差未代你决断。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','核 047 远端、清临时凭据'],
+['02','逐字落盘','48-round-048-instructions.txt'],
+['03','三轨拆分','硬编码 / 防护 / 合规，不合并'],
+['04','扫硬编码','src 4 处、DOM 399 key、405 裸节点'],
+['05','查 032 遗漏','只修了设置分组 27 处'],
+['06','文案归位','5 个语义 key + 659 组字典'],
+['07','守卫双向','注入中文 key 即 FAIL'],
+['08','查 OWASP','只接受已知好值，不清洗'],
+['09','落地 robust','8 类场景、37 文件零新增依赖'],
+['10','接入调用点','http::plan / paths::resolve_relative'],
+['11','合规核对','A/B/C/D 四类逐条'],
+['12','验证','306 测试、三守卫、56 张 PNG 重渲'],
+['13','提交推送','本地提交、远端快照、逐项哈希比对']];
+const DETAIL={'01':'V047 d71e8b5 990_files CLEAN','02':'SPEC cmp 0','03':'TRACKS 3 independent','04':'HIT rs_4 dom_key_399 bare_405','05':'E032 only_27_fixed','06':'U99_U100 5_keys 659_pairs','07':'U101 inject_data_i18n_首页 FAIL_1 restore_OK','08':'R36 known_good_not_sanitize','09':'U102 robust_241_lines 8_tests','10':'U102 check_ids safe_join','11':'U103 A11 B10 C10 D9groups EQ14_EQ15','12':'TEST 280_lib + 26_int 306_total 0_failed WINDOWS_GNU_OK GUARDS_3_OK PNG_56','13':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'三轨拆分','04':'硬编码扫描','05':'查遗漏','06':'文案归位','07':'守卫双向','08':'查一手资料','09':'落地防护','10':'接入调用点','11':'合规核对','12':'验证','13':'提交推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12']);
+const M={'04':['m1','`src/plugins/fault.rs` 4 处产品层中文字符串（037 落地故障弹窗时写的）；`ui-full-kcu-paper.html` 里 **399 个** `data-i18n` 值直接是中文（344 唯一）、**405 个**含中文的标签没有 key。032 只修了设置分组 27 处中文 key。'],'06':['m2','产品层改成 5 个语义 key + `body_args`；DOM 层生成 **659 组** `ZH_TEXT`/`EN_TEXT`，`tr()` 中文态走字典；新增 `i18n_guard.py` + CI step，双向验证注入 `data-i18n="首页"` 即 FAIL、恢复 OK。**如实登记**：script 数据源 298 行中文未抽离、英文态 567 条回退中文、2 份历史稿显式排除。'],'09':['m3','OWASP Path Traversal：「只接受已知好值，不要清洗」。`src/core/robust.rs` 241 行：文本/id 边界、基于 `std::path::Component` 拒绝对路径与 `..` 越界、Windows 保留名、超深、控制字符；文件被删/损坏回默认并带标志、必需文件明确报错；`OpBudget` 1 秒滚动窗口限流，锁中毒走 `PoisonError::into_inner`。8 个测试真跑。`Cargo.toml`/`Cargo.lock`/`vendor/` 一行未动。'],'11':['m4','`requirement-compliance-audit.md` 把 00-requirements（261 行）+ 两份功能输入逐条分四类：A 已决断且遵守 11 条、**B 已决断但未遵守 10 条**（交付格式缺时间戳/自我批判、开工未逐字复读、`/v1/batch` 与 `https` 写死、未用 UI 框架、未引 HMCL 代码、声明页三项未做、插件独立进程未实现、境外限制未实现、32 位未验证、未停在完全无法失误）、**C 未决断我擅自定默认 10 条**（轻量 13 项排除、单主题、纯 std 例外、身份哈希、A 未重审、推荐位、上层起手、导航 9 项、028 默认值、历史稿）、**D 文档要求但标未启动 9 组**。新增 EQ-14 / EQ-15，本轮未代你决断。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','core.split','q.audit','q.research','q.construct','q.reference','q.research','q.construct','q.construct','q.audit','core.verify','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===12)document.getElementById('note').textContent='三轨已落地；EQ-01 ~ EQ-15 仍等你按编号拍板，B/C/D 偏差未代你决断。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},220);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='EQ-14 / EQ-15 新增；B/C/D 三类偏差未代你决断。';}
+</script></body></html>

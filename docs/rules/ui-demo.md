@@ -299,3 +299,7 @@ python3 scripts/render_ui.py
 ## 047 闸门判定
 
 本轮改的是 `src/updater/policy.rs` / `launcher.rs` 与 CI 脚本，不产生任何界面变化；`demos/preview/` 与 `demos/ui-full-kcu-paper.html` 零 diff。沿用 036 / 038–046 的先例判**未触发**。
+
+## 048 闸门判定
+
+本轮改动了 `demos/ui-full-kcu-paper.html` 的文案属性（399 个中文 key → 语义 key、405 个裸节点注入 `data-i18n`），属界面演示变更，**闸门触发**。按规则重渲 `python3 scripts/render_ui.py`：shots=51、56 张 PNG、总览 2549707 B；读 `01-home.png` 实拍确认中文完整、无 `t.NNNN` 顶替。`src/` 无界面实现改动，实现层仍等手感确认。

@@ -2754,3 +2754,39 @@ EQ-01 ~ EQ-12 具体环境仍待拍板（045 已交）；真实网络 IO、UI �
 另交 **EQ-13 / Q-047-01**：`decide`（036）回滚要 2 个条件，`decide_upgrade`（037）要 3 个（多 `user_confirmed_upgrade`），同一输入给出 `Install` / `Reject` 相反结果。本轮只统一了 `+build` 相等判定，**没改条件数量**，具体环境与三个选项已列进环境清单，等你拍板。
 
 EQ-01 ~ EQ-12 具体环境仍待拍板（045 已交）；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。
+
+## 048
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/48-round-048-instructions.txt | 逐字副本 |
+| docs/decisions/048-hardening-i18n-compliance.md | V-047-A~C、U99-U103、V-A~V-F、E89-E92、四值 |
+| docs/verification/round-048.md | 24 条复跑证据 |
+| docs/research/30-input-hardening.md | 7 个锚点 / R36-R39 |
+| docs/records/requirement-compliance-audit.md | **主交付之一**：A/B/C/D 四类逐条核对 |
+| src/core/robust.rs / http.rs / paths.rs / plugins/fault.rs | 防护模块、接入、文案归位 |
+| scripts/round048_i18n.py / i18n_guard.py / .github/workflows/ci.yml | 转换脚本、守卫、CI step |
+| demos/ui-full-kcu-paper.html + demos/preview/ | 659 组字典、56 张 PNG 重渲 |
+| demos/round-048-hardening.html | 13 步运行逻辑演示 |
+| 索引与记录 | docs/index 247 项、README、两个 index、ai-errors A161-A165、code-ownership-audit、implementation-strategy、ui-demo 闸门判定、interface-log、rounds |
+
+你指出三件事：还有硬编码文字、暴力测试/删文件要预防、原始文档里未决断的地方有没遵守。三轨并行处理，没合并成一个「优化」。
+
+**硬编码**：查到 `src/plugins/fault.rs` 4 处产品层中文（037 落地故障弹窗时写的）；`ui-full-kcu-paper.html` 里 399 个 `data-i18n` 值直接是中文（344 唯一）、405 个裸中文文本节点无 key —— 032 只修了设置分组 27 处。全部收敛：产品层改 5 个语义 key + `body_args`，DOM 层生成 659 组 `ZH_TEXT`/`EN_TEXT`，`tr()` 中文态走字典。新增 `i18n_guard.py` + CI step，双向验证注入 `data-i18n="首页"` 即 FAIL、恢复 OK；历史作废稿 2 份显式排除并打印。如实登记三处未清零：script 数据源 298 行中文、英文态 567 条回退中文、两版历史稿。
+
+**破坏性防护**：一手资料取 OWASP Path Traversal（「只接受已知好值，不要清洗」、`%2e%2e%2f` 变体）与 `std::path::Component`。新增 `src/core/robust.rs` 241 行：文本/id 边界、拒绝绝对路径与 `..` 越界、Windows 保留名、超深、控制字符；文件被删/损坏回默认并带标志、必需文件给明确错误；`OpBudget` 1 秒滚动窗口限流。接入 `http::plan`（构造请求前拦 id 洪泛）与 `PathResolver::resolve_relative`。8 个测试真跑删文件→回退→写回→再删、10 万个 id 被拒、8 线程并发不超上限、锁中毒仍可服务。
+
+**合规核对**：`requirement-compliance-audit.md` 把 00-requirements（261 行）+ 两份功能输入分成四类：A 已决断且遵守 11 条、B **已决断但未遵守 10 条**（交付格式缺时间戳/自我批判、开工未逐字复读原文、`/v1/batch` 与 `https` 写死、未用 UI 框架、未引 HMCL 代码、声明页三项内容未做、插件独立进程未实现、境外限制未实现、32 位未验证、未停在「完全无法失误」）、C **未决断我擅自定默认 10 条**（轻量 13 项排除、实现层单主题、L1–L3 纯 std 例外、身份哈希口径、「两个问题 A」未随澄清重审、推荐位 10 处与 SLP 六类、上层起手顺序、一级导航 9 项、028 三个默认值、历史稿保留）、D **文档要求但标未启动 9 组**。新增 EQ-14（演示数据源语言包迁移）与 EQ-15（端点配置化），本轮未代你决断。
+
+验证：280 单元 / 0 + 7 http_construct / 0 + 6 窗口契约 / 0 + 7 lifecycle / 0 + 6 abi / 0 = **306 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过；三守卫零命中、CI scan 7 steps、37 份 HTML 脚本通过。`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。UI 闸门触发：`render_ui.py` 重渲 51 场景 / 56 张 PNG，读 `01-home.png` 实拍确认中文完整、无 key 顶替。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E89 | `i18n_guard` 首版扫全部 `ui-full-*.html`，两份作废历史稿 299 处中文判 FAIL | 设 ACTIVE 集合，排除项显式输出 |
+| E90 | 词级补译只修 4 条，567 条英文态仍回退中文 | 如实登记，列 EQ-14 |
+| E91 | 首次统计把 `<style>` / `<title>` 算成裸中文节点 | 设 `SKIP_TAGS`，重跑 DOM 裸节点 0 |
+| E92 | 文案属性改造后需确认渲染没被 key 顶替 | 读首页 PNG 实拍确认 |
+
+EQ-01 ~ EQ-15 具体环境仍待拍板；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。

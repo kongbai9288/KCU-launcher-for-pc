@@ -79,3 +79,5 @@ jobs:
         run: python3 scripts/panic_guard.py
       - name: semver_guard
         run: python3 scripts/semver_guard.py
+      - name: i18n_guard
+        run: python3 scripts/i18n_guard.py

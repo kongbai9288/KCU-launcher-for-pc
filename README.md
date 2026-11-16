@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 047 |
+| 当前轮次 | 048 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -253,3 +253,13 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 双向验证真跑：注入 `v == b` 后守卫 FAIL、行为测试 FAILED（`left: Reject / right: Install`），恢复后守卫 OK、policy 12/0。`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。
 
 `cargo test --offline` 合计 **295/0**（269 单元 + 26 集成），Windows GNU 交叉检查通过，界面与 56 张 PNG 零 diff。另交 **EQ-13 / Q-047-01**：两条回滚路径条件数不同（2 个 vs 3 个），本轮只统一相等判定、没改条件数量，等你拍板。
+
+## 048 硬编码清零、破坏性防护、合规核对
+
+`src/plugins/fault.rs` 4 处产品层中文改成 5 个语义 key；`demos/ui-full-kcu-paper.html` 399 个中文 key 与 405 个裸中文节点收敛为 **659 组** `ZH_TEXT`/`EN_TEXT`；新增 `scripts/i18n_guard.py` 与 CI step，双向验证通过。历史稿 2 份显式排除。
+
+新增 `src/core/robust.rs`：长度/空值/控制字符、id 洪泛、基于 `std::path::Component` 的路径穿越与保留名拒绝、文件被删或损坏回退、必需文件明确报错、`OpBudget` 高频限流。接入 `http::plan` 与 `PathResolver::resolve_relative`。
+
+`docs/records/requirement-compliance-audit.md` 把原始需求逐条分成四类：已决断且遵守 11 条、**已决断但未遵守 10 条**、**未决断我擅自定默认 10 条**、文档要求但标未启动 9 组。新增 EQ-14 / EQ-15 待拍板。
+
+`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。`cargo test --offline` 合计 **306/0**（280 单元 + 26 集成），Windows GNU 交叉检查通过，三守卫零命中，56 张 PNG 重渲并人眼确认中文完整。

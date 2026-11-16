@@ -41,6 +41,12 @@ impl PathResolver {
     pub fn logical_names(&self) -> Vec<&'static str> {
         LOGICAL.iter().map(|(name, _)| *name).collect()
     }
+
+    /// 用户给出的相对路径必须落在已登记的逻辑目录内。
+    pub fn resolve_relative(&self, logical: &str, rel: &str) -> anyhow::Result<PathBuf> {
+        let base = self.resolve(logical)?;
+        crate::core::robust::safe_join(&base, rel)
+    }
 }
 
 #[cfg(test)]
@@ -72,5 +78,19 @@ mod tests {
     fn save_path_is_selectable() {
         let r = PathResolver::from_env("KCU_TEST_ROOT").unwrap_or_else(|_| PathResolver::new("KCU"));
         assert!(r.resolve("backups").unwrap().ends_with("backups"));
+    }
+
+
+    #[test]
+    fn user_relative_path_cannot_escape_logical_dir() {
+        let r = PathResolver::new("KCU");
+        assert_eq!(
+            r.resolve_relative("instances", "alpha/mods").unwrap(),
+            PathBuf::from("KCU/instances/alpha/mods")
+        );
+        assert!(r.resolve_relative("instances", "../../Windows").is_err());
+        assert!(r.resolve_relative("instances", "/abs").is_err());
+        assert!(r.resolve_relative("instances", "CON").is_err());
+        assert!(r.resolve_relative("unknown", "x").is_err());
     }
 }

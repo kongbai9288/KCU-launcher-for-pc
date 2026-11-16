@@ -87,6 +87,7 @@ pub fn build_request(spec: &RequestSpec, page: usize, ids: &[String]) -> Result<
 }
 
 pub fn plan(spec: &RequestSpec, ids: &[String], page_size: usize) -> Result<Vec<Request<()>>> {
+    crate::core::robust::check_ids(ids)?;
     if ids.is_empty() {
         return Ok(Vec::new());
     }
@@ -207,5 +208,20 @@ mod tests {
     fn unicode_ids_are_encoded_as_utf8_bytes() {
         let r = build_request(&spec(), 1, &vec!["甲".into()]).unwrap();
         assert!(r.uri().query().unwrap().contains("%E7%94%B2"));
+    }
+
+
+    #[test]
+    fn id_flood_is_rejected_before_request_construction() {
+        let ids: Vec<String> = (0..crate::core::robust::MAX_IDS_TOTAL + 1)
+            .map(|i| format!("mod-{}", i))
+            .collect();
+        assert!(plan(&spec(), &ids, 20).is_err());
+    }
+
+    #[test]
+    fn oversized_id_is_rejected_before_request_construction() {
+        let ids = vec!["x".repeat(crate::core::robust::MAX_ID_BYTES + 1)];
+        assert!(plan(&spec(), &ids, 20).is_err());
     }
 }
