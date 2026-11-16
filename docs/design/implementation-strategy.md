@@ -328,3 +328,14 @@ registry 在本环境被 403 阻断，故采用 `vendor/` + `.cargo/config.toml`
 | 英文数据源译文 | 未审校，471 条保留中文（L-049-1） |
 | 实现层 Fluent `.ftl` + `i18n-embed`（023 方案） | 未启动，未进 `Cargo.toml` |
 | 端点配置化 | 未做（EQ-15） |
+
+## 050 端点状态
+
+| 项 | 状态 |
+| --- | --- |
+| 代码层端点配置化 | **已落地（050）**：`config.endpoints["download/batch"]` → `core/endpoints.rs::resolve` → `Downloader::plan` |
+| 缺省常量 | 集中在 `src/core/endpoints.rs`，缺省逐字不变 |
+| `§` 自定义镜像 URL 模板 | 显式拒绝并登记未启动（`template_not_supported`） |
+| 设置页端点输入控件、镜像切换 UI | 未启动 |
+| 境外后端 / 镜像优先 / 限额限速策略 | 未启动 |
+| 实现层 Fluent `.ftl` + `i18n-embed` | 未启动 |

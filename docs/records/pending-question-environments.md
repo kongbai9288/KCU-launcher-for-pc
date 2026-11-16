@@ -186,3 +186,9 @@
 答复：「抽」→ 按选项 ② 执行。已生成 `demos/lang/zh-CN.js` / `demos/lang/en-US.js`（各 24 键），HTML 用 `<script src>` 离线加载，`setLang` 调用 `loadData` 重建 20 个数据数组并用 `mergeState` 合并运行时状态。`lang_guard.py` + CI step 落地。英文包 471 条数据源字符串仍保留中文（L-049-1），未做词级拼接或人工补译。
 
 EQ-15（端点配置化）仍待拍板，是 049 之后唯一的下一步。
+
+**EQ-15 按默认落地（050）**
+
+用户未明确拍板三选项，按 049 结尾「或者继续『干』我按默认往下走」执行选项①：`plan()` 从 `Config::endpoint("download/batch")` 取 scheme / authority / path，缺省才回内置；常量集中到 `src/core/endpoints.rs`。`resolve()` 用 `http::Uri` 解析并支持 8 类回退 reason。B03 代码层偏差消除，设置页端点控件与 `§` 模板仍属 UI 层未启动。登记为 **D-050-1**（我的默认，不是用户决断）。
+
+EQ-01 ~ EQ-13 仍待拍板；EQ-14（049）、EQ-15（050）已关闭。

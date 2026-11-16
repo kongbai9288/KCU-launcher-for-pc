@@ -307,3 +307,7 @@ python3 scripts/render_ui.py
 ## 049 闸门判定
 
 本轮改动 `demos/ui-full-kcu-paper.html`（数据源抽离、外部语言包、切换重渲），属界面演示变更，**闸门触发**。按规则重渲 `python3 scripts/render_ui.py`：shots=51、56 张 PNG、总览 2553183 B；读 `01-home.png` 确认中文完整、读 `41-i18n-en.png` 确认英文框架生效。另用 Playwright `file://` 真点语言切换与状态合并，0 控制台错误。`src/` 无界面实现改动，实现层仍等手感确认。
+
+## 050 闸门判定
+
+本轮改 `src/core/endpoints.rs` / `src/lightweight/download.rs` / `src/core/mod.rs`，新增 `demos/round-050-endpoint.html`（**流程 HTML，不是 UX HTML**）。**UI 闸门未触发**：`demos/ui-full-kcu-paper.html`、两个语言包、56 张 PNG 全部零 diff；设置页端点输入控件属 UI 层未启动，不在本轮范围。按 018 的口径，动界面轮次才出整页 UX 演示，本轮明确标注「非整页 UX 演示」。

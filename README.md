@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 049 |
+| 当前轮次 | 050 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -275,3 +275,9 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。`cargo test --offline --lib` 280/0，四守卫零命中，Playwright `file://` 切换 0 控制台错误，56 张 PNG 重渲。
 
 | 交付快照 | 本地 `5ae2b1a` ↔ 远端 `fe00c6f`，1008 文件 ALL_MATCH True |
+
+## 050 端点配置化
+
+`src/core/endpoints.rs`：`plan()` 从 `config.endpoints["download/batch"]` 取 scheme / authority / path，缺省才回内置常量。完整 URL 由 `http::Uri` 解析，8 类不可用配置回退并带 `reason`，不 panic。`ProviderConfig` 加 `with_endpoint` / `with_app_config`，`Downloader::endpoint()` 暴露来源。
+
+`cargo test --offline --lib` **298 / 0**（新增 18），全量 **324 / 0**，`cargo check --target x86_64-pc-windows-gnu` 通过，四守卫零命中。零新增依赖，仍 **26 包 / 25 第三方**。UI 闸门未触发，UX HTML 与 56 张 PNG 零 diff。

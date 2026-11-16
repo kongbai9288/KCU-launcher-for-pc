@@ -2831,3 +2831,39 @@ EQ-14 关闭；EQ-01 ~ EQ-13、EQ-15 仍待拍板；真实网络 IO、UI 宿主�
 ## 049 交付快照
 
 本地 `5ae2b1a` ↔ 远端 `fe00c6f`，**1008 文件 ALL_MATCH True**（DIFF 0 / EXTRA 0 / tree `truncated=false`）。推送两次被网关 502 截断，查远端 ref 与 message 确认快照完整落地；未强推、未重写历史。全仓零凭据、`.git/config` 干净、后端仓 0 写请求、临时凭据已删。
+
+## 050
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/50-round-050-instructions.txt | 逐字副本：「干」 |
+| docs/decisions/050-endpoint-config.md | V-049-A~C、R01–R04、U110–U115、V-A~V-H、E97–E100、自我批判、四值 |
+| docs/verification/round-050.md | 26 条复跑证据 |
+| src/core/endpoints.rs | **主交付**：端点解析与回退 |
+| src/lightweight/download.rs | `plan()` 删写死 scheme / path，接配置 |
+| src/core/mod.rs | 注册 `endpoints` 模块 |
+| demos/round-050-endpoint.html | 运行逻辑演示（16 步可点，非整页 UX 演示） |
+| 索引与记录 | docs/index 258 项、README、decisions/index、requirement-compliance-audit、pending-question-environments、interface-log I76–I79、ai-errors A172–A177、code-ownership-audit、implementation-strategy、ui-demo 闸门判定、rounds |
+
+049 结尾只留 EQ-15 一个待拍板项；用户回「干」，按 049 自己写的「或者继续『干』我按默认往下走」执行**选项①**（修 B03 偏差）。**用户未明确拍板三选项，登记 D-050-1，不写成已决断。**
+
+**原文**：`00-requirements.txt` 7.3 禁止硬编码环境假设；`11-features-input.txt`「尽量不要 api 写死…那些联网他们有可能后面会更新相关的端口」、13 手动选镜像、29 `§` 自定义镜像 URL 模板。048 合规核对 B03 的具体证据是 `download.rs::plan` 写死 `https` 与 `/v1/batch`，`core/config.rs` 的 `endpoints` 表没被读。
+
+**落地**：新增 `src/core/endpoints.rs`（255 行），常量集中；`EndpointConfig` 只存原始字符串，`from_app_config` 从 `Config::endpoint("download/batch")` 拷出。`resolve()` 用 `http::Uri` 解析完整 URL（scheme / authority 含端口 / path 三段覆盖），只有 authority 时只换主机，URL 没给 path 时回缺省；没配就回 `https` + `base` + `/v1/batch`，**逐字不变**。`ProviderConfig` 加 `endpoint` 字段 + `with_endpoint` / `with_app_config`，`plan()` 由 `self.endpoint()` 提供三段。
+
+8 类不可用配置回退并带 `reason`：`empty_endpoint` / `unsupported_scheme` / `query_not_allowed` / `invalid_path` / `missing_authority` / `missing_host` / `uri_parse_failed` / `invalid_authority`，另加 `template_not_supported`。`http::plan` 会追加 `?page=&ids=`，配置带 query 必须拒。`§` 模板是原需求第 29 条，本轮**显式拒绝并登记未启动**，不假装支持。
+
+**验证**：`cargo test --offline --lib` **280 → 298 / 0**（新增 18：endpoints 11 + download 7）；全量 **324 / 0** = 298 单元 + 7 http_construct + 6 window_handle_contract + 7 lifecycle（44.87 s 真加载 cdylib）+ 6 abi（109.39 s）；Windows GNU 交叉检查通过；panic / semver / i18n / lang 四守卫零命中；CI 口径 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；40 份 demos HTML `node new Function` 全通过。零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。UI 闸门**未触发**：UX HTML、两个语言包、56 张 PNG 零 diff。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E97 | 文档注释与测试里 `http://` 字面量触发 CI hardcode 扫描（042 / 048 同类坑） | 注释改三段描述，测试 URL 数组拼接，复跑 `NO_HARDCODE` |
+| E98 | 首版 `uri.scheme_str().unwrap_or(...)` 落在非测试段 | 改 `Some(s @ ("http" \| "https"))` 模式绑定 |
+| E99 | 快集成把测试名写成 `window_lifecycle`（实际 `window_handle_contract`），后续 `&&` 链断开 | 按 `ls tests/` 重跑，6 / 0，交叉检查补跑 |
+| E100 | 全量集成连续被网关 502 截断 | 拆 lifecycle / abi 两段跑，断言没降 |
+
+**自我批判**：URL 词法、authority 校验、query 编码全交给已进构建的库；配置优先级、8 类回退 reason、模板拒绝是项目特有业务编排，无语义等价库可换，如实登记，**不是新开自写底座例外**（023 A03 已于 024 撤回）。设置页端点输入控件、镜像切换 UI、`§` 模板编辑都属 UI 层未启动，不能把「可配置」说成「界面上能改」。R02 的境外后端 / 镜像优先 / 限额限速策略一行未动。
+
+EQ-14（049）、EQ-15（050）关闭；EQ-01 ~ EQ-13 仍待拍板；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。

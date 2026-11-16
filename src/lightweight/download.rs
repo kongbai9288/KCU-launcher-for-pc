@@ -32,6 +32,8 @@ pub struct ProviderConfig {
     pub region_override: Option<String>,
     pub mirror_speedtest: bool,
     pub page_size: usize,
+    /// 来自 `Config::endpoint("download/batch")`；None 表示用内置缺省。
+    pub endpoint: Option<crate::core::endpoints::EndpointConfig>,
 }
 
 impl ProviderConfig {
@@ -43,6 +45,7 @@ impl ProviderConfig {
             region_override: None,
             mirror_speedtest: true,
             page_size: PAGE_SIZE,
+            endpoint: None,
         }
     }
 
@@ -54,6 +57,7 @@ impl ProviderConfig {
             region_override: None,
             mirror_speedtest: true,
             page_size: PAGE_SIZE,
+            endpoint: None,
         }
     }
 
@@ -64,6 +68,18 @@ impl ProviderConfig {
 
     pub fn with_region(mut self, region: &str) -> Self {
         self.region_override = Some(region.to_string());
+        self
+    }
+
+    /// 直接指定端点原始值（完整 URL 或仅 authority）。
+    pub fn with_endpoint(mut self, raw: &str) -> Self {
+        self.endpoint = Some(crate::core::endpoints::EndpointConfig::new(raw));
+        self
+    }
+
+    /// 从应用配置读端点；表里没有就保持内置缺省。
+    pub fn with_app_config(mut self, cfg: &crate::core::config::Config) -> Self {
+        self.endpoint = crate::core::endpoints::from_app_config(cfg);
         self
     }
 
@@ -124,12 +140,18 @@ impl Downloader {
         crate::core::http::validate_authority(&self.config.base)
     }
 
+    /// 当前生效的端点。配置不可用时回内置缺省并带 reason，不 panic。
+    pub fn endpoint(&self) -> crate::core::endpoints::Endpoint {
+        crate::core::endpoints::resolve(&self.config.base, self.config.endpoint.as_ref())
+    }
+
     /// 每页构造一个标准 HTTP 请求；真实网络 IO 未启动。
     pub fn plan(&self, ids: &[String]) -> anyhow::Result<Vec<::http::Request<()>>> {
+        let ep = self.endpoint();
         let spec = crate::core::http::RequestSpec {
-            scheme: "https".into(),
-            authority: self.config.base.clone(),
-            path: "/v1/batch".into(),
+            scheme: ep.scheme,
+            authority: ep.authority,
+            path: ep.path,
             headers: Vec::new(),
         };
         crate::core::http::plan(&spec, ids, self.config.page_size.max(1))
@@ -325,6 +347,78 @@ mod tests {
         let d = Downloader::new(ProviderConfig::mojang("official-a"));
         assert_eq!(d.plan(&ids(10)).unwrap().len(), 1);
         assert_eq!(d.plan(&ids(45)).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn default_plan_uri_is_verbatim_unchanged() {
+        let d = Downloader::new(ProviderConfig::bmclapi("mirror-a"));
+        let r = d.plan(&ids(2)).unwrap();
+        assert_eq!(r.len(), 1);
+        assert_eq!(r[0].uri().scheme_str(), Some("https"));
+        assert_eq!(r[0].uri().host(), Some("mirror-a"));
+        assert_eq!(r[0].uri().path(), "/v1/batch");
+        assert!(r[0].uri().query().unwrap_or("").starts_with("page=1&ids="));
+        assert_eq!(d.endpoint().origin, crate::core::endpoints::Origin::Default);
+    }
+
+    #[test]
+    fn configured_full_url_changes_every_segment() {
+        let raw = ["http", "://", "mirror-b:8080", "/v2/batch"].concat();
+        let d = Downloader::new(ProviderConfig::bmclapi("mirror-a").with_endpoint(&raw));
+        let r = d.plan(&ids(2)).unwrap();
+        assert_eq!(r[0].uri().scheme_str(), Some("http"));
+        assert_eq!(r[0].uri().authority().map(|a| a.as_str()), Some("mirror-b:8080"));
+        assert_eq!(r[0].uri().path(), "/v2/batch");
+        assert_eq!(d.endpoint().origin, crate::core::endpoints::Origin::Config);
+    }
+
+    #[test]
+    fn authority_only_keeps_default_path_and_scheme() {
+        let d = Downloader::new(ProviderConfig::bmclapi("mirror-a").with_endpoint("mirror-b"));
+        let r = d.plan(&ids(2)).unwrap();
+        assert_eq!(r[0].uri().scheme_str(), Some("https"));
+        assert_eq!(r[0].uri().host(), Some("mirror-b"));
+        assert_eq!(r[0].uri().path(), "/v1/batch");
+    }
+
+    #[test]
+    fn bad_endpoint_falls_back_not_panics() {
+        let raw = ["ftp", "://", "mirror-b", "/v1/batch"].concat();
+        let d = Downloader::new(ProviderConfig::bmclapi("mirror-a").with_endpoint(&raw));
+        let r = d.plan(&ids(2)).unwrap();
+        assert_eq!(r[0].uri().scheme_str(), Some("https"));
+        assert_eq!(r[0].uri().host(), Some("mirror-a"));
+        assert_eq!(r[0].uri().path(), "/v1/batch");
+        assert_eq!(d.endpoint().origin, crate::core::endpoints::Origin::Fallback);
+        assert_eq!(d.endpoint().reason, "unsupported_scheme");
+    }
+
+    #[test]
+    fn page_count_is_unchanged_when_endpoint_is_configured() {
+        let raw = ["http", "://", "mirror-b", "/v2/batch"].concat();
+        let d = Downloader::new(ProviderConfig::mojang("official-a").with_endpoint(&raw));
+        assert_eq!(d.plan(&ids(10)).unwrap().len(), 1);
+        assert_eq!(d.plan(&ids(45)).unwrap().len(), 3);
+        assert_eq!(d.plan(&ids(45)).unwrap().len(), d.batch(&ids(45), &CancelToken::new()).unwrap().pages);
+    }
+
+    #[test]
+    fn app_config_table_drives_plan() {
+        let mut cfg = crate::core::config::Config::empty("windows");
+        cfg.set_endpoint(crate::core::endpoints::DOWNLOAD_BATCH_KEY, "mirror-c");
+        let d = Downloader::new(ProviderConfig::bmclapi("mirror-a").with_app_config(&cfg));
+        assert_eq!(d.plan(&ids(2)).unwrap()[0].uri().host(), Some("mirror-c"));
+        let back = crate::core::config::Config::from_json_str(&cfg.to_json_string().unwrap()).unwrap();
+        let d2 = Downloader::new(ProviderConfig::bmclapi("mirror-a").with_app_config(&back));
+        assert_eq!(d2.plan(&ids(2)).unwrap()[0].uri().host(), Some("mirror-c"));
+    }
+
+    #[test]
+    fn malformed_config_table_keeps_default_endpoint() {
+        let cfg = crate::core::config::Config::from_json_str(r#"{"endpoints":"oops"}"#).unwrap();
+        let d = Downloader::new(ProviderConfig::bmclapi("mirror-a").with_app_config(&cfg));
+        assert_eq!(d.endpoint().origin, crate::core::endpoints::Origin::Default);
+        assert_eq!(d.plan(&ids(2)).unwrap()[0].uri().host(), Some("mirror-a"));
     }
 
     #[test]

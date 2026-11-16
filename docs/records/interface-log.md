@@ -607,3 +607,13 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I74 | `demos/ui-full-kcu-paper.html` | 删除 274 行顶层 const；外部 script 引入；`loadData` / `mergeState`；`setLang` 全量重渲 |
 | I75 | CI | scan job 加 `lang_guard` step，脚本 `scripts/lang_guard.py` |
 | S48 | 状态 | U104–U109 已证实；src 零改动；EQ-14 关闭；L-049-1 已登记 |
+
+## 050 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I76 | `src/core/endpoints.rs` | 新增；`DOWNLOAD_BATCH_KEY` / `DEFAULT_SCHEME` / `DEFAULT_PATH` / `EndpointConfig` / `Origin` / `Endpoint` / `resolve` / `from_app_config` |
+| I77 | `src/lightweight/download.rs` | `ProviderConfig.endpoint`、`with_endpoint`、`with_app_config`、`Downloader::endpoint()`；`plan()` 删写死 scheme / path |
+| I78 | `src/core/mod.rs` | 注册 `pub mod endpoints;` |
+| I79 | 配置键 | `endpoints["download/batch"]`，值可为完整 URL 或仅 authority |
+| S49 | 状态 | U110–U115 已证实；零新增依赖；设置页端点控件未启动；D-050-1 已登记 |

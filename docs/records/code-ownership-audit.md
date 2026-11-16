@@ -440,3 +440,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 049 语言包抽离（src 零改动）
 
 `src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` 全部一行未动，仍 26 包 / 25 第三方。本轮只改演示层：24 个顶层数据常量抽到 `demos/lang/*.js`，新增 `scripts/lang_guard.py` 与 CI step。`cargo test --offline --lib` 280 / 0 仅作回归。
+
+## 050 端点配置化（零新增第三方）
+
+`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。新增 `src/core/endpoints.rs` 的 URL 词法交给 `http::Uri`（040）、authority 校验复用 `http::validate_authority`（040）、query 编码复用 `percent-encoding`（042），**没有手写解析器**。配置优先级、8 类回退 reason、`§` 模板拒绝是项目特有业务编排，无语义等价库可换，如实登记；**不是新开自写底座例外**（023 A03 已于 024 撤回）。`cargo test --offline --lib` 298 / 0，全量 324 / 0。
