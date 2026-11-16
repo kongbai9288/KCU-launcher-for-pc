@@ -2827,3 +2827,7 @@ EQ-01 ~ EQ-15 具体环境仍待拍板；真实网络 IO、UI 宿主、崩溃分
 | E96 | 切语言重建 SERVERS 会丢用户状态 | `mergeState` 按 sid 合并并真改状态复核 |
 
 EQ-14 关闭；EQ-01 ~ EQ-13、EQ-15 仍待拍板；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。
+
+## 049 交付快照
+
+本地 `5ae2b1a` ↔ 远端 `fe00c6f`，**1008 文件 ALL_MATCH True**（DIFF 0 / EXTRA 0 / tree `truncated=false`）。推送两次被网关 502 截断，查远端 ref 与 message 确认快照完整落地；未强推、未重写历史。全仓零凭据、`.git/config` 干净、后端仓 0 写请求、临时凭据已删。

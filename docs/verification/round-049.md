@@ -41,3 +41,15 @@
 | 集成测试段（7+6+7+6）本轮未重跑 | 已证实（`src/` 零改动，沿用 048 的 306/0） |
 
 限制：本轮未做 GUI 端到端自动化遍历、未做英文译文审校、未做真实 HTTP 请求；改动作者未代改验证结论，未降低验收项。
+
+## 交付快照
+
+| 项 | 值 |
+| --- | --- |
+| 本地提交 | `5ae2b1a` |
+| 远端主快照 | `fe00c6f`（`round 049 extract demo data into standalone language packs`） |
+| 远端 tree | `53c350c` |
+| 文件数 | 本地 1008 / 远端 blob 1008 |
+| 逐项比对 | `ALL_MATCH True`，DIFF 0，EXTRA 0，tree `truncated=false` |
+| 通道 | GitHub Git Data API，8 线程并发、增量树；推送调用两次被网关 502 截断，查远端 ref 确认已落地，未强推、未重写历史 |
+| 凭据 | 临时载体在仓库外，核对后删除；全仓 `NO_CREDENTIAL`，`.git/config` 干净 |

@@ -273,3 +273,5 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `scripts/lang_guard.py` + CI step 检查两包结构、稳定状态值、用户数据、离线引用。HTML script 中文行 **298 → 122**；英文包 471 条数据源字符串保留中文（L-049-1），禁用词级拼接翻译。
 
 `src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。`cargo test --offline --lib` 280/0，四守卫零命中，Playwright `file://` 切换 0 控制台错误，56 张 PNG 重渲。
+
+| 交付快照 | 本地 `5ae2b1a` ↔ 远端 `fe00c6f`，1008 文件 ALL_MATCH True |
