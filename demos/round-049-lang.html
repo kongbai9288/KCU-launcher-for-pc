@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 049 演示数据源抽成独立语言包</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:660px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:138px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:230px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>049 运行逻辑</h1><div class="sub">演示数据源抽离 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>抽离前</h3><p id="m1">未运行</p><span class="badge r">script 298 行中文</span><span class="badge r">671 个字符串</span><span class="badge r">24 个顶层 const</span></div>
+<div class="mini"><h3>语言包</h3><p id="m2">未运行</p><span class="badge g">zh-CN.js 24 键</span><span class="badge g">en-US.js 24 键</span><span class="badge g">script src 离线加载</span></div>
+<div class="mini"><h3>切换与状态</h3><p id="m3">未运行</p><span class="badge g">loadData 重建 20 数组</span><span class="badge g">mergeState 按 sid 合并</span><span class="badge g">0 控制台错误</span></div>
+<div class="mini"><h3>译文口径</h3><p id="m4">未运行</p><span class="badge g">25 条精确译文</span><span class="badge r">471 条保留中文</span><span class="badge r">禁用词级拼接</span></div>
+</div><div class="note" id="note">EQ-14 按「抽」关闭；英文译文审校未代你决定。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','核 048 本地与远端'],
+['02','逐字落盘','49-round-049-instructions.txt = 抽'],
+['03','单轨判定','EQ-14 选项②，不做别的'],
+['04','Node 求值','24 个顶层 const 导出 JSON'],
+['05','生成两包','zh-CN.js / en-US.js 各 24 键'],
+['06','译文口径','115 条真实双语对，只整句精确'],
+['07','撤回拼接','ProjectNotes 怪译，禁用词级替换'],
+['08','删内联','HTML 删 274 行 const'],
+['09','离线加载','两个 script src，无 fetch 无 CDN'],
+['10','重建与合并','loadData + mergeState + setLang 重渲'],
+['11','稳定值保护','状态字面量与用户数据两包一致'],
+['12','守卫','lang_guard + CI step'],
+['13','验证','Playwright file:// 往返切换'],
+['14','重渲','51 场景 / 56 张 PNG'],
+['15','提交推送','本地提交、远端快照、逐项比对']];
+const DETAIL={'01':'V048 local_6a8bbe5 remote_cb20450 clean','02':'SPEC cmp 0','03':'TRACK 1 EQ14_option2','04':'EXPORT 24_keys 100442_B_json','05':'LANG 2_files 80874B 80815B','06':'DICT 115_pairs exact_25','07':'E94 phrase_patch_reverted','08':'REMOVE 274_lines','09':'OFFLINE 2_script_src no_fetch','10':'U106_U107_U108 loadData mergeState 12_render_calls','11':'E95 stable_values_ok user_data_excluded','12':'U109 LANG_GUARD_OK scan_steps_8','13':'VERIFY zh_首页 en_Home back_首页 state_lock_false_ping_99 errors_0','14':'RENDER shots_51 png_56','15':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'单轨判定','04':'导出数据','05':'生成语言包','06':'译文口径','07':'撤回拼接','08':'删除内联','09':'离线加载','10':'重建与合并','11':'稳定值保护','12':'守卫','13':'验证','14':'重渲','15':'提交推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12','13','14']);
+const M={'04':['m1','抽离前：HTML 的 `<script>` 段有 298 行中文、671 个单引号字符串（503 唯一），数据源是 24 个顶层 `const`（`NOTICES`/`POPUPS`/`INS`/`SRV`/`SERVERS`/`VIEW_META`…）加 659 组 `ZH_TEXT`/`EN_TEXT`。用 Node 求值导出 100442 B 纯 JSON，不在 Python 里手写 JS 字面量解析。'],'05':['m2','`demos/lang/zh-CN.js` 与 `en-US.js`，各 24 键、约 80 KB，格式 `window.KCU_LANG[locale]`。HTML 用两个 `<script src="lang/*.js">` 在主脚本前加载 —— `file://` 直接可用，不用 `fetch`、不受 CORS 限制。'],'10':['m3','20 个数据变量改成 `let`；`loadData(l)` 从语言包重建全部数组；`setLang` 追加 12 个渲染调用重渲当前视图。`mergeState` 按 `sid`/`id` 合并公告已读、服务器锁定 / ping / 在线人数 / 用户新增项。验证脚本真改 `lock=false; ping=99`，往返切两次仍是 `false / 99`，0 控制台错误。'],'06':['m4','词典只收文件里真实存在的双语对应（`EN_TEXT` 92 组、`VIEW_META`↔`EN[view.*]`、`TIER_LABEL`↔`TIER_EN`、内联三元、`T(k,zh,en)`），共 115 条。数据源 496 条中文里 25 条精确译成英文、**471 条保留中文**（L-049-1）。首版词级短语替换生成 `KCU Launcher ProjectNotes`，已撤回，不做未审校拼接。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','core.split','q.construct','q.construct','q.reference','q.research','q.construct','q.construct','q.construct','q.audit','q.audit','core.verify','core.verify','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===14)document.getElementById('note').textContent='EQ-14 已按「抽」关闭；英文译文审校（L-049-1）与 EQ-15 端点配置化未代你决定。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},210);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='EQ-14 按「抽」关闭；英文译文审校未代你决定。';}
+</script></body></html>

@@ -2792,3 +2792,38 @@ EQ-01 ~ EQ-12 具体环境仍待拍板（045 已交）；真实网络 IO、UI �
 本地 `976c0d1` ↔ 远端 `d7dd6a2`，1000 文件 ALL_MATCH True。
 
 EQ-01 ~ EQ-15 具体环境仍待拍板；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。
+
+## 049
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/49-round-049-instructions.txt | 逐字副本：「抽」 |
+| docs/decisions/049-lang-extraction.md | V-048-A~C、U104-U109、V-A~V-G、E93-E96、四值 |
+| docs/verification/round-049.md | 23 条复跑证据 |
+| demos/lang/zh-CN.js / en-US.js | **主交付**：各 24 键、约 80 KB |
+| demos/ui-full-kcu-paper.html | 删 274 行顶层 const、外部 script、loadData / mergeState / setLang 重渲 |
+| scripts/lang_guard.py / .github/workflows/ci.yml | 守卫 + CI step（scan 8 steps） |
+| demos/preview/ | 51 场景 / 56 张 PNG 重渲 |
+| demos/round-049-lang.html | 运行逻辑演示 |
+| 索引与记录 | docs/index 254 项、README、decisions/index、requirement-compliance-audit、pending-question-environments、interface-log、ai-errors A166-A171、code-ownership-audit、implementation-strategy、ui-demo 闸门判定、rounds |
+
+048 结尾只留了 EQ-14 一个待拍板项，答复是「抽」→ 按选项 ② 执行，单轨轮，没顺手做别的。
+
+**抽离**：用 Node 对顶层 `const` 段求值导出 24 个键的纯数据（100442 B JSON），生成 `demos/lang/zh-CN.js` 与 `en-US.js`，各约 80 KB、`window.KCU_LANG['<locale>']`。HTML 删掉 **274 行**顶层定义，改由两个 `<script src="lang/*.js">` 在主脚本前加载 —— 离线 `file://` 直接可用，不用 `fetch`、不受 CORS 限制。主脚本 20 个数据变量改成 `let`，`loadData(l)` 从语言包重建，`setLang` 追加 12 个渲染调用重渲当前视图。
+
+**状态不丢**：`mergeState(fresh, old, key, fields)` 按 `sid` / `id` 合并公告已读、服务器锁定、ping、在线人数、用户新增项。验证脚本真改 `SERVERS[0].lock=false; ping=99`，往返切两次语言后仍是 `false / 99`。
+
+**译文口径**：词典只收文件里真实存在的双语对应（`EN_TEXT` 92 组、`VIEW_META` ↔ `EN['view.*']`、`TIER_LABEL` ↔ `TIER_EN`、内联三元、`T(k,zh,en)`），共 115 条。首版试过词级短语替换，生成 `KCU Launcher ProjectNotes` 拼接怪译，已撤回；只保留整句精确对应。数据源 496 条中文字符串里 25 条译成英文、**471 条保留中文**，登记为 **L-049-1**，未做机器拼接或人工补译，不代你决定。用户数据（服务器名、MOTD、实例名）与 JS 用来判断 badge 的稳定字面量两包逐项一致，由 `lang_guard` 强制。
+
+**验证**：Playwright + 系统 chromium 用 `file://` 打开，两语言包加载成功、中文「首页」→ 英文「Home」→ 切回「首页」、`NOTICES`/`SERVERS` 数量不变、0 控制台错误；`lang_guard` / `i18n_guard` / `panic_guard` / `semver_guard` 零命中，CI scan 8 steps；`render_ui.py` 重渲 51 场景 / 56 张 PNG，读 `01-home.png` 与 `41-i18n-en.png` 实拍确认；`cargo test --offline --lib` **280 / 0**，`git diff -- src/ Cargo.toml Cargo.lock vendor/` 为空，仍 26 包 / 25 第三方。HTML script 中文行 **298 → 122**，剩余是内联双语 fallback 与稳定状态字面量。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E93 | Playwright 默认浏览器未安装，验证脚本首跑 launch 失败 | 按 render_ui.py 的既有口径传系统 chromium 路径 + `--no-sandbox` |
+| E94 | 词级短语替换生成 `KCU Launcher ProjectNotes` | 撤回，只保留整句精确对应 |
+| E95 | `SRV[*][3]` / `LICENSE_ROWS[*][6]` 中文比较值可能被翻译改逻辑 | 生成时保护 + 守卫逐项比对 |
+| E96 | 切语言重建 SERVERS 会丢用户状态 | `mergeState` 按 sid 合并并真改状态复核 |
+
+EQ-14 关闭；EQ-01 ~ EQ-13、EQ-15 仍待拍板；真实网络 IO、UI 宿主、崩溃分析、子进程隔离、028 三项实现、CF F17、特殊版代码、本项目 LICENSE、UX 手感均未动。

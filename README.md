@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 048 |
+| 当前轮次 | 049 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -265,3 +265,11 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。`cargo test --offline` 合计 **306/0**（280 单元 + 26 集成），Windows GNU 交叉检查通过，三守卫零命中，56 张 PNG 重渲并人眼确认中文完整。
 
 | 交付快照 | 本地 `976c0d1` ↔ 远端 `d7dd6a2`，1000 文件 ALL_MATCH True |
+
+## 049 演示数据源语言包
+
+`demos/lang/zh-CN.js` / `en-US.js`，各 **24 键**。`ui-full-kcu-paper.html` 删掉 274 行顶层 `const`，改由两个 `<script src>` 离线加载；`setLang` 调用 `loadData` 重建 20 个数据数组，`mergeState` 按 `sid`/`id` 合并运行时状态，切语言不丢公告已读与服务器锁定 / 延迟。
+
+`scripts/lang_guard.py` + CI step 检查两包结构、稳定状态值、用户数据、离线引用。HTML script 中文行 **298 → 122**；英文包 471 条数据源字符串保留中文（L-049-1），禁用词级拼接翻译。
+
+`src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。`cargo test --offline --lib` 280/0，四守卫零命中，Playwright `file://` 切换 0 控制台错误，56 张 PNG 重渲。

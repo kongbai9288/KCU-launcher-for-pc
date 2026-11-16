@@ -436,3 +436,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 `src/core/robust.rs` 241 行：文本/id 边界、基于 `std::path::Component` 的路径策略、文件被删或损坏的回退、必需文件明确报错、`OpBudget` 高频限流。接入 `http::plan` 与 `PathResolver::resolve_relative`。`src/plugins/fault.rs` 4 处产品层中文改成语义 key。
 
 **如实登记**：标准库 API 用法 + 项目策略清单 + 文案归位，不是第三方库替换；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。新增 `scripts/i18n_guard.py` 与 CI step。自写通用算法已收敛，剩余是项目特有编排与业务规则。
+
+## 049 语言包抽离（src 零改动）
+
+`src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` 全部一行未动，仍 26 包 / 25 第三方。本轮只改演示层：24 个顶层数据常量抽到 `demos/lang/*.js`，新增 `scripts/lang_guard.py` 与 CI step。`cargo test --offline --lib` 280 / 0 仅作回归。

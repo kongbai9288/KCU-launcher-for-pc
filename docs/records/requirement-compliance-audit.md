@@ -112,3 +112,16 @@
 要选：① `plan()` 改从 `Config::endpoint` 取 scheme/authority/path，缺省才回内置 ② 保持代码内常量，但集中到 `src/core/endpoints.rs` 单文件 ③ 维持现状，登记为已知偏差。
 
 不选：B03 保持未遵守。
+
+## 049 补记：EQ-14 已按「抽」落地
+
+| 项 | 048 状态 | 049 状态 |
+| --- | --- | --- |
+| 演示数据源位置 | HTML `<script>` 段 298 行中文 | `demos/lang/zh-CN.js` / `en-US.js`，各 24 键 |
+| 加载方式 | 内联 | 两个 `<script src>`，离线 `file://` 可用 |
+| 切换行为 | 只换 DOM 文案，数据源不重建 | `loadData` 重建 20 个数组 + `mergeState` 合并状态 |
+| 守卫 | `i18n_guard` 只统计不判 | 新增 `lang_guard`，CI scan 8 steps |
+| HTML script 中文行 | 298 | **122**（内联双语 fallback 与稳定字面量） |
+| 英文译文 | 567 条回退中文 | 471 条数据源字符串保留中文，禁用拼接翻译（L-049-1） |
+
+B/C/D 三类偏差本轮未动，EQ-01 ~ EQ-13、EQ-15 仍待拍板。

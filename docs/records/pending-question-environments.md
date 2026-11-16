@@ -178,3 +178,11 @@
 要选：① `plan()` 改从 `Config::endpoint` 取 scheme / authority / path，缺省才回内置 ② 保持代码内常量，但集中到 `src/core/endpoints.rs` 单文件 ③ 维持现状，登记为已知偏差。
 
 不选：B03 保持未遵守。详见 `docs/records/requirement-compliance-audit.md`。
+
+---
+
+**EQ-14 已拍板（049）**
+
+答复：「抽」→ 按选项 ② 执行。已生成 `demos/lang/zh-CN.js` / `demos/lang/en-US.js`（各 24 键），HTML 用 `<script src>` 离线加载，`setLang` 调用 `loadData` 重建 20 个数据数组并用 `mergeState` 合并运行时状态。`lang_guard.py` + CI step 落地。英文包 471 条数据源字符串仍保留中文（L-049-1），未做词级拼接或人工补译。
+
+EQ-15（端点配置化）仍待拍板，是 049 之后唯一的下一步。

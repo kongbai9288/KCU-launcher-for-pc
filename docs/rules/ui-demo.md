@@ -303,3 +303,7 @@ python3 scripts/render_ui.py
 ## 048 闸门判定
 
 本轮改动了 `demos/ui-full-kcu-paper.html` 的文案属性（399 个中文 key → 语义 key、405 个裸节点注入 `data-i18n`），属界面演示变更，**闸门触发**。按规则重渲 `python3 scripts/render_ui.py`：shots=51、56 张 PNG、总览 2549707 B；读 `01-home.png` 实拍确认中文完整、无 `t.NNNN` 顶替。`src/` 无界面实现改动，实现层仍等手感确认。
+
+## 049 闸门判定
+
+本轮改动 `demos/ui-full-kcu-paper.html`（数据源抽离、外部语言包、切换重渲），属界面演示变更，**闸门触发**。按规则重渲 `python3 scripts/render_ui.py`：shots=51、56 张 PNG、总览 2553183 B；读 `01-home.png` 确认中文完整、读 `41-i18n-en.png` 确认英文框架生效。另用 Playwright `file://` 真点语言切换与状态合并，0 控制台错误。`src/` 无界面实现改动，实现层仍等手感确认。

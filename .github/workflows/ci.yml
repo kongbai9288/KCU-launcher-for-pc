@@ -81,3 +81,5 @@ jobs:
         run: python3 scripts/semver_guard.py
       - name: i18n_guard
         run: python3 scripts/i18n_guard.py
+      - name: lang_guard
+        run: python3 scripts/lang_guard.py

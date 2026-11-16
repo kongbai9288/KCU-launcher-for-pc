@@ -598,3 +598,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I71 | `demos/ui-full-kcu-paper.html` | 399 中文 key + 405 裸节点收敛为 659 组 `ZH_TEXT`/`EN_TEXT` |
 | I72 | CI | scan job 加 `i18n_guard` step，脚本 `scripts/i18n_guard.py` |
 | S47 | 状态 | U99–U103 已证实；零新增依赖；EQ-14 / EQ-15 待拍板 |
+
+## 049 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I73 | `demos/lang/zh-CN.js` / `en-US.js` | 新增；各 24 键，`window.KCU_LANG['<locale>']` |
+| I74 | `demos/ui-full-kcu-paper.html` | 删除 274 行顶层 const；外部 script 引入；`loadData` / `mergeState`；`setLang` 全量重渲 |
+| I75 | CI | scan job 加 `lang_guard` step，脚本 `scripts/lang_guard.py` |
+| S48 | 状态 | U104–U109 已证实；src 零改动；EQ-14 关闭；L-049-1 已登记 |

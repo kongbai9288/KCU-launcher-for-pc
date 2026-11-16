@@ -5,8 +5,8 @@
 2. demos/ui-full-*.html 的 DOM 段 data-i18n* 值不得含中文。
 3. DOM 段纯文本节点含中文时，标签必须带 data-i18n（style/title/script 等排除）。
 
-script 数据源里的中文只统计、不判失败：那是演示数据，语言包迁移见
-docs/records/requirement-compliance-audit.md 的 EQ-14。
+049 起演示数据源已抽到 demos/lang/*.js；script 段剩余中文是内联双语
+fallback 与稳定状态字面量，只统计、不判失败。语言包结构由 lang_guard.py 判。
 """
 from pathlib import Path
 import re
@@ -68,5 +68,5 @@ if hits:
     print('I18N_GUARD_FAIL', len(hits))
     sys.exit(1)
 print('I18N_GUARD_OK', 'rs_files', rs_files, 'ux_html', html_files,
-      'hits 0', 'script_cn_lines_known', script_cn,
+      'hits 0', 'inline_bilingual_cn_lines', script_cn,
       'excluded_history', ','.join(excluded))

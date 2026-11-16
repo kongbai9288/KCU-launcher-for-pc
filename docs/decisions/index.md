@@ -99,3 +99,5 @@
 | 047 | 回滚目标版本比较缺陷 + 双守卫 | 已实现已验证；上层未启动 | 047-rollback-version-precedence.md |
 
 | 048 | 硬编码清零、破坏性输入防护、原始需求合规核对 | 已实现已验证；上层未启动 | 048-hardening-i18n-compliance.md |
+
+| 049 | 演示数据源抽成独立语言包（EQ-14 选项②） | 已实现已验证；src 零改动 | 049-lang-extraction.md |
