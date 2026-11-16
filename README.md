@@ -263,3 +263,5 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `docs/records/requirement-compliance-audit.md` 把原始需求逐条分成四类：已决断且遵守 11 条、**已决断但未遵守 10 条**、**未决断我擅自定默认 10 条**、文档要求但标未启动 9 组。新增 EQ-14 / EQ-15 待拍板。
 
 `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 **26 包 / 25 第三方**。`cargo test --offline` 合计 **306/0**（280 单元 + 26 集成），Windows GNU 交叉检查通过，三守卫零命中，56 张 PNG 重渲并人眼确认中文完整。
+
+| 交付快照 | 本地 `976c0d1` ↔ 远端 `d7dd6a2`，1000 文件 ALL_MATCH True |

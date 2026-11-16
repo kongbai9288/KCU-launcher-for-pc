@@ -102,3 +102,7 @@ B03 具体证据：`src/lightweight/download.rs::plan` 硬编码 `scheme: "https
 | EQ-14 / EQ-15、B/C/D 偏差处置 | 未证实（待拍板） |
 | 真实网络 IO / TLS / UI 宿主 / 崩溃分析 / 子进程隔离 | 未启动 |
 | 后端仓写请求 | 0（已证实） |
+
+## 交付快照
+
+本地 `976c0d1` ↔ 远端 `d7dd6a2`，1000 文件逐项 ALL_MATCH True（DIFF 0 / EXTRA 0）。远端 message 与本地一致。全仓零凭据、后端仓 0 写请求。

@@ -42,3 +42,14 @@
 | 306 测试仅作回归，不作质量结论 | 已证实 |
 
 限制：本轮未做真实 HTTP 请求、GUI 端到端、崩溃捕获与 Win7 运行时验证；改动作者未代改验证结论，未降低验收项。
+
+## 交付快照
+
+| 项 | 值 |
+| --- | --- |
+| 本地提交 | `976c0d1` |
+| 远端提交 | `d7dd6a2`（`round 048 i18n guard input hardening compliance audit`） |
+| 文件数 | 本地 1000 / 远端 blob 1000 |
+| 逐项比对 | `ALL_MATCH True`，DIFF 0，EXTRA 0，tree `truncated=false` |
+| 通道 | GitHub Git Data API，8 线程并发，复用远端已有 blob 888 个，增量 83 项 |
+| 凭据 | 临时载体在仓库外，核对后删除；全仓 `NO_CREDENTIAL`，`.git/config` 干净 |
