@@ -289,3 +289,5 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 B02：4 份原文全文读取，字节 / 行 / SHA-256 落 `docs/records/round-051-full-readback.md`；`00-requirements.txt` 261 行全文回显。B01：本轮回复按 §14 十二项组织，历史缺失不补写。B06：语言包 24 → 26 键，声明页三项（功能关闭 / 软件完整性 / 旧版系统）进 `popups` 视图与弹窗，中英双态，六种关闭路径零残留；实现层 D07 未启动。
 
 Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline --lib` 298 / 0；四守卫零命中；56 张 PNG 重渲。`src/` / Cargo.* / vendor/ 零改动，仍 26 包 / 25 第三方。
+
+| 交付快照 | 本地 `9d4b292` ↔ 远端 `c79b278`，1020 文件 ALL_MATCH True |

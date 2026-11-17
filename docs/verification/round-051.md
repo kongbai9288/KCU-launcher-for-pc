@@ -37,3 +37,15 @@
 | GUI 端到端、真实网络 IO、Win7 运行时 | 受阻 |
 
 限制：改动作者未代改验证结论；298 个测试是回归，不作质量结论。E104 网关中断拆段补齐，未降验收项。
+
+## 交付快照
+
+| 项 | 值 |
+| --- | --- |
+| 本地主快照 | `9d4b292` |
+| 远端主快照 | `c79b278`（`round 051 readback evidence and declaration page three items`） |
+| 远端 tree | `8b5ad60` |
+| 文件数 | 本地 1020 / 远端 blob 1020 |
+| 逐项比对 | `ALL_MATCH True`，DIFF 0，EXTRA 0，tree `truncated=false` |
+| 通道 | GitHub Git Data API，8 线程并发、复用远端已有 blob 911 个、增量 76 项 |
+| 凭据 | 临时载体在仓库外，核对后删除；全仓 `NO_CREDENTIAL`，`.git/config` 干净 |
