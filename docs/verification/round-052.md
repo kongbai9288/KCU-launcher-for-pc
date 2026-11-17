@@ -42,3 +42,15 @@
 | GUI 端到端、真实网络 IO、Win7 / MSVC 运行时 | 受阻 |
 
 限制：改动作者未代改验证结论；339 个测试是回归，不作质量结论。E108 网关截断拆段补齐，未降验收项。
+
+## 交付快照
+
+| 项 | 值 |
+| --- | --- |
+| 本地主快照 | `d78b85d` |
+| 远端主快照 | `751eef0`（`round 052 integrity verification implementation for B06`） |
+| 远端 tree | `fa4aa61` |
+| 文件数 | 本地 1028 / 远端 blob 1028 |
+| 逐项比对 | `ALL_MATCH True`，DIFF 0，EXTRA 0，tree `truncated=false` |
+| 通道 | GitHub Git Data API，8 线程并发、复用远端已有 blob 916 个、增量 20 项 |
+| 凭据 | 临时载体在仓库外，核对后删除；全仓 `NO_CREDENTIAL`，`.git/config` 干净 |

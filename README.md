@@ -297,3 +297,5 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 `src/core/integrity.rs`：签名校验排在解析之前，四级兜底（ok / degraded / disabled / fatal），连续失败 ≥3 导出诊断包，摘要缓存含长度键且 `refresh()` 全清，**签名与判定不缓存结论**，限流不返回通过。公钥与文件读取由调用方注入，代码不内置信任根、不写路径、不发网络请求。
 
 `cargo test --offline --lib` **313 / 0**，全量 **339 / 0**，Windows GNU 交叉检查通过，四守卫零命中，反向注入验签判定 9 FAILED、恢复 15 / 0。零新增依赖，仍 **26 包 / 25 第三方**。UI 闸门未触发，UX HTML 与 56 张 PNG 零 diff。
+
+| 交付快照 | 本地 `d78b85d` ↔ 远端 `751eef0`，1028 文件 ALL_MATCH True |
