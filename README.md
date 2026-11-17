@@ -305,3 +305,5 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 `src/core/feature_gate.rs`：设备能力由宿主注入、平台策略签名快照本地判定、内置默认策略（原文「必须内置」）、评估失败一律不关（fail-open）、未知 id 与设置/关于永不关、禁止在策略里放地址与凭据、每处关闭一条可关声明、判定缓存与 `refresh()`、取消 0 副作用。另修 052 遗留：`VerifyInput.offline` / `Outcome.declaration`，落实原文「离线则不声明」。
 
 `cargo test --offline --lib` **331 / 0**，全量 **357 / 0**，Windows GNU 交叉检查通过，四守卫零命中，双向反向注入 1 + 10 FAILED、恢复后 331 / 0。零新增依赖，仍 **26 包 / 25 第三方**。UI 闸门未触发，UX HTML 与 56 张 PNG 零 diff。
+
+| 交付快照 | 本地 `9cd711f` ↔ 远端 `6010e40`，1037 文件 ALL_MATCH True |
