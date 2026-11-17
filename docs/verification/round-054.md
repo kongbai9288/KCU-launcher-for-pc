@@ -43,3 +43,15 @@
 | GUI 端到端、Win7 / MSVC 运行时 | 受阻 |
 
 限制：改动作者未代改验证结论；377 个测试是回归，不作质量结论。E119 网关截断拆段补齐，未降验收项。048 / 051 / 052 / 053 历史验证报告按 B01 口径不补写。
+
+## 交付快照
+
+| 项 | 值 |
+| --- | --- |
+| 本地主快照 | `beac860` |
+| 远端主快照 | `72ce85c`（`round 054 region offline restriction gate`） |
+| 远端 tree | `72e12ea` |
+| 文件数 | 本地 1046 / 远端 blob 1046 |
+| 逐项比对 | `ALL_MATCH True`，DIFF 0，EXTRA 0，tree `truncated=false` |
+| 通道 | GitHub Git Data API，8 线程并发、复用远端已有 blob 931 个、增量 21 项 |
+| 凭据 | 临时载体在仓库外，核对后删除；全仓 `NO_CREDENTIAL`，`.git/config` 干净 |

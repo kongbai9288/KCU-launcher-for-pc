@@ -313,3 +313,5 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 `src/core/region.rs`：原文第 7 行 6 条约束分别落地；只用宿主注入的 locale / timezone 本地信号，**双信号一致才判境外**，单一或冲突信号一律放行；`ip` / `geoip` / `vpn` / `asn` 等 16 类键出现即整份作废；特殊版豁免、正版后正常、大陆恢复、用户覆盖排第一；只限制离线账户的登录与注册，不扩大到第三方与正版；每处拒绝一条可关声明与三动作。**不读写 `config.download_region`**，两条链分开。
 
 `cargo test --offline --lib` **351 / 0**，全量 **377 / 0**，Windows GNU 交叉检查通过，四守卫零命中，双向反向注入 5 + 1 FAILED、恢复后 351 / 0。零新增依赖，仍 **26 包 / 25 第三方**。UI 闸门未触发，UX HTML 与 56 张 PNG 零 diff。
+
+| 交付快照 | 本地 `beac860` ↔ 远端 `72ce85c`，1046 文件 ALL_MATCH True |
