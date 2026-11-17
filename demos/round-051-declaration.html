@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 051 合规复读与声明页三项</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:320px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:152px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>051 运行逻辑</h1><div class="sub">B01 / B02 / B06 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>B02 逐字复读</h3><p id="m1">未运行</p><span class="badge g">4 份原文全文读取</span><span class="badge g">SHA-256 落盘</span><span class="badge r">仅 00-req 全文回显</span></div>
+<div class="mini"><h3>B01 输出结构</h3><p id="m2">未运行</p><span class="badge g">§14 十二项</span><span class="badge g">时间戳回显</span><span class="badge r">历史缺失不补写</span></div>
+<div class="mini"><h3>B06 声明页</h3><p id="m3">未运行</p><span class="badge g">三项内容进语言包</span><span class="badge g">中英双态</span><span class="badge r">实现层取数未启动</span></div>
+<div class="mini"><h3>验证</h3><p id="m4">未运行</p><span class="badge g">Playwright 0 错误</span><span class="badge g">298 / 0 单元回归</span><span class="badge g">56 张 PNG 重渲</span></div>
+</div><div class="note" id="note">B06 只补演示层三项文案与界面形态；平台版本信息拉取仍属 D07 未启动。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','本地 c2aae2a / 1014 文件 / 干净'],
+['02','逐字落盘','51-round-051-instructions.txt = 干'],
+['03','B02 全文复读','00-req 261 行全文回显'],
+['04','复读证据落盘','4 份 SHA-256 + 命中条款行号'],
+['05','B01 结构对齐','§14 十二项固定结构'],
+['06','读 B/C/D 台账','048 核对表全文'],
+['07','选 B06','三项声明内容缺失'],
+['08','读 POPUPS','13 项，declaration 仅一行'],
+['09','语言包加键','DECLARATION / DECL_META'],
+['10','中英各 3 项','功能关闭 / 完整性 / 旧版系统'],
+['11','UX HTML 接键','loadData + setLang 重建'],
+['12','声明页面板','declDetail 三卡 + 弹窗内三项'],
+['13','弹窗状态修正','ESC / × / 宿主关闭不留残留'],
+['14','陈旧计数修正','11 类 → 13 类'],
+['15','Playwright 验证','中→英→中，0 控制台错误'],
+['16','重渲 56 张 PNG','UI 闸门触发'],
+['17','全量静态验证','298/0 + 四守卫 + JS/YAML'],
+['18','合规更新','B01/B02/B06 状态分层'],
+['19','提交推送','本地 + 远端逐项比对']];
+const DETAIL={'01':'V050 local_c2aae2a remote_36586a7 files_1014 clean','02':'SPEC cmp 0','03':'READBACK 00_req_261_lines_full_echo','04':'EVID 4_files sha256 bytes lines hit_lines','05':'STRUCT section_14 items_12 timestamp selfcrit','06':'AUDIT B_10 C_10 D_9 read_full','07':'PICK B06 three_declaration_items_missing','08':'POPUPS 13 declaration_one_line','09':'LANG add_DECLARATION add_DECL_META keys_24_to_26','10':'ROWS feat_off integrity legacy_os zh_en','11':'U116 loadData setLang renderDeclaration','12':'U117 declDetail_3_cards dlg_3_cards','13':'E101 curPopId closeDlg popState_false','14':'E102 t0259_11_to_13 render_title','15':'PW zh_en_zh 0_console_error declCards_3','16':'RENDER shots_51 png_56 ui_gate_on','17':'VERIFY 298_0 7_0 6_0 guards_0 js_41','18':'DOC B01_partial B02_partial B06_demo_only','19':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'B02 全文复读','04':'复读证据落盘','05':'B01 结构对齐','06':'读 B/C/D 台账','07':'选 B06','08':'读 POPUPS','09':'语言包加键','10':'中英各 3 项','11':'UX HTML 接键','12':'声明页面板','13':'弹窗状态修正','14':'陈旧计数修正','15':'Playwright 验证','16':'重渲 56 张 PNG','17':'全量静态验证','18':'合规更新','19':'提交推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18']);
+const M={'04':['m1','`docs/records/round-051-full-readback.md` 落盘 4 份原文的字节数、行数、SHA-256：`00-requirements.txt` 16422 B / 261 行、`ai-errors.md` 33640 B / 354 行、`11-features-input.txt` 17096 B / 268 行、`12-server-features-input.txt` 4970 B / 64 行；命中条款带行号。**如实**：只有 `00-requirements.txt` 261 行全文回显，其余三份执行全文 `read_text()` 并落盘哈希，未逐行打印。'],'05':['m2','本轮回复按 `00-requirements.txt` §14 的 12 项固定结构组织：第一行结论、时间戳回显、目标范围、代码、运行逻辑 HTML、自我批判、四值、独立验证、自评、通过标记判定、文档更新、唯一下一步。**如实**：035–047 已发出的回复缺时间戳与自我批判，历史段不补写、不重写；B01 只能标「本轮起按结构执行」，不能标「已修」。'],'12':['m3','`demos/lang/*.js` 各加 `DECLARATION`（3 行 × 5 字段）与 `DECL_META`（2 项），键数 24 → 26。UX HTML 的 `popups` 视图新增 `declDetail` 三卡；点击「声明页」弹窗内也带同样三卡。三项：功能关闭说明、软件完整性（校验未通过，3 个动作）、旧版系统说明。**如实**：三项是演示层文案与界面形态；`从 GitHub/atomgit 拉版本平台信息` 属 D07 实现层，未启动。'],'17':['m4','`cargo test --offline --lib` 298 / 0；`http_construct` 7 / 0、`window_handle_contract` 6 / 0；`src/` / Cargo.* / vendor/ 零 diff；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；panic / semver / i18n / lang 四守卫零命中；`P09_HITS 0`；40 份 demos HTML 脚本 `node new Function` 全通过；Playwright 中→英→中 0 控制台错误。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.audit','q.audit','q.audit','q.audit','q.reference','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.audit','q.audit','core.verify','core.verify','q.audit','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===18)document.getElementById('note').textContent='B01 / B02 标「本轮起执行，历史偏差不补写」；B06 标「演示层已补，实现层未启动」。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},200);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='B06 只补演示层三项文案与界面形态；平台版本信息拉取仍属 D07 未启动。';}
+</script></body></html>

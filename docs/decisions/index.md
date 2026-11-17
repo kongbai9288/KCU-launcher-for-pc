@@ -103,3 +103,5 @@
 | 049 | 演示数据源抽成独立语言包（EQ-14 选项②） | 已实现已验证；src 零改动 | 049-lang-extraction.md |
 
 | 050 | 端点配置化（B03 / EQ-15 选项①） | 已实现已验证；零新增依赖 | 050-endpoint-config.md |
+
+| 051 | 输出结构对齐、开工逐字复读、声明页三项 | 演示层与文档层落地，src 零改动 | 051-compliance-and-declaration.md |

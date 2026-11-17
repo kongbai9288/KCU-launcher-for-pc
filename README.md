@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 050 |
+| 当前轮次 | 051 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -283,3 +283,9 @@ Q-028-01 = **Q1-C 每次命中都手动同意**，Q-028-02 = **Q2-A 只允许 C1
 `cargo test --offline --lib` **298 / 0**（新增 18），全量 **324 / 0**，`cargo check --target x86_64-pc-windows-gnu` 通过，四守卫零命中。零新增依赖，仍 **26 包 / 25 第三方**。UI 闸门未触发，UX HTML 与 56 张 PNG 零 diff。
 
 | 交付快照 | 本地 `9a32d4d` ↔ 远端 `15a0e3d`，1014 文件 ALL_MATCH True |
+
+## 051 输出结构、逐字复读与声明页三项
+
+B02：4 份原文全文读取，字节 / 行 / SHA-256 落 `docs/records/round-051-full-readback.md`；`00-requirements.txt` 261 行全文回显。B01：本轮回复按 §14 十二项组织，历史缺失不补写。B06：语言包 24 → 26 键，声明页三项（功能关闭 / 软件完整性 / 旧版系统）进 `popups` 视图与弹窗，中英双态，六种关闭路径零残留；实现层 D07 未启动。
+
+Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline --lib` 298 / 0；四守卫零命中；56 张 PNG 重渲。`src/` / Cargo.* / vendor/ 零改动，仍 26 包 / 25 第三方。

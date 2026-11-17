@@ -28,7 +28,7 @@ SCENES = [
     ("13-logs-drawer", "logs-drawer", "日志抽屉"),
     ("14-settings", "settings", "设置 · 纸感表单"),
     ("15-about", "about", "关于与外观"),
-    ("16-popups", "popups", "弹窗全集 11 类"),
+    ("16-popups", "popups", "声明页与弹窗全集 13 类"),
     ("17-lightweight", "lightweight", "轻量模式极简视图"),
     ("18-error", "error", "异常与边界六态"),
     ("19-narrow", "narrow", "侧栏收起态"),

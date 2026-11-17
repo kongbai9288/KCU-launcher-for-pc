@@ -2853,7 +2853,7 @@ EQ-14 关闭；EQ-01 ~ EQ-13、EQ-15 仍待拍板；真实网络 IO、UI 宿主�
 
 8 类不可用配置回退并带 `reason`：`empty_endpoint` / `unsupported_scheme` / `query_not_allowed` / `invalid_path` / `missing_authority` / `missing_host` / `uri_parse_failed` / `invalid_authority`，另加 `template_not_supported`。`http::plan` 会追加 `?page=&ids=`，配置带 query 必须拒。`§` 模板是原需求第 29 条，本轮**显式拒绝并登记未启动**，不假装支持。
 
-**验证**：`cargo test --offline --lib` **280 → 298 / 0**（新增 18：endpoints 11 + download 7）；全量 **324 / 0** = 298 单元 + 7 http_construct + 6 window_handle_contract + 7 lifecycle（44.87 s 真加载 cdylib）+ 6 abi（109.39 s）；Windows GNU 交叉检查通过；panic / semver / i18n / lang 四守卫零命中；CI 口径 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；40 份 demos HTML `node new Function` 全通过。零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。UI 闸门**未触发**：UX HTML、两个语言包、56 张 PNG 零 diff。
+**验证**：`cargo test --offline --lib` **280 → 298 / 0**（新增 18：endpoints 11 + download 7）；全量 **324 / 0** = 298 单元 + 7 http_construct + 6 window_handle_contract + 7 lifecycle（44.87 s 真加载 cdylib）+ 6 abi（109.39 s）；Windows GNU 交叉检查通过；panic / semver / i18n / lang 四守卫零命中；CI 口径 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；41 份 demos HTML `node new Function` 全通过。零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。UI 闸门**未触发**：UX HTML、两个语言包、56 张 PNG 零 diff。
 
 本轮真实问题：
 
@@ -2871,3 +2871,43 @@ EQ-14（049）、EQ-15（050）关闭；EQ-01 ~ EQ-13 仍待拍板；真实网�
 ## 050 交付快照
 
 本地主快照 `9a32d4d` ↔ 远端 `15a0e3d`，**1014 文件 ALL_MATCH True**（DIFF 0 / EXTRA 0 / tree `truncated=false`）。推送一次成功，复用远端已有 blob 906 个、增量 19 项；未强推、未重写历史。全仓零凭据、`.git/config` 干净、后端仓 0 写请求、临时凭据核对后删除。
+
+## 051
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/51-round-051-instructions.txt | 逐字副本：「干」 |
+| docs/records/round-051-full-readback.md | B02 逐字复读证据：4 份文件字节 / 行 / SHA-256 + 命中条款行号 |
+| docs/decisions/051-compliance-and-declaration.md | U116–U120、V1–V16、E101–E104、四值 |
+| docs/verification/round-051.md | 20 条复跑证据 |
+| demos/lang/zh-CN.js / en-US.js | 加 `DECLARATION`（3 行 × 5 字段）、`DECL_META`；键数 24 → 26 |
+| demos/ui-full-kcu-paper.html | `popups` 视图声明页三卡、`declaration` 弹窗内三卡、`loadData` / `setLang` 重建、`curPopId` 状态清理 |
+| scripts/render_ui.py | 16-popups 场景标题 11 → 13 类 |
+| demos/preview/*.png | 56 张重渲 |
+| demos/round-051-declaration.html | 运行逻辑演示（19 步可点，非整页 UX HTML） |
+| 索引与记录 | docs/index 262 项、README、decisions/index、requirement-compliance-audit、pending-question-environments、interface-log I80–I82、ai-errors A178–A182、code-ownership-audit、ui-demo 闸门判定 |
+
+050 结尾留的是 EQ-01 ~ EQ-13 待拍板与 B 类偏差台账；用户回「干」，按「按默认往下走」继续修 B 类，本轮取 B01 / B02 / B06。
+
+**B02**：此前各轮只核 `docs/index.md` 必读项与防错清单的存在性。本轮在写任何代码之前，对 `00-requirements.txt`（16422 B / 261 行 / `23ffbf3fe341ce4f`）、`ai-errors.md`（33640 B / 354 行 / `2f4f44cde1d61c4d`）、`11-features-input.txt`（17096 B / 268 行 / `1c3ff1a282863dfb`）、`12-server-features-input.txt`（4970 B / 64 行 / `03a62d90a2325fdf`）执行全文读取并落盘，命中条款带行号。**如实**：只有 `00-requirements.txt` 261 行全文回显，其余三份未逐行打印。
+
+**B01**：本轮回复按 §14 的 12 项固定结构组织（第一行结论、时间戳回显、目标范围、代码、运行逻辑 HTML、自我批判、四值、独立验证、自评、通过标记判定、文档更新、唯一下一步）。035–047 历史回复缺时间戳与自我批判，不补写、不重写；B01 状态是「本轮起按结构执行」，不是「已修」。
+
+**B06**：048 登记「声明页弹窗外壳有，三项具体内容未做」。本轮两语言包各加 `DECLARATION` 3 行 × 5 字段（功能关闭说明 / 软件完整性 / 旧版系统说明）与 `DECL_META` 2 项，键数 24 → 26；`popups` 视图新增 `declDetail` 三卡，点「声明页」弹窗内也带三卡；`loadData` / `setLang` 重建两键；`renderPops` 与 `popCnt` 随 `LOCALE` 切换，弹窗正文移除 `id=` 工程标签。**如实**：三项是演示层文案与界面形态，`从 GitHub/atomgit 拉版本平台信息`、完整性校验算法、Win7 判定属 D07 实现层未启动，B06 不能标「已修」。
+
+**弹窗计数**：`ZH_TEXT['t.0259']` 与 `EN_TEXT['t.0259']` 原文「11 类 · …」，而 037 起 `POPUPS` 实为 13 项；两包与 `render_ui.py` 场景标题统一改 13 类。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E101 | Playwright 首版 ESC 关闭后 `popState['declaration']` 仍为 `true` | 加 `curPopId`，`closeDlg` 统一清状态并重渲；复跑断言 `false` |
+| E102 | 弹窗页副标题写 11 类，`POPUPS` 实为 13 项（037 遗留） | 两语言包 `t.0259` 与 `render_ui.py` 标题同步改 13 |
+| E103 | 验证脚本用 `dlgTitle` / `dlgBody`，实际 id 是 `mdTitle` / `mdBody`，首跑 FAIL | 按 HTML 实际 id 改脚本，不改断言口径 |
+| E104 | 综合验证连续 6 次被网关 502 / 超时截断 | 拆单条短命令重跑补齐，未降验收项 |
+
+**验证**：`cargo test --offline --lib` 298 / 0；`http_construct` 7 / 0、`window_handle_contract` 6 / 0；`src/` / Cargo.* / vendor/ 零 diff；panic / semver / i18n / lang 四守卫零命中（`lang_guard keys 26`、`i18n_guard inline_bilingual_cn_lines 121`）；`P09_HITS 0`；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；41 份 demos HTML 脚本 `node new Function` 全通过；`yaml.safe_load` scan 8 steps；`render_ui.py` 51 shots / 56 PNG；Playwright 中文三卡、弹窗三卡、ESC 关闭零残留、英文三卡与 `Home`、切回中文三卡，**0 控制台错误**。UI 闸门触发。
+
+**四值**：B02 复读证据、B01 本轮结构、B06 演示层三项、298 / 0、`src/` 零改动 = 已证实；B01 / B02 历史缺失 = 已失败（不补写）；B06 实现层与 D07 = 未启动；GUI 端到端 / 真实网络 IO / Win7 运行时 = 受阻。独立验证「部分通过」，**未发通过标记**。
+
+**下一步**：继续按台账走 B06 的实现层「软件完整性验证」——用已进构建的 ed25519-compact 做本地签名比对，不拉新依赖、不碰真实网络 IO；或用户点 EQ-01 ~ EQ-13 任一编号。

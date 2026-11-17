@@ -311,3 +311,7 @@ python3 scripts/render_ui.py
 ## 050 闸门判定
 
 本轮改 `src/core/endpoints.rs` / `src/lightweight/download.rs` / `src/core/mod.rs`，新增 `demos/round-050-endpoint.html`（**流程 HTML，不是 UX HTML**）。**UI 闸门未触发**：`demos/ui-full-kcu-paper.html`、两个语言包、56 张 PNG 全部零 diff；设置页端点输入控件属 UI 层未启动，不在本轮范围。按 018 的口径，动界面轮次才出整页 UX 演示，本轮明确标注「非整页 UX 演示」。
+
+## 051 闸门判定
+
+**触发**。本轮改 `demos/ui-full-kcu-paper.html`（`popups` 视图新增声明页三卡、`declaration` 弹窗内容）、两个语言包、`scripts/render_ui.py` 场景标题。`python3 scripts/render_ui.py` 重渲 51 场景 / 56 张 PNG；Playwright `file://` 离线验证中→英→中、0 控制台错误；修完后才提交。`demos/round-051-declaration.html` 是流程 HTML，不是整页 UX 演示。`src/` 零改动，实现层未动。

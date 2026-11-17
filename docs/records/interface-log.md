@@ -617,3 +617,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I78 | `src/core/mod.rs` | 注册 `pub mod endpoints;` |
 | I79 | 配置键 | `endpoints["download/batch"]`，值可为完整 URL 或仅 authority |
 | S49 | 状态 | U110–U115 已证实；零新增依赖；设置页端点控件未启动；D-050-1 已登记 |
+
+## 051 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I80 | `demos/lang/*.js` | `DECLARATION`（3×5 字段）、`DECL_META`（2 项），键数 24 → 26 |
+| I81 | `demos/ui-full-kcu-paper.html` | `DECLARATION` / `DECL_META` 变量、`loadData` / `setLang` 重建、`renderDeclaration`、`declDetail`、`curPopId` |
+| I82 | 弹窗关闭契约 | `closeDlg` 统一清 `popState`；六种关闭路径零残留 |
+| S50 | 状态 | U116–U120 已证实；B06 实现层未启动；`src/` 零改动 |
