@@ -315,3 +315,7 @@ python3 scripts/render_ui.py
 ## 051 闸门判定
 
 **触发**。本轮改 `demos/ui-full-kcu-paper.html`（`popups` 视图新增声明页三卡、`declaration` 弹窗内容）、两个语言包、`scripts/render_ui.py` 场景标题。`python3 scripts/render_ui.py` 重渲 51 场景 / 56 张 PNG；Playwright `file://` 离线验证中→英→中、0 控制台错误；修完后才提交。`demos/round-051-declaration.html` 是流程 HTML，不是整页 UX 演示。`src/` 零改动，实现层未动。
+
+## 052 闸门判定
+
+**未触发**。本轮改 `src/core/integrity.rs` 与 `src/core/mod.rs`，新增 `demos/round-052-integrity.html`（**流程 HTML，不是 UX HTML**）、功能登记与文档。`demos/ui-full-kcu-paper.html`、两个语言包、56 张 PNG 全部零 diff。051 的 `DECLARATION` 三卡与按钮保持静态预览，未接实现层回调；渲染层接线属 UI 层，动到那层才按闸门规则出整页演示与预览图。

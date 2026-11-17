@@ -2915,3 +2915,44 @@ EQ-14（049）、EQ-15（050）关闭；EQ-01 ~ EQ-13 仍待拍板；真实网�
 ## 051 交付快照
 
 本地主快照 `9d4b292` ↔ 远端 `c79b278`，**1020 文件 ALL_MATCH True**（DIFF 0 / EXTRA 0 / tree `truncated=false`）。推送一次成功，复用远端已有 blob 911 个、增量 76 项；未强推、未重写历史。全仓零凭据、`.git/config` 干净、后端仓 0 写请求、临时凭据核对后删除。
+
+## 052
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/52-round-052-instructions.txt | 逐字副本：「干」 |
+| docs/records/round-052-full-readback.md | B02 复读证据：4 份字节 / 行 / SHA-256；防错清单 364 行全文回显 |
+| docs/decisions/052-integrity-verification.md | U121–U129、V1–V16、E105–E108、自我批判、四值 |
+| docs/verification/round-052.md | 24 条复跑证据 |
+| docs/features/software-integrity.md | F052-01 五字段登记、顺序、分级、缓存、三动作映射、未启动项 |
+| src/core/integrity.rs | **主交付**：608 行，本地签名比对与分级兜底 |
+| src/core/mod.rs | 注册 `pub mod integrity;` |
+| demos/round-052-integrity.html | 运行逻辑演示（19 步可点，非整页 UX HTML） |
+| 索引与记录 | docs/index 268 项、README、decisions/index、requirement-compliance-audit、pending-question-environments、interface-log I83–I85、ai-errors A183–A187、code-ownership-audit、implementation-strategy、ui-demo 闸门判定 |
+
+051 结尾写「继续按台账走 B06 的实现层软件完整性验证 —— 用已进构建的 ed25519-compact 做本地签名比对，不拉新依赖、不碰真实网络 IO；或用户点 EQ-01 ~ EQ-13 任一编号」。用户回「干」，按默认走前者；**用户未点 EQ 编号，登记 D-052-1，不写成已决断**。
+
+**B02**：对 4 份原文执行全文 `read_text()` 与逐行遍历；`docs/checklists/ai-errors.md` 34458 B / 364 行 / `b08e96ae816e4895` **全文回显**（A182 点名、此前从未逐字打印）；`00-requirements.txt` 261 行已于 051 全文回显；另两份全文遍历未逐行打印。防错清单哈希较 051 变化是 051 自己追加 A178–A182 所致。
+
+**A158 阈值核对**：全仓 grep `consecutive` / `safe_mode` / `SAFE_MODE`，`src/dispatcher/launcher.rs:470-474` 是第 3 次失败进安全模式；本模块 `SAFE_MODE_AFTER=3` 与之一致。
+
+**落地**：验签复用 036 `verify_detached`（ed25519-compact）且**排在解析之前**；manifest 用 `serde_json::Value` 的 `get` / `as_str` / `as_array`，空集合 / 缺字段 / 超 4096 项 / 摘要非 128 位 hex 全返回 `Fatal`，无 `expect` 与下标 panic；路径走 048 `robust::safe_join`；摘要用 037 的 `sha512` + 042 的 `hex`；缓存复用 029 的 `Cache`（`path:len -> sha512hex`，容量 256 / TTL 30 s），`refresh()` 全清，**签名与判定每次重跑、不缓存结论**；`OpBudget` 限 64 次/秒，超限返回 `disabled` 而非 `ok`；连续失败 ≥3 导出 `DiagnosticBundle`（诊断行 / 配置快照 / 运行时 / 模块列表）；结果带 `Envelope::new(Kind::Response, "core.integrity")`，`code` / `level` / `checked` / `safe_mode` 字段，诊断行单行 `[KCU]`。**零新增第三方**，`Cargo.toml` / `Cargo.lock` / `vendor/` 未动，仍 26 包 / 25 第三方。
+
+`public_key` / `signature` / `manifest_bytes` / `root` / `read` 全部由调用方注入，代码不内置信任根、不写绝对路径、不发网络请求，符合 §7.3 与 A12 / A13。发行物公钥分发流程**未启动**。
+
+**演示层三动作映射**：「用默认继续」→ `level != Ok && safe_mode=0`，忽略自定义配置用内置默认；「重新获取」→ `refresh()` 后重走 `verify()`；「取消」→ 不继续启动。**如实**：051 的三卡与按钮仍是静态预览，未接实现层回调，渲染层接线属 UI 层未启动。B06 只补签名比对一项，拉版本平台信息与 Win7 判定仍属 D07 未启动，不能把 B06 整体写成「已修」。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E105 | 首版不确定 `sha512::Hash` 是否实现 `AsRef` | 编译验证通过，未改断言 |
+| E106 | 全局把 `disk` 改成 `_disk` 误改 7 处，5 处仍引用 → 6 个 E0425 | 全部恢复，按编译警告精确定位 3 行，复跑 313 / 0 零 warning |
+| E107 | 反向注入验签判定后 9 个测试 FAILED，不是预估的 2 个 | 按实记录 9 个；证明验签是全部正向路径的共同前置，未调整测试 |
+| E108 | abi 集成首跑被网关 502 截断 | 等待后重跑 6 / 0，断言没降 |
+
+**验证**：`cargo test --offline --lib core::integrity` 15 / 0；`cargo test --offline --lib` **313 / 0**（298 + 15，零 warning）；`http_construct` 7 / 0、`window_handle_contract` 6 / 0、`plugin_lifecycle_load` 7 / 0（54.54 s 真加载 cdylib）、`plugin_abi_load` 6 / 0（116.87 s）；全量 **339 / 0**；Windows GNU 交叉检查通过（35.04 s）；panic / semver / i18n / lang 四守卫零命中（`files 39 hits 0`、`keys 26`）；`P09_HITS 0`；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；42 份 demos HTML `node new Function` 全通过；`yaml.safe_load` scan 8 steps；反向验证 9 FAILED → 恢复 15 / 0。UI 闸门**未触发**：UX HTML、两语言包、56 张 PNG 零 diff。
+
+**四值**：B02 复读、B06 实现层、313 / 0、339 / 0、零新增依赖 = 已证实；B01 / B02 历史缺失 = 已失败（不补写）；B06 其余两项、D07 取数与分发、渲染层接线 = 未启动；EQ-01 ~ EQ-13 拍板 = 未证实；GUI 端到端 / 真实网络 IO / Win7 与 MSVC 运行时 = 受阻。独立验证「部分通过」，**未发通过标记**。
+
+**下一步**：继续按台账走 B06 剩余两项中的「自动关闭某功能」——从版本平台信息得到可用范围后关闭对应入口，属真实网络 IO 层，需 EQ-01 / EQ-03 的 Win7 TLS 口径拍板才能动；或用户点 EQ-01 ~ EQ-13 任一编号。

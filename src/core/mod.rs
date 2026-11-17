@@ -14,3 +14,4 @@ pub mod asynk;
 pub mod leak;
 pub mod robust;
 pub mod endpoints;
+pub mod integrity;

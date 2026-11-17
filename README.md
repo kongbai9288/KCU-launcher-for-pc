@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 051 |
+| 当前轮次 | 052 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -291,3 +291,9 @@ B02：4 份原文全文读取，字节 / 行 / SHA-256 落 `docs/records/round-0
 Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline --lib` 298 / 0；四守卫零命中；56 张 PNG 重渲。`src/` / Cargo.* / vendor/ 零改动，仍 26 包 / 25 第三方。
 
 | 交付快照 | 本地 `9d4b292` ↔ 远端 `c79b278`，1020 文件 ALL_MATCH True |
+
+## 052 软件完整性验证（B06 实现层）
+
+`src/core/integrity.rs`：签名校验排在解析之前，四级兜底（ok / degraded / disabled / fatal），连续失败 ≥3 导出诊断包，摘要缓存含长度键且 `refresh()` 全清，**签名与判定不缓存结论**，限流不返回通过。公钥与文件读取由调用方注入，代码不内置信任根、不写路径、不发网络请求。
+
+`cargo test --offline --lib` **313 / 0**，全量 **339 / 0**，Windows GNU 交叉检查通过，四守卫零命中，反向注入验签判定 9 FAILED、恢复 15 / 0。零新增依赖，仍 **26 包 / 25 第三方**。UI 闸门未触发，UX HTML 与 56 张 PNG 零 diff。

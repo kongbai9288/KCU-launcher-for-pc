@@ -626,3 +626,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I81 | `demos/ui-full-kcu-paper.html` | `DECLARATION` / `DECL_META` 变量、`loadData` / `setLang` 重建、`renderDeclaration`、`declDetail`、`curPopId` |
 | I82 | 弹窗关闭契约 | `closeDlg` 统一清 `popState`；六种关闭路径零残留 |
 | S50 | 状态 | U116–U120 已证实；B06 实现层未启动；`src/` 零改动 |
+
+## 052 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I83 | `src/core/integrity.rs` | 新增；`Verifier` / `VerifyInput` / `Outcome` / `Level` / `Manifest` / `DiagnosticBundle` / `parse_manifest` |
+| I84 | 复用接口 | `updater::verify::verify_detached`(036)、`ed25519_compact::sha512`(037)、`hex`(042)、`serde_json`(031)、`robust::safe_join`/`OpBudget`(048)、`cache::Cache`(029)、`envelope::Envelope`(031)、`diag_line` |
+| I85 | 常量 | `SAFE_MODE_AFTER=3`（与 dispatcher 一致）、`MAX_MANIFEST_ENTRIES=4096`、`MAX_FILE_BYTES=64MiB`、`CACHE_CAPACITY=256`、`CACHE_TTL_SECS=30` |
+| S51 | 状态 | U121–U129 已证实；零新增依赖；取数与分发未启动；渲染层按钮未接线 |
