@@ -107,3 +107,5 @@
 | 051 | 输出结构对齐、开工逐字复读、声明页三项 | 演示层与文档层落地，src 零改动 | 051-compliance-and-declaration.md |
 
 | 052 | B06 实现层软件完整性验证 | src 落地，零新增依赖 | 052-integrity-verification.md |
+
+| 053 | B06 第二项自动关闭功能判定层 | src 落地，零新增依赖 | 053-auto-disable-feature.md |

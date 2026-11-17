@@ -635,3 +635,13 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I84 | 复用接口 | `updater::verify::verify_detached`(036)、`ed25519_compact::sha512`(037)、`hex`(042)、`serde_json`(031)、`robust::safe_join`/`OpBudget`(048)、`cache::Cache`(029)、`envelope::Envelope`(031)、`diag_line` |
 | I85 | 常量 | `SAFE_MODE_AFTER=3`（与 dispatcher 一致）、`MAX_MANIFEST_ENTRIES=4096`、`MAX_FILE_BYTES=64MiB`、`CACHE_CAPACITY=256`、`CACHE_TTL_SECS=30` |
 | S51 | 状态 | U121–U129 已证实；零新增依赖；取数与分发未启动；渲染层按钮未接线 |
+
+## 053 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I86 | `src/core/feature_gate.rs` | `FeatureGate` / `GateInput` / `DeviceCaps` / `GateOutcome` / `FeatureState` / `Notice` / `GateSource` / `BUILTIN_POLICY` / `KNOWN_FEATURES` / `CORE_LOCKED` / `parse_entries` |
+| I87 | `src/core/integrity.rs` 增量 | `VerifyInput.offline`、`Outcome.declaration`、信封 `declaration` / `offline`、诊断行 `declaration=0/1` |
+| I88 | 复用接口 | `verify_detached`(036)、`semver::Version::cmp_precedence`(034)、`serde_json`(031)、`robust::check_text`/`OpBudget`(048)、`cache::Cache`(029)、`Envelope`(031)、`CancelToken`(027)、`diag_line` |
+| I89 | 常量 | `MAX_POLICY_ENTRIES=512`、`MAX_POLICY_BYTES=256KiB`、`MAX_REQUIRES=16`、`CACHE_CAPACITY=128`、`CACHE_TTL_SECS=30` |
+| S52 | 状态 | U130–U142 已证实；零新增依赖；平台取数与分发未启动；渲染层按钮未接线 |

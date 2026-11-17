@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 053 自动关闭某功能（B06 第二项）</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:320px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:164px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>053 运行逻辑</h1><div class="sub">B06 第二项 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>两个来源</h3><p id="m1">未运行</p><span class="badge g">设备能力由宿主注入</span><span class="badge g">平台策略签名快照</span><span class="badge g">内置默认策略</span></div>
+<div class="mini"><h3>安全默认</h3><p id="m2">未运行</p><span class="badge g">验签失败不关任何功能</span><span class="badge r">未知 id 忽略</span><span class="badge r">设置 / 关于锁定</span></div>
+<div class="mini"><h3>声明与刷新</h3><p id="m3">未运行</p><span class="badge g">每处关闭一条可关声明</span><span class="badge g">三动作</span><span class="badge g">refresh 全清</span></div>
+<div class="mini"><h3>验证</h3><p id="m4">未运行</p><span class="badge g">331 / 0 单元</span><span class="badge g">357 / 0 全量</span><span class="badge g">双向注入 1 + 10 FAILED</span></div>
+</div><div class="note" id="note">离线口径分开：完整性验证「失败则声明软件可能被修改，离线则不声明」；自动关闭功能是本地判定，离线仍显示声明但标注来源为内置默认策略。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','本地 7aae835 / 1028 文件 / 干净'],
+['02','逐字落盘','53-round-053-instructions.txt = 干'],
+['03','B02 全文复读','功能原文 268 行全文回显'],
+['04','复读发现偏差','052 缺「离线则不声明」'],
+['05','统一调研','4 份一手资料 + 2 项不采用'],
+['06','读 B06 台账','第二项自动关闭功能未启动'],
+['07','修 052 遗留','offline / declaration 字段落地'],
+['08','内置默认策略','控制平面断开不擅自关闭'],
+['09','边界先判','空 / 超 256 KiB → builtin'],
+['10','验签最先','失败不解析、不关任何功能'],
+['11','字段白名单','拒 url / token / depends_on'],
+['12','未知 id 与锁定','忽略未知，设置与关于永不关'],
+['13','设备能力判定','requires 全真才启用'],
+['14','版本范围','cmp_precedence 不用 =='],
+['15','过期 flag','过期忽略不生效'],
+['16','声明项','一处关闭一条可关声明 · 三动作'],
+['17','缓存与刷新','判定缓存 128 / TTL30 / refresh 全清'],
+['18','取消与限流','取消 0 副作用，限流不关功能'],
+['19','反向验证','两次注入 1 + 10 FAILED，恢复 331 / 0'],
+['20','全量验证','357 / 0 + 四守卫 + Windows GNU'],
+['21','提交推送','本地 + 远端逐项比对']];
+const DETAIL={'01':'V052 local_7aae835 remote_d7d0e35 files_1028 clean','02':'SPEC cmp 0','03':'READBACK 11_features_268_lines_full_echo','04':'E109 00_req_line12 offline_no_declaration_missing','05':'RESEARCH 4_sources 2_rejected urls_full','06':'AUDIT B06 item2 not_started','07':'U130 offline_field declaration_field 3_tests','08':'U131 BUILTIN_POLICY source_builtin fail_open','09':'U132 policy_size_256KiB fallback','10':'U133 verify_before_parse never_disable','11':'U134 forbidden_keys url_token_depends_on','12':'U135 known_features_14 core_locked_2','13':'U136 requires_all_true no_system_detection','14':'U137 cmp_precedence build_metadata','15':'U138 expires_iso_date ignored','16':'U139 notice_closable_3_actions diag_per_notice','17':'U140 cache_128_ttl30 refresh_clear','18':'U141 cancel_0_side_effects rate_limit_no_disable','19':'E110 inject_unknown_1_FAILED E111 inject_sig_10_FAILED','20':'VERIFY 331_0 357_0 guards_0 win_gnu_ok js_43','21':'PUSH ALL_MATCH'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'B02 全文复读','04':'复读发现偏差','05':'统一调研','06':'读 B06 台账','07':'修 052 遗留','08':'内置默认策略','09':'边界先判','10':'验签最先','11':'字段白名单','12':'未知 id 与锁定','13':'设备能力判定','14':'版本范围','15':'过期 flag','16':'声明项','17':'缓存与刷新','18':'取消与限流','19':'反向验证','20':'全量验证','21':'提交推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20']);
+const M={'10':['m1','两个来源分开：① 设备能力 `DeviceCaps`（应用版本、当日日期、宿主注入的上下文键），本模块**不做任何系统检测**，能力由宿主 probe 注入；② 平台策略是「签名快照 + 本地判定」，不把中心服务放进请求路径。原文第 12 行要求调度器送的 json「必须内置」，所以 `BUILTIN_POLICY` 直接编译进模块：控制平面断开、签名不符、策略被删、畸形时一律回退到它。'],'12':['m2','**fail-open 是文档化的默认**：验签失败、策略畸形、条目判定异常，一律不关任何用户功能（误关比不关更糟）。`KNOWN_FEATURES` 14 项白名单，未知 id 直接忽略；`CORE_LOCKED` 的 `core.locked.settings` / `core.locked.about` 永不关闭（020 锁定）。策略字段走严格白名单，`url` / `token` / `depends_on` 等一律拒：功能开关里不放 API 地址、不放凭据、不放嵌套依赖。'],'16':['m3','每处关闭生成一条 `Notice`：语义 `reason_key`（`gate.reason.device` / `version` / `platform`）、`closable=true`、三动作 `gate.act.default` / `gate.act.refresh` / `gate.act.cancel`，与 051 声明页三项对齐；每条再写一条单行 `[KCU]` 诊断，流程结束 0 残留。判定缓存 128 / TTL 30 s，`refresh()` 全清后重跑签名与全部判定；**签名与结论不缓存**。'],'20':['m4','`cargo test --offline --lib` **331 / 0**（052 的 313 + 15 新增 + 3 个 offline 修正），零 warning；全量 **357 / 0**（+7 http +6 window +7 lifecycle/36.45 s +6 abi/108.13 s）；Windows GNU 交叉检查通过；panic / semver / i18n / lang 四守卫零命中；`NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；43 份 demos HTML 脚本全通过；反向注入「允许未知 id」1 FAILED、「反转验签」10 FAILED，恢复后 331 / 0。`Cargo.toml` / `Cargo.lock` / `vendor/` 零改动，仍 26 包 / 25 第三方。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.audit','q.audit','q.reference','q.audit','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.audit','q.audit','core.push'];return 'kcu-'+String(i+1).padStart(8,'0')+' '+k[i]+' '+i+1+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===20)document.getElementById('note').textContent='B06 三项：演示层三项（051）、软件完整性（052）、自动关闭功能判定层（053）已落地；平台信息取数、公钥分发、渲染层接线仍属 D07 未启动。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},200);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='离线口径分开：完整性验证「失败则声明软件可能被修改，离线则不声明」；自动关闭功能是本地判定，离线仍显示声明但标注来源为内置默认策略。';}
+</script></body></html>

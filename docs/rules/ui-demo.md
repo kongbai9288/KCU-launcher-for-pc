@@ -319,3 +319,7 @@ python3 scripts/render_ui.py
 ## 052 闸门判定
 
 **未触发**。本轮改 `src/core/integrity.rs` 与 `src/core/mod.rs`，新增 `demos/round-052-integrity.html`（**流程 HTML，不是 UX HTML**）、功能登记与文档。`demos/ui-full-kcu-paper.html`、两个语言包、56 张 PNG 全部零 diff。051 的 `DECLARATION` 三卡与按钮保持静态预览，未接实现层回调；渲染层接线属 UI 层，动到那层才按闸门规则出整页演示与预览图。
+
+## 053 闸门判定
+
+**未触发**。本轮改 `src/core/feature_gate.rs` 与 `src/core/integrity.rs`（增量字段），新增 `demos/round-053-feature-gate.html`（**流程 HTML，不是 UX HTML**）、功能登记、调研与文档。`demos/ui-full-kcu-paper.html`、两个语言包、56 张 PNG 全部零 diff。051 的 `DECLARATION` 三卡与按钮保持静态预览，未接 `GateOutcome` 回调；渲染层接线属 UI 层，动到那层才按闸门规则出整页演示与预览图。

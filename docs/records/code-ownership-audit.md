@@ -452,3 +452,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 052 零新增第三方
 
 `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。新增 `src/core/integrity.rs` 的验签、摘要、hex、JSON 解析、路径校验、LRU 缓存、信封、限流全部复用已进构建的库；项目侧只有顺序编排、四级分级、字段映射，**不是新开自写底座例外**（023 A03 已于 024 撤回）。`cargo test --offline --lib` 313 / 0，全量 339 / 0。
+
+## 053 零新增第三方
+
+`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。新增 `src/core/feature_gate.rs` 的验签、版本比较、JSON 解析、文本边界、LRU 缓存、信封、取消、限流全部复用已进构建的库；项目侧只有顺序编排、白名单策略、声明映射，**不是新开自写底座例外**（023 A03 已于 024 撤回）。`cargo test --offline --lib` 331 / 0，全量 357 / 0。

@@ -68,6 +68,9 @@ pub struct Outcome {
     pub checked: usize,
     pub mismatches: Vec<String>,
     pub safe_mode: bool,
+    /// 原文第 12 行「失败则声明软件可能被修改，离线则不声明」。
+    /// 离线时仍分级、仍记诊断、仍不给通过，只是不弹声明页。
+    pub declaration: bool,
     pub bundle: Option<DiagnosticBundle>,
 }
 
@@ -78,6 +81,7 @@ pub struct VerifyInput<'a> {
     pub signature: &'a [u8],
     pub root: &'a Path,
     pub consecutive_failures: u32,
+    pub offline: bool,
     pub config_snapshot: &'a str,
     pub runtime: &'a str,
     pub modules: &'a [String],
@@ -262,8 +266,10 @@ impl Verifier {
         mut details: Vec<String>,
     ) -> Outcome {
         let safe_mode = level != Level::Ok && input.consecutive_failures >= SAFE_MODE_AFTER;
+        let declaration = level != Level::Ok && !input.offline;
         details.push(format!("checked={}", checked));
         details.push(format!("level={}", level.code()));
+        details.push(format!("declaration={}", if declaration { "1" } else { "0" }));
         if safe_mode {
             details.push("safe_mode=1".to_string());
         }
@@ -275,6 +281,8 @@ impl Verifier {
             .with("code", code)
             .with("level", level.code())
             .with("checked", &checked.to_string())
+            .with("declaration", if declaration { "1" } else { "0" })
+            .with("offline", if input.offline { "1" } else { "0" })
             .with("safe_mode", if safe_mode { "1" } else { "0" });
         if level != Level::Ok {
             envelope = envelope.with_error(code);
@@ -308,6 +316,7 @@ impl Verifier {
             checked,
             mismatches,
             safe_mode,
+            declaration,
             bundle,
         }
     }
@@ -395,6 +404,7 @@ mod tests {
             signature: sig,
             root: Path::new("KCU"),
             consecutive_failures: failures,
+            offline: false,
             config_snapshot: "{}",
             runtime: "test",
             modules: &[],
@@ -596,6 +606,46 @@ mod tests {
             assert!(l.starts_with("[KCU] "));
             assert!(!l.contains('\n'));
         }
+    }
+
+    #[test]
+    fn offline_failure_suppresses_declaration_but_keeps_level() {
+        let (m, pk, sig, _disk) = signed_manifest(&[("config/launch.json", b"a")]);
+        let mut changed = BTreeMap::new();
+        changed.insert("config/launch.json".to_string(), b"bad".to_vec());
+        let mut inp = input(&m, &pk, &sig, 0);
+        inp.offline = true;
+        let v = Verifier::new();
+        let o = v.verify(&inp, reader(&changed));
+        assert_eq!(o.code, "integrity.content_mismatch");
+        assert_eq!(o.level, Level::FeatureDisabled);
+        assert!(!o.declaration);
+        assert_eq!(o.envelope.field("declaration"), Some("0"));
+        assert_eq!(o.envelope.field("offline"), Some("1"));
+        assert!(o.diagnostics[0].contains("declaration=0"));
+    }
+
+    #[test]
+    fn online_failure_declares_software_may_be_modified() {
+        let (m, pk, sig, _disk) = signed_manifest(&[("config/launch.json", b"a")]);
+        let mut changed = BTreeMap::new();
+        changed.insert("config/launch.json".to_string(), b"bad".to_vec());
+        let v = Verifier::new();
+        let o = v.verify(&input(&m, &pk, &sig, 0), reader(&changed));
+        assert!(o.declaration);
+        assert_eq!(o.envelope.field("declaration"), Some("1"));
+        assert_eq!(o.envelope.field("offline"), Some("0"));
+        assert!(o.diagnostics[0].contains("declaration=1"));
+    }
+
+    #[test]
+    fn passing_result_never_declares() {
+        let (m, pk, sig, disk) = signed_manifest(&[("config/launch.json", b"a")]);
+        let v = Verifier::new();
+        let o = v.verify(&input(&m, &pk, &sig, 0), reader(&disk));
+        assert_eq!(o.level, Level::Ok);
+        assert!(!o.declaration);
+        assert_eq!(o.envelope.field("declaration"), Some("0"));
     }
 
     #[test]

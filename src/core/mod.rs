@@ -15,3 +15,4 @@ pub mod leak;
 pub mod robust;
 pub mod endpoints;
 pub mod integrity;
+pub mod feature_gate;

@@ -2960,3 +2960,50 @@ EQ-14（049）、EQ-15（050）关闭；EQ-01 ~ EQ-13 仍待拍板；真实网�
 ## 052 交付快照
 
 本地主快照 `d78b85d` ↔ 远端 `751eef0`，**1028 文件 ALL_MATCH True**（DIFF 0 / EXTRA 0 / tree `truncated=false`）。推送一次成功，复用远端已有 blob 916 个、增量 20 项；未强推、未重写历史。全仓零凭据、`.git/config` 干净、后端仓 0 写请求、临时凭据核对后删除。
+
+## 053
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/53-round-053-instructions.txt | 逐字副本：「干」 |
+| docs/records/round-053-full-readback.md | B02 复读证据：4 份字节 / 行 / SHA-256；功能原文 268 行全文回显 |
+| docs/research/21-feature-gate.md | 统一调研：3 组关键词 6 条，采用 4 条 / 不采用 2 条，完整 URL 与一手原句 |
+| docs/decisions/053-auto-disable-feature.md | U130–U142、V1–V19、E109–E114、三轮迭代与自评 9.4、四值 |
+| docs/verification/round-053.md | 26 条复跑证据 |
+| docs/features/auto-disable-feature.md | F053-01 五字段登记、两个来源、顺序、fail-open、声明与刷新、离线口径、未启动项 |
+| src/core/feature_gate.rs | **主交付**：796 行，自动关闭功能判定层 |
+| src/core/integrity.rs | 增量：`offline` / `declaration` 字段与 3 个测试（修 052 遗留） |
+| src/core/mod.rs | 注册 `pub mod feature_gate;` |
+| demos/round-053-feature-gate.html | 运行逻辑演示（21 步可点，非整页 UX HTML） |
+| 索引与记录 | docs/index 275 项、README、decisions/index、requirement-compliance-audit、pending-question-environments、interface-log I86–I89、ai-errors A188–A193、code-ownership-audit、implementation-strategy、ui-demo 闸门判定 |
+
+052 结尾写「继续按台账走 B06 剩余两项中的『自动关闭某功能』——从版本平台信息得到可用范围后关闭对应入口，属真实网络 IO 层，需 EQ-01 / EQ-03 的 Win7 TLS 口径拍板才能动」。用户回「干」，未点 EQ 编号；按 050 的 A177 把**不碰真实网络 IO 的判定层**先落地，取数与分发仍标未启动，登记 **D-053-1**（我的默认，不是用户决断）。
+
+**B02**：对 4 份原文执行全文 `read_text()` 与逐行遍历；`docs/spec/11-features-input.txt` 17096 B / 268 行 / `1c3ff1a282863dfb` **全文回显**（048 合规核对 C/D 类所依据的功能原文，此前从未逐字打印）。`ai-errors.md` 本轮 374 行（052 追加 A183–A187 所致）。复读在写任何代码之前完成。
+
+**E109（复读发现的真实偏差）**：原文第 12 行「软件完整性验证[失败则声明软件可能被修改，**离线则不声明**]」，052 的 `Outcome` 没有 `offline` / `declaration`，失败一律会触发声明。本轮 `VerifyInput.offline` + `Outcome.declaration` + 信封字段 + 诊断行 `declaration=0/1` + 3 个测试补齐；052 历史验证报告按 B01 口径不补写。
+
+**统一调研**：3 组关键词 6 条结果，采用 R01 签名快照与 fail-open 默认、R02 四类开关 / 活跃上限 / 禁止嵌套与禁止放地址凭据、R03 VS Code when-clause 上下文键、R04 Minecraft Launcher 设置开关形态；不采用 `vscode.cool`（视频教程目录）与不可展示的 Wiki diff 片段。完整 URL 与一手原句在 `docs/research/21-feature-gate.md`。未证实：VS Code 官方原站正文、平台版本信息 schema、真实网络 IO、Win7 / MSVC 运行时。
+
+**落地**：`BUILTIN_POLICY` 编译进模块（原文「必须内置」）；策略缺失 / 空 / 超 256 KiB → 内置默认；验签复用 036 且**排在解析之前**，失败不解析内容、不关任何功能；`serde_json` 严格字段白名单拒 9 类键（`url` / `token` / `depends_on` 等）；`KNOWN_FEATURES` 14 项白名单 + `CORE_LOCKED` 两项永不关；`DeviceCaps.context` 宿主注入布尔键、`requires` 全真才启用；`min_app` / `max_app` 用 034 的 `cmp_precedence`；`expires` 过期忽略；每处关闭生成 `Notice`（语义 reason_key / closable / 三动作）并写一条单行 `[KCU]` 诊断；判定缓存 128 / TTL 30 s，`refresh()` 全清后重跑签名与全部判定，**签名与结论不缓存**；`CancelToken` 取消 0 副作用、`OpBudget` 限流不关功能；`GateOutcome` 带统一信封。**零新增第三方**，`Cargo.toml` / `Cargo.lock` / `vendor/` 未动，仍 26 包 / 25 第三方。
+
+**离线口径不混用**：052 的「离线不声明」专指软件完整性验证；053 的自动关闭功能是本地判定，离线仍显示声明但来源标 `builtin`。若一律套「离线不声明」，用户反而看不到哪些功能被关了。
+
+**三轮真迭代与自评**：8.2（只做版本范围、漏设备能力与 052 遗留）→ 8.9（补内置默认 / 白名单 / 核心锁定 / 禁止字段 / fail-open / 缓存刷新 / 取消）→ **9.4**（补过期 flag、policy_version 进信封、每条关闭的可关声明、双向反向验证）。未给满分：平台取数与分发、渲染层接线未启动；调研只取到 VS Code 中文镜像；`expires` 是字符串日期比较，依赖调用方注入 ISO 格式。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E109 | B02 复读发现 052 缺「离线则不声明」 | U130 补字段与 3 个测试 |
+| E110 | `GateInput` derive `Debug` 因 `CancelToken` 无 `Debug` 触发 E0277 | 去掉 `Debug` derive，不动 027 模块 |
+| E111 | 文件头注释引用原文含「为了」，触发 CI wording 扫描 | 改述为等义描述，复跑 `NO_EXPLANATORY` |
+| E112 | 反向注入「允许未知 id」只有 1 个测试 FAILED | 按实记录 1，不为凑数补测试 |
+| E113 | 反向注入「反转验签」10 个测试 FAILED | 按实记录 10，证明验签是全部平台路径共同前置 |
+| E114 | 综合验证命令被网关 502 截断 | 拆单条短命令重跑补齐，未降验收项 |
+
+**验证**：`cargo test --offline --lib core::feature_gate` 15 / 0；`core::integrity` 18 / 0；`cargo test --offline --lib` **331 / 0**（313 + 15 + 3，零 warning）；`http_construct` 7 / 0、`window_handle_contract` 6 / 0、`plugin_lifecycle_load` 7 / 0（36.45 s 真加载 cdylib）、`plugin_abi_load` 6 / 0（108.13 s）；全量 **357 / 0**；Windows GNU 交叉检查通过（14.96 s）；panic / semver / i18n / lang 四守卫零命中（`files 40 hits 0`、`version_files 4 hits 0`、`keys 26`）；`P09_HITS 0`；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；43 份 demos HTML `node new Function` 全通过；`yaml.safe_load` scan 8 steps；反向注入 1 + 10 FAILED → 恢复 331 / 0。UI 闸门**未触发**：UX HTML、两语言包、56 张 PNG 零 diff。
+
+**四值**：B02 复读、E109 修正、B06 第二项判定层、331 / 0、357 / 0、零新增依赖 = 已证实；B01 / B02 历史缺失 = 已失败（不补写）；B06 平台取数 / 签发 / 公钥分发 / 渲染层接线 / Win7 判定 = 未启动；EQ-01 ~ EQ-13 拍板 = 未证实；GUI 端到端 / 真实网络 IO / Win7 与 MSVC 运行时 = 受阻。独立验证「部分通过」，**未发通过标记**。
+
+**下一步**：B06 三项的判定层已齐，剩下全在 D07 实现层（平台取数、签发分发、渲染层接线、Win7 声明文案），其中真实网络 IO 需 EQ-01 / EQ-03 的 Win7 TLS 口径拍板；或用户点 EQ-01 ~ EQ-13 任一编号。
