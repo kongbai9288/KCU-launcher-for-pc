@@ -645,3 +645,13 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I88 | 复用接口 | `verify_detached`(036)、`semver::Version::cmp_precedence`(034)、`serde_json`(031)、`robust::check_text`/`OpBudget`(048)、`cache::Cache`(029)、`Envelope`(031)、`CancelToken`(027)、`diag_line` |
 | I89 | 常量 | `MAX_POLICY_ENTRIES=512`、`MAX_POLICY_BYTES=256KiB`、`MAX_REQUIRES=16`、`CACHE_CAPACITY=128`、`CACHE_TTL_SECS=30` |
 | S52 | 状态 | U130–U142 已证实；零新增依赖；平台取数与分发未启动；渲染层按钮未接线 |
+
+## 054 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I90 | `src/core/region.rs` | `RegionGate` / `RegionInput` / `RegionOutcome` / `RegionNotice` / `Region` / `AccountKind` / `Action` / `DecisionSource` / `ALLOWED_SIGNAL_KEYS` / `FORBIDDEN_SIGNAL_KEYS` / `MAINLAND_TIMEZONES` / `region_subtag` / `diagnostic_payload` |
+| I91 | 复用接口 | `robust::check_text`/`OpBudget`(048)、`cache::Cache`(029)、`Envelope`(031)、`CancelToken`(027)、`diag_line`(032)、`serde_json::json!`(031) |
+| I92 | 常量 | `MAX_SIGNAL_BYTES=128`、`MAX_SIGNAL_KEYS=16`、`CACHE_CAPACITY=128`、`CACHE_TTL_SECS=30`、`LOAD_TIMEOUT_SECS=5` |
+| I93 | 状态 | U143–U155 已证实；零新增依赖；真实网络 IO / GUI 接线 / 特殊版标识注入未启动 |
+| S53 | 独立链 | 不读写 `config.rs::download_region`；`offline` 键显式不参与判定 |

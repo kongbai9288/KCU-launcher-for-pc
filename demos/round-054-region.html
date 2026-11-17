@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 054 境外离线账户限制（B08）</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:320px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:168px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>054 运行逻辑</h1><div class="sub">B08 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>原文第 7 行</h3><p id="m1">未运行</p><span class="badge g">特殊版除外</span><span class="badge r">境外禁离线登录/注册</span><span class="badge g">正版后正常</span><span class="badge g">大陆恢复</span><span class="badge r">禁网络打法</span></div>
+<div class="mini"><h3>不误伤</h3><p id="m2">未运行</p><span class="badge r">拒 ip / geoip / vpn / asn</span><span class="badge g">双信号一致才判境外</span><span class="badge g">单一 / 冲突 → Unknown</span><span class="badge g">失败一律不限制</span></div>
+<div class="mini"><h3>独立链路</h3><p id="m3">未运行</p><span class="badge g">不读写 download_region</span><span class="badge g">用户覆盖排第一</span><span class="badge g">第三方/正版不扩大</span></div>
+<div class="mini"><h3>验证</h3><p id="m4">未运行</p><span class="badge g">351 / 0 单元</span><span class="badge g">377 / 0 全量</span><span class="badge g">注入 5 + 1 FAILED</span></div>
+</div><div class="note" id="note">与 053 的「离线不声明」口径分开：本模块离线字段只过边界校验，显式不参与判定；网络可达与否不改变账户限制结论。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','本地 950e21c / 远端 4167881 / 1037 文件 / 干净'],
+['02','逐字落盘','54-round-054-instructions.txt = 干'],
+['03','B02 全文复读','5 份原文全文遍历 + 哈希'],
+['04','全文回显','开服器功能原文 64 行逐行打印'],
+['05','复读发现边界','config.rs 已有 download_region，演示层 t.0409 写着「仅下载选择，不复用为地区禁用」'],
+['06','统一调研','3 组关键词 9 条：采用 5 / 不采用 4'],
+['07','读 B08 台账','048 核对表：口径登记、未实现'],
+['08','原文逐条拆','6 条约束分别落规则，不合并'],
+['09','独立信号链','region.rs 不读写 config.download_region'],
+['10','禁用键白名单','ip / geoip / vpn / asn / token 等整份作废'],
+['11','双信号一致','locale 非 CN + 非大陆时区才判 Outside'],
+['12','单一与冲突','单信号 / zh-CN 配 America/New_York → Unknown'],
+['13','判定优先级','special > override > 正版 > 范围 > 动作'],
+['14','登录与注册','境外离线两项都拒，各给可关声明'],
+['15','不扩大范围','第三方与正版保持可用（D-054-2）'],
+['16','声明三动作','改用正版 / 手动指定地区 / 取消'],
+['17','缓存与刷新','128 / TTL30 / refresh 全清'],
+['18','取消与限流','取消 0 副作用，限流不误禁'],
+['19','反向验证','注入 5 + 1 FAILED，恢复 351 / 0'],
+['20','全量验证','377 / 0 + 四守卫 + Windows GNU'],
+['21','打包与推送','两个 zip 重打，远端逐项比对']];
+const DETAIL={'01':'V054 local_950e21c remote_4167881 files_1037 clean','02':'SPEC cmp 0','03':'READBACK 5_files 00_req_261 ai_errors_385 11_feat_268 12_srv_64 53_spec_1','04':'ECHO 12_server_features_64_lines_full','05':'E115 config_download_region_exists t0409_no_reuse_for_region_ban','06':'RESEARCH 3_queries_9_hits adopt_5 reject_4 urls_full','07':'AUDIT B08 registered_not_implemented','08':'U143 6_constraints_separate_rules','09':'U144 independent_signals_no_config_read','10':'U145 forbidden_keys_16 allowed_keys_8','11':'U146 dual_signal_agreement_required','12':'U147 single_or_conflict_unknown_fail_open','13':'U148 priority_special_override_premium_region_action','14':'U149 login_register_both_denied_notice_closable','15':'U150 third_party_mojang_not_expanded D054_2','16':'U151 notice_3_actions diag_per_notice','17':'U152 cache_128_ttl30 refresh_clear','18':'U153 cancel_0_side_effects rate_limit_no_deny','19':'E116 inject_no_outside_block_5_FAILED E117 inject_single_signal_1_FAILED','20':'VERIFY 351_0 377_0 guards_0 win_gnu_ok js_44','21':'ZIP rebuilt PUSH ALL_MAP'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'B02 全文复读','04':'全文回显','05':'复读发现边界','06':'统一调研','07':'读 B08 台账','08':'原文逐条拆','09':'独立信号链','10':'禁用键白名单','11':'双信号一致','12':'单一与冲突','13':'判定优先级','14':'登录与注册','15':'不扩大范围','16':'声明三动作','17':'缓存与刷新','18':'取消与限流','19':'反向验证','20':'全量验证','21':'打包与推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20']);
+const M={'08':['m1','原文 `11-features-input.txt` 第 7 行拆成 6 条独立规则：① 特殊版本除外；② 物理位置处于国外；③ 离线账户的登录与注册都不可以使用；④ 这个功能在这个场景下只有在正版后才能正常使用；⑤ 位于中国大陆地区功能将恢复正常；⑥ **不能使用那种网络连接打法，因为那有可能误伤加速器、VPN**。第 6 条是硬约束，不是建议：本模块不发请求、不读 IP、不做 GeoIP。'],'12':['m2','误伤的根源是拿单一网络信号做硬拒绝。这里反过来：**只有 locale 区域子标签明确非 CN、且 IANA 时区明确非大陆，两个信号一致才判 Outside**；只有一个信号、两个信号冲突（如 `zh-CN` 配 `America/New_York`）、或信号缺失，一律 `Unknown → 不限制`。禁用键白名单把 `ip` / `geoip` / `vpn` / `proxy` / `asn` / `isp` / `network_probe` / `country_by_ip` / 凭据类键整份作废；任何异常输入都 fail-open，不拒绝登录。'],'09':['m3','`core/config.rs` 早有 `download_region` / `set_download_region("overseas")`，演示层 `t.0409` 写着「仅下载选择，不复用为地区禁用」。B08 是**用户原文**，不能被我自己写的演示文案压过：`src/core/region.rs` 用**独立的** `signals` 与 `user_override`，不读写 `download_region`。两条链分开，不混用同一份状态；`t.0409` 那句需在动 UI 的轮次修正，登记 **D-054-2**，本轮 UI 闸门未触发故不改演示。'],'20':['m4','`cargo test --offline --lib` **351 / 0**（331 + 20 新增），零 warning；全量 **377 / 0**（+7 http +6 window +7 lifecycle/29.57 s +6 abi/77.67 s）；Windows GNU 交叉检查通过（16.03 s）；panic / semver / i18n / lang 四守卫零命中；`P09_HITS 0`；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；44 份 demos HTML 脚本全通过；反向注入「境外不限制」**5 FAILED**、「单一信号即判境外」**1 FAILED**，恢复后 351 / 0。`Cargo.toml` / `Cargo.lock` / `vendor/` 零改动，仍 **26 包 / 25 第三方**。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.audit','q.audit','q.audit','q.reference','q.audit','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.construct','q.audit','q.audit','core.push'];return 'kcu-'+String(i+54).padStart(8,'0')+' '+k[i]+' '+(i+1)+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===20)document.getElementById('note').textContent='B08 判定层已落地；真实网络 IO、GUI 接线、Win7 运行时仍属未启动/受阻。053 的「离线不声明」只属于软件完整性验证，本模块离线字段显式不参与判定。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},200);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='与 053 的「离线不声明」口径分开：本模块离线字段只过边界校验，显式不参与判定；网络可达与否不改变账户限制结论。';}
+</script></body></html>

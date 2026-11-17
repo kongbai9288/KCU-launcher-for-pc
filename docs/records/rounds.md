@@ -3011,3 +3011,48 @@ EQ-14（049）、EQ-15（050）关闭；EQ-01 ~ EQ-13 仍待拍板；真实网�
 ## 053 交付快照
 
 本地主快照 `9cd711f` ↔ 远端 `6010e40`，**1037 文件 ALL_MATCH True**（DIFF 0 / EXTRA 0 / tree `truncated=false`）。推送一次成功，复用远端已有 blob 923 个、增量 22 项；未强推、未重写历史。全仓零凭据、`.git/config` 干净、后端仓 0 写请求、临时凭据核对后删除。
+
+## 054
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/54-round-054-instructions.txt | 逐字副本：「干」 |
+| docs/records/round-054-full-readback.md | B02 复读证据：5 份字节 / 行 / SHA-256；开服器原文 64 行全文回显 |
+| docs/research/22-region-signals.md | 统一调研：3 组关键词 9 条，采用 5 条 / 不采用 4 条，完整 URL 与一手原句 |
+| docs/decisions/054-region-offline-restriction.md | U143–U155、V1–V19、E115–E119、三轮迭代与自评 9.4、四值 |
+| docs/verification/round-054.md | 25 条复跑证据 |
+| docs/features/region-offline-restriction.md | F054-01 五字段登记、6 条原文约束、输入信号、防误伤、独立链、离线口径分层、未启动项 |
+| src/core/region.rs | **主交付**：869 行，B08 判定层 |
+| src/core/mod.rs | 注册 `pub mod region;` |
+| demos/round-054-region.html | 运行逻辑演示（21 步可点，非整页 UX HTML） |
+| 索引与记录 | docs/index 282 项、README、decisions/index、requirement-compliance-audit、pending-question-environments、interface-log I90–I93、ai-errors A194–A199、code-ownership-audit、implementation-strategy、ui-demo 闸门判定 |
+
+053 结尾写「B06 三项的判定层已齐，剩下全在 D07 实现层……真实网络 IO 需 EQ-01 / EQ-03 拍板；或用户点 EQ-01 ~ EQ-13 任一编号」。用户回「干」，未点编号；按 050 的 A177 继续走 048 核对表剩余 B 类偏差，选 **B08**：明确原文、不碰真实网络 IO（原文反而禁止网络打法）、不碰 UI 闸门，登记 **D-054-1**（我的默认，不是用户决断）。
+
+**B02**：对 5 份原文执行全文 `read_text()` 与逐行遍历；`docs/spec/12-server-features-input.txt` 4970 B / 64 行 / `03a62d90a2325fdf` **全文回显**（开服器功能原文，此前从未逐行打印）。`ai-errors.md` 本轮 36208 B / 385 行（053 追加 A188–A193 所致）。复读在写任何代码之前完成。
+
+**E115（复读发现的真实边界）**：`src/core/config.rs` 早有 `region_override` / `set_download_region("overseas")` / `download_region()` 与测试 `region_override_only_exposed_for_download_selection`；演示层 `t.0409` 写着「仅下载选择，不复用为地区禁用」。B08 是**用户原文**，要求账户登录/注册的地域限制，不能被我自己写的演示文案压过。处置：新建独立 `signals` 链、**不读写 `download_region`**；`t.0409` 修正登记 **D-054-2**，等 UI 闸门触发的轮次再改，本轮不动演示。
+
+**统一调研**：3 组关键词 9 条结果，采用 R01 Microsoft Learn BCP-47 区域子标签、R02 MSDN `GetUserDefaultLocaleName` 本地偏好性质、R03 ProxyWhereabouts「IP geolocation is an inference, not a measurement」、R04 GeoIPHub「One signal should never trigger a hard block」、R05 tsight.io「Locale 不等于国家」；不采用 IP2Location 商业页（正是原文禁止的网络打法）、kakunin-ip.click 词条（与 R03/R04 重复）、CSDN `setlocale` 实验博客、bcp47.antfu.me 工具页。完整 URL 与一手原句在 `docs/research/22-region-signals.md`。未证实：Windows `LOCALE_SCOUNTRY` 官方原文、IANA 时区权威映射、「物理位置」精确定义、特殊版标识注入方式。
+
+**落地**：原文第 7 行拆 6 条独立规则；`ALLOWED_SIGNAL_KEYS` 8 键 / `FORBIDDEN_SIGNAL_KEYS` 16 类（10 类网络探测 + 6 类凭据地址），任一禁用键出现即整份作废；`region_subtag()` 取 BCP-47 区域段，不实现完整解析器；**locale 明确非 CN 且时区明确非大陆，两信号一致才判 Outside**；单一 / 冲突 / 缺失 → `Unknown` 放行；优先级 `special_build` > `user_override` > `authenticated` > Mainland 恢复 > 账户动作范围；`account=offline` 且 `action∈{login,register}` 且 Outside → 拒绝 + 可关声明（三动作：改用正版 / 手动指定地区 / 取消）+ 单行 `[KCU]` 诊断；`third_party` / `mojang` 不扩大（D-054-2）；缓存 128 / TTL30 / `refresh()` 全清；取消 0 副作用、限流不误禁；`offline` 键显式不参与判定，信封带 `network_probe=0`；`diagnostic_payload()` 不带原始信号。**零新增第三方**，`Cargo.toml` / `Cargo.lock` / `vendor/` 未动，仍 26 包 / 25 第三方。
+
+**离线口径三层分开**：052/053 完整性验证「离线不声明」、053 自动关闭功能「离线仍声明但标内置」、054 账户限制「offline 不参与判定」，三条互不套用。
+
+**三轮真迭代与自评**：8.3（只做境外禁离线，漏禁网络打法 / 既有口径 / 双信号 / 三条豁免）→ 8.9（补禁用键白名单、fail-open、声明三动作、缓存刷新、取消限流）→ **9.4**（补 64 行全文回显、调研一手原句与不采用项、双向反向注入、离线口径分层）。未给满分：真实网络 IO / GUI 接线 / 特殊版标识注入未启动；「物理位置」精确定义与 IANA 映射未证实；`t.0409` 演示文案按闸门规则留到动界面的轮次。
+
+本轮真实问题：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E115 | B02 复读发现 `config.download_region` 与 `t.0409` 既有口径和 B08 原文冲突 | 独立链 + D-054-2，本轮不改演示 |
+| E116 | `RegionInput` derive `Debug` 因 `CancelToken` 无 `Debug` 触发 E0277（与 053 E110 同类） | 去掉 `Debug` derive，不动 027 模块 |
+| E117 | 未用导入 `MAX_TEXT_BYTES` 与 `Signals.offline` dead_code | 删导入；`offline` 改为允许键但显式不参与判定，零 warning |
+| E118 | 反向注入 A 5 FAILED、B 1 FAILED | 按实记录，不凑数 |
+| E119 | 综合验证命令被网关 502 截断（与 053 E114 同类） | 拆单条短命令重跑补齐，未降验收项 |
+
+**验证**：`cargo test --offline --lib core::region` 20 / 0；`cargo test --offline --lib` **351 / 0**（331 + 20，零 warning）；`http_construct` 7 / 0、`window_handle_contract` 6 / 0、`plugin_lifecycle_load` 7 / 0（29.57 s 真加载 cdylib）、`plugin_abi_load` 6 / 0（77.67 s）；全量 **377 / 0**；Windows GNU 交叉检查通过（16.03 s）；panic / semver / i18n / lang 四守卫零命中（`files 41 hits 0`、`version_files 4 hits 0`、`rs_files 41`、`keys 26`）；`P09_HITS 0`；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；44 份 demos HTML `node new Function` 全通过；`yaml.safe_load` scan 8 steps；反向注入 5 + 1 FAILED → 恢复 351 / 0。UI 闸门**未触发**：UX HTML、两语言包、56 张 PNG 零 diff。
+
+**四值**：B02 复读、E115 边界发现、B08 判定层、351 / 0、377 / 0、零新增依赖 = 已证实；B01 / B02 历史缺失、`t.0409` 口径差异 = 已失败 / 已登记（不补写）；真实网络 IO / GUI 接线 / 特殊版标识注入 / Win7 声明文案 = 未启动；EQ-01 ~ EQ-13 拍板 / 物理位置定义 / IANA 映射 = 未证实；GUI 端到端 / Win7 与 MSVC 运行时 = 受阻。独立验证「部分通过」，**未发通过标记**。
+
+**下一步**：B 类剩余 B04（UI 框架）/ B05（HMCL 代码）/ B07（插件独立进程）/ B09（32 位）/ B10（完全无法失误），以及 D07 实现层，均需 EQ-01 / EQ-03 的 Win7 TLS 与 UI 宿主口径拍板；或用户点 EQ 任一编号。

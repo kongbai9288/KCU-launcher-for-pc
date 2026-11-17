@@ -109,3 +109,5 @@
 | 052 | B06 实现层软件完整性验证 | src 落地，零新增依赖 | 052-integrity-verification.md |
 
 | 053 | B06 第二项自动关闭功能判定层 | src 落地，零新增依赖 | 053-auto-disable-feature.md |
+
+| 054 | B08 境外离线账户限制判定层 | src 落地，零新增依赖 | 054-region-offline-restriction.md |

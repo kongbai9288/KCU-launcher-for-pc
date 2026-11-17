@@ -16,3 +16,4 @@ pub mod robust;
 pub mod endpoints;
 pub mod integrity;
 pub mod feature_gate;
+pub mod region;
