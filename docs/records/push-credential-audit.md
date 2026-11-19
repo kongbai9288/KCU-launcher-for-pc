@@ -113,3 +113,9 @@
 | GUI 端到端 / Win7 / MSVC / i686 运行时 | 受阻 |
 
 历史验证报告与四值表按既有口径不重写；本补记覆盖其「远端写入受阻」结论。
+
+## 060 附记：补写记录
+
+060 补记文件本身落地后做了第二次增量推送：`91e4abfcbbee` → `91561e3ef5ee`（6 changed / 0 deleted）。两次均 `force=false`、同一形态（以远端先前 ref 为父、压本地 tracked 树），与 025 以来「主快照 + 补写记录」一致。最终 **1071 / 1071 ALL_MATCH True**（DIFF 0 / EXTRA 0 / truncated False）。
+
+远端 ref 以 `GET /git/ref/heads/main` 实时值为准；本附记之后若再改文件，ref 会继续前进，不回写本文档。
