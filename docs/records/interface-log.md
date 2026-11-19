@@ -655,3 +655,45 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I92 | 常量 | `MAX_SIGNAL_BYTES=128`、`MAX_SIGNAL_KEYS=16`、`CACHE_CAPACITY=128`、`CACHE_TTL_SECS=30`、`LOAD_TIMEOUT_SECS=5` |
 | I93 | 状态 | U143–U155 已证实；零新增依赖；真实网络 IO / GUI 接线 / 特殊版标识注入未启动 |
 | S53 | 独立链 | 不读写 `config.rs::download_region`；`offline` 键显式不参与判定 |
+
+## 055 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I94 | `scripts/policy_guard.py` | G1–G8 八组文档断言；失败打印 `POLICY_GUARD_FAIL reason=` 并退出 1 |
+| I95 | `.github/workflows/ci.yml` | `scan` job 第 9 步 `policy_guard`；前 8 步不变 |
+| I96 | `docs/records/c-class-default-recheck.md` | C01–C10 逐条复核、3 处台账修正、待拍板 4 项、四值 |
+| I97 | 状态 | Q-031-01 已关闭；Q-C01 / Q-C02 / Q-C08 / Q-037-01 待拍板；`src/` 零改动 |
+| S54 | 口径一致性 | 031 Q1-C + Q2-A、032 三档单调与 U01、033 结案，三者由 G1/G2/G4/G5 守护 |
+
+## 056 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I98 | `scripts/delivery_guard.py` | G1–G8，`GUARD_FROM = 56`，不追溯 054 之前；失败打印 `DELIVERY_GUARD_FAIL reason=` 并退出 1 |
+| I99 | `.github/workflows/ci.yml` | `scan` job 第 10 步 `delivery_guard`；前 9 步不变 |
+| I100 | `docs/records/b-class-status-recheck.md` | B01–B10 逐条复核、E127–E129、5 条 B→EQ 可拍环境、四值 |
+| I101 | 状态 | B04/B05/B07/B09/B10 未开工；`src/` 零改动；远端 403 受阻 |
+
+## 057 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I102 | `src/core/boot.rs` | `STATE_FILE` / `BUNDLE_FILE` / `Tier` / `classify` / `safe_mode_reached` / `BootState` / `export` / `loaded_modules` |
+| I103 | `src/dispatcher/launcher.rs` | `DispatchInput.export_dir`、`LaunchOutcome.bundle_path`；`diagnostic_ready` 段构造 `DiagnosticBundle` 真实四项并调 `boot::export` |
+| I104 | `tests/boot_fallback.rs` | 6 个集成测试：端到端导出、无目录可见、状态删后恢复、包删后重导、坏状态恢复再持久化、8×8 并发 |
+| I105 | 状态 | 零新增第三方；B04/B05/B07/B09/B10 未开工；远端 403 受阻 |
+
+## 058 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I106 | `docs/records/push-credential-audit.md` | C1–C5 证据链、S1–S6 实测、E140–E143 归因修正、恢复条件、四值 |
+| I107 | 状态 | 核查轮；无实现改动；远端仍未更新 |
+
+## 059 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I108 | `docs/records/push-credential-audit.md` 059 补记 | S7–S11 实测、E144 过期归因、恢复条件覆盖、四值 |
+| I109 | 状态 | 核查轮；无实现改动；远端仍未更新；零 token 残留 |

@@ -100,3 +100,9 @@
 | U11 | 预览图 `46-settings-tiers.png` / `47-tier-switch.png` / `48-loose-actions.png`；整页演示 `demos/ui-full-kcu-paper.html`。 |
 
 界面文案走语义 key（`auto.tier.*` / `auto.a1`…），不把中文当 key，不写工程标识、槽位 ID 或策略编号。
+
+## 055 复核补记
+
+031 的 Q1-C + Q2-A、P01–P07，032 的三档单调与 U01–U07，033 的 Q-031-01 结案（A = answer 缩写）三者一致，全部有效。048 核对表 C05 曾写「结论未随之重审」属台账笔误，054 结尾沿用该错述，055 已撤回；031 / 032 决策各追加 055 补记覆盖其历史行，历史行不重写。
+
+本文件由 `scripts/policy_guard.py` G4 / G5 守护：默认严格档、Q1-C、Q2-A、U01 回严格，以及严格 Q1-C/Q2-A → 标准 Q1-B/Q2-C → 宽松 Q1-A/Q2-D 的单调性；CI `scan` 第 9 步执行。

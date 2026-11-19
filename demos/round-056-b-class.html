@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 056 B 类状态复核</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:330px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:170px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>056 运行逻辑</h1><div class="sub">B 类 10 条复核 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>E127 台账滞后</h3><p id="m1">未运行</p><span class="badge r">B01/B02 判未遵守</span><span class="badge g">051 起复读 6 份</span><span class="badge g">054 起回复六项齐</span></div>
+<div class="mini"><h3>E128 留痕不齐</h3><p id="m2">未运行</p><span class="badge r">054 决策缺 2 锚点</span><span class="badge g">回复齐备</span><span class="badge g">不补写，056 起守卫</span></div>
+<div class="mini"><h3>E129 B08 滞后</h3><p id="m3">未运行</p><span class="badge r">台账写未实现</span><span class="badge g">054 region.rs 已落地</span><span class="badge g">GUI 接线未启动</span></div>
+<div class="mini"><h3>验证与交付</h3><p id="m4">未运行</p><span class="badge g">delivery_guard OK</span><span class="badge g">注入 A/B 各 1 FAIL</span><span class="badge g">377 / 0 回归</span><span class="badge r">远端 403 受阻</span></div>
+</div><div class="note" id="note">B04/B05/B07/B09/B10 全卡 EQ，本轮不擅自开工；只复核状态、摊平可拍环境、加防复发守卫。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','7aede31 / 1054 文件 / DIRTY 0'],
+['02','逐字落盘','56-round-056-instructions.txt = 干'],
+['03','B02 全文复读','5 份原文遍历 + 哈希，ai-errors 408 行'],
+['04','读 B 类台账','048 核对表第 31–40 行 B01–B10'],
+['05','范围判定','只回「干」= 按台账继续、不代拍板'],
+['06','核 051–056 复读记录','6 份 full-readback 齐全 → E127'],
+['07','核 054/055 决策锚点','055 四锚点齐；054 缺 2 项 → E128'],
+['08','核 B08 实际代码','054 region.rs 869 行 / 20 测试 → E129'],
+['09','B03/B06 已修确认','050 端点配置化；051-053 声明页分层'],
+['10','B04/B05/B07/B09/B10','逐条核对卡点 EQ，不开工'],
+['11','写 B→EQ 映射','五条具体环境值 + 要拍一句'],
+['12','台账 056 补记','E127/E128/E129，历史行不重写'],
+['13','delivery_guard + CI','G1–G8，scan 9 → 10 steps'],
+['14','双向注入','删 spec → G1 FAIL；删时间戳 → G3 FAIL'],
+['15','全量回归','377 / 0，六守卫，UI/Cargo 零 diff'],
+['16','再试远端推送','403，PUSH_RC 128，如实登记'],
+['17','打包与本地提交','两个 zip，按 git ls-files 打包']];
+const DETAIL={'01':'V056 head_7aede31 files_1054 dirty_0','02':'SPEC cmp 0 sha_67997353aa5bff04','03':'READBACK 5_files ai_errors_408','04':'AUDIT B01_B10 lines_31_40','05':'SCOPE no_cred no_Q no_EQ do_not_start_B04_B10','06':'E127 readback_051_056_6_files','07':'E128 054_anchors_2_of_4 055_anchors_4_of_4','08':'E129 region_869_lines 20_tests zero_dep','09':'B03_050_fixed B06_051_052_053','10':'B04_EQ01 B05_no_EQ B07_EQ05 B09_EQ11 B10_open','11':'MAP 5_rows env_values only','12':'LEDGER 056_append E127_E128_E129','13':'GUARD G1_G8 CI_scan_10','14':'INJECT_A_G1_FAIL INJECT_B_G3_FAIL RESTORE_OK','15':'VERIFY 377_0 guards_6 win_gnu_ok js_46','16':'PUSH_403_RC128 no_force no_fake_ALL_MATCH','17':'ZIP tracked_only PUSHLOG_DELETED'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'B02 复读','04':'读 B 类台账','05':'范围判定','06':'E127','07':'E128','08':'E129','09':'已修确认','10':'卡点核对','11':'写映射','12':'台账补记','13':'守卫与 CI','14':'双向注入','15':'全量回归','16':'远端通道','17':'打包提交'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12','13','14','15','16']);
+const M={'06':['m1','051–056 共 6 份 round-NNN-full-readback.md，每份 5 文件全文 read_text() + 逐行遍历 + 字节/行/SHA-256。054/055/056 回复均含时间戳、自我批判、四值、独立验证、HTML 演示；055 决策文件四锚点齐全。B01/B02 自 054/051 起常态遵守，035–047 历史缺失不补写。'],'07':['m2','054 最终回复有「2. 时间戳」和四值表，但 054 决策文件里 2. 时间戳 锚点计数 0、无 ## 10. 四值 标题。回复齐备 ≠ 留痕齐备。不补写 054 文件、不重写历史；从 056 起由 delivery_guard G3 强制决策文件四锚点。'],'08':['m3','048 台账 B08 仍写「登记为口径，未实现」；054 已落 src/core/region.rs 869 行、6 条原文规则、20 个测试、零新增依赖，lib 351 / 0、全量 377 / 0。改判「判定层已落地，GUI 接线未启动」，054 决策原文不改。'],'15':['m4','delivery_guard G1–G8 全通过；注入 A（删 spec 副本）→ G1 FAIL、注入 B（删 056 决策时间戳段）→ G3 FAIL，恢复 OK。CI scan 9 → 10 steps。cargo 全量 377 / 0（src 零改动，仅回归）；Windows GNU 通过；panic/semver/i18n/lang/policy/P09 零命中；46 份 demos HTML 脚本通过；UI HTML、两语言包、56 张 PNG、Cargo.toml/lock/vendor 全部零 diff。远端推送仍 403，如实登记为受阻。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.audit','q.audit','q.audit','q.audit','q.audit','q.audit','q.audit','q.audit','q.construct','q.construct','q.construct','q.audit','q.audit','core.push','core.push'];return 'kcu-'+String(i+56).padStart(8,'0')+' '+k[i]+' '+(i+1)+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===16)document.getElementById('note').textContent='B04/B05/B07/B09/B10 全卡 EQ；远端 403 未更新；本地闭环完整，不强推、不伪造 ALL_MATCH。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},200);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='B04/B05/B07/B09/B10 全卡 EQ，本轮不擅自开工；只复核状态、摊平可拍环境、加防复发守卫。';}
+</script></body></html>

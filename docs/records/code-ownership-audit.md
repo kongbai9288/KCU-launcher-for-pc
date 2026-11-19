@@ -460,3 +460,15 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 054 零新增第三方
 
 `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。新增 `src/core/region.rs` 的边界与限流、LRU 缓存、信封、取消、诊断、JSON 载荷全部复用已进构建的库；项目侧只有信号白名单、BCP-47 区域段提取、判定顺序、声明映射，**不是新开自写底座例外**（023 A03 已于 024 撤回）。`cargo test --offline --lib` 351 / 0，全量 377 / 0。
+
+## 055 零改动复核轮
+
+`src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。本轮不是换库轮，只做 C 类 10 条口径复核、三处台账修正与 `scripts/policy_guard.py` 守卫；`cargo test --offline` 全量 377 / 0 仅作回归，不作质量结论。023 A03 自写底座例外于 024 撤回的状态不变。
+
+## 056 零改动复核轮
+
+`src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。本轮不是换库轮，只做 B 类 10 条状态复核、三处台账修正与 `scripts/delivery_guard.py` 守卫；`cargo test --offline` 全量 377 / 0 仅作回归，不作质量结论。023 A03 自写底座例外于 024 撤回的状态不变。
+
+## 057 实现轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。新增 `src/core/boot.rs` 中序列化交 `serde_json`、路径与限流交 `robust`、诊断行交 `diagnostics`、包结构与四级源交 `integrity`、内置默认交 `Config` 与 `feature_gate`、日志交 `log`；项目特有只剩状态迁移、阈值比较、导出路径策略与 21 项模块索引。`src/dispatcher/launcher.rs` 增量 22 行，原有 20 个断言一字未改。023 A03 自写底座例外于 024 撤回的状态不变。

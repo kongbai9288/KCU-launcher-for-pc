@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 057 启动级兜底</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:720px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:260px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>057 运行逻辑</h1><div class="sub">§12 启动级兜底 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">failures=0 mode=normal</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>状态持久化</h3><p id="m1">未运行</p><span class="badge g">跨进程计数</span><span class="badge g">删/损坏回默认</span><span class="badge g">饱和不溢出</span><span class="badge r">写失败可见</span></div>
+<div class="mini"><h3>安全模式</h3><p id="m2">未运行</p><span class="badge g">阈值 3</span><span class="badge g">忽略自定义配置</span><span class="badge g">内置默认</span><span class="badge g">成功归零</span></div>
+<div class="mini"><h3>诊断包导出</h3><p id="m3">未运行</p><span class="badge g">lines 真实全文</span><span class="badge g">config_snapshot</span><span class="badge g">runtime</span><span class="badge g">21 个模块</span><span class="badge r">无目录可见 SKIP</span></div>
+<div class="mini"><h3>四级分级与验证</h3><p id="m4">未运行</p><span class="badge g">fatal/disabled/degraded/ignored</span><span class="badge g">注入 A/B 各 1 FAILED</span><span class="badge g">367 / 0 + 6 / 0</span><span class="badge r">远端 403</span></div>
+</div><div class="note" id="note">§12 原文：连续多次启动失败进入安全模式，忽略自定义配置用内置默认；安全模式仍失败，导出诊断包（日志 + 配置快照 + 运行时信息 + 已加载模块列表）。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','0902962 / 1062 文件 / DIRTY 0'],
+['02','逐字落盘','57-round-057-instructions.txt = 干'],
+['03','B02 全文复读','5 份原文 + SHA-256；真读 §12 与 11/12 输入'],
+['04','定位真实缺口','dispatcher 已有计数与 safe_mode；bundle 仅 4 行摘要'],
+['05','BootState::open','读 boot-state.json；删/损坏/超大/schema 错都回默认'],
+['06','record(true) ×3','跨进程累计，阈值 SAFE_MODE_AFTER=3'],
+['07','进入安全模式','ModeSelector::safe；忽略 config_mode/args_mode/task_mode'],
+['08','内置默认','Config::empty + feature_gate::BUILTIN_POLICY'],
+['09','record(true) #4','安全模式下仍失败 → diagnostic_ready'],
+['10','构造真实四项','lines=诊断全文 / config_text / runtime / 21 模块'],
+['11','boot::export','serde_json 序列化 + safe_join 路径 + create_dir_all'],
+['12','落盘校验','diagnostic-bundle.json 四项逐字段读回'],
+['13','四级分级','Fatal / FeatureDisabled / Degraded / Ignored'],
+['14','暴力与删除','状态文件删、包删后重导、并发 8×8、限流、饱和'],
+['15','双向注入 A','bundle_path=None → 集成测试 FAILED'],
+['16','双向注入 B','删 schema 校验 → 集成测试 FAILED；恢复 OK'],
+['17','全量回归与交付','367 / 0 + 6 / 0，六守卫，两个 zip，远端 403']];
+const DETAIL={'01':'V057 head_0902962 files_1062 dirty_0','02':'SPEC cmp 0 sha_67997353aa5bff04','03':'READBACK 5_files ai_errors_417','04':'GAP bundle_was_4_summary_lines no_file_export','05':'STATE read_or_default fallback_default','06':'RECORD failed=1 failures=3 cross_process','07':'SAFE_MODE config_ignored mode=safe','08':'BUILTIN config_empty policy_builtin','09':'RECORD failed=1 failures=4 diagnostic_ready=1','10':'BUNDLE lines>4 snapshot=not-json{ runtime=mem modules=21','11':'EXPORT serde_json safe_join create_dir_all write','12':'READBACK schema=1 sections=4 path=diagnostic-bundle.json','13':'TIERS 4 codes 4 actions','14':'ROBUST deleted_state deleted_bundle concurrent ops_rate_limit','15':'INJECT_A FAILED bundle_path_must_be_set EXIT_recovered','16':'INJECT_B FAILED state_schema EXIT_101 RESTORE_OK','17':'VERIFY 367_0 6_0 win_gnu_ok guards_6 push_403'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'B02 复读','04':'缺口定位','05':'状态读取','06':'失败累计','07':'安全模式','08':'内置默认','09':'仍失败','10':'构造包','11':'导出','12':'落盘校验','13':'四级分级','14':'鲁棒性','15':'注入 A','16':'注入 B','17':'回归交付'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12','13','14','15','16']);
+const ST=['failures=0 mode=normal','failures=0 mode=normal','failures=0 mode=normal','failures=0 mode=normal','failures=0 mode=normal','failures=3 mode=safe','failures=3 mode=safe custom=ignored','failures=3 mode=safe config=builtin','failures=4 mode=safe bundle=ready','failures=4 mode=safe sections=4','failures=4 mode=safe exported=1','failures=4 mode=safe readback=ok','failures=4 mode=safe tiers=4','failures=4 mode=safe robust=ok','inject_a=FAILED','inject_b=FAILED restored=ok','verify=367_0+6_0 remote=403'];
+const M={'05':['m1','BootState::open(Option<dir>) 读 boot-state.json；文件被删、内容非 JSON、超 4096 B、schema≠1、failures 为负数或超 u32 全部回默认并给 [KCU] 行。AtomicU32 饱和加，成功归零；写失败给 state_write ERROR 不崩；OpBudget 限流。无 dir 时走内存退化，原有 dispatcher 行为不变。'],'08':['m2','连续失败达 SAFE_MODE_AFTER=3 进安全模式：dispatcher 的 config_mode / args_mode / task_mode 全部置 None，ModeSelector::safe 用内置默认。builtin_defaults() 返回 Config::empty 的 JSON 与 feature_gate::BUILTIN_POLICY，两者都由 serde_json 复验可解析。成功一次计数归零。'],'12':['m3','boot::export 把 DiagnosticBundle 四项用 serde_json::json! 序列化，路径走 robust::safe_join(root, diagnostic-bundle.json)，目录不存在则 create_dir_all。返回的 ExportOutcome 带 path / bytes / diagnostics；无 export_dir 给可见 SKIP 而不是静默；写失败、超量 lines、控制字符模块名都给 ERROR 不崩。集成测试读回逐字段校验。'],'16':['m4','注入 A 把 bundle_path 恒置 None → safe_mode_failure_exports_real_four_sections FAILED（bundle_path must be set）。注入 B 删 parse_state 的 schema 校验 → malformed_state_recovers_and_persists_again FAILED（EXIT 101）。恢复后 367 / 0 + 6 / 0。四级 classify 映射 integrity::Level，四级各有 code 与 action。远端 git push 仍 403，如实登记。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.audit','q.audit','core.boot','core.boot','core.boot','core.boot','core.boot','q.construct','q.construct','q.audit','core.boot','core.boot','q.audit','q.audit','core.push'];return 'kcu-'+String(i+57).padStart(8,'0')+' '+k[i]+' '+(i+1)+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('state').textContent=ST[i];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';lines=lines.slice(0,i);lines.push('[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]]);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===16)document.getElementById('note').textContent='§12 判定层与导出已落地；远端 403 未更新，本地闭环完整，不强推、不伪造 ALL_MATCH。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},200);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('state').textContent='failures=0 mode=normal';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='§12 原文：连续多次启动失败进入安全模式，忽略自定义配置用内置默认；安全模式仍失败，导出诊断包（日志 + 配置快照 + 运行时信息 + 已加载模块列表）。';}
+</script></body></html>

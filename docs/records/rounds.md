@@ -3060,3 +3060,163 @@ EQ-14（049）、EQ-15（050）关闭；EQ-01 ~ EQ-13 仍待拍板；真实网�
 ## 054 交付快照
 
 本地主快照 `beac860` ↔ 远端 `72ce85c`，**1046 文件 ALL_MATCH True**（DIFF 0 / EXTRA 0 / tree `truncated=false`）。推送一次成功，复用远端已有 blob 931 个、增量 21 项；未强推、未重写历史。全仓零凭据、`.git/config` 干净、后端仓 0 写请求、临时凭据核对后删除。
+
+## 054 结尾错述撤回（055 补记）
+
+054 最终回复「唯一下一步」写：「或者下一声『干』我转去处置 048 核对表里一直挂着的 C 类 10 条擅自定默认（含你 033 澄清『A 是 answer 缩写』后我还没重审的 Q-031-01）」。
+
+核 `docs/decisions/033-answer-abbr-and-anyhow.md` 第 1 / 15 / 18–30 行、`docs/features/server-auto-command-log-trigger.md:128`、`docs/records/q028-decision-scenarios.md:187`：Q-031-01 **早在 033 已结案**，031 结论与 032 三档均不改。048 核对表 C05 的「结论未随之重审」是台账笔误，054 结尾直接沿用了该错述，且未核 033 决策文件。
+
+处置：撤回 054 结尾该句；031 / 032 决策追加 055 补记（历史行不重写）；合规核对表追加 055 补记；新增 `scripts/policy_guard.py` 与 CI step 防复发。**不重做界面、不改 031/032 口径、不重写 054 回复**。
+
+## 055
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/55-round-055-instructions.txt | 逐字副本：「干」 |
+| docs/records/round-055-full-readback.md | B02 复读证据：5 份字节 / 行 / SHA-256 |
+| docs/records/c-class-default-recheck.md | **主交付**：C01–C10 逐条复核、3 处台账修正、具体值回显、4 项待拍板、四值 |
+| docs/decisions/055-c-class-recheck.md | U/E/V、三轮迭代自评 9.3、自我批判、四值 |
+| docs/verification/round-055.md | 22 条复跑证据 |
+| scripts/policy_guard.py | G1–G8 口径守护 |
+| .github/workflows/ci.yml | `scan` 8 → 9 steps，新增 `policy_guard` |
+| demos/round-055-c-class-recheck.html | 运行逻辑演示（19 步可点，非整页 UX HTML） |
+| 补记 | 031 / 032 决策、requirement-compliance-audit 055 补记、pending-question-environments 055 状态、rounds「054 结尾错述撤回」 |
+| 索引与记录 | docs/index 289 项、README、decisions/index、ai-errors A200–A204、interface-log I94–I97、code-ownership-audit、implementation-strategy、ui-demo、auto-command-policy 复核补记 |
+
+054 结尾写「下一声『干』我转去处置 048 核对表里一直挂着的 C 类 10 条擅自定默认（含你 033 澄清『A 是 answer 缩写』后我还没重审的 Q-031-01）」。用户回「干」，按该指向执行，**不另起新层**：不碰 B 类剩余项、不碰 D07 实现层、不碰 EQ-01 ~ EQ-13。
+
+**B02**：5 份原文全文遍历；`ai-errors.md` 本轮 37282 B / 396 行。为 C 类复核定位原文：`00-requirements.txt` 第 9–14 行轻量 5 条、`11-features-input.txt:206`「有些功能你看着办」、020 指令「不要写进顶上」、021 指令「显示什么按正常我的世界现实的逻辑」。
+
+**三个真实发现**：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E120 | 048 核对表 C05「未随澄清重审」是笔误：033 决策第 1/15/18–30 行、功能 md 第 128 行、q028 第 187 行、环境清单第 105 行均记 Q-031-01 已结案 | 追加补记，031/032 决策加 055 补记，历史行不重写 |
+| E121 | 048 C06 仍写「服务器状态按 SLP 六类设计」，021 决策第 9/D07/D09 行已撤回该页面口径，`server-status.md` 第 83 行标「不再作为页面设计依据」 | 台账同步；10 处推荐位属 019 授权补全，确认 |
+| E122 | 048 C08 依据写 021，「不要写进顶上」原文在 020 | 改依据为 020，9 项补回显 |
+| E123 | 054 结尾沿用 C05 错述且未核 033 文件 | `rounds.md` 追加「054 结尾错述撤回」，不重写 054 回复、不改 031/032 口径、不重做界面 |
+| E124 | 双向注入各只触发 1 项 FAIL | 按实记录，不补凑断言（A204） |
+
+**C 类 10 条结论**：C01 13 项排除补回显（Q-C01 待拍板）；C02 单主题补回显（Q-C02）；C03 024 已撤回、6 处引用均带标记、无活例外；C04 补两种哈希口径后果（内容哈希会使升级确认不可达），Q-037-01 仍待拍板；C05 台账笔误；C06 前半确认 / 后半已撤回；C07 顺序既成事实；C08 依据错 + 9 项回显（Q-C08）；C09「看着办」授权成立、三值首次回显（032 后第三条改 U05）；C10 保留无冲突。**Q-031-01 已关闭**，本轮未新增 EQ，未代用户拍板。
+
+**policy_guard**：G1 033 结案、G2 031/032 补记、G3 三处台账修正、G4 默认严格与 U01、G5 三档单调、G6 环境清单、G7 复核表 10 条、G8 054 错述撤回。CI `scan` 新增第 9 步。注入 A（删 031 补记段）→ `G2 FAIL`；注入 B（严格行改 Q1-A）→ `G5 FAIL`；恢复 → OK。
+
+**三轮真迭代与自评**：8.2（只核状态，没打开 033、没核依据轮次、没补具体值）→ 8.9（发现 E120–E123、写复核表、撤回错述、补回显）→ **9.3**（补 G1–G8、CI step、双向注入、全量回归、流程演示与索引）。未给满分：四条待拍板未拍、C01/C02/C08 默认仍是我定的、上层四块未启动、B01/B02 历史偏差未补写。
+
+**验证**：`cargo test --offline --lib` 351 / 0（src 零改动，仅回归），全量 **377 / 0**；Windows GNU 通过；panic / semver / i18n / lang 四守卫零命中，`policy_guard` OK；`P09_HITS 0`；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；45 份 demos HTML 脚本通过；`yaml.safe_load` scan 9 steps；289 项必读 `MISSING 0`。UI 闸门**未触发**：UX HTML、两语言包、56 张 PNG、`src/`、`Cargo.toml`、`Cargo.lock`、`vendor/` 全部零 diff，仍 26 包 / 25 第三方。
+
+**四值**：E120–E123 证据、C 类逐条结论、具体值回显、policy_guard、377 / 0 = 已证实；B01/B02 历史缺失 = 已失败（不补写）；Q-C01/Q-C02/Q-C08/Q-037-01、EQ-01 ~ EQ-13 = 未证实；真实网络 IO / GUI 接线 / UI 宿主 / 崩溃分析 / 子进程隔离 = 未启动；GUI 端到端 / Win7 与 MSVC 运行时 = 受阻。独立验证「部分通过」，**未发通过标记**。
+
+**下一步**：B 类剩余 B04（UI 框架）/ B05（HMCL 代码）/ B07（插件独立进程）/ B09（32 位）/ B10（完全无法失误）需 EQ-01 / EQ-03 的 Win7 TLS 与 UI 宿主口径；或用户点 EQ 任一编号 / 回 Q-C01、Q-C02、Q-C08、Q-037-01 任一待拍板项。
+
+## 055 交付补记（收口）
+
+| 项 | 值 |
+| --- | --- |
+| 本地主快照 | `03ba613`，23 文件 / 990 insertions，1054 tracked，DIRTY 0 |
+| 交付补记 | 第二次提交，仅追加交付状态 |
+| 远端 ref | `1fe6a90255ec`（054 补写记录），**本轮未更新** |
+| 远端写入 | 受阻：`git push` → 403；`KCU_PAT` unset、credential 无写凭据；`api_push.py` 需 KCU_PAT。不强推、不伪造 ALL_MATCH |
+| zip | 主包 1054 项、预览包 57 项，按 `git ls-files` 打包，EXTRA 0 / MISSING 0 |
+| E125 | 首次 `zip -r` 混入 2 个 pyc 与 125 目录项（1181 项）→ 改 tracked 清单打包 |
+| E126 | 验证报告 V15 / V22 原写 ALL_MATCH True，实际未推 → 改为「未执行 / 受阻」 |
+| 零凭据 | tracked 零凭据、`.git/config` 零 token、`.push055.log` 已删 |
+| 最终时间戳 | `Wed Nov 18 23:03:57 CST 2026` |
+
+055 结论、C 类 10 条复核、三处台账修正、policy_guard G1–G8、双向注入、377 / 0 回归全在本地复跑，不依赖远端。
+
+## 056
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/56-round-056-instructions.txt | 逐字副本：「干」 |
+| docs/records/round-056-full-readback.md | B02 复读证据：5 份字节 / 行 / SHA-256 |
+| docs/records/b-class-status-recheck.md | **主交付**：B01–B10 逐条复核、E127–E129、5 条可拍环境、四值 |
+| docs/decisions/056-b-class-recheck.md | 时间戳 / 自我批判 / 四值 / 三轮迭代自评 9.3 / 交付补记 |
+| docs/verification/round-056.md | 23 条复跑证据 + 交付快照 |
+| scripts/delivery_guard.py | G1–G8，`GUARD_FROM = 56` |
+| .github/workflows/ci.yml | `scan` 9 → 10 steps，新增 `delivery_guard` |
+| demos/round-056-b-class.html | 运行逻辑演示（17 步可点，非整页 UX HTML） |
+| 补记 | requirement-compliance-audit 056 补记、pending-question-environments 056 状态、decisions/index、ai-errors A207–A209、interface-log I98–I101、code-ownership-audit、README |
+| 索引 | docs/index 289 → 296 项 |
+
+055 结尾列「B04 / B05 / B07 / B09 / B10 需 EQ 编号」。用户没给凭据、没回 Q-C、没点 EQ，只回「干」。按 049/050 既有默认「按台账继续、不代拍板」执行；五条全卡 EQ，硬做会重复 048 批评的 C 类错误，故**不擅自开工**，改为状态复核 + 摊平可拍环境 + 防复发守卫。
+
+**B02**：5 份原文全文遍历；`ai-errors.md` 复读时 38518 B / 408 行（A207–A209 在复读之后追加）。
+
+**三个真发现**：
+
+| 编号 | 现象 | 处置 |
+| --- | --- | --- |
+| E127 | B01 / B02 台账滞后：051–056 共 6 份 full-readback 齐全；054/055/056 回复六项齐备、055 决策四锚点齐全 | 台账追加 056 补记改判；035–047 历史缺失不补写 |
+| E128 | 054 决策文件缺 `2. 时间戳` 段与 `## 10. 四值` 标题（054 回复里有） | 不补写 054 文件；从 056 起由 G3 强制 |
+| E129 | B08 台账仍写「未实现」，054 已落 `src/core/region.rs` 869 行 / 20 测试 / 零新增依赖 | 台账追加补记改判「判定层已落地，GUI 接线未启动」 |
+| E130 | 056 再试 `git push` → 403，PUSH_RC 128 | 不强推、不伪造 ALL_MATCH；待通道恢复后按 `03ba613 → 7aede31 → 056` 补推 |
+| E131 | 双向注入各只触发 1 项 FAIL（**G0** / G3） | 按实记录，不补凑断言 |
+| E132 | 注入 B 首版未触发：守卫表格引用同一锚点字符串，子串判断命中引用 | G3 改 `^## ...$` 行首精确匹配，重跑 → `G3 heading_missing`，恢复 OK；A210 防复发 |
+| E133 | 全量集成第一次调用 502 截断 | 拆 lifecycle / abi 两段，7 / 0 与 6 / 0，断言没降 |
+
+**B 类结论**：B01/B02 054/051 起常态遵守；B03（050）、B06（051–053）、B08 判定层（054）已落地；B04/B05/B07/B09/B10 未启动，卡点分别 EQ-01 / 源仓库与许可未给 / EQ-05 / EQ-11 / 推进口径未决断。五条具体环境值与「要拍一句」在复核表里，不铺场景。
+
+**delivery_guard**：G1 spec 副本、G2 复读记录、G3 决策四锚点、G4 验证报告、G5 流程 HTML、G6 B 类台账、G7 交付快照、G8 CI step；`GUARD_FROM = 56` 不追溯历史。CI `scan` 新增第 10 步。注入 A（移走 spec）→ `G0 FAIL`；注入 B（改 056 决策时间戳标题）→ `G3 heading_missing`；恢复 → OK。G3 用行首精确匹配，避免文档表格引用干扰。
+
+**三轮真迭代与自评**：8.3（想直接开工 B04；没先核台账；没核 054 决策锚点）→ 8.9（发现 E127–E129、写复核表与 B→EQ 映射、台账补记）→ **9.3**（补 G1–G8、CI step、双向注入、全量回归、流程演示与索引）。未给满分：五条待拍板未拍、上层四块未启动、035–047 历史缺失不补写、远端写入受阻。
+
+**验证**：`cargo test --offline --lib` 351 / 0（src 零改动，仅回归），全量 **377 / 0**；Windows GNU 通过；panic / semver / i18n / lang / policy / delivery 六守卫零命中或 OK；`P09_HITS 0`；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；46 份 demos HTML 脚本通过；`yaml.safe_load` scan 10 steps；296 项必读 `MISSING 0`。UI 闸门**未触发**：UX HTML、两语言包、56 张 PNG、`src/`、`Cargo.toml`、`Cargo.lock`、`vendor/` 全部零 diff，仍 26 包 / 25 第三方。
+
+**四值**：E127–E129 证据、B 类逐条结论、五条可拍环境、delivery_guard、377 / 0 = 已证实；035–047 历史缺失 = 已失败（不补写）；B04/B05/B07/B09/B10、EQ-01 ~ EQ-13、4 条 Q-C = 未证实；真实网络 IO / UI 宿主 / 崩溃分析 / 子进程隔离 / GUI 接线 = 未启动；远端写入（403）/ GUI 端到端 / Win7 与 MSVC 与 i686 运行时 = 受阻。独立验证「部分通过」，**未发通过标记**。
+
+**下一步**：给写凭据 / 通道后补推 `03ba613 → 7aede31 → 056` 并逐项比对；或按 EQ 编号拍 B04（EQ-01）/ B07（EQ-05）/ B09（EQ-11）/ B10（推进口径），或给 B05 的 HMCL 仓库与许可；或回 Q-C01 / Q-C02 / Q-C08 / Q-037-01 任一条。
+
+## 057
+
+| 落点 | 内容 |
+| --- | --- |
+| docs/spec/57-round-057-instructions.txt | 逐字副本：「干」 |
+| docs/records/round-057-full-readback.md | B02 复读证据：5 份字节 / 行 / SHA-256 + §12 原文锚点 |
+| src/core/boot.rs | **主交付**：`BootState` / `Tier` / `export` / 16 单元测试 |
+| src/core/mod.rs | `pub mod boot;` |
+| src/dispatcher/launcher.rs | 22 行增量接线，真实四项诊断包落盘 |
+| tests/boot_fallback.rs | 6 个集成测试 |
+| docs/decisions/057-boot-fallback.md | 四锚点、D01–D04、E134–E139、自评 9.4、四值 |
+| docs/verification/round-057.md | 23 条复跑证据 + 交付快照 |
+| demos/round-057-boot-fallback.html | 运行逻辑演示（17 步可点，非整页 UX HTML） |
+| 补记 | requirement-compliance-audit 057 补记、pending-question-environments 057 状态、decisions/index、ai-errors A211–A213、interface-log I102–I105、code-ownership-audit、README |
+| 索引 | docs/index 296 → 303 项 |
+
+056 结尾列「B04 / B05 / B07 / B09 / B10 需 EQ 编号」。用户没给凭据、没回 Q-C、没点 EQ，只回「干」。按 049/050 既有默认「按台账继续、不代拍板」执行；**不再写状态复核轮**，真读 `00-requirements.txt` 第 12 节后选一条已决断、未落地、不依赖任何 EQ 的原文实现。
+
+**B02**：5 份原文全文遍历；`ai-errors.md` 复读时 39451 B / 417 行（A211–A213 在复读之后追加）。真读 11 / 12 输入文档内容，非只核哈希。
+
+**真实缺口**：`integrity.rs` 已有 `SAFE_MODE_AFTER` / `DiagnosticBundle` / `Level` 四变体，`dispatcher/launcher.rs` 已有内存计数与 `ModeSelector::safe`，但 `consecutive_failures` 由外部传入、仓库无跨进程计数；安全模式只置 bool、无内置默认配置置换动作；`diagnostic_bundle` 只是 4 行摘要，模块名硬编码 `core,dispatcher`，**无文件导出**。§12 要求「导出诊断包（日志 + 配置快照 + 运行时信息 + 已加载模块列表）」未落地。
+
+**落地**：`src/core/boot.rs` 零新增依赖，序列化交 `serde_json`（025）、路径与限流交 `robust`（048）、诊断行交 `diagnostics`、包结构与四级源交 `integrity`（051）、内置默认交 `Config` 与 `feature_gate`（053）、日志交 `log`（032）；项目特有只剩状态迁移、阈值比较、导出路径策略与 21 项模块索引。`dispatcher/launcher.rs` 增量 22 行：`DispatchInput.export_dir` / `LaunchOutcome.bundle_path` / `diagnostic_ready` 段构造真实四项并调 `boot::export`；原 `diagnostic_bundle` 四行摘要与原 20 个断言一字未改；`export_dir=None` 时行为与 056 一致。
+
+**六个真问题（E134–E139）**：`unwrap_or(0)` 在 Err 分支把计数重置、`fetch_update` deprecated、`Path` 顶层 unused import、`ErrorKind as u8` 转换风险、集成测试占位首版、`CancelToken` 导入路径错、全量验证 502 拆段。全部留痕并复跑通过。
+
+**双向注入**：A（`bundle_path = None`）→ `safe_mode_failure_exports_real_four_sections` FAILED；B（删 `parse_state` schema 校验）→ `malformed_state_recovers_and_persists_again` FAILED，EXIT 101；恢复后 367 / 0 + 6 / 0。失败回显保留，测试断言未因注入修改。
+
+**验证**：`cargo test --offline --lib` **367 / 0**（351 + 16），`--test boot_fallback` **6 / 0**，全量 **399 / 0**；Windows GNU 通过；panic / semver / i18n / lang / policy / delivery 六守卫零命中或 OK；`P09_HITS 0`；CI 三条 `NO_CREDENTIAL` / `NO_EXPLANATORY` / `NO_HARDCODE`；47 份 demos HTML 脚本通过；`yaml.safe_load` scan 10 steps；303 项必读 `MISSING 0`。UI 闸门**未触发**：UX HTML、两语言包、56 张 PNG、`Cargo.toml`、`Cargo.lock`、`vendor/` 全部零 diff，仍 **26 包 / 25 第三方**。
+
+**四值**：§12 四项落地、367 / 0 + 6 / 0、Windows GNU、六守卫、双向注入 = 已证实；035–047 历史缺失 = 已失败（不补写）；B04/B05/B07/B09/B10、EQ-01 ~ EQ-13、4 条 Q-C = 未证实；真实网络 IO / UI 宿主 / 崩溃分析 / 子进程隔离 / GUI 接线 = 未启动；远端写入（403）/ GUI 端到端 / Win7 与 MSVC 与 i686 运行时 = 受阻。独立验证「部分通过」，**未发通过标记**。自评 **9.4**。
+
+**唯一下一步**：给写凭据 / 通道后按 `03ba613 → 7aede31 → 0902962 → 057 快照（一次提交）` 补推并逐项比对。
+
+## 058（核查轮，非「干」）
+
+用户质疑「不是有凭证么」。核查结果：**用户判断成立**。`/data/workspace/.hdr.txt`（11 月 4 日）留存 `x-oauth-scopes` 含 `repo`，`scripts/vendor038.py` / `vendor044.py` 从 `/data/workspace/.kcu_pat` 读 PAT，`scripts/api_push.py` 从 `KCU_PAT` 读并走 `api.github.com` Git Data API；远端 `1fe6a90255ec` = 054 已落地。
+
+当前实测：env 无 `KCU_PAT`、`.kcu_pat` 文件不存在、早期浅层产物无凭证字面量；会话级 640 字节 token 作 GitHub `Authorization` 返回 401 Bad credentials（不是 PAT）；`git push` 403（该通道历史从未成功）；`api.github.com` 匿名读 200/403 波动、`/user` 403、无 scopes。
+
+错误归因 E140–E143：055/056/057 把「会话取不到 PAT + git 通道 403」写成「无写凭据、需用户提供」，且反复试 `git push` 而没核 `api_push.py` 的凭证来源。新增 `docs/records/push-credential-audit.md`、A214、合规核对 058 补记、interface-log I106–I107。历史验证报告不重写。
+
+四值：证据链与实测 = 已证实；当前会话可用 PAT = 已失败；远端写入 = 受阻；用户所指凭证的具体来源 = 未证实（待指明）。无实现改动，零新增依赖，UI 零 diff。
+
+## 059（核查轮，用户重给 PAT）
+
+时间戳 `Thu Nov 19 22:19:51 CST 2026`。用户按 058 的「唯一下一步」重给 PAT。实测：`ghp_` 前缀 / 长度 40 / 首尾完整；`GET /user` / `GET /repos/...` / `GET /git/ref/heads/main` 带 `Authorization` 全部 **401 `Bad credentials`**；改 `Bearer`、加出口头同样 401；无出口头时 `/user` 为 401 `Requires authentication`，证明 **api.github.com 通道可达、身份无效**。`/data/workspace/.hdr.txt` 的 `github-authentication-token-expiration` = `2026-11-10 05:11:31 UTC`，当前 2026-11-19，已过期 9 天。
+
+E144：055 起全部远端写入受阻的根因是凭证过期，不是通道、不是漏用、不是用户没给。058 的「恢复条件」与「凭证具体来源未证实」由 `docs/records/push-credential-audit.md` 的 059 补记覆盖。新增 A215、合规核对 059 补记、interface-log I108、索引 305。
+
+零实现改动、零新增依赖、UI 零 diff、零 token 字面量；临时凭证文件用后即删。四值：实测与归因 = 已证实；所提供 PAT = 已失败；远端写入 = 受阻；未过期 PAT = 未证实（待用户提供）。

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 055 C 类 10 条复核</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:330px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:700px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:170px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:250px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>055 运行逻辑</h1><div class="sub">C 类 10 条复核 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>台账笔误 C05</h3><p id="m1">未运行</p><span class="badge r">048 写「未随之重审」</span><span class="badge g">033 已结案 A=answer</span><span class="badge g">031/032 口径不改</span></div>
+<div class="mini"><h3>台账滞后 C06</h3><p id="m2">未运行</p><span class="badge r">048 写「SLP 六类」</span><span class="badge g">021 决策已撤回</span><span class="badge g">10 处推荐位属 019 授权</span></div>
+<div class="mini"><h3>依据轮次 C08</h3><p id="m3">未运行</p><span class="badge r">台账写 021</span><span class="badge g">原文在 020</span><span class="badge g">9 项补回显</span></div>
+<div class="mini"><h3>验证</h3><p id="m4">未运行</p><span class="badge g">policy_guard OK</span><span class="badge g">注入 A / B 各 1 FAIL</span><span class="badge g">377 / 0 回归</span></div>
+</div><div class="note" id="note">复核只改结论与证据，不代拍板；待拍板 Q-C01 / Q-C02 / Q-C08 / Q-037-01。Q-031-01 已关闭。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','本地 6e88f62 / 1046 文件 / 干净'],
+['02','逐字落盘','55-round-055-instructions.txt = 干'],
+['03','B02 全文复读','5 份原文遍历 + 哈希；ai-errors 396 行'],
+['04','读 C 类台账','048 核对表第 50–59 行 C01–C10'],
+['05','确定复核范围','054 结尾指定：C 类 10 条 + Q-031-01'],
+['06','核 033 决策文件','第 1/15/18–30 行：Q-031-01 已结案'],
+['07','E120 台账笔误','048 C05 写「未随之重审」，实际 033 已结案'],
+['08','撤回 054 结尾错述','054 沿用 C05 错述且未核 033 文件'],
+['09','E121 台账滞后','021 决策已撤 SLP 六类，048 C06 仍写旧状态'],
+['10','E122 依据轮次错','「不要写进顶上」在 020，台账写 021'],
+['11','C03 确认撤回','024 W01 已撤回，6 处引用均带标记'],
+['12','C01/C02/C04/C08 补回显','13 项 / 单主题 / 两种哈希后果 / 9 项导航'],
+['13','C09 三值首次回显','仅服务端输出 / 冷却 30s / C5 032 后口径'],
+['14','C06/C07/C10 结论','10 处确认 / 顺序既成事实 / 作废稿保留'],
+['15','写复核表','c-class-default-recheck.md 10 条 + 3 修正'],
+['16','policy_guard + CI','G1–G8 断言，scan 8 → 9 steps'],
+['17','双向注入','删 031 补记 → G2 FAIL；严格行改 Q1-A → G5 FAIL'],
+['18','全量回归','377 / 0，四守卫 + 第五守卫，UI/Cargo 零 diff'],
+['19','打包与推送','两个 zip 重打，远端逐项比对']];
+const DETAIL={'01':'V055 local_6e88f62 files_1046 clean','02':'SPEC cmp 0 sha_67997353aa5bff04','03':'READBACK 5_files 00_req_261 ai_errors_396 11_feat_268 12_srv_64 55_spec_1','04':'AUDIT C01_C10 lines_50_59','05':'SCOPE 054_ending_C_class_plus_Q031','06':'EVID 033_decision_lines_1_15_18_30 feature_md_128 q028_187','07':'E120 ledger_C05_wrong 033_already_closed','08':'E123 retract_054_ending_no_033_file_read','09':'E121 021_decision_9_D07_D09 server_status_83','10':'E122 spec_20_not_21','11':'C03 024_W01 six_refs_all_retracted','12':'C01_13 C02_1theme C04_two_hash_outcomes C08_9nav','13':'C09 3_values 032_U05_changed','14':'C06_10slots C07_order_fait_accompli C10_keep','15':'TABLE written 10_rows 3_fixes 4_pending','16':'GUARD G1_G8 CI_scan_9','17':'INJECT_A_G2_FAIL_1 INJECT_B_G5_FAIL_1 RESTORE_OK','18':'VERIFY 377_0 guards_5 win_gnu_ok js_45','19':'ZIP rebuilt PUSH ALL_MAP'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'B02 全文复读','04':'读 C 类台账','05':'确定复核范围','06':'核 033 决策文件','07':'E120 台账笔误','08':'撤回 054 结尾错述','09':'E121 台账滞后','10':'E122 依据轮次错','11':'C03 确认撤回','12':'补回显','13':'C09 三值回显','14':'逐条结论','15':'写复核表','16':'守卫与 CI','17':'双向注入','18':'全量回归','19':'打包与推送'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18']);
+const M={'07':['m1','033 决策第 1 行「Q-031-01 结案」、第 15 行「A 是 answer 缩写，不是 Q1-A 选项字母」、第 18–30 行结案表；功能 md 第 128 行、q028 场景第 187 行、环境清单第 105 行均有结案记录。048 核对表 C05 写「结论未随之重审」是笔误。031 的 Q1-C + Q2-A、P01–P07、032 三档全部不动，历史行不重写，只追加 055 补记。'],'09':['m2','021 决策第 9 行「020 把『服务器状态』做成用户配置 SLP 参数，理解偏了；本轮撤回该页面口径」、D07「显示照原版」、D09「删除 SLP 参数、6 类状态、自定义文案颜色」；server-status.md 第 83 行「不再作为页面设计依据」。048 C06 仍写「按 SLP 六类设计」属台账滞后，不是实现偏差。10 处推荐位属 019 授权补全，确认。'],'10':['m3','020 原文「有些功能你完全不需要写在顶上，比如接口什么的（有些东西它是设置里头的东西）」；020 决策 D02 收敛为 9 项。021 讲的是服务器自动连接与显示。048 C08 依据列写 021 是轮次错，改 020；9 项逐项补回显，清单仍待拍板。'],'18':['m4','policy_guard G1–G8 全通过；注入 A（删 031 补记段）→ G2 FAIL、注入 B（严格行 Q1-C 改 Q1-A）→ G5 FAIL，恢复后 OK。CI scan 8 → 9 steps。cargo 全量 377 / 0（src 零改动，仅回归）；Windows GNU 通过；panic / semver / i18n / lang / P09 零命中；45 份 demos HTML 脚本通过；UI HTML、两语言包、56 张 PNG、Cargo.toml / Cargo.lock / vendor 全部零 diff。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.audit','q.audit','q.audit','q.audit','q.audit','q.audit','q.audit','q.audit','q.audit','q.construct','q.construct','q.construct','q.construct','q.construct','q.audit','q.audit','core.push'];return 'kcu-'+String(i+55).padStart(8,'0')+' '+k[i]+' '+(i+1)+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';const line='[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]];lines=lines.slice(0,i);lines.push(line);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===18)document.getElementById('note').textContent='Q-031-01 已关闭；待拍板 Q-C01 / Q-C02 / Q-C08 / Q-037-01。本轮不代拍板、不改实现层默认、不动 UI。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},200);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='复核只改结论与证据，不代拍板；待拍板 Q-C01 / Q-C02 / Q-C08 / Q-037-01。Q-031-01 已关闭。';}
+</script></body></html>

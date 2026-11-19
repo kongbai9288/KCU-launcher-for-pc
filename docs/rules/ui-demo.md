@@ -327,3 +327,7 @@ python3 scripts/render_ui.py
 ## 054 闸门判定
 
 **未触发**。本轮新增 `src/core/region.rs` 与 `demos/round-054-region.html`（**流程 HTML，不是 UX HTML**）、功能登记、调研与文档。`demos/ui-full-kcu-paper.html`、两个语言包、56 张 PNG 全部零 diff。B08 的拒绝声明目前在判定层生成 `RegionNotice`（语义 key + 三动作），**未接演示层按钮、未渲染到任何界面**；动到那层才按闸门规则出整页演示与预览图。演示层 `t.0409`「仅下载选择，不复用为地区禁用」与 B08 用户原文冲突，登记 D-054-2，修正排队等 UI 闸门。
+
+## 055 闸门判定
+
+**未触发**。本轮新增 `demos/round-055-c-class-recheck.html`（流程 HTML，不是 UX HTML）、复核表、决策、验证报告与 `scripts/policy_guard.py`。`demos/ui-full-kcu-paper.html`、两个语言包、56 张 PNG 全部零 diff。031 / 032 的界面口径未改，不重做界面、不出新预览图。

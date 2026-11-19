@@ -1,9 +1,11 @@
 use crate::core::args::LaunchArgs;
 use crate::core::asynk::CancelToken;
+use crate::core::boot;
 use crate::core::cache::Cache;
 use crate::core::diagnostics::diag_line;
 use crate::core::envelope::{Envelope, Kind};
 use crate::core::instance::{select_instance, Instance, ServerEntry, VersionWeight};
+use crate::core::integrity::DiagnosticBundle;
 use crate::core::log::LogBuffer;
 use crate::core::popup::{catalog, CloseAction, PopupRegistry};
 use crate::dispatcher::json;
@@ -32,6 +34,7 @@ pub struct DispatchInput {
     pub instances: Vec<Instance>,
     pub habit: Vec<VersionWeight>,
     pub user_choice: Option<String>,
+    pub export_dir: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -47,6 +50,7 @@ pub struct LaunchOutcome {
     pub popups_open: usize,
     pub safe_mode: bool,
     pub diagnostic_bundle: Vec<String>,
+    pub bundle_path: Option<String>,
     pub cancelled: bool,
 }
 
@@ -111,6 +115,7 @@ impl Dispatcher {
                 popups_open: 0,
                 safe_mode: self.safe_mode,
                 diagnostic_bundle: Vec::new(),
+                bundle_path: None,
                 cancelled: true,
             };
         }
@@ -247,11 +252,27 @@ impl Dispatcher {
         }
 
         let mut diagnostic_bundle = Vec::new();
+        let mut bundle_path = None;
         if self.diagnostic_ready {
+            let config_snapshot = match input.config_text.as_deref() {
+                Some(s) => s.to_string(),
+                None => boot::DEFAULT_STATE.to_string(),
+            };
+            let modules = boot::loaded_modules();
             diagnostic_bundle.push(diag_line("dispatcher", "bundle", "logs", "OK", &format!("detail={}", diagnostics.len())));
             diagnostic_bundle.push(diag_line("dispatcher", "bundle", "config", "OK", &format!("detail={:?}", config_mode)));
             diagnostic_bundle.push(diag_line("dispatcher", "bundle", "runtime", "OK", &format!("detail=mem={} first={}", input.mem_bytes, input.first_run)));
-            diagnostic_bundle.push(diag_line("dispatcher", "bundle", "modules", "OK", "detail=core,dispatcher"));
+            diagnostic_bundle.push(diag_line("dispatcher", "bundle", "modules", "OK", &format!("detail={}", modules.len())));
+
+            let bundle = DiagnosticBundle {
+                lines: diagnostics.clone(),
+                config_snapshot,
+                runtime: format!("mem={} first={} mode={}", input.mem_bytes, input.first_run, selection.mode.code()),
+                modules,
+            };
+            let exported = boot::export(input.export_dir.as_deref(), &bundle);
+            diagnostics.extend(exported.diagnostics.clone());
+            bundle_path = exported.path;
         }
 
         diagnostics.push(diag_line("dispatcher", "dispatch", "launch", "OK", &format!("detail=mode={} task={} fallback={}", selection.mode.code(), task.id, selection.fallback.code())));
@@ -281,6 +302,7 @@ impl Dispatcher {
             popups_open,
             safe_mode: self.safe_mode,
             diagnostic_bundle,
+            bundle_path,
             cancelled: false,
         }
     }

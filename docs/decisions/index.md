@@ -111,3 +111,9 @@
 | 053 | B06 第二项自动关闭功能判定层 | src 落地，零新增依赖 | 053-auto-disable-feature.md |
 
 | 054 | B08 境外离线账户限制判定层 | src 落地，零新增依赖 | 054-region-offline-restriction.md |
+
+| 055 | C 类 10 条复核、三处台账修正、Q-031-01 撤回错述 | 结论已落地，policy_guard + CI 守护 | 055-c-class-recheck.md |
+
+| 056 | B 类 10 条状态复核、E127-E129、B→EQ 映射、交付格式守卫 | 结论已落地，delivery_guard + CI 守护 | 056-b-class-recheck.md |
+
+| 057 | §12 启动级兜底：持久化计数、四级分级、四项诊断包落盘、dispatcher 接线 | 已实现、已验证 | 057-boot-fallback.md |

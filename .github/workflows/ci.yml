@@ -83,3 +83,7 @@ jobs:
         run: python3 scripts/i18n_guard.py
       - name: lang_guard
         run: python3 scripts/lang_guard.py
+      - name: policy_guard
+        run: python3 scripts/policy_guard.py
+      - name: delivery_guard
+        run: python3 scripts/delivery_guard.py

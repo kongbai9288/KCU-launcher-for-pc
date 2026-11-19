@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 054 |
+| 当前轮次 | 057 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -315,3 +315,23 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 `cargo test --offline --lib` **351 / 0**，全量 **377 / 0**，Windows GNU 交叉检查通过，四守卫零命中，双向反向注入 5 + 1 FAILED、恢复后 351 / 0。零新增依赖，仍 **26 包 / 25 第三方**。UI 闸门未触发，UX HTML 与 56 张 PNG 零 diff。
 
 | 交付快照 | 本地 `beac860` ↔ 远端 `72ce85c`，1046 文件 ALL_MATCH True |
+
+## 055 C 类 10 条复核
+
+`docs/records/c-class-default-recheck.md` 逐条复核 048 核对表的 C 类 10 条，**不代拍板**：C03 确认 024 已撤回无残留；C05 台账笔误（Q-031-01 早在 033 结案，A = answer 缩写）、C06 台账滞后（SLP 六类已在 021 撤回）、C08 依据轮次错（原文在 020）三处追加补记；054 结尾沿用错述已撤回。C01 13 项排除、C02 单主题、C08 9 项导航、C09 三值、C04 两种哈希后果全部补回显。
+
+新增 `scripts/policy_guard.py`（G1–G8）与 CI `scan` 第 9 步，守护 031 默认严格档、032 三档单调、033 结案；双向注入各 1 项 FAIL，恢复后 OK。`src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` / UX HTML / 两语言包 / 56 张 PNG 全部零 diff，仍 **26 包 / 25 第三方**；`cargo test --offline` 全量 **377 / 0**（仅回归）。待拍板：Q-C01 / Q-C02 / Q-C08 / Q-037-01；Q-031-01 已关闭。
+
+055 远端写入受阻（`git push` 403、无写凭据），远端仍停在 054 的 `1fe6a90`；本地 23 文件闭环完整，不强推、不伪造 ALL_MATCH。
+
+## 056 B 类 10 条状态复核
+
+`docs/records/b-class-status-recheck.md` 逐条复核 048 核对表的 B 类 10 条，**不代拍板**：E127（B01/B02 自 054/051 起常态遵守，台账滞后）、E128（054 决策文件缺 2 项格式锚点，回复齐备但留痕不齐，不补写）、E129（B08 判定层 054 已落地，台账仍写未实现）三处追加补记。B04 / B05 / B07 / B09 / B10 全卡 EQ，本轮**不擅自开工**，只把五条具体环境值与「要拍一句」摊平。
+
+新增 `scripts/delivery_guard.py`（G1–G8，`GUARD_FROM = 56`，不追溯历史）与 CI `scan` 第 10 步，守护交付格式六项与开工复读留痕；双向注入各 1 项 FAIL，恢复后 OK。`src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` / UX HTML / 两语言包 / 56 张 PNG 全部零 diff，仍 **26 包 / 25 第三方**；`cargo test --offline` 全量 **377 / 0**（仅回归）。远端 `git push` 仍 403，055 / 056 未更新远端，不强推、不伪造 ALL_MATCH。
+
+## 057 §12 启动级兜底
+
+真读 `00-requirements.txt` 第 12 节后落地一条**已决断、不依赖任何 EQ** 的原文：`src/core/boot.rs` 跨进程持久化连续失败计数（删 / 坏 / 超大 / schema 错回默认）、四级 `Tier` 统一出口、安全模式内置默认配置、`diagnostic-bundle.json` 真实四项落盘；`src/dispatcher/launcher.rs` 增量 22 行接线，原 20 个断言一字未改，`export_dir=None` 时行为不变。
+
+零新增第三方，仍 **26 包 / 25 第三方**；`cargo test --offline --lib` **367 / 0**、`--test boot_fallback` **6 / 0**、全量 **399 / 0**；双向注入 A/B 各 1 项 FAILED，恢复后全过。远端 `git push` 仍 403，055 / 056 / 057 未更新远端，不强推、不伪造 ALL_MATCH。
