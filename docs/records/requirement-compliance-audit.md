@@ -232,3 +232,9 @@ B01 / B02 的 035–047 历史偏差仍标「已失败」，不补写、不重�
 ## 059 补记：远端受阻根因确定为凭证过期
 
 用户重新提供 PAT 后实测 401 `Bad credentials`；`/data/workspace/.hdr.txt` 记录该批凭证 expiration `2026-11-10 05:11:31 UTC`，当前 2026-11-19。055–058 的「远端写入 = 受阻」结论不变，根因统一为凭证过期，覆盖 058 补记里「当前会话取不到 PAT」的表述。历史验证报告不重写。详见 `docs/records/push-credential-audit.md` 059 补记。
+
+## 060 补记：远端写入受阻解除（Thu Nov 19 23:34:25 CST 2026）
+
+有效 PAT 到手后走 `api.github.com` Git Data API 补推成功：远端 `1fe6a90255ec` → `91e4abfcbbee`，**1071 / 1071 逐项 ALL_MATCH True**。055–059 四值表里「远端写入 = 受阻」由本补记覆盖为「已证实」；根因仍是 059 登记的凭证过期（E144），E145 闭环。历史验证报告不重写。
+
+口径：`91e4abfcbbee` 以 054 为父，把本地最终 tracked 树压成一个 commit，不是逐 commit 重放本地 6 个哈希；`force=false`，未强推、未重写远端历史。详见 `docs/records/push-credential-audit.md` 060 补记。

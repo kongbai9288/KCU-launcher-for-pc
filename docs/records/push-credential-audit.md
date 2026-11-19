@@ -82,3 +82,34 @@
 | 未过期 PAT | 未证实（待用户提供） |
 
 055 / 056 / 057 / 058 验证报告与四值表按既有口径不重写；本补记覆盖其归因。
+
+## 060 补记：有效 PAT 到手，远端已同步（Thu Nov 19 23:34:25 CST 2026）
+
+用户指出上一条是发错的，重给有效 PAT。不回显明文；未写入仓库、未写入日志；临时文件用后即删。
+
+| 编号 | 检查 | 结果 |
+| --- | --- | --- |
+| S12 | `GET /user` | **200**，login `kongbai9288`；`x-oauth-scopes` 含 `repo`、`workflow`；expiration `2026-12-10 05:42:18 UTC`；配额 4999 |
+| S13 | `GET /repos/kongbai9288/KCU-launcher-for-pc` | **200**，`permissions.push = true`、`admin = true` |
+| S14 | `GET /git/ref/heads/main` | **200**，推送前 `1fe6a90255ec`（054） |
+| S15 | `git push origin main` | 仍 403；该通道不可用，与凭证有效性无关 |
+| S16 | `api.github.com` Git Data API 增量推送 | **成功**：`1fe6a90255ec` → `91e4abfcbbee`，parent `1fe6a90255ec`；42 changed / 0 deleted / 0 added-as-delete |
+| S17 | 逐项比对远端新树 vs 本地 `git ls-files -s` | **1071 / 1071 ALL_MATCH True**，DIFF 0 / EXTRA 0 / `truncated=False` |
+
+**E145 闭环**：059 的「未过期 PAT = 未证实」关闭；055–059 全部「远端写入受阻」的根因是 058 的凭证过期（E144），现已解除。058 的恢复条件（用户重新提供未过期 PAT）已满足并执行完毕。
+
+**E146 真问题**：第一次前台跑 `scripts/api_push.py` 撞网关 502，远端 ref 复查仍 `1fe6a90255ec`，确认**未落地**才重推，没有盲目重试、没有强推。原因是该脚本对 1071 个文件逐个 `git hash-object` fork 子进程，且把全量 tree 一次性 POST。改用临时增量脚本 `/data/workspace/push060.py`（不进仓库）：一次 `git ls-files -s -z` 取全量 path+blob sha，拉远端 tree 求差集，只对 42 个差异创建 blob，`base_tree` 增量 POST。A216 防复发。
+
+**口径（必须说清）**：远端 commit `91e4abfcbbee` **不是逐 commit 重放**本地 `03ba613` / `7aede31` / `0902962` / `1e5a3f9` / `6a66501` / `5a50b7b`。它以远端 054 为唯一父、把本地最终 tracked 树压成一个 commit；本地这 6 个哈希不会出现在远端历史。这是 025 以来每轮既有的交付形态（每轮一个远端主快照 + 可选补写记录），本轮沿用，**文件树一致、提交历史不同**。未重写远端历史、未强推（`force=false`）。
+
+**四值（060）**
+
+| 项 | 值 |
+| --- | --- |
+| S12–S17 实测、E145 闭环、E146 留痕、零 token 残留 | 已证实 |
+| 远端写入 | 已证实（不再受阻） |
+| 055–059 期间远端落后 | 已失败（已补齐） |
+| 本地 6 个 commit 哈希上远端 | 已失败（既有形态，文件树一致；不重写历史） |
+| GUI 端到端 / Win7 / MSVC / i686 运行时 | 受阻 |
+
+历史验证报告与四值表按既有口径不重写；本补记覆盖其「远端写入受阻」结论。

@@ -435,3 +435,9 @@
 | 编号 | 防错项 |
 | --- | --- |
 | A215 | 拿到 PAT 先核 `github-authentication-token-expiration` 与 `GET /user` 状态码。`401 Bad credentials` 说明请求到达 GitHub、身份失效（过期 / 撤销）；`401 Requires authentication` 说明没带身份；两者都不是「通道被挡」。不要把过期凭证当成可用凭证反复重试，也不要把 token 写进仓库或日志。 |
+
+## 060 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A216 | 推送撞网关 502 时，先用只读 `GET /git/ref/heads/<branch>` 确认远端 ref 是否变过，再决定重推；不要盲目重试、不要强推。大仓库用 `git ls-files -s -z` 一次取全量 path+blob sha，与远端 recursive tree 求差集，只创建差异 blob 并用 `base_tree` 增量 POST；不要对每文件 fork `git hash-object`、不要全量 POST tree。 |

@@ -3220,3 +3220,13 @@ EQ-14（049）、EQ-15（050）关闭；EQ-01 ~ EQ-13 仍待拍板；真实网�
 E144：055 起全部远端写入受阻的根因是凭证过期，不是通道、不是漏用、不是用户没给。058 的「恢复条件」与「凭证具体来源未证实」由 `docs/records/push-credential-audit.md` 的 059 补记覆盖。新增 A215、合规核对 059 补记、interface-log I108、索引 305。
 
 零实现改动、零新增依赖、UI 零 diff、零 token 字面量；临时凭证文件用后即删。四值：实测与归因 = 已证实；所提供 PAT = 已失败；远端写入 = 受阻；未过期 PAT = 未证实（待用户提供）。
+
+## 060（补推闭环，非「干」）
+
+时间戳 `Thu Nov 19 23:34:25 CST 2026`。用户重给有效 PAT。实测 `/user` 200（login `kongbai9288`，scopes 含 `repo`，expiration 2026-12-10）、repo `permissions.push=true`、推送前远端 `1fe6a90255ec`。`git push` 仍 403，走 `api.github.com` Git Data API 成功：`1fe6a90255ec` → `91e4abfcbbee`，parent `1fe6a90255ec`，42 changed / 0 deleted；**1071 / 1071 逐项 ALL_MATCH True**，DIFF 0 / EXTRA 0 / truncated False。
+
+E145：059 的「未过期 PAT 未证实」关闭，055–059 受阻根因（凭证过期）解除。E146：首跑 `api_push.py` 撞 502 且远端复查未变，确认未落地才重推；改临时增量脚本（一次 `git ls-files -s -z` + 42 个差异 blob + `base_tree`），临时脚本不进仓库、用后即删。新增 A216、合规核对 060 补记、interface-log I110、README 轮次 060。
+
+口径：远端 `91e4abfcbbee` 以 054 为父、把本地最终树压成一个 commit，**不是**逐 commit 重放 055–059 的 6 个本地哈希；既有交付形态，文件树一致、提交历史不同，`force=false` 未强推。
+
+零实现改动、零新增依赖、UI 零 diff、全仓与 zip 零 token 字面量。四值见 `docs/records/push-credential-audit.md` 060 补记。
