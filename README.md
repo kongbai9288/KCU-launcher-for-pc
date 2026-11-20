@@ -11,7 +11,7 @@
 | 可见性 | public |
 | 分支 | main |
 | 推送路径 | git HTTP 受阻；REST Git Data API 全量树快照 |
-| 当前轮次 | 060 |
+| 当前轮次 | 061 |
 | 当前阶段 | D06 已触发、D07 已启用；第 1 层 core、第 2 层 dispatcher、第 3 层 lightweight 已落地，其余 6 层未启动 |
 | 图标 | assets/icon/kcu-launcher.jpg |
 | 正常模式 UI 设计稿 | assets/ui/normal-mode-v3.html，014 轮起为样板与交互参考，不直接复用 |
@@ -341,3 +341,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 有效 PAT 到手后走 `api.github.com` Git Data API 补推：`1fe6a90255ec` → `91e4abfcbbee`，**1071 / 1071 逐项 ALL_MATCH True**（DIFF 0 / EXTRA 0 / truncated False）。055–059 的「远端写入受阻」解除，根因是 059 登记的凭证过期。`git push` 通道仍 403。
 
 远端 commit 以 054 为父、把本地最终树压成一个 commit，不是逐 commit 重放本地 6 个哈希；`force=false`，未强推、未重写历史。全仓与 zip 零 token 字面量。
+
+## 061 第 19 条数据层
+
+`src/core/stats.rs` 落地单次时长、总时长、每实例时长与快捷启动静默记录；`play-stats.json` 持久化，删 / 坏 / 超大 / schema 错回默认。`dispatcher::Dispatcher::finish_session` 接线。零新增第三方；显示层未启动。

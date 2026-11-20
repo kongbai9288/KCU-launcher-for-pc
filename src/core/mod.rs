@@ -19,3 +19,4 @@ pub mod feature_gate;
 pub mod region;
 
 pub mod boot;
+pub mod stats;

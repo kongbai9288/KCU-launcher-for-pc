@@ -441,3 +441,12 @@
 | 编号 | 防错项 |
 | --- | --- |
 | A216 | 推送撞网关 502 时，先用只读 `GET /git/ref/heads/<branch>` 确认远端 ref 是否变过，再决定重推；不要盲目重试、不要强推。大仓库用 `git ls-files -s -z` 一次取全量 path+blob sha，与远端 recursive tree 求差集，只创建差异 blob 并用 `base_tree` 增量 POST；不要对每文件 fork `git hash-object`、不要全量 POST tree。 |
+
+## 061 轮新增
+
+| 编号 | 防错项 |
+| --- | --- |
+| A217 | 实现 backlog 中「已登记 / 未实现」的原文条目前，先核 `src/` 是否已有占位：本轮 `popup.rs:171` 的 `PopupKind::Duration` 弹窗已在目录但无数据层。只接数据层，不把「弹窗已登记」写成「功能已实现」。 |
+| A218 | 限流检查要放在「移除活跃会话」之前。`PlayStats::end` 先 `try_op()` 再 `remove`；否则高频洪泛会让一次正常结束被拒且会话从表里消失，数据不可恢复。 |
+| A219 | `OpBudget::new(n)` 的 `max` 取 `n.max(1)`，构造 `new(0)` 后首次 `try_op()` 仍返回 true；别拿它当「立刻拒绝」的测试夹具。 |
+| A220 | 文档里描述凭据「形态」时别写会触发 `.github/workflows/ci.yml` 的 `credential` job 的字面量前缀；用「GitHub 经典个人访问令牌前缀（`gh` + `p` + 下划线）」等等义描述。守卫按 CI 真实命令实跑，不只核文档存在性。 |

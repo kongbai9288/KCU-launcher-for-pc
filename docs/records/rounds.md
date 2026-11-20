@@ -3215,7 +3215,7 @@ EQ-14（049）、EQ-15（050）关闭；EQ-01 ~ EQ-13 仍待拍板；真实网�
 
 ## 059（核查轮，用户重给 PAT）
 
-时间戳 `Thu Nov 19 22:19:51 CST 2026`。用户按 058 的「唯一下一步」重给 PAT。实测：`ghp_` 前缀 / 长度 40 / 首尾完整；`GET /user` / `GET /repos/...` / `GET /git/ref/heads/main` 带 `Authorization` 全部 **401 `Bad credentials`**；改 `Bearer`、加出口头同样 401；无出口头时 `/user` 为 401 `Requires authentication`，证明 **api.github.com 通道可达、身份无效**。`/data/workspace/.hdr.txt` 的 `github-authentication-token-expiration` = `2026-11-10 05:11:31 UTC`，当前 2026-11-19，已过期 9 天。
+时间戳 `Thu Nov 19 22:19:51 CST 2026`。用户按 058 的「唯一下一步」重给 PAT。实测：GitHub 经典个人访问令牌前缀 / 长度 40 / 首尾完整；`GET /user` / `GET /repos/...` / `GET /git/ref/heads/main` 带 `Authorization` 全部 **401 `Bad credentials`**；改 `Bearer`、加出口头同样 401；无出口头时 `/user` 为 401 `Requires authentication`，证明 **api.github.com 通道可达、身份无效**。`/data/workspace/.hdr.txt` 的 `github-authentication-token-expiration` = `2026-11-10 05:11:31 UTC`，当前 2026-11-19，已过期 9 天。
 
 E144：055 起全部远端写入受阻的根因是凭证过期，不是通道、不是漏用、不是用户没给。058 的「恢复条件」与「凭证具体来源未证实」由 `docs/records/push-credential-audit.md` 的 059 补记覆盖。新增 A215、合规核对 059 补记、interface-log I108、索引 305。
 
@@ -3230,3 +3230,11 @@ E145：059 的「未过期 PAT 未证实」关闭，055–059 受阻根因（凭
 口径：远端 `91e4abfcbbee` 以 054 为父、把本地最终树压成一个 commit，**不是**逐 commit 重放 055–059 的 6 个本地哈希；既有交付形态，文件树一致、提交历史不同，`force=false` 未强推。
 
 零实现改动、零新增依赖、UI 零 diff、全仓与 zip 零 token 字面量。四值见 `docs/records/push-credential-audit.md` 060 补记。
+
+## 061（实现轮，逐字原文第 19 条）
+
+用户只回「干」。B04 / B05 / B07 / B09 / B10 仍全卡 EQ，按 056 的 A208 不擅自开工；按 057 的 A211 真读 `00-requirements.txt` 与 `11-features-input.txt` 全文，选 backlog 第 19 条「单次时长、总时长、每实例时长、快捷启动静默记录」——原文已决断、不依赖任何 EQ。
+
+新增 `src/core/stats.rs`（`PlayStats` 持久化计数、单次 / 总 / 每实例三项、快捷启动静默、活跃会话上限 3、时钟回拨与超长会话截断、删 / 坏 / 超大 / schema 错回默认、限流、锁中毒恢复），`tests/play_stats.rs` 7 个集成（真写文件、真删文件、真并发、dispatcher 接线）。`core/mod.rs` / `lib.rs` / `boot.rs` 模块索引 / `dispatcher::Dispatcher::finish_session` 增量接线，原 20 个 dispatch 断言一字未改。零新增第三方，仍 26 包 / 25 第三方。
+
+`cargo test --offline --lib` **381 / 0**（367 + 14），`--test play_stats` **7 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。UI 闸门未触发：UX HTML、两语言包、56 张 PNG 零 diff。远端状态见 `docs/verification/round-061.md`。

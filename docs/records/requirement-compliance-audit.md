@@ -238,3 +238,9 @@ B01 / B02 的 035–047 历史偏差仍标「已失败」，不补写、不重�
 有效 PAT 到手后走 `api.github.com` Git Data API 补推成功：远端 `1fe6a90255ec` → `91e4abfcbbee`，**1071 / 1071 逐项 ALL_MATCH True**。055–059 四值表里「远端写入 = 受阻」由本补记覆盖为「已证实」；根因仍是 059 登记的凭证过期（E144），E145 闭环。历史验证报告不重写。
 
 口径：`91e4abfcbbee` 以 054 为父，把本地最终 tracked 树压成一个 commit，不是逐 commit 重放本地 6 个哈希；`force=false`，未强推、未重写远端历史。详见 `docs/records/push-credential-audit.md` 060 补记。
+
+## 061 补记：D 类第 19 条数据层落地
+
+`docs/features/backlog.md` 第 19 条（原表 D 类「文档明确要求但标未启动」）由 061 落地**数据层**：`src/core/stats.rs` 与 `dispatcher::Dispatcher::finish_session`。原文逐字在 `docs/records/round-061-full-readback.md` 与 `docs/features/normal-stats.md`。
+
+不改原表 B/C/D 行，不重写历史证据。B04 / B05 / B07 / B09 / B10 仍卡 EQ；C 类 4 条待拍板不变；EQ-01 ~ EQ-13 不变。**显示层未启动**：`PopupKind::Duration` 在 `popup.rs:171` 已登记但未接数据，真实游戏进程结束事件源未建立，不把数据层写成端到端已实现。零新增第三方依赖。

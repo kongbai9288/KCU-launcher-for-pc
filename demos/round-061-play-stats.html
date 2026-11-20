@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 061 游戏时长记录</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:720px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:260px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>061 运行逻辑</h1><div class="sub">11-features-input 第 19 条 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">total=0 instances=0 active=0</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>状态读取</h3><p id="m1">未运行</p><span class="badge g">跨进程持久化</span><span class="badge g">删/坏/超大回默认</span><span class="badge g">schema=1</span><span class="badge r">写失败可见</span></div>
+<div class="mini"><h3>三项时长</h3><p id="m2">未运行</p><span class="badge g">单次</span><span class="badge g">总时长</span><span class="badge g">每实例</span><span class="badge g">饱和加</span><span class="badge r">显示层未启动</span></div>
+<div class="mini"><h3>静默与并发</h3><p id="m3">未运行</p><span class="badge g">快捷启动写数据</span><span class="badge g">show_popup=false</span><span class="badge g">活跃上限 3</span><span class="badge r">限流 64/s</span></div>
+<div class="mini"><h3>鲁棒与回归</h3><p id="m4">未运行</p><span class="badge g">时钟回拨记 0</span><span class="badge g">单次≤30天</span><span class="badge g">注入 A/B FAILED</span><span class="badge g">381/0 + 7/0</span><span class="badge r">真实进程事件源未建立</span></div>
+</div><div class="note" id="note">原文第 226 行：每次游戏结束的时候显示玩了多长时间，并且有记录总时长，对应每一个实例 时长（这些都是咱们启动器的时长）（如果是快捷启动则静默记录）。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','e10d9ed / 1071 文件 / DIRTY 0'],
+['02','逐字落盘','61-round-061-instructions.txt = 干'],
+['03','B02 全文复读','5 份原文 + SHA-256；真读 §7.3 / §12 与第 19 / 26 条'],
+['04','定位真实缺口','backlog:33 已登记未实现；popup.rs:171 Duration 弹窗无数据层'],
+['05','原文四项','单次 / 总时长 / 每实例 / 快捷启动静默记录'],
+['06','PlayStats::open','读 play-stats.json；删/坏/超大/schema 错回默认'],
+['07','record','played = ended − started；饱和加；空 id 与控制字符拒绝'],
+['08','per-instance','BTreeMap 按实例 id 累计，上限 4096'],
+['09','persist','serde_json::Map + safe_join + create_dir_all + fs::write'],
+['10','silent','数据仍落盘，show_popup=false，不显示时长弹窗'],
+['11','start / end','活跃会话上限 3（原文第 26 条）；限流时不丢活跃会话'],
+['12','时钟异常','ended<started 记 0；单次超 30 天截断给 DEGRADE'],
+['13','暴力与删除','限流 64/s、id 洪泛、文件删后重建、锁中毒恢复、8×8 并发'],
+['14','dispatcher 接线','finish_session → stats.record → LogBuffer.record'],
+['15','双向注入 A','show_popup 恒 true → 静默单测 FAILED 1 项；恢复 OK'],
+['16','双向注入 B','删 parse_stats 的 schema 校验 → 回默认单测 FAILED 1 项；恢复 OK'],
+['17','全量回归与交付','381 / 0 + 420 / 0 + Windows GNU + 六守卫 + 远端 ALL_MATCH']];
+const DETAIL={'01':'V061 head_e10d9ed files_1071 dirty_0','02':'SPEC sha_9ee0280bc49cff49','03':'READBACK 5_files ai_errors_443','04':'GAP backlog_19_not_implemented popup_duration_no_data','05':'SPEC line_226 four_items line_233 limit_3','06':'STATE read_or_default fallback_default schema=1','07':'RECORD played=60 total=60 instance_alpha=60','08':'MAP alpha=90 beta=10 cap_4096','09':'WRITE serde_json_map safe_join create_dir_all bytes','10':'SILENT accepted=1 show_popup=0 file_written=1','11':'ACTIVE cap=3 end_first_try_op_then_remove','12':'BOUND clock_rollback=0 session_clamped=2592000','13':'ROBUST deleted_file rate_limit poison_lock concurrent_64','14':'WIRE finish_session diagnostics_to_LogBuffer','15':'INJECT_A FAILED_1 RC_101 RESTORE_OK','16':'INJECT_B FAILED_1 RC_101 RESTORE_OK','17':'VERIFY 381_0 420_0 win_gnu_ok guards_6 remote_synced'};
+const PHASE={'01':'开工预检','02':'逐字落盘','03':'B02 复读','04':'缺口定位','05':'原文四项','06':'状态读取','07':'单次累计','08':'每实例累计','09':'持久化','10':'静默口径','11':'并发上限','12':'异常边界','13':'鲁棒性','14':'调度接线','15':'注入 A','16':'注入 B','17':'回归交付'};
+const QN=new Set(['03','04','05','06','07','08','09','10','11','12','13','14','15','16']);
+const ST=['head=e10d9ed dirty=0','spec=sha_9ee0280b','readback=5_files','gap=backlog_19','items=4','open=default','record=ok played=60','map=ok instances=2','persist=ok schema=1','silent=ok popup=0','active=3 then=0','bound=ok rollback=0','robust=ok','wire=ok diagnostics=2','inject_a=FAILED_1','inject_b=FAILED_1 restored=ok','verify=381_0+420_0 remote=ALL_MATCH'];
+const M={'06':['m1','PlayStats::open(Option<dir>) 读 play-stats.json；文件被删、内容非 JSON、超 64 KiB、schema≠1、instances 非对象或值越界全部回默认并给 [KCU] 行。无 dir 时走内存退化。写回用 serde_json::Map 构造，路径走 robust::safe_join，目录不存在则 create_dir_all；写失败给 state_write ERROR 不崩。'],'10':['m2','单次 = ended − started，ended<started 记 0；总时长与每实例时长都饱和加。快捷启动 silent=true 时数据仍写盘、show_popup=false，弹窗目录 popup.rs:171 的 PopupKind::Duration 已登记但未接数据，显示层未启动。三项数值由 SessionOutcome 回传。'],'13':['m3','start 限活跃会话 3（原文第 26 条）；end 先 try_op() 再 remove，限流拒绝时活跃会话不丢。OpBudget 1 秒 64 次；check_text 拒空 id、控制字符、超长 id；实例上限 4096；锁中毒走 PoisonError::into_inner。集成测试真删文件、真 8×8 并发、真并发累计。'],'16':['m4','注入 A 把 show_popup 恒置 true → 静默单测 FAILED 1 项（RC=101）；注入 B 删 parse_stats 的 schema 校验 → 回默认单测 FAILED 1 项（left=7 right=0，RC=101）。恢复后 381 / 0 与全量 420 / 0 全过。真实游戏进程结束事件源未建立，数据层只提供可调用入口，不宣称端到端已实现。']};
+let lines=[];const flow=document.getElementById('flow');
+NODES.forEach((n,i)=>{const d=document.createElement('div');d.className='node'+(QN.has(n[0])?' q':'');d.id='nd'+i;d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>paint(i);flow.appendChild(d);});
+function envelope(i){const k=['core.start','core.spec','q.audit','q.audit','q.spec','core.stats','core.stats','core.stats','core.stats','core.stats','core.stats','core.stats','core.stats','dispatcher.stats','q.audit','q.audit','core.push'];return 'kcu-'+String(i+61).padStart(8,'0')+' '+k[i]+' '+(i+1)+' OK';}
+function paint(i){document.querySelectorAll('.node').forEach((e,j)=>e.classList.toggle('on',j===i));const n=NODES[i];document.getElementById('step').textContent=n[0]+' · '+n[1];document.getElementById('phase').textContent=PHASE[n[0]];document.getElementById('state').textContent=ST[i];document.getElementById('env').textContent=envelope(i);const dom=QN.has(n[0])?'q':'core';lines=lines.slice(0,i);lines.push('[KCU] '+n[0]+' '+dom+' '+n[0]+' OK '+DETAIL[n[0]]);document.getElementById('out').textContent=lines.join('\n');for(let k=1;k<=i+1;k++){const key=String(k).padStart(2,'0');if(M[key])document.getElementById(M[key][0]).textContent=M[key][1];}if(i===16)document.getElementById('note').textContent='061 第 19 条数据层已落地；显示层与真实游戏进程结束事件源未启动。零新增第三方依赖，远端逐项 ALL_MATCH。';}
+function run(){reset();let i=0;const t=setInterval(()=>{paint(i);i++;if(i>=NODES.length)clearInterval(t);},200);}
+function reset(){lines=[];document.querySelectorAll('.node').forEach(e=>e.classList.remove('on'));document.getElementById('step').textContent='—';document.getElementById('phase').textContent='待执行';document.getElementById('state').textContent='total=0 instances=0 active=0';document.getElementById('env').textContent='—';['m1','m2','m3','m4'].forEach(x=>document.getElementById(x).textContent='未运行');document.getElementById('out').textContent='等待执行…';document.getElementById('note').textContent='原文第 226 行：每次游戏结束的时候显示玩了多长时间，并且有记录总时长，对应每一个实例 时长（这些都是咱们启动器的时长）（如果是快捷启动则静默记录）。';}
+</script></body></html>

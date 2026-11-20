@@ -8,6 +8,7 @@ use crate::core::instance::{select_instance, Instance, ServerEntry, VersionWeigh
 use crate::core::integrity::DiagnosticBundle;
 use crate::core::log::LogBuffer;
 use crate::core::popup::{catalog, CloseAction, PopupRegistry};
+use crate::core::stats::{PlayStats, SessionOutcome};
 use crate::dispatcher::json;
 use crate::dispatcher::json::StringField;
 use crate::dispatcher::mode::{Fallback, Mode, ModeInput, ModeSelection, ModeSelector};
@@ -92,6 +93,22 @@ impl Dispatcher {
 
     pub fn flush_diagnostics(&mut self) -> Vec<Vec<String>> {
         self.log.take_shards()
+    }
+
+    /// Close a game session and forward its outcome to the diagnostic log.
+    pub fn finish_session(
+        &self,
+        stats: &PlayStats,
+        instance: &str,
+        started: u64,
+        ended: u64,
+        silent: bool,
+    ) -> SessionOutcome {
+        let outcome = stats.record(instance, started, ended, silent);
+        for d in &outcome.diagnostics {
+            self.log.record(format_args!("{}", d), log::Level::Info, "kcu.dispatcher.stats");
+        }
+        outcome
     }
 
     pub fn dispatch(&mut self, input: &DispatchInput, cancel: &CancelToken) -> LaunchOutcome {

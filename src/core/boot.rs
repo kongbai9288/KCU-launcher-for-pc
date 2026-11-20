@@ -40,6 +40,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.feature_gate",
     "core.region",
     "core.boot",
+    "core.stats",
     "dispatcher.launcher",
 ];
 

@@ -705,3 +705,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I110 | `docs/records/push-credential-audit.md` 060 补记 | S12–S17、E145 闭环、E146 增量推送、合成 commit 口径、四值 |
 | I111 | 远端 | `refs/heads/main` `91e4abfcbbee`，1071 文件 ALL_MATCH True |
 | I112 | 状态 | 补推闭环；无实现改动；零 token 残留 |
+
+## 061 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I113 | `src/core/stats.rs` | `PlayStats::open` / `start` / `end` / `record` / `totals` / `active_count`；`SessionOutcome` 七字段 |
+| I114 | `src/dispatcher/launcher.rs` | `Dispatcher::finish_session` 接线，诊断行进 `LogBuffer` |
+| I115 | `tests/play_stats.rs` | 7 个集成；`docs/features/normal-stats.md` 功能登记 |
+| I116 | 状态 | 实现轮；零新增依赖；UI 零 diff；第 19 条显示层未启动 |

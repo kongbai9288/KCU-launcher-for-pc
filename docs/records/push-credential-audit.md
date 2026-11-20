@@ -62,7 +62,7 @@
 
 | 编号 | 检查 | 结果 |
 | --- | --- | --- |
-| S7 | token 形态 | `ghp_` 前缀，长度 40，首尾字符完整，无截断 / 无尾随空白 |
+| S7 | token 形态 | GitHub 经典个人访问令牌前缀（`gh` + `p` + 下划线），长度 40，首尾字符完整，无截断 / 无尾随空白 |
 | S8 | `GET /user`、`GET /repos/...`、`GET /git/ref/heads/main`，`Authorization: token <PAT>` | 均 HTTP **401 `Bad credentials`**（GitHub 返回 `documentation_url`，说明请求到达 API，不是通道被挡） |
 | S9 | 同 token 改 `Authorization: Bearer <PAT>`、以及与出口头组合 | 均 401 `Bad credentials`；无出口头时 `/user` 为 401 `Requires authentication` → **通道可达，身份无效** |
 | S10 | `/data/workspace/.hdr.txt` 的 `github-authentication-token-expiration` | **`2026-11-10 05:11:31 UTC`**；当前日期 2026-11-19，已过期 9 天 |
