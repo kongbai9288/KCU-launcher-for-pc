@@ -3238,3 +3238,5 @@ E145：059 的「未过期 PAT 未证实」关闭，055–059 受阻根因（凭
 新增 `src/core/stats.rs`（`PlayStats` 持久化计数、单次 / 总 / 每实例三项、快捷启动静默、活跃会话上限 3、时钟回拨与超长会话截断、删 / 坏 / 超大 / schema 错回默认、限流、锁中毒恢复），`tests/play_stats.rs` 7 个集成（真写文件、真删文件、真并发、dispatcher 接线）。`core/mod.rs` / `lib.rs` / `boot.rs` 模块索引 / `dispatcher::Dispatcher::finish_session` 增量接线，原 20 个 dispatch 断言一字未改。零新增第三方，仍 26 包 / 25 第三方。
 
 `cargo test --offline --lib` **381 / 0**（367 + 14），`--test play_stats` **7 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。UI 闸门未触发：UX HTML、两语言包、56 张 PNG 零 diff。远端状态见 `docs/verification/round-061.md`。
+
+061 补记：远端主快照 `'+REF+'` 经 Git Data API 推送成功，1079 / 1079 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。061 补记以该 ref 为父，`force=false`。历史行不重写。

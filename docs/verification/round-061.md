@@ -5,7 +5,7 @@
 | 编号 | 061 |
 | 独立验证结论 | **部分通过**，未发通过标记 |
 | 依据 | `docs/decisions/061-play-stats.md` V1–V7 |
-| 远端 `refs/heads/main` | 061 补记覆盖 |
+| 远端 `refs/heads/main` | 主快照 `0b03d25fea09ddc483c963d275111fe0321721a3`；061 补记以该 ref 为父，`force=false` |
 
 ## 1. 时间戳
 
@@ -119,10 +119,10 @@ RC=101
 
 | 项 | 值 |
 | --- | --- |
-| 本地 HEAD | 061 补记覆盖（DIRTY 0） |
-| 远端 `refs/heads/main` | 061 补记覆盖 |
-| 逐项 ALL_MATCH | 061 补记覆盖 |
-| 主包 | 按 `git ls-files` 打包，项数见 061 补记 |
+| 本地 HEAD | `b097382`（主快照）/ 061 补记（DIRTY 0） |
+| 远端 `refs/heads/main` | 主快照 `0b03d25fea09ddc483c963d275111fe0321721a3`；061 补记以该 ref 为父，`force=false` |
+| 逐项 ALL_MATCH | **True**（1079 / 1079，DIFF 0 / EXTRA 0 / truncated False） |
+| 主包 | 按 `git ls-files` 打包 1079 项，EXTRA 0 / MISSING 0；预览包 57 项 |
 | 零凭据 | tracked 零 token 字面量；`.git/config` 零 token；临时 PAT 与临时脚本用后即删 |
 | `Cargo.toml` / `Cargo.lock` / `vendor/` | 一行未动，26 包 / 25 第三方 |
 | UI | UX HTML、两语言包、56 张 PNG 零 diff |
@@ -134,7 +134,7 @@ RC=101
 | 第 19 条数据层、三项时长、静默口径、活跃上限 3、异常与删除边界 | 已证实 |
 | 381 / 0、7 / 0、`**420 / 0**（8 段全部 ok，RC=0）`、Windows GNU、六守卫、双向注入 | 已证实 |
 | 零新增依赖、零 UI diff | 已证实 |
-| 远端逐项 ALL_MATCH | 061 补记覆盖 |
+| 远端逐项 ALL_MATCH | 已证实（1079 / 1079 True） |
 | 035–047 历史交付格式缺失 | 已失败（不补写） |
 | B04 / B05 / B07 / B09 / B10、EQ-01 ~ EQ-13、4 条 Q-C | 未证实（待拍板） |
 | 显示层、真实游戏进程结束事件源、真实网络 IO、UI 宿主、崩溃分析、子进程隔离 | 未启动 |
@@ -143,3 +143,14 @@ RC=101
 ## 8. 结论
 
 独立验证**部分通过**：实现层、回归层、交付层均有可复现外部证据，但存在「未证实（待拍板）」「未启动」「受阻」三类未解决项，按 §9 三条发放条件**未发通过标记**。自评 9.3 为辅助信号，不覆盖独立验证结论。
+
+## 061 补记：远端写入闭环
+
+| 项 | 值 |
+| --- | --- |
+| 远端主快照 | `'+REF+'`（`api_push.py` Git Data API，`files=1079`，`INCREMENTAL changes=20`，`force=false`） |
+| 本地主快照 | `b097382` |
+| 逐项比对 | `REMOTE_FILES 1079 / LOCAL_FILES 1079 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True` |
+| 061 补记 | 以主快照为父的第二次提交；历史行不重写 |
+| 凭据 | 会话内有效 PAT 经 `KCU_PAT` 环境变量传入；未写入仓库、日志或包；临时文件用后即删 |
+| 独立验证结论 | 仍「部分通过」，未发通过标记；实现层与交付层已闭环，未证实 / 未启动 / 受阻项不变 |

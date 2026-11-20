@@ -103,9 +103,9 @@
 
 | 项 | 值 |
 | --- | --- |
-| 远端 `refs/heads/main` | 061 补记覆盖 |
-| 逐项 ALL_MATCH | 见 `docs/verification/round-061.md` |
-| 两个 zip | 主包按 `git ls-files` 打包，预览包 57 项 |
+| 远端 `refs/heads/main` | 主快照 `0b03d25fea09ddc483c963d275111fe0321721a3`；061 补记以该 ref 为父，`force=false` |
+| 逐项 ALL_MATCH | **True**（1079 / 1079，DIFF 0 / EXTRA 0 / truncated False） |
+| 两个 zip | 主包按 `git ls-files` 打包 1079 项，预览包 57 项；EXTRA 0 / MISSING 0 |
 | 零凭据 | tracked 零 token 字面量；临时 PAT 与临时脚本用后即删 |
 
 最终交付快照与时间戳见 `docs/verification/round-061.md`。
