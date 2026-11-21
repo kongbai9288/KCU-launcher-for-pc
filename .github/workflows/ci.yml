@@ -107,3 +107,5 @@ jobs:
         run: python3 scripts/launch_progress_guard.py
       - name: download_sources_guard
         run: python3 scripts/download_sources_guard.py
+      - name: instance_drop_guard
+        run: python3 scripts/instance_drop_guard.py

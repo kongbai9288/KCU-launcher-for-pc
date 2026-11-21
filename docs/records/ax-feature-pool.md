@@ -77,3 +77,13 @@ E192：`privacy-consent.json` 与设置文件同目录，清理若按目录清�
 状态分层更新为 `Planned 19` / `DataLayer 4`（AX05、AX06、AX11、AX12）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到四项，动态求和不变（A240）；`src/core/ax.rs` 测试断言同步为 `DataLayer 4` / `Planned 19`。064–068 历史表格行不重写，本补记覆盖结论。
 
 `api::v1` 7 符号不变：AX12 是内部数据层，不扩公共面（`00:137`）。
+
+## 070 补记：AX24 状态覆盖
+
+| 编号 | 064 行 | 070 覆盖 |
+| --- | --- | --- |
+| AX24 | `Planned` / 排队（robust 路径边界） | **`DataLayer`**：`src/core/instance_drop.rs` 已落地未分组集合、三类别落点计算、路径边界、原子写；内容探测、真实文件移动、拖拽 UI 未启动 |
+
+状态分层更新为 `Planned 18` / `DataLayer 5`（AX05、AX06、AX11、AX12、AX24）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到五项，动态求和不变（A240）；`src/core/ax.rs` 测试断言同步为 `DataLayer 5` / `Planned 18`。064–069 历史表格行不重写，本补记覆盖结论。069 的 D-069-1「AX24 内容探测范围更深」是相对 AX12 的排序理由，本轮收窄范围后落地，见 `docs/decisions/070-instance-drop.md` D-070-2。
+
+`api::v1` 7 符号不变：AX24 是内部数据层，不扩公共面（`00:137`）。

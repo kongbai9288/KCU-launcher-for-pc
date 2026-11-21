@@ -38,7 +38,7 @@ pub(crate) const AX_SPECS: &[AxSpec] = &[
     AxSpec { id: "AX21", name: "redstone_multiplayer", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX22", name: "shimu_account", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX23", name: "client_ai_gate", state: AxState::GateOnly, conflict: "11:18 gate_only_no_ui", ui: false },
-    AxSpec { id: "AX24", name: "ungrouped_drop", state: AxState::Planned, conflict: "", ui: true },
+    AxSpec { id: "AX24", name: "ungrouped_drop", state: AxState::DataLayer, conflict: "", ui: true },
 ];
 
 pub(crate) fn by_id(id: &str) -> Option<&'static AxSpec> {
@@ -74,12 +74,12 @@ mod tests {
 
     #[test]
     fn ax05_is_data_layer_this_round() {
-        for id in ["AX05", "AX06", "AX11", "AX12"] {
+        for id in ["AX05", "AX06", "AX11", "AX12", "AX24"] {
             assert_eq!(by_id(id).unwrap().state, AxState::DataLayer);
         }
-        assert_eq!(count_by_state(AxState::DataLayer), 4);
+        assert_eq!(count_by_state(AxState::DataLayer), 5);
         assert_eq!(count_by_state(AxState::GateOnly), 1);
-        assert_eq!(count_by_state(AxState::Planned), 19);
+        assert_eq!(count_by_state(AxState::Planned), 18);
     }
 
     #[test]

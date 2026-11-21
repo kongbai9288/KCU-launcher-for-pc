@@ -3300,3 +3300,9 @@ AX11 `Planned` → `DataLayer`，状态分层 21 / 2 / 1；`ax_guard.py` 动态�
 069 补记：远端主快照 `d66972714f3f93cb4ae067624b1e1148a5b8a0a8` 经 20-blob 精简增量 Git Data API 推送成功，1142 / 1142 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。推送前只读确认远端父提交为 `1544e3d`。补记以该 ref 为父，`force=false`。提交前核无 `.git/index.lock`（A254），未重复 commit。历史行不重写。
 
 E233 修复：新守卫禁用字面量表里的凭据前缀连续串触发 credential job，改分部件拼接后 `NO_CREDENTIAL` 复跑通过；A258 留痕。E234：登记脚本单引号嵌套 SyntaxError 且网关 502 留 `.git/index.lock`，按 A254 清锁后重提交。历史行不重写。
+
+070 轮：用户只发「干」，按 069 结尾主分支「继续按功能池落下一项」执行。A208 / A202 复核：069 结尾的 Q / EQ 是可选替代分支，不是阻塞层；EQ-01 ~ EQ-13 摊平可拍环境未启用。A226 复核发现 `31-axolotl-launcher-features.md:67` 的「11-15 拖拽整合包到主界面」引用错误（`11-features-input.txt` 无编号、第 15 行是别的内容），「12-36」「12-24」是条目编号与行号混写；改用 `12-server-features-input.txt:36` / `:47` 行号，31 号历史行不重写。真读 19 项 `Planned` 与 065/066/069 排除清单后选 **AX24 ungrouped_drop**（登记 D-070-1 为我的默认），收窄为不读文件内容、不自动推断类型、调用方显式传 category，覆盖 069 的「内容探测范围更深」排序理由。`src/core/instance_drop.rs` 落地未分组集合（`Vec<String>` 显式、上限 64、默认展开）、`CATEGORY_DIRS` 三类别落点、`KNOWN_KEYS` 3 键白名单、8 类坏输入回默认、`plan()` 只算路径不落用户文件、两次复用 `robust::safe_join`、原子写与四文件保护、状态变更走统一信封。AX24 `Planned` → `DataLayer`，`Planned 18` / `DataLayer 5` / `GateOnly 1`；`api::v1` 7 符号不变；零新增第三方。E236 守卫字面量与实现参数名不一致首次 FAIL，改精确调用形态。Q-070-01（自动识别类型判定依据）待拍板。070 四件套、台账、双向注入、提交推送、zip 一次闭环。
+
+E242 修复：069 与 070 守卫写死功能池状态计数，070 改状态后 069 守卫误报。两处改为核 `ax_guard.py` 动态求和，18 守卫全 OK；A262 留痕。历史行不重写。
+
+E243 修复：首轮注入 E 的多义锚点命中 `open()` 而非 `plan()` 造成守卫假 OK；夹具改唯一签名、守卫改逐行缩进扫描，重跑 10 组全真 FAIL；A263 留痕。历史行不重写。

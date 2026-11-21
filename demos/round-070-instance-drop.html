@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 070 运行逻辑</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:720px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:260px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>070 运行逻辑</h1><div class="sub">AX24 未分组与拖拽落点数据层 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">planned=19 v1=7</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>开工与选项目的</h3><p id="m1">未运行</p><span class="badge g">00 全文 261 行</span><span class="badge g">防错 499 行</span><span class="badge g">A208 复核</span><span class="badge r">D-070-1 我的默认</span></div>
+<div class="mini"><h3>AX24 数据层</h3><p id="m2">未运行</p><span class="badge g">三类别落点</span><span class="badge g">路径边界</span><span class="badge g">plan 只算路径</span><span class="badge r">内容探测未启动</span></div>
+<div class="mini"><h3>安全与边界</h3><p id="m3">未运行</p><span class="badge g">零凭据字面量</span><span class="badge g">零新增依赖</span><span class="badge g">v1 不变</span><span class="badge r">18 项排队</span></div>
+<div class="mini"><h3>交付状态</h3><p id="m4">未运行</p><span class="badge g">**481 / 0**</span><span class="badge g">十八守卫</span><span class="badge g">ALL_MATCH</span><span class="badge r">18 项排队</span></div>
+</div><div class="note" id="note">用户 070 逐字：干。按 069 结尾「按功能池落下一项」执行；AX24 数据层，不发通过标记。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[["01", "开工预检", "13ee2e8 / 1142 文件 / DIRTY 1（新 spec）", 0], ["02", "逐字落盘", "70 指令 3 字节 · SHA 9ee0280b", 0], ["03", "真读全文", "00 全文 261 行 / 防错清单 499 行（A255–A258 已含）", 0], ["04", "A208 复核", "069 结尾主分支「按功能池落下一项」，非 EQ 阻塞层", 1], ["05", "条号复核", "31 号调研 11-15 引用错误 → 改用 12:36 / 12:47", 1], ["06", "功能池真读", "19 项 Planned 全表 + 065/066/069 排除清单", 0], ["07", "选 AX24 收窄", "不读内容、不推断类型、调用方显式传 category；D-070-1 我的默认", 1], ["08", "接口终点", "v1 7 符号不动 · mod/boot/ax/守卫/CI 五处", 0], ["09", "未分组集合", "Vec<String> 显式 · 上限 64 · 默认展开 · 8 类坏输入回默认", 0], ["10", "三类别落点", "CATEGORY_DIRS 3 项 · plan 只算路径不落文件", 0], ["11", "路径边界", "复用 robust::safe_join · 拒穿越/绝对/可执行/无扩展名", 1], ["12", "统一信封", "Kind=Event · target=instance.drop · 只带 collapsed 与 count", 0], ["13", "守卫与 CI", "第 19 步 · 8 组双向注入 · ax_guard 扩到五项", 0], ["14", "回归验证", "**481 / 0** / **520 / 0**（8 段分段求和，非单条全量命令） / Win GNU / 十八守卫", 0], ["15", "交付闭环", "四件套 + 台账 + 提交推送 + zip · 不发通过标记", 1]];
+const LOG={"01": "[KCU] preflight 070 OK tracked=1142 dirty=1", "02": "[KCU] spec 70-round-070-instructions.txt OK bytes=3 sha=9ee0280b", "03": "[KCU] readback OK 00:261 checklist:499", "04": "[KCU] A208 OK eq_layer=none q_067=3_parallel", "05": "[KCU] source_anchor OK use_12:36_12:47 drop_11-15", "06": "[KCU] ax_pool OK planned=19 data=4 gate=1", "07": "[KCU] select AX24 D-070-1 scope=no_content_probe", "08": "[KCU] interface_end OK v1_symbols=7 boot_modules=+1", "09": "[KCU] ungrouped OK cap=64 bad_inputs=8", "10": "[KCU] categories=3 plan_pure=1", "11": "[KCU] safe_join OK traversal=rejected exe=rejected", "12": "[KCU] envelope Kind=Event target=instance.drop payload=2", "13": "[KCU] guards=18 ci_steps=19 injection=bidirectional", "14": "VERIFY **481 / 0** **520 / 0**（8 段分段求和，非单条全量命令） win_gnu_ok", "15": "DELIVERY 待推 pass_mark=withheld next=ax_pool_18"};
+const STATE={"04": "eq=none", "05": "anchor=fixed", "07": "AX24=DataLayer", "09": "cap=64", "10": "dirs=3", "11": "reject=4", "12": "event=unified", "13": "guards=18", "14": "verified", "15": "delivery=closed"};
+const MINI1=["预检", "逐字落盘", "真读全文", "A208 复核", "条号复核", "功能池真读", "选 AX24 收窄", "接口终点", "未分组集合", "三类别落点", "路径边界", "统一信封", "守卫与 CI", "回归验证", "交付闭环"];
+const MINI2=["未运行", "70 指令 3 字节逐字", "00 全文 261 行回显，防错清单 499 行完整读", "069 结尾主分支是按功能池落下一项，Q/EQ 是可选替代分支", "31 号调研 11-15 引用错误，改用 12:36 / 12:47 行号", "真读 19 项 Planned 与 065/066/069 排除清单", "选 AX24，收窄为不读内容、不推断类型，登记 D-070-1 我的默认", "v1 7 符号不动，mod/boot/ax/守卫/CI 五处引用", "Vec<String> 显式类型，上限 64，默认展开，8 类坏输入回默认", "CATEGORY_DIRS 3 项，plan 只返回 PathBuf 与诊断行", "复用 robust::safe_join，拒穿越/绝对/可执行/无扩展名", "策略变更走统一 Envelope，载荷只带布尔与计数", "新守卫挂 CI 第 19 步，ax_guard 显式断言扩到五项", "481 / 0 · 分段求和 · Win GNU RC=0", "四件套与台账闭环，不发通过标记"];
+const MINI3=["未运行", "未运行", "未运行", "不把自造约束写成用户指令（A248）", "069 结尾授权分支「按功能池落下一项」", "A226 逐字回原文核条号，不引用错误锚点", "摊平可拍环境未启用，选中项不碰 EQ-01~13", "接口终点列全，api::v1 零改动", "Q-070-01：自动识别类型判定依据未拍板，不代决断", "A165：路径逐分量判定，不自己删 ../", "A30：不写死未取得一手原文的类型推断规则", "00:114：事件走统一信封", "守卫不写凭据前缀连续串（A258），凭据交给 CI job", "分段求和注明口径（A252）", "存在已失败 / 未证实 / 未启动"];
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(n[3]?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=MINI1[i]||'待执行';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=11?'Envelope Kind=Event · request_id 配对':(i>=7?'待构造':'—');
+ document.getElementById('m1').textContent=MINI2[i]||'未运行';
+ document.getElementById('m2').textContent=MINI3[i]||'未运行';
+ document.getElementById('m3').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('m4').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join(String.fromCharCode(10))||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;upd()}
+upd();
+</script></body></html>

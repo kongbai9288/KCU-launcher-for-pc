@@ -50,6 +50,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.extension_gate",
     "core.launch_progress",
     "core.download_sources",
+    "core.instance_drop",
     "dispatcher.launcher",
 ];
 

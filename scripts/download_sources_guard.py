@@ -65,11 +65,11 @@ ax = (ROOT / 'src/core/ax.rs').read_text()
 m = re.search(r'AxSpec \{ id: "AX12", name: "download_sources", state: AxState::(\w+)', ax)
 if not m or m.group(1) != 'DataLayer':
     fail('ax12_not_data_layer')
-if 'count_by_state(AxState::Planned), 19' not in ax:
-    fail('ax_planned_count_not_updated')
 axg = (ROOT / 'scripts/ax_guard.py').read_text()
 if "'AX12'" not in axg:
     fail('ax_guard_not_extended')
+if 'planned = sum(' not in axg:
+    fail('ax_guard_not_dynamic')
 
 boot = (ROOT / 'src/core/boot.rs').read_text()
 if '"core.download_sources"' not in boot:
