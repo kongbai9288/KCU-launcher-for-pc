@@ -3240,3 +3240,9 @@ E145：059 的「未过期 PAT 未证实」关闭，055–059 受阻根因（凭
 `cargo test --offline --lib` **381 / 0**（367 + 14），`--test play_stats` **7 / 0**；`cargo check --offline --target x86_64-pc-windows-gnu` 通过。UI 闸门未触发：UX HTML、两语言包、56 张 PNG 零 diff。远端状态见 `docs/verification/round-061.md`。
 
 061 补记：远端主快照 `'+REF+'` 经 Git Data API 推送成功，1079 / 1079 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。061 补记以该 ref 为父，`force=false`。历史行不重写。
+
+062 收口：用户只回「干」+ 两条提醒。真读 `00-requirements.txt` / `11-features-input.txt` 后确认是既有原文重申（`11:18` 不写成共有 API、`00:24` UI 用框架方式、`00:25` 少选平台固定 API）。补 048 核对表漏项 B11 / B12 / B04 局部（E156–E159）。
+
+`src/lib.rs` 12 行 `pub use`（29 符号）→ 0；新增 `src/api.rs::v1` 六符号稳定面，破坏性变更升 `v2` 并给迁移步骤。`src/core/popup.rs` 改 `PopupSpec` 13 条单一声明源，`catalog()` 从表派生，`Popup` / `PopupKind` / `catalog` / `open` 全收紧 `pub(crate)`；`open_registered` 未知 id 拒绝，`open_all_registered` / `close_all_registered` 统一行为。`userflow.rs` / `dispatcher/launcher.rs` / `lightweight/view.rs` 三处改走注册表，原断言一字未改。`tests/boot_fallback.rs:3` import 改 `api::v1::CancelToken`。新增 `scripts/api_guard.py` / `scripts/popup_guard.py` + CI 两步。
+
+零新增第三方，仍 26 包 / 25 第三方；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。UI 闸门未触发：UX HTML、两语言包、56 张 PNG 零 diff。远端状态见 `docs/verification/round-062.md`。

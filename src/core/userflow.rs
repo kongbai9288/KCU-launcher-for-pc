@@ -1,7 +1,7 @@
 use crate::core::args::LaunchArgs;
 use crate::core::envelope::{Envelope, Kind};
 use crate::core::instance::{select_instance, Instance, ServerEntry, VersionWeight};
-use crate::core::popup::{catalog, CloseAction, PopupRegistry};
+use crate::core::popup::{CloseAction, PopupRegistry};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Step {
@@ -53,11 +53,9 @@ pub fn simulate(
     steps.push(Step::Boot);
     envelopes.push(Envelope::new(Kind::Request, "core.boot"));
 
-    reg.open(crate::core::popup::Popup::new(
-        "privacy",
-        crate::core::popup::PopupKind::PrivacyPolicy,
-        "privacy",
-    ));
+    if reg.open_registered("privacy").is_err() {
+        errors.push("privacy popup is not registered".to_string());
+    }
     steps.push(Step::PrivacyPolicyShown);
     if !reg.close("privacy", CloseAction::Confirm) {
         errors.push("privacy popup did not close".to_string());
@@ -66,9 +64,9 @@ pub fn simulate(
     envelopes.push(Envelope::new(Kind::Response, "core.privacy").with("accepted", "true"));
 
     steps.push(Step::DeclarationPage);
-    for p in catalog() {
-        if p.id != "privacy" {
-            reg.open(p);
+    for id in reg.registered_ids() {
+        if id != "privacy" && reg.open_registered(id).is_err() {
+            errors.push(format!("popup {} is not registered", id));
         }
     }
     steps.push(Step::PopupsRegistered);
@@ -77,10 +75,9 @@ pub fn simulate(
     if !missing.is_empty() {
         errors.push(format!("popups without close path: {:?}", missing));
     }
-    for p in catalog() {
-        if !reg.close(&p.id, CloseAction::Button) && !reg.close(&p.id, CloseAction::Escape) {
-            errors.push(format!("popup {} could not be closed", p.id));
-        }
+    reg.close_all_registered();
+    if !reg.all_closed() {
+        errors.push(format!("{} popups left open", reg.open_count()));
     }
     if !reg.all_closed() {
         errors.push(format!("{} popups left open", reg.open_count()));

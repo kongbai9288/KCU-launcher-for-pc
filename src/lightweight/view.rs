@@ -2,7 +2,7 @@ use crate::core::asynk::CancelToken;
 use crate::core::diagnostics::diag_line;
 use crate::core::envelope::{Envelope, Kind};
 use crate::core::log::LogBuffer;
-use crate::core::popup::{catalog, CloseAction, PopupRegistry};
+use crate::core::popup::{CloseAction, PopupRegistry};
 use crate::lightweight::login::{AuthKind, LoginStage};
 use crate::lightweight::loaders::LoaderKind;
 use std::collections::BTreeMap;
@@ -154,17 +154,13 @@ impl LightweightView {
 
     pub fn open_popups_for_state(&mut self, state: ViewState) {
         self.popups = PopupRegistry::new();
-        for p in catalog() {
-            self.popups.open(p);
-        }
+        self.popups.open_all_registered();
         self.state = state;
         let _ = self.diag("popups", "OK", &format!("detail=registered={} state={:?}", self.popups.len(), state));
     }
 
     pub fn close_all_popups(&mut self) -> usize {
-        for p in catalog() {
-            let _ = self.popups.close(&p.id, CloseAction::Button);
-        }
+        self.popups.close_all_registered();
         let left = self.popups.force_close_all();
         let _ = self.diag("popups", "OK", &format!("detail=forced_closed={} left={}", left, self.popups.open_count()));
         self.popups.open_count()

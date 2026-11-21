@@ -345,3 +345,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 ## 061 第 19 条数据层
 
 `src/core/stats.rs` 落地单次时长、总时长、每实例时长与快捷启动静默记录；`play-stats.json` 持久化，删 / 坏 / 超大 / schema 错回默认。`dispatcher::Dispatcher::finish_session` 接线。零新增第三方；显示层未启动。
+
+## 062 API 面收紧与弹窗注册表
+
+`src/lib.rs` 顶层 12 行 `pub use`（29 个内部具体类型）清零，唯一稳定公共面收进 `src/api.rs::v1`（6 符号）；破坏性变更升 `v2` 并给迁移步骤。弹窗改 `PopupSpec` 13 条单一声明源 + `PopupRegistry` 统一开关，三处业务模块不再各自循环。零新增第三方；UI 框架仍卡 EQ-01。

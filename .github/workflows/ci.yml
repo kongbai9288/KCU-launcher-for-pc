@@ -87,3 +87,7 @@ jobs:
         run: python3 scripts/policy_guard.py
       - name: delivery_guard
         run: python3 scripts/delivery_guard.py
+      - name: api_guard
+        run: python3 scripts/api_guard.py
+      - name: popup_guard
+        run: python3 scripts/popup_guard.py

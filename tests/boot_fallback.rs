@@ -1,6 +1,6 @@
 use kcu_core::core::boot::{BootState, BUNDLE_FILE, STATE_FILE};
 use kcu_core::dispatcher::{DispatchInput, Dispatcher, FAILURE_THRESHOLD};
-use kcu_core::CancelToken;
+use kcu_core::api::v1::CancelToken;
 use serde_json::{from_str, Value};
 use std::fs;
 use std::path::Path;

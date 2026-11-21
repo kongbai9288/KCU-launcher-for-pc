@@ -450,3 +450,8 @@
 | A218 | 限流检查要放在「移除活跃会话」之前。`PlayStats::end` 先 `try_op()` 再 `remove`；否则高频洪泛会让一次正常结束被拒且会话从表里消失，数据不可恢复。 |
 | A219 | `OpBudget::new(n)` 的 `max` 取 `n.max(1)`，构造 `new(0)` 后首次 `try_op()` 仍返回 true；别拿它当「立刻拒绝」的测试夹具。 |
 | A220 | 文档里描述凭据「形态」时别写会触发 `.github/workflows/ci.yml` 的 `credential` job 的字面量前缀；用「GitHub 经典个人访问令牌前缀（`gh` + `p` + 下划线）」等等义描述。守卫按 CI 真实命令实跑，不只核文档存在性。 |
+
+| A221 | 「收紧 API」先核接口终点再动手（`00:137`）：扫 `src/lib.rs` 顶层 `pub use`、`tests/` 对 crate 顶层的引用、业务模块对内部工厂的引用，三处都查完再删。本轮 `tests/boot_fallback.rs:3` 是唯一顶层引用，只改 import 不动断言。 |
+| A222 | 把 `Popup` 收紧成 `pub(crate)` 时，`pub fn catalog() -> Vec<Popup>` 和 `pub fn open(&mut self, p: Popup)` 会 private-in-public。要一并收紧这几个出入口，不能只改类型可见性；对外只留注册表方法。 |
+| A223 | 守卫解析 Rust 字面量表时，`struct Foo {` 也会被 `Foo \{([^}]*)\}` 正则命中。过滤含 `id: "` 的字面量行再计数，否则 13 条 spec 会被算成 14（E160）。 |
+| A224 | 删「不再需要」的 import 前先全文搜该标识符：`src/lightweight/view.rs:204` 仍用 `CloseAction::Button`，首版把整行 import 删掉导致 E0433（E164）。只删本轮真正不再引用的符号。 |

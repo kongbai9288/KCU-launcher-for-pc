@@ -7,7 +7,7 @@ use crate::core::envelope::{Envelope, Kind};
 use crate::core::instance::{select_instance, Instance, ServerEntry, VersionWeight};
 use crate::core::integrity::DiagnosticBundle;
 use crate::core::log::LogBuffer;
-use crate::core::popup::{catalog, CloseAction, PopupRegistry};
+use crate::core::popup::PopupRegistry;
 use crate::core::stats::{PlayStats, SessionOutcome};
 use crate::dispatcher::json;
 use crate::dispatcher::json::StringField;
@@ -238,16 +238,12 @@ impl Dispatcher {
 
         let popups_open = if selection.ui_loaded {
             let mut reg = PopupRegistry::new();
-            for p in catalog() {
-                reg.open(p);
-            }
+            reg.open_all_registered();
             let missing = reg.missing_close_path();
             if !missing.is_empty() {
                 diagnostics.push(diag_line("dispatcher", "popup", "registry", "ERROR", &format!("detail={:?}", missing)));
             }
-            for p in catalog() {
-                let _ = reg.close(&p.id, CloseAction::Button);
-            }
+            reg.close_all_registered();
             let _ = reg.force_close_all();
             reg.open_count()
         } else {

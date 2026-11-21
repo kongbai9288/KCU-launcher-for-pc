@@ -472,3 +472,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 057 实现轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。新增 `src/core/boot.rs` 中序列化交 `serde_json`、路径与限流交 `robust`、诊断行交 `diagnostics`、包结构与四级源交 `integrity`、内置默认交 `Config` 与 `feature_gate`、日志交 `log`；项目特有只剩状态迁移、阈值比较、导出路径策略与 21 项模块索引。`src/dispatcher/launcher.rs` 增量 22 行，原有 20 个断言一字未改。023 A03 自写底座例外于 024 撤回的状态不变。
+
+## 062 架构收敛轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。本轮不换库：把 crate 顶层平铺的内部类型收进 `src/api.rs::v1`，弹窗构造从 13 处散落 `Popup::new` 收进 `POPUP_SPECS` 单一声明源，行为由 `PopupRegistry` 统一给出。`Popup` / `PopupKind` / `catalog()` / `PopupRegistry::open` 收紧 `pub(crate)`。023 A03 自写底座例外于 024 撤回的状态不变。
