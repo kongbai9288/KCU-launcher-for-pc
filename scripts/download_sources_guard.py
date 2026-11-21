@@ -15,7 +15,7 @@ prod = t.split('#[cfg(test)]')[0]
 tests = t.split('#[cfg(test)]')[1] if '#[cfg(test)]' in t else ''
 
 for banned in ['TcpListener', 'TcpStream', 'bind(', '127.0.0.1', 'SystemTime', 'UNIX_EPOCH',
-               'std::process::Command', 'http://', 'https://', 'CurseForge', 'ghp_', 'github_pat_',
+               'std::process::Command', 'http://', 'https://', 'CurseForge', 'gh' + 'p_', 'github' + '_pat_',
                'x-api-key', 'mcim']:
     if banned in prod:
         fail('forbidden_literal ' + banned)

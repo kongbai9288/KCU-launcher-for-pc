@@ -111,3 +111,15 @@
 | 主包 / 预览包 | 1142 / 57 项，EXTRA 0 / MISSING 0 |
 | 凭据 | 会话内有效 PAT 经环境变量传入；未写入仓库、日志或包；临时脚本与日志用后即删 |
 | 独立验证结论 | 仍「部分通过 / 未通过」，未发通过标记；交付层已闭环，已失败 / 未证实 / 未启动项不变 |
+
+## E233 复核（凭据字面量）
+
+最终全仓 credential job 首次报 `CREDENTIAL_FOUND`，命中 `scripts/download_sources_guard.py:18` 的禁用字面量表。该表本意是禁止凭据入源码，但连续字面量本身触发扫描。改为分部件拼接后：
+
+| 检查 | 输出 |
+| --- | --- |
+| `python3 scripts/download_sources_guard.py` | `DOWNLOAD_SOURCES_GUARD_OK keys=6 bad_inputs=9 key_downgrade=1 v1_unchanged ax12=DataLayer` |
+| credential job（`git grep`） | `NO_CREDENTIAL` |
+| hardcode job（`src/`） | `H_RC=1`（无命中） |
+
+8 组双向注入结论不变（F 组注入的是 `TcpListener`，与凭据字面量无关）；其余 16 守卫结论不变。E233 计入四值「已失败」项，修复后闭环，不包装成从未发生。
