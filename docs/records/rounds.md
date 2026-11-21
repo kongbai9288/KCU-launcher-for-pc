@@ -3258,3 +3258,13 @@ AX23（本地 MCP Server）与 `11:18` 直接冲突，已登记不推定。平�
 `src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` / UX HTML / 两语言包 / 56 张 PNG 全部零 diff，仍 26 包 / 25 第三方。隐私政策全文是下轮输入，本轮不读、不存、不预判。远端状态见 `docs/verification/round-063.md`。
 
 063 补记：远端主快照 `'+REF+'` 经 13-blob 精简增量 Git Data API 推送成功，1093 / 1093 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。063 补记以该 ref 为父，`force=false`。历史行不重写。
+
+064 收口：用户「全部（不与我们的项目冲突的情况下）」+ 客户端 AI 裁决 + 《KCU Launcher 隐私政策》v1.1 全文。
+
+按 `00:248` 覆盖 063 的 D-063-1（零加入）：AX01–AX24 全部决断加入。冲突两处：AX23 与 `11:18` → 用户裁决「只留一个口子，不给用户操作页面」，`api::v1` 6 → **7 符号**，唯一新增 `ClientAiGate`（默认拒绝 / 无监听 / 无凭据 / 无 UI / 无截图操作）；AX18 的 AI 提供商自填 API 配置页排除，其余工具保留。AX07 DoH 等属技术受阻非需求冲突，不排除。
+
+隐私政策逐字保存到 `docs/spec/64-privacy-policy-v1.1.txt`（4638 字节 / SHA-256 `de3b07c7...`）。`src/core/consent.rs` 用 `include_str!` 引用，版本 v1.1 一致免弹，版本变化 / 8 类坏输入重弹并给 DEGRADE 行，`Confirm` 写盘、其余关闭动作全部等同不同意且 0 副作用；关联 062 已注册的 `privacy` 弹窗 spec。
+
+`src/core/ax.rs` 落 `AX_SPECS` 24 条单一声明源（与 `POPUP_SPECS` 同形态）：`Planned 22` / `DataLayer 1`（AX05）/ `GateOnly 1`（AX23）。AX05 存储分析数据层落 `src/core/storage.rs`（5 类桶、饱和、清理范围与 4 类保护项分离、不真删）。`src/core/boot.rs` 的 `LOADED_MODULES` 同步 4 个模块。
+
+新增 `privacy_guard.py` / `ai_gate_guard.py` / `ax_guard.py` 与 CI 三步；`api_guard.py` 白名单 +1、输出改动态。`src/` 新增 4 模块、零新增第三方（26 包 / 25 第三方）；UX HTML、两语言包、56 张 PNG 零 diff，UI 闸门未触发。E178–E189 共 12 个真问题留痕。24 项全量决断 ≠ 一轮做完，22 项进 `docs/records/ax-feature-pool.md` 按工程依赖逐轮落地。远端状态见 `docs/verification/round-064.md`。

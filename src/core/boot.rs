@@ -41,6 +41,10 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.region",
     "core.boot",
     "core.stats",
+    "core.consent",
+    "core.client_ai",
+    "core.storage",
+    "core.ax",
     "dispatcher.launcher",
 ];
 
@@ -339,6 +343,20 @@ fn validate_bundle(b: &DiagnosticBundle) -> Result<()> {
 
 pub fn loaded_modules() -> Vec<String> {
     LOADED_MODULES.iter().map(|s| (*s).to_string()).collect()
+}
+
+pub fn ax_pool_line() -> String {
+    use crate::core::ax::{self, AxState};
+    let conflicts = ax::AX_SPECS.iter().filter(|s| !s.conflict.is_empty()).count();
+    let no_ui = ax::AX_SPECS.iter().filter(|s| !s.ui).count();
+    let named = ax::AX_SPECS.iter().filter(|s| !s.name.is_empty() && !s.id.is_empty()).count();
+    let planned = ax::AX_SPECS.iter().filter(|s| s.state == AxState::Planned).count();
+    let _ = ax::by_id("AX23");
+    let _ = ax::count_by_state(AxState::GateOnly);
+    format!(
+        "[KCU] core ax pool OK specs={} planned={} conflicts={} no_ui={} named={}",
+        ax::AX_SPECS.len(), planned, conflicts, no_ui, named
+    )
 }
 
 #[cfg(test)]

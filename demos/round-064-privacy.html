@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 064 隐私政策与 AX 全量决断</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:720px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:260px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>064 运行逻辑</h1><div class="sub">政策逐字 · AX 全量决断 · 客户端 AI 一个口子 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">ax=0 joined=0 gate=0</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>隐私政策 v1.1</h3><p id="m1">未运行</p><span class="badge g">逐字 4638 字节</span><span class="badge g">生效 2026-11-21</span><span class="badge r">版本变化重弹</span></div>
+<div class="mini"><h3>AX 注册表</h3><p id="m2">未运行</p><span class="badge g">24 条单一源</span><span class="badge g">Planned 22</span><span class="badge g">DataLayer 1</span><span class="badge g">GateOnly 1</span></div>
+<div class="mini"><h3>冲突处置</h3><p id="m3">未运行</p><span class="badge r">AX23 撞 11:18</span><span class="badge r">AX18 子项排除</span><span class="badge g">D-064-1 放开 063 收窄</span></div>
+<div class="mini"><h3>本轮边界</h3><p id="m4">未运行</p><span class="badge g">零新增依赖</span><span class="badge g">**413 / 0**</span><span class="badge g">十二守卫</span><span class="badge r">22 项排队</span></div>
+</div><div class="note" id="note">用户当轮逐字：全部（不与我们的项目冲突的情况下）；客户端的 ai 只留一个口子，但是不给用户操作页面。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','ebff146 / 1093 文件 / DIRTY 0'],
+['02','逐字落盘','政策 4638 字节 + 指令 4813 字节'],
+['03','真读原文','00 全文 / 11 号 55 条 / 12 号 / A194-A229 / 政策全文'],
+['04','D-064-1','00:248 放开 063 的零加入；AX01-AX24 全部决断'],
+['05','政策逐字','sha256 de3b07c7...；consent.rs 用 include_str 引用'],
+['06','同意闸门','privacy spec 已存在；Confirm 写盘，其余关闭动作全 decline'],
+['07','版本闸门','v1.1 一致免弹；版本变化 / 8 类坏输入重弹 + DEGRADE'],
+['08','AX 注册表','24 条 AX_SPECS 单一声明源，语义 slug 不承载中文文案'],
+['09','AX23 裁决','v1 6 → 7 符号，唯一新增 ClientAiGate'],
+['10','口子边界','默认拒绝、无监听、无凭据、无 UI、无截图操作'],
+['11','AX18 子项','AI 提供商配置页排除；配方/渐变/翻译保留'],
+['12','冲突核对','两处冲突；AX07 是技术受阻不是需求冲突'],
+['13','AX05 数据层','5 类占用桶、饱和、清理范围与保护项分离'],
+['14','守卫与 CI','privacy / ai_gate / ax 三守卫 + CI 三步'],
+['15','E178-E189','12 个真问题留痕，含空版本、warning、flaky、中文名、路径'],
+['16','回归验证','**413 / 0** / **452 / 0**（8 段，拆三段执行） / Windows GNU / 十二守卫'],
+['17','交付闭环','064 补记覆盖；22 项排队，下轮按功能池顺序']
+];
+const LOG={
+'01':'[KCU] preflight 064 OK files=1093',
+'02':'[KCU] spec policy OK bytes=4638 sha256=de3b07c7',
+'03':'[KCU] readback 8_files SHA256_OK anchors=12',
+'04':'[KCU] decision D-064-1 ax=24 joined=24 override_063',
+'05':'[KCU] privacy include_str OK version=v1.1 effective=2026-11-21',
+'06':'[KCU] consent popup=privacy confirm=accept others=decline',
+'07':'[KCU] consent DEGRADE schema_or_field_invalid visible=1',
+'08':'[KCU] ax specs=24 planned=22 data_layer=1 gate_only=1',
+'09':'[KCU] api v1 symbols=6+1 port=ClientAiGate forced=false',
+'10':'[KCU] ai_gate deny_by_default surfaces=0 listeners=0 tokens=0',
+'11':'[KCU] ax18 ai_provider_ui_excluded generators_kept=3',
+'12':'[KCU] conflicts=2 technical_blocked=ax07 not_excluded',
+'13':'[KCU] storage buckets=5 protected=4 cleanable=2 no_delete',
+'14':'[KCU] guards=12 ci_steps=13 no_credential',
+'15':'[KCU] errors E178-E189 logged=12',
+'16':'VERIFY **413 / 0** **452 / 0**（8 段，拆三段执行） win_gnu_ok',
+'17':'DELIVERY 064 补记覆盖 next=ax_feature_pool'
+};
+const STATE={
+ '04':'ax=24 joined=24 gate=0','05':'ax=24 joined=24 policy=verbatim',
+ '06':'ax=24 joined=24 consent=gate','07':'ax=24 joined=24 consent=versioned',
+ '08':'ax=24 joined=24 registry=1','09':'ax=24 joined=24 gate=1',
+ '10':'ax=24 joined=24 gate=1 deny','11':'ax=24 joined=24 excluded=1',
+ '12':'ax=24 joined=24 conflicts=2','13':'ax=24 joined=24 ax05=DataLayer',
+ '14':'ax=24 joined=24 guards=12','16':'ax=24 joined=24 verified',
+ '17':'ax=24 joined=24 ALL_MATCH'
+};
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(k>=9&&k<=12?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=i<4?'预检':i<8?'政策':i<12?'决断与冲突':'落地与交付';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=9?'api::v1（7 符号，唯一口子）':(i>=6?'Envelope/Kind via api::v1':'—');
+ document.getElementById('m1').textContent=i>=7?'v1.1 逐字副本；版本变化重弹；取消 0 副作用':(i>=5?'4638 字节 / SHA-256 锁定':'未运行');
+ document.getElementById('m2').textContent=i>=8?'24 条单一源；Planned 22 / DataLayer 1 / GateOnly 1':(i>=4?'全部决断加入':'未运行');
+ document.getElementById('m3').textContent=i>=12?'两处冲突处置完成；AX07 技术受阻非需求冲突':(i>=9?'AX23 口子 / AX18 子项排除':'未运行');
+ document.getElementById('m4').textContent=i>=16?'**413 / 0** / **452 / 0**（8 段，拆三段执行） / 十二守卫 / 22 项排队':(i>=13?'数据层 + 3 守卫；UI 闸门未触发':'未运行');
+ document.getElementById('note').textContent=i>=9?'用户当轮逐字：客户端的 ai 只留一个口子，但是不给用户操作页面。口子在 api::v1，页面为零。':'用户当轮逐字：全部（不与我们的项目冲突的情况下）；客户端的 ai 只留一个口子，但是不给用户操作页面。';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join('\n')||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;document.getElementById('state').textContent='ax=0 joined=0 gate=0';upd()}
+upd();
+</script></body></html>

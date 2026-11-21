@@ -353,3 +353,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 ## 063 美西螈启动器功能调研
 
 整理 Axolotl Launcher 46 项功能，对照三份需求文档后列出 24 项未列候选（AX01–AX24），只列不加入，等用户点名。AX23 本地 MCP Server 与 `11:18` 内部监听口径冲突已登记。隐私政策全文为下轮输入，本轮不处理。`src/` 零改动。
+
+## 064 隐私政策与 AX 全量决断
+
+《KCU Launcher 隐私政策》v1.1 逐字保存到 `docs/spec/`，同意闸门在 `src/core/consent.rs`：版本一致免弹，取消 / 超时 0 副作用。AX01–AX24 全部决断加入，`AX_SPECS` 24 条单一声明源；客户端 AI 按用户裁决只留 `api::v1` 一个口子 `ClientAiGate`，默认拒绝、无页面。AX05 存储分析数据层已落地，其余 22 项按功能池排队。零新增第三方。

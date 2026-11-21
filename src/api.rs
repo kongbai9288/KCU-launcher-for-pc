@@ -5,4 +5,5 @@ pub mod v1 {
     pub use crate::core::asynk::CancelToken;
     pub use crate::core::envelope::{Envelope, Kind};
     pub use crate::core::popup::{CloseAction, PopupOpenError, PopupRegistry};
+    pub use crate::core::client_ai::ClientAiGate;
 }

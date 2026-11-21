@@ -91,3 +91,9 @@ jobs:
         run: python3 scripts/api_guard.py
       - name: popup_guard
         run: python3 scripts/popup_guard.py
+      - name: privacy_guard
+        run: python3 scripts/privacy_guard.py
+      - name: ai_gate_guard
+        run: python3 scripts/ai_gate_guard.py
+      - name: ax_guard
+        run: python3 scripts/ax_guard.py

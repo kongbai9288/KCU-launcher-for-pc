@@ -20,3 +20,7 @@ pub mod region;
 
 pub mod boot;
 pub mod stats;
+pub mod consent;
+pub mod client_ai;
+pub mod storage;
+pub mod ax;

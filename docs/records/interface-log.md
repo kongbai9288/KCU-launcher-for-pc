@@ -732,3 +732,13 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I122 | `docs/research/31-axolotl-launcher-features.md` | Axolotl 46 项功能调研、24 项未列候选 AX01–AX24、来源等级、冲突与局限 |
 | I123 | 主交付 | `/data/workspace/Axolotl未列功能候选清单.md`，与仓库副本 SHA-256 一致 |
 | I124 | 状态 | 调研轮；`src/` 零 diff；零功能加入；零新增依赖；隐私政策全文下轮输入 |
+
+## 064 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I125 | `docs/spec/64-privacy-policy-v1.1.txt` | 用户给的隐私政策 v1.1 逐字副本，SHA-256 锁定 |
+| I126 | `src/core/consent.rs` | `include_str!` 引用政策；版本闸门、8 类坏输入、关闭动作映射、弹窗 id 绑定 |
+| I127 | `src/core/client_ai.rs` + `src/api.rs` | `ClientAiGate` 是 v1 唯一新增符号，默认拒绝、零页面 |
+| I128 | `src/core/ax.rs` / `src/core/storage.rs` | 24 条 `AX_SPECS` 单一声明源；AX05 存储分析数据层 |
+| I129 | 状态 | 零新增第三方（26 包 / 25 第三方）；22 项 `Planned` 排队；UI 闸门未触发 |

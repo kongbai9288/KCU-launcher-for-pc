@@ -26,7 +26,7 @@ for l in lines:
         syms.update(x.strip() for x in tail[1:-1].split(','))
     else:
         syms.add(tail)
-WHITELIST = {'CancelToken', 'Envelope', 'Kind', 'CloseAction', 'PopupOpenError', 'PopupRegistry'}
+WHITELIST = {'CancelToken', 'Envelope', 'Kind', 'CloseAction', 'PopupOpenError', 'PopupRegistry', 'ClientAiGate'}
 if syms != WHITELIST:
     fail('v1_surface_changed got=' + ','.join(sorted(syms)))
 
@@ -42,4 +42,4 @@ for p in (ROOT / 'src').rglob('*.rs'):
 if hits:
     fail('scattered_popup_construction ' + '; '.join(hits[:5]))
 
-print('API_GUARD_OK flat_pub_use=0 v1_symbols=6 scattered=0')
+print('API_GUARD_OK flat_pub_use=0 v1_symbols=' + str(len(syms)) + ' scattered=0')
