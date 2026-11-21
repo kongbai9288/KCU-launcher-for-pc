@@ -3270,3 +3270,11 @@ AX23（本地 MCP Server）与 `11:18` 直接冲突，已登记不推定。平�
 新增 `privacy_guard.py` / `ai_gate_guard.py` / `ax_guard.py` 与 CI 三步；`api_guard.py` 白名单 +1、输出改动态。`src/` 新增 4 模块、零新增第三方（26 包 / 25 第三方）；UX HTML、两语言包、56 张 PNG 零 diff，UI 闸门未触发。E178–E189 共 12 个真问题留痕。24 项全量决断 ≠ 一轮做完，22 项进 `docs/records/ax-feature-pool.md` 按工程依赖逐轮落地。远端状态见 `docs/verification/round-064.md`。
 
 064 补记：远端主快照 `'+REF+'` 经 26-blob 精简增量 Git Data API 推送成功，1107 / 1107 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。064 补记以该 ref 为父，`force=false`。历史行不重写。
+
+065 收口：用户只发「干」，未点 AX 编号、未回 EQ / Q-C。按 064 功能池「按工程依赖逐轮落地」继续，选 **AX11 settings_export**（22 项 Planned 里依赖最浅、不碰 EQ-01 / EQ-13 / 真实网络 IO / UI 渲染）。
+
+`src/core/settings_io.rs` 落地：`export_diff` 只导出与内置默认不同的键，`os_class` 列 `DERIVED_KEYS` 不导出（基准由 `Config::empty(&config.os_class)` 生成，零硬编码环境假设）；`import` 逐键白名单校验，8 类坏输入剔除并给 `[KCU]` DEGRADE 行，端点值只查类型/长度、不解析 URL（与 050 回退口径一致）；`atomic_write` 写 `.tmp` 再 rename；`cleanup` 只回写内置默认。
+
+真发现 E192：`privacy-consent.json` 与设置同目录，清理若按目录清空会抹掉同意记录、绕过 `11:10` 开启时同意。四个状态文件（consent / boot-state / diagnostic-bundle / play-stats）改表驱动保护 + `reject_protected_removal`，单测逐项读回仍为 `keep`。
+
+AX11 `Planned` → `DataLayer`，状态分层 21 / 2 / 1；`ax_guard.py` 动态求和，`settings_guard.py` 新建并挂 CI 第 14 步。`boot.rs LOADED_MODULES` 同步。零新增第三方（26 包 / 25 第三方），UX HTML、两语言包、56 张 PNG 零 diff，UI 闸门未触发。E190–E200 共 11 个真问题留痕。剩 21 项仍 `Planned`。远端状态见 `docs/verification/round-065.md`。

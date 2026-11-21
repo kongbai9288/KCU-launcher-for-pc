@@ -25,7 +25,7 @@ pub(crate) const AX_SPECS: &[AxSpec] = &[
     AxSpec { id: "AX08", name: "instance_import", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX09", name: "upgrade_compat", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX10", name: "first_run_wizard", state: AxState::Planned, conflict: "", ui: true },
-    AxSpec { id: "AX11", name: "settings_export", state: AxState::Planned, conflict: "", ui: true },
+    AxSpec { id: "AX11", name: "settings_export", state: AxState::DataLayer, conflict: "", ui: true },
     AxSpec { id: "AX12", name: "download_sources", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX13", name: "appearance_modes", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX14", name: "skin_editor", state: AxState::Planned, conflict: "", ui: true },
@@ -75,9 +75,10 @@ mod tests {
     #[test]
     fn ax05_is_data_layer_this_round() {
         assert_eq!(by_id("AX05").unwrap().state, AxState::DataLayer);
-        assert_eq!(count_by_state(AxState::DataLayer), 1);
+        assert_eq!(by_id("AX11").unwrap().state, AxState::DataLayer);
+        assert_eq!(count_by_state(AxState::DataLayer), 2);
         assert_eq!(count_by_state(AxState::GateOnly), 1);
-        assert_eq!(count_by_state(AxState::Planned), 22);
+        assert_eq!(count_by_state(AxState::Planned), 21);
     }
 
     #[test]

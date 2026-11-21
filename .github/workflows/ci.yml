@@ -97,3 +97,5 @@ jobs:
         run: python3 scripts/ai_gate_guard.py
       - name: ax_guard
         run: python3 scripts/ax_guard.py
+      - name: settings_guard
+        run: python3 scripts/settings_guard.py

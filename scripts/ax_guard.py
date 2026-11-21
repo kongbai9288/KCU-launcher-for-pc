@@ -26,13 +26,16 @@ if field('AX23', 'state') != 'AxState::GateOnly' or field('AX23', 'ui') != 'fals
     fail('ax23_not_gate_only')
 if 'no_ui' not in field('AX23', 'conflict'):
     fail('ax23_conflict_missing')
-if field('AX05', 'state') != 'AxState::DataLayer':
-    fail('ax05_not_data_layer')
+for ax in ('AX05', 'AX11'):
+    if field(ax, 'state') != 'AxState::DataLayer':
+        fail(ax + '_not_data_layer')
 if 'ai_provider_ui_excluded' not in field('AX18', 'conflict'):
     fail('ax18_excluded_subitem_missing')
 planned = sum(1 for r in rows if 'AxState::Planned' in r)
-if planned != 22:
-    fail('planned=' + str(planned))
+data = sum(1 for r in rows if 'AxState::DataLayer' in r)
+gate = sum(1 for r in rows if 'AxState::GateOnly' in r)
+if planned + data + gate != 24 or gate != 1 or data < 1:
+    fail('state_sum planned=%d data=%d gate=%d' % (planned, data, gate))
 
 for p in (ROOT / 'src').rglob('*.rs'):
     if p.name != 'ax.rs' and 'AxSpec {' in p.read_text():
@@ -43,4 +46,4 @@ for i in range(1, 25):
     if f'AX{i:02d}' not in doc:
         fail('doc_missing AX' + f'{i:02d}')
 
-print('AX_GUARD_OK specs=24 gate_only=1 data_layer=1 planned=22')
+print('AX_GUARD_OK specs=24 gate_only=%d data_layer=%d planned=%d' % (gate, data, planned))

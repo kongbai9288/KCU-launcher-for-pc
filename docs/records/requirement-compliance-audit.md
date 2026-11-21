@@ -287,3 +287,15 @@ E156 漏登记 B11、E157 漏单列 B12、E158 B04 只记 UI 框架没记弹窗�
 | D-064-5 | AX18 AI 提供商配置页 | 排除该子项，与「不给用户操作页面」冲突 |
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 零 diff，仍 26 包 / 25 第三方。
+
+## 065 补记：AX 功能池按轮落地
+
+| 编号 | 项 | 结论 |
+| --- | --- | --- |
+| D-065-1 | 064 的 AX11 `Planned` | 065 覆盖为 `DataLayer`；`Planned 22 → 21`、`DataLayer 1 → 2`；064 历史行不重写 |
+| E192 | `11:10` 开启时同意 | 清理设置不删 `privacy-consent.json`，四文件表驱动保护，单测逐项读回 |
+| `00:112` / `00:113` | 禁止硬编码环境假设、路径集中 | 基准由 `Config::empty(&config.os_class)` 派生；`SETTINGS_FILE` 只存文件名；路径全走 `robust::safe_join` |
+| `00:179` | 单点失败不崩、失败可见 | 8 类坏输入给 DEGRADE 行；无 root 给 ERROR 行；无 panic |
+| B04 | UI 框架卡 EQ-01 | 设置页输入控件未启动；UX HTML、两语言包、56 PNG 零 diff |
+
+零新增第三方，仍 26 包 / 25 第三方。

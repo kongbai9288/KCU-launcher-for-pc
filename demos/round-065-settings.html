@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 065 设置导入导出与清理</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:720px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:260px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>065 运行逻辑</h1><div class="sub">AX11 数据层 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">ax=24 planned=22 protected=0</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>导出差集</h3><p id="m1">未运行</p><span class="badge g">仅非默认键</span><span class="badge g">os_class 排除</span><span class="badge r">零硬编码</span></div>
+<div class="mini"><h3>导入校验</h3><p id="m2">未运行</p><span class="badge g">8 类坏输入可见</span><span class="badge g">未知键剔除留痕</span><span class="badge g">端点不解析 URL</span></div>
+<div class="mini"><h3>清理保护</h3><p id="m3">未运行</p><span class="badge r">E192 同意文件</span><span class="badge g">4 文件表驱动</span><span class="badge g">原子写 tmp+rename</span></div>
+<div class="mini"><h3>本轮边界</h3><p id="m4">未运行</p><span class="badge g">零新增依赖</span><span class="badge g">**425 / 0**</span><span class="badge g">十三守卫</span><span class="badge r">21 项排队</span></div>
+</div><div class="note" id="note">用户当轮逐字：干。按 064 功能池「按工程依赖逐轮落地」继续，不另起新层。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','daabde6 / 1107 文件 / DIRTY 0'],
+['02','逐字落盘','65-round-065-instructions.txt = 干'],
+['03','真读原文','00 全文 / 11 号 55 条 / 12 号 / A194-A235 / 功能池'],
+['04','选 AX11','Planned 22 里依赖最浅，不碰 EQ / 网络 IO / UI'],
+['05','基准生成','Config::empty(&config.os_class)，无写死架构名'],
+['06','差集导出','只收与默认不同的键；os_class 列 DERIVED_KEYS'],
+['07','逐键校验','已知 6 键白名单；未知键剔除并给 DEGRADE 行'],
+['08','8 类坏输入','空/非 JSON/非 object/超长/坏类型/控制字符/超限/数组'],
+['09','端点值','只查类型长度，不解析 URL，与 050 回退一致'],
+['10','E192','清理若批量删目录会抹掉 privacy-consent.json'],
+['11','四文件保护','consent / boot-state / bundle / play-stats 表驱动'],
+['12','原子写','写 launch.json.tmp 再 rename，无残留'],
+['13','清理语义','只回写内置默认，不删任何状态文件'],
+['14','AX11 状态','DataLayer 2 / Planned 21 / GateOnly 1'],
+['15','守卫与 CI','settings_guard 第 14 步；ax_guard 改动态求和'],
+['16','回归验证','**425 / 0** / **464 / 0**（8 段，拆三段执行） / Windows GNU / 十三守卫'],
+['17','交付闭环','065 补记覆盖；剩 21 项按功能池顺序']
+];
+const LOG={
+'01':'[KCU] preflight 065 OK files=1107',
+'02':'[KCU] spec 65-round-065-instructions.txt OK bytes=4',
+'03':'[KCU] readback 8_files SHA256_OK anchors=12',
+'04':'[KCU] select AX11 dependency_depth=1 eq=0 ui=0',
+'05':'[KCU] baseline Config::empty(current_os) hardcoded=0',
+'06':'[KCU] export_diff OK derived_excluded=os_class',
+'07':'[KCU] import OK unknown_key=rejected visible=1',
+'08':'[KCU] import DEGRADE cases=8 panic=0',
+'09':'[KCU] endpoint_value OK url_parse=0 mirror_name=allowed',
+'10':'[KCU] E192 consent_wipe_risk detected',
+'11':'[KCU] protected=4 consent boot bundle stats',
+'12':'[KCU] atomic_write OK tmp_cleared=1',
+'13':'[KCU] cleanup reset OK protected_kept=4 deleted=0',
+'14':'[KCU] ax pool OK specs=24 planned=21 data_layer=2 gate_only=1',
+'15':'[KCU] guards=13 ci_steps=14 no_credential',
+'16':'VERIFY **425 / 0** **464 / 0**（8 段，拆三段执行） win_gnu_ok',
+'17':'DELIVERY 065 补记覆盖 next=ax_feature_pool'
+};
+const STATE={
+ '04':'ax=24 planned=22 selected=AX11','06':'ax=24 planned=22 export=diff',
+ '08':'ax=24 planned=22 import=validated','09':'ax=24 planned=22 endpoint=shape',
+ '10':'ax=24 planned=22 protected=0 risk=1','11':'ax=24 planned=22 protected=4',
+ '12':'ax=24 planned=22 atomic=1','13':'ax=24 planned=22 cleanup=safe',
+ '14':'ax=24 planned=21 data_layer=2','15':'ax=24 planned=21 guards=13',
+ '16':'ax=24 planned=21 verified','17':'ax=24 planned=21 ALL_MATCH'
+};
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(k>=10&&k<=13?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=i<4?'预检':i<10?'导入导出':'清理与交付';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=7?'api::v1（7 符号未改动）':'—';
+ document.getElementById('m1').textContent=i>=6?'仅非默认键；os_class 排除；基准由当前 os 派生':(i>=5?'基准生成中':'未运行');
+ document.getElementById('m2').textContent=i>=9?'8 类坏输入可见；端点值不解析 URL':(i>=7?'逐键校验中':'未运行');
+ document.getElementById('m3').textContent=i>=13?'4 文件保护 + 原子写；清理不删状态文件':(i>=10?'E192 同意文件风险':'未运行');
+ document.getElementById('m4').textContent=i>=16?'**425 / 0** / **464 / 0**（8 段，拆三段执行） / 十三守卫 / 21 项排队':(i>=14?'零新增依赖；UI 闸门未触发':'未运行');
+ document.getElementById('note').textContent=i>=10?'E192：清理若按目录清空会抹掉隐私同意，绕过 11:10。本轮只回写默认，四个状态文件逐项读回仍是 keep。':'用户当轮逐字：干。按 064 功能池「按工程依赖逐轮落地」继续，不另起新层。';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join('\n')||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;document.getElementById('state').textContent='ax=24 planned=22 protected=0';upd()}
+upd();
+</script></body></html>

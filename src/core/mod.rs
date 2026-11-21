@@ -24,3 +24,4 @@ pub mod consent;
 pub mod client_ai;
 pub mod storage;
 pub mod ax;
+pub mod settings_io;

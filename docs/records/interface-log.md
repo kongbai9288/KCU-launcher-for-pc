@@ -742,3 +742,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I127 | `src/core/client_ai.rs` + `src/api.rs` | `ClientAiGate` 是 v1 唯一新增符号，默认拒绝、零页面 |
 | I128 | `src/core/ax.rs` / `src/core/storage.rs` | 24 条 `AX_SPECS` 单一声明源；AX05 存储分析数据层 |
 | I129 | 状态 | 零新增第三方（26 包 / 25 第三方）；22 项 `Planned` 排队；UI 闸门未触发 |
+
+## 065 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I130 | `src/core/settings_io.rs` | AX11 数据层：差集导出、逐键导入校验、原子写、清理保护 |
+| I131 | `PROTECTED_FILES` | 4 个常量引用：consent / boot-state / diagnostic-bundle / play-stats |
+| I132 | `scripts/settings_guard.py` | CI `scan` 第 14 步；`ax_guard.py` 改动态状态求和 |
+| I133 | 状态 | AX11 `DataLayer`；`Planned 21` / `DataLayer 2` / `GateOnly 1`；零新增第三方 |
