@@ -57,7 +57,7 @@ const NODES=[
 ['14','AX11 状态','DataLayer 2 / Planned 21 / GateOnly 1'],
 ['15','守卫与 CI','settings_guard 第 14 步；ax_guard 改动态求和'],
 ['16','回归验证','**425 / 0** / **464 / 0**（8 段，拆三段执行） / Windows GNU / 十三守卫'],
-['17','交付闭环','065 补记覆盖；剩 21 项按功能池顺序']
+['17','交付闭环','ALL_MATCH True；剩 21 项按功能池顺序']
 ];
 const LOG={
 '01':'[KCU] preflight 065 OK files=1107',
@@ -76,7 +76,7 @@ const LOG={
 '14':'[KCU] ax pool OK specs=24 planned=21 data_layer=2 gate_only=1',
 '15':'[KCU] guards=13 ci_steps=14 no_credential',
 '16':'VERIFY **425 / 0** **464 / 0**（8 段，拆三段执行） win_gnu_ok',
-'17':'DELIVERY 065 补记覆盖 next=ax_feature_pool'
+'17':'DELIVERY ALL_MATCH True next=ax_feature_pool'
 };
 const STATE={
  '04':'ax=24 planned=22 selected=AX11','06':'ax=24 planned=22 export=diff',

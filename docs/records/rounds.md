@@ -3278,3 +3278,5 @@ AX23（本地 MCP Server）与 `11:18` 直接冲突，已登记不推定。平�
 真发现 E192：`privacy-consent.json` 与设置同目录，清理若按目录清空会抹掉同意记录、绕过 `11:10` 开启时同意。四个状态文件（consent / boot-state / diagnostic-bundle / play-stats）改表驱动保护 + `reject_protected_removal`，单测逐项读回仍为 `keep`。
 
 AX11 `Planned` → `DataLayer`，状态分层 21 / 2 / 1；`ax_guard.py` 动态求和，`settings_guard.py` 新建并挂 CI 第 14 步。`boot.rs LOADED_MODULES` 同步。零新增第三方（26 包 / 25 第三方），UX HTML、两语言包、56 张 PNG 零 diff，UI 闸门未触发。E190–E200 共 11 个真问题留痕。剩 21 项仍 `Planned`。远端状态见 `docs/verification/round-065.md`。
+
+065 补记：远端主快照 `'+REF+'` 经 20-blob 精简增量 Git Data API 推送成功，1114 / 1114 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。065 补记以该 ref 为父，`force=false`。历史行不重写。

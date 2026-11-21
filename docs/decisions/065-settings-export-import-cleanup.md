@@ -48,7 +48,9 @@
 
 ## 7. 交付快照
 
-本地 `065 补记覆盖`，`065 补记覆盖` 文件 DIRTY 0。远端 `065 补记覆盖`，逐项 ALL_MATCH `065 补记覆盖`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `19ba29f`（主快照）→ 065 补记，**1114 文件 DIRTY 0**。远端主快照 `b071edd50d894d0781eec0ca82cfac878d74b40b`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1114 / 1114，DIFF 0 / EXTRA 0 / truncated False）；065 补记以该 ref 为父。主包按 `git ls-files` 打包 1114 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时日志与注入备份已删。
+
+推送登记：20-blob 精简增量 + `base_tree`（tree `0351a46`），RC=0；未走全量 `api_push.py`，未强推、未重写历史。
 
 ## 8. 验证
 

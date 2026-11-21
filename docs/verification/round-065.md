@@ -70,10 +70,10 @@
 
 | 项 | 值 |
 | --- | --- |
-| 本地 HEAD | `065 补记覆盖`（`065 补记覆盖` 文件，DIRTY 0） |
-| 远端 `refs/heads/main` | `065 补记覆盖` |
-| 逐项 ALL_MATCH | `065 补记覆盖` |
-| 主包 / 预览包 | `065 补记覆盖` / 57 项，EXTRA 0 / MISSING 0 |
+| 本地 HEAD | `19ba29f`（主快照）→ 065 补记（1114 文件，DIRTY 0） |
+| 远端 `refs/heads/main` | 主快照 `b071edd50d894d0781eec0ca82cfac878d74b40b`；065 补记以该 ref 为父，`force=false` |
+| 逐项 ALL_MATCH | **True**（1114 / 1114，DIFF 0 / EXTRA 0 / truncated False） |
+| 主包 / 预览包 | 1114 / 57 项，EXTRA 0 / MISSING 0 |
 
 ## 7. 四值
 
@@ -86,3 +86,14 @@
 | 受阻 | 无（远端 Git Data API 通道正常；21 项 `Planned` 属未启动，不计受阻） |
 
 独立验证仍「部分通过」，存在未证实与未启动项，不发通过标记。
+
+## 065 补记：远端写入闭环
+
+| 项 | 值 |
+| --- | --- |
+| 远端主快照 | `'+REF+'`（增量 tree `0351a46`，20 个变化 blob，`force=false`） |
+| 本地主快照 | `19ba29f` |
+| 主快照逐项比对 | `LOCAL 1114 / REMOTE 1114 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True` |
+| 推送方式 | 20-blob 精简增量 + `base_tree`；RC=0；未强推、未重写历史 |
+| 凭据 | 会话内有效 PAT 经环境变量传入；未写入仓库、日志或包；临时脚本与日志用后即删 |
+| 独立验证结论 | 仍「部分通过」，未发通过标记；交付层已闭环，未证实 / 未启动项不变 |
