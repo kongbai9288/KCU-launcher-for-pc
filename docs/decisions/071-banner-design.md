@@ -59,7 +59,9 @@ Q-071-01（图案与染料 id 表来源）、Q-071-02（旗帜设计 JSON / 物�
 
 ## 7. 交付快照
 
-本地 `待推`，`待推` 文件 DIRTY 0。远端 `待推`，逐项 ALL_MATCH `待推`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `2b1c0ac`（主快照）→ 071 补记，**1156 文件 DIRTY 0**。远端主快照 `d862dc2b3d8d792f6759a784e0c2a0f3f4fc1da3`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1156 / 1156，DIFF 0 / EXTRA 0 / truncated False）；补记以该 ref 为父。主包按 `git ls-files` 打包 1156 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时脚本与日志用后即删。
+
+推送登记：推送前只读 `GET /git/ref/heads/main` 确认远端父提交为 `abbc20a`（070 补记），再用 20-blob 精简增量 + `base_tree`（tree `346eeaf`），RC=0；未强推、未重写历史。提交前核无 `.git/index.lock`（A254）。
 
 ## 8. 验证
 

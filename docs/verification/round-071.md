@@ -117,3 +117,15 @@
 | `cargo test --offline --test plugin_abi_load` | `test result: ok. 6 passed; 0 failed; ... 122.73s` | 0 |
 
 502 那次未取得任何输出，不编造、不沿用上一轮值；拆命令不算降验收项（A112 / A145）。四值「受阻」仍为无：通道已恢复且两段均重跑通过。
+
+## 071 补记：远端写入闭环
+
+| 项 | 值 |
+| --- | --- |
+| 远端主快照 | `d862dc2b3d8d792f6759a784e0c2a0f3f4fc1da3`（增量 tree `346eeaf`，20 个变化 blob，`force=false`） |
+| 本地主快照 | `2b1c0ac` |
+| 远端父提交（推送前只读核） | `abbc20a`（070 补记） |
+| 主快照逐项比对 | `LOCAL 1156 / REMOTE 1156 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True` |
+| 主包 / 预览包 | 1156 / 57 项，EXTRA 0 / MISSING 0 |
+| 凭据 | 会话内有效 PAT 经环境变量传入；未写入仓库、日志或包；临时脚本与日志用后即删 |
+| 独立验证结论 | 仍「部分通过 / 未通过」，未发通过标记；交付层已闭环，已失败 / 未证实 / 未启动项不变 |
