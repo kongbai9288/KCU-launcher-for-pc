@@ -760,3 +760,13 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I135 | `api::v1` | **零改动**，7 符号不变；AX06 不扩公共面 |
 | I136 | `scripts/download_history_guard.py` | CI `scan` 第 15 步；禁网络 / 时钟 / 删除 / unwrap；核 v1 未扩面 |
 | I137 | 状态 | AX06 `DataLayer`；`Planned 20` / `DataLayer 3` / `GateOnly 1`；零新增第三方 |
+
+## 067 / 068 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I138 | `src/core/extension_gate.rs` | 5 条锁位、安装状态持久化、8 项跨进程信封校验；`LOCK_POPUP_ID=extension` 复用 062 注册表 |
+| I139 | `src/core/launch_progress.rs` | 5 阶段单调进度状态机；`PROGRESS_TARGET=launcher.progress`；事件走统一信封 |
+| I140 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
+| I141 | 守卫与 CI | `extension_gate_guard.py` / `launch_progress_guard.py` 挂 CI 第 16 / 17 步；068 补双向注入与 `delivery_guard` 复跑 |
+| I142 | 状态 | AX 池 `Planned 20` / `DataLayer 3` / `GateOnly 1` 不变；零新增第三方 |

@@ -492,3 +492,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 066 实现轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`download_history.rs` 的序列化走 `serde_json`、路径走 048 的 `robust::safe_join`、诊断行走 `diagnostics::diag_line`、保护清单引用 065 的 `settings_io::PROTECTED_FILES`。本地记录的去重、饱和、逐条校验是项目特有编排，无语义等价库可换，如实登记；未改 `stats.rs` / `settings_io.rs` / `consent.rs`（`00:111`）。023 A03 自写底座例外于 024 撤回的状态不变。
+
+## 067 实现轮 / 068 收口轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`extension_gate.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`PopupRegistry`（062）、`robust::safe_join`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）；`launch_progress.rs` 只复用 `Envelope` 与 `diag_line`。锁位门禁、信封配对防重放、进度单调状态机是项目特有编排，无语义等价库可换，如实登记。068 为文档与交付收口，`src/` 零改动。023 A03 自写底座例外于 024 撤回的状态不变。

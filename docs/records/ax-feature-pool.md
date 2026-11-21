@@ -63,3 +63,7 @@ E192：`privacy-consent.json` 与设置文件同目录，清理若按目录清�
 状态分层更新为 `Planned 20` / `DataLayer 3`（AX05、AX06、AX11）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到 AX05 / AX06 / AX11，动态求和不变。064、065 历史表格行不重写，本补记覆盖结论。
 
 `api::v1` 7 符号不变：AX06 是内部数据层，不扩公共面（`00:137` 接口终点核对）。
+
+## 067 / 068 补记：功能池不动
+
+用户 067 给两段新功能，按 `00:248` 覆盖 066 结尾「按功能池落下一项」预告。`Planned 20` / `DataLayer 3`（AX05、AX06、AX11）/ `GateOnly 1`（AX23）全部不变，`ax_guard.py` 不改。064–066 历史表格行不重写。067 两模块不进 AX 池，属用户当轮原文条目，登记在 `docs/decisions/067-extension-gate-and-launch-progress.md`。

@@ -26,3 +26,5 @@ pub mod storage;
 pub mod ax;
 pub mod settings_io;
 pub mod download_history;
+pub mod extension_gate;
+pub mod launch_progress;

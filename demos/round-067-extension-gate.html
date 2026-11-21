@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 067 运行逻辑</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:720px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:260px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>067 运行逻辑</h1><div class="sub">扩展包门禁 + 加载进度 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">planned=20 v1=7 locked=5</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>合规与代码</h3><p id="m1">未运行</p><span class="badge g">00 全文 261 行</span><span class="badge g">防错 484 行</span><span class="badge g">逐字 SHA</span><span class="badge r">E214 幻觉</span></div>
+<div class="mini"><h3>扩展包门禁</h3><p id="m2">未运行</p><span class="badge g">5 条锁位</span><span class="badge g">默认全锁</span><span class="badge g">复用弹窗</span><span class="badge r">真实 IPC 未启动</span></div>
+<div class="mini"><h3>两进程安全</h3><p id="m3">未运行</p><span class="badge g">统一信封</span><span class="badge g">防重放</span><span class="badge g">超时注入</span><span class="badge r">验签未决 Q-067-03</span></div>
+<div class="mini"><h3>本轮边界</h3><p id="m4">未运行</p><span class="badge g">v1 不变</span><span class="badge g">**458 / 0**</span><span class="badge g">十六守卫</span><span class="badge r">20 项排队</span></div>
+</div><div class="note" id="note">用户 067 逐字：扩展包要安装才能用对应功能；统一调度器进全量启动器有加载进度条。不周之处你完普。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[["01", "开工预检", "4fdc372 / 1121 文件 / DIRTY 0", 0], ["02", "逐字落盘", "67 指令 328 字节 · 错别字「完普」原样", 0], ["03", "真读全文", "00 全文 261 行 / 防错清单 484 行 / 11:242 第34条", 0], ["04", "核接口终点", "v1 7 符号不变 · dispatcher 20 断言不动", 0], ["05", "锁位注册表", "5 条语义 slug · 默认全 Locked · 含 headless.kculf", 0], ["06", "点锁图", "复用 062 extension 弹窗 · 13 条 spec 不变", 0], ["07", "安装请求", "Envelope Kind=Request · target=extension.install", 0], ["08", "request_id", "派生 RFC9562 v5 · 与 extension_id 绑定", 0], ["09", "八项校验", "kind / target / error / 配对 / 超时 / 重放 / 上限 / 白名单", 1], ["10", "事件不越权", "Kind=Event 不顶替安装完成 · 拒", 1], ["11", "消费即删", "响应成功后 pending 移除 · 重放拒", 1], ["12", "进度 5 阶段", "0 / 20 / 50 / 80 / 100 单调 · 事件走统一信封", 0], ["13", "取消与超时", "cancel 冻结 0 副作用 · 120s 超时可见", 1], ["14", "持久化", "extension-installs.json · 原子写 · 四文件保护", 0], ["15", "守卫与 CI", "extension_gate_guard + launch_progress_guard 第16/17步", 0], ["16", "回归验证", "**458 / 0** / **497 / 0**（8 段分段求和，非单条全量命令） / Windows GNU / 十六守卫", 0], ["17", "交付收口", "067 交付层转 068 补齐 · 不发通过标记", 1]];
+const LOG={"01": "[KCU] preflight 067 OK files=1121", "02": "[KCU] spec 67-round-067-instructions.txt OK bytes=328", "03": "[KCU] readback OK 00:261 checklist:484 anchor=11:242", "04": "[KCU] interface_end OK v1_symbols=7 dispatch_assertions=20 unchanged", "05": "[KCU] extension slots=5 state=Locked headless.kculf=1", "06": "[KCU] lock_click OK popup=extension specs=13", "07": "[KCU] envelope request target=extension.install", "08": "[KCU] request_id OK bound=extension_id", "09": "[KCU] ipc_checks=8 DEGRADE visible=1", "10": "[KCU] event_kind DEGRADE kind_not_response", "11": "[KCU] pending consumed replay=rejected", "12": "[KCU] progress phases=5 monotonic=1 events=unified", "13": "[KCU] cancel frozen=1 side_effects=0 timeout=visible", "14": "[KCU] installs atom=1 protected=4", "15": "[KCU] guards=16 ci_steps=17", "16": "VERIFY **458 / 0** **497 / 0**（8 段分段求和，非单条全量命令） win_gnu_ok", "17": "DELIVERY 待推 pass_mark=withheld next=068"};
+const STATE={"05": "slots=5 locked=5", "06": "popup=extension", "08": "request_id=bound", "09": "checks=8", "11": "replay=rejected", "12": "phases=5", "13": "cancel=frozen", "14": "protected=4", "15": "guards=16", "16": "verified", "17": "delivery=deferred"};
+const MINI1=["预检与复读", "逐字落盘", "真读全文", "接口终点", "锁位注册表", "点锁图", "安装请求", "request_id", "八项校验", "事件不越权", "消费即删", "进度 5 阶段", "取消与超时", "持久化", "守卫与 CI", "回归验证", "交付收口"];
+const MINI2=["未运行", "未运行", "未运行", "v1 7 符号不变", "5 条锁位默认 Locked，含 headless.kculf", "复用 062 extension 弹窗，13 条 spec 不变", "Kind=Request，target 白名单", "request_id 派生并与 extension_id 绑定", "8 项校验：kind / target / error / 配对 / 超时 / 重放 / 上限 / 白名单", "Event 不顶替安装完成，拒绝并给 DEGRADE 行", "响应消费后 pending 移除，重放拒", "5 阶段 0→100 单调，事件走统一信封", "取消冻结 0 副作用，120s 超时可见", "原子写 + 四文件保护，reset 不删状态文件", "两守卫挂 CI 第 16 / 17 步", "458 / 0 · 分段求和 · Win GNU RC=0", "067 交付层转 068 收口"];
+const MINI3=["未运行", "未运行", "未运行", "零真实进程 / 零端口 / 零系统时钟", "不启真实进程、不绑端口", "请求-响应配对，Event 独立", "request_id 由 uuid v5 派生", "8 项拒绝全部给 [KCU] DEGRADE 行", "伪造 request_id / extension_id / 错误信封全拒", "Event 响应被拒，锁位保持 Locked", "重放同一响应被拒，installed_count 不重复", "进度事件独立于安装响应", "取消与失败态冻结，不回写", "写盘失败给 ERROR 行，不崩", "守卫扫 TcpListener / bind / SystemTime / Command", "双向注入 FAIL 数按实记录", "不发通过标记"];
+const MINI4=null;
+const NOTE="用户 067 逐字：扩展包要安装才能用对应功能；统一调度器进全量启动器有加载进度条。不周之处你完普。";
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(n[3]?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=MINI1[i]||'待执行';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=6?'Envelope Kind=Request/Response/Event · request_id 配对':(i>=4?'Envelope 待构造':'—');
+ const vals=[MINI2,MINI3,MINI4];
+ document.getElementById('m1').textContent=vals[0][i]||'未运行';
+ document.getElementById('m2').textContent=vals[1][i]||'未运行';
+ document.getElementById('m3').textContent=vals[2][i]||'未运行';
+ document.getElementById('m4').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('note').textContent=NOTE[i]||NOTE[0];
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join(String.fromCharCode(10))||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;upd()}
+upd();
+</script></body></html>
