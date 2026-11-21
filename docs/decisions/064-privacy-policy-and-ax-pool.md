@@ -59,7 +59,9 @@ AX07 DoH、AX02 新闻联网、AX12 受限文件流程是「真实网络 IO 未�
 
 ## 7. 交付快照
 
-本地 `064 补记覆盖`，`064 补记覆盖` 文件 DIRTY 0。远端 `064 补记覆盖`，逐项 ALL_MATCH `064 补记覆盖`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `31259fa`（主快照）→ 064 补记，**1107 文件 DIRTY 0**。远端主快照 `8ff0b638549897a55949c753fb45c6a82081c5b0`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1107 / 1107，DIFF 0 / EXTRA 0 / truncated False）；064 补记以该 ref 为父。主包按 `git ls-files` 打包 1107 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时日志与注入备份已删。
+
+推送登记：26-blob 精简增量 + `base_tree`（tree `4ed7482`），RC=0；未走全量 `api_push.py`，未强推、未重写历史。
 
 ## 8. 验证
 

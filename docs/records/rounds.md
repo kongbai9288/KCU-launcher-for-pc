@@ -3268,3 +3268,5 @@ AX23（本地 MCP Server）与 `11:18` 直接冲突，已登记不推定。平�
 `src/core/ax.rs` 落 `AX_SPECS` 24 条单一声明源（与 `POPUP_SPECS` 同形态）：`Planned 22` / `DataLayer 1`（AX05）/ `GateOnly 1`（AX23）。AX05 存储分析数据层落 `src/core/storage.rs`（5 类桶、饱和、清理范围与 4 类保护项分离、不真删）。`src/core/boot.rs` 的 `LOADED_MODULES` 同步 4 个模块。
 
 新增 `privacy_guard.py` / `ai_gate_guard.py` / `ax_guard.py` 与 CI 三步；`api_guard.py` 白名单 +1、输出改动态。`src/` 新增 4 模块、零新增第三方（26 包 / 25 第三方）；UX HTML、两语言包、56 张 PNG 零 diff，UI 闸门未触发。E178–E189 共 12 个真问题留痕。24 项全量决断 ≠ 一轮做完，22 项进 `docs/records/ax-feature-pool.md` 按工程依赖逐轮落地。远端状态见 `docs/verification/round-064.md`。
+
+064 补记：远端主快照 `'+REF+'` 经 26-blob 精简增量 Git Data API 推送成功，1107 / 1107 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。064 补记以该 ref 为父，`force=false`。历史行不重写。

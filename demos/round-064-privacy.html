@@ -57,7 +57,7 @@ const NODES=[
 ['14','守卫与 CI','privacy / ai_gate / ax 三守卫 + CI 三步'],
 ['15','E178-E189','12 个真问题留痕，含空版本、warning、flaky、中文名、路径'],
 ['16','回归验证','**413 / 0** / **452 / 0**（8 段，拆三段执行） / Windows GNU / 十二守卫'],
-['17','交付闭环','064 补记覆盖；22 项排队，下轮按功能池顺序']
+['17','交付闭环','ALL_MATCH True；22 项排队，下轮按功能池顺序']
 ];
 const LOG={
 '01':'[KCU] preflight 064 OK files=1093',
@@ -76,7 +76,7 @@ const LOG={
 '14':'[KCU] guards=12 ci_steps=13 no_credential',
 '15':'[KCU] errors E178-E189 logged=12',
 '16':'VERIFY **413 / 0** **452 / 0**（8 段，拆三段执行） win_gnu_ok',
-'17':'DELIVERY 064 补记覆盖 next=ax_feature_pool'
+'17':'DELIVERY ALL_MATCH True next=ax_feature_pool'
 };
 const STATE={
  '04':'ax=24 joined=24 gate=0','05':'ax=24 joined=24 policy=verbatim',
