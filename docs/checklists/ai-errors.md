@@ -489,3 +489,5 @@
 | A251 | 守卫脚本里不留未使用变量；部署前跑一次 `python -m py_compile` 或等价检查，别让无效绑定混进 CI。 |
 | A252 | 四值里写「全量 N / 0」若是分段命令求和，必须注明分段口径并保留各段真实输出；不写成单条 `cargo test --offline` 的输出（A15 / `00:131`）。 |
 | A253 | 用 Python 三引号拼 HTML 里的 JS 时，`'\n'` 会被解释成真实换行写进字符串字面量，Node 报 `Invalid or unexpected token`。用 `String.fromCharCode(10)` 或双反斜杠转义，并对每份演示实跑一次 JS 语法检查。 |
+
+| A254 | 网关 502 中断提交会留下 `.git/index.lock`，下次 `git commit` 报 `Unable to create index.lock` RC=128。先 `ps` 核无运行中的 git 进程，删锁再提交；提交后只读核 HEAD 唯一性与 DIRTY 0，不重复 commit、不强推（A140 / A145）。 |

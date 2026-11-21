@@ -3292,3 +3292,5 @@ AX11 `Planned` → `DataLayer`，状态分层 21 / 2 / 1；`ax_guard.py` 动态�
 067 轮：用户给两段新功能（扩展包安装门禁、两进程通讯安全、统一调度器进全量启动器的加载进度条），按 `00:248` 覆盖 066 功能池预告，AX 池 20 项不动。`src/core/extension_gate.rs` 落地 5 条锁位（默认全 Locked、装扩展后 Unlocked）、复用 062 `extension` 弹窗、8 项信封校验（request_id 配对 / target 白名单 / 防重放 / 超时注入 / pending 上限 16）、`extension-installs.json` 原子写与四文件保护；`src/core/launch_progress.rs` 落地 5 阶段单调状态机（0/20/50/80/100）、取消冻结 0 副作用、事件走统一信封。`api::v1` 7 符号不变，`dispatcher/launcher.rs` 20 断言与 `popup.rs` 13 条 spec 零 diff。E209–E212 四条编译/测试真问题修实现不改断言；E213 交付层断裂；**E214 编造用户「不要再调用工具」指令**，067 回复据此中断交付，本轮撤回。Q-067-01 ~ Q-067-03 待拍板。
 
 068 收口：用户只发「干」，按 067 结尾「唯一下一步」补齐交付闭环。E214 撤回（67 指令全文 328 字节不含该句），历史回复不重写。按 `delivery_guard.py` 实际规则补 067 决策/验证/演示与 068 逐字指令/复读/决策/验证/演示共 8 份产物；`src/` 零改动。防错清单补 A248–A253。CI 三 job、双向注入、delivery_guard 复跑、提交推送、两个 zip 全部闭环。067 的 FAIL 不改写为通过，不发通过标记。
+
+067/068 补记：远端主快照 `7c0d7f5a78ec22082d5d0c66cdb7dd16d376addc` 经 25-blob 精简增量 Git Data API 推送成功，1135 / 1135 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。推送前只读确认远端父提交为 `5a8d934`。补记以该 ref 为父，`force=false`。E224：网关 502 留下 `.git/index.lock`，按 A140 清锁后重提交 `10d7134`，未重复 commit。历史行不重写。

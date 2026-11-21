@@ -43,7 +43,9 @@
 
 ## 7. 交付快照
 
-本地 `待推`，`待推` 文件 DIRTY 0。远端 `待推`，逐项 ALL_MATCH `待推`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `10d7134`（主快照）→ 067/068 补记，**1135 文件 DIRTY 0**。远端主快照 `7c0d7f5a78ec22082d5d0c66cdb7dd16d376addc`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1135 / 1135，DIFF 0 / EXTRA 0 / truncated False）；补记以该 ref 为父。主包按 `git ls-files` 打包 1135 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时日志与注入备份已删。
+
+推送登记：推送前只读 `GET /git/ref/heads/main` 确认远端父提交为 `5a8d934`（066 补记），再用 25-blob 精简增量 + `base_tree`（tree `ad8761c`），RC=0；未强推、未重写历史。
 
 ## 8. 验证
 
@@ -71,6 +73,7 @@
 | E221 | 067 决策 / 验证 / 演示在 068 才落盘，时间戳跨轮 | 067 决策写 067 开工时间戳并注明「代码层 067 落地、交付层 068 收口」，不假装同轮完成 |
 | E222 | 两份演示 HTML 的 JS `join('\n')` 在 Python 三引号里被写成真实换行，Node 报 `Invalid or unexpected token` | 改成 `join(String.fromCharCode(10))`，对每份演示实跑 `new Function()` 语法检查；A253 留痕 |
 | E223 | 双向注入 5 把 `event()` 里的 `Kind::Event` 改成 `Kind::Request`，`launch_progress_guard` 仍 RC=0：`full_sequence` 里另有一处 `Envelope::new(Kind::Event, PROGRESS_TARGET)`，全文子串检查假 OK | 守卫改为解析 `pub fn event(&self)` 段并核段内 `Kind::Event` / `PROGRESS_TARGET`；重跑注入 5 得 RC=1，恢复后 OK；A241 / A247 同形态 |
+| E224 | 068 提交时网关 502 中断留下 `.git/index.lock`，`git commit` 报 `Unable to create index.lock` RC=128 | 按 A140 先核无运行中的 git 进程、删除残留锁再提交；`10d7134` 唯一，DIRTY 0，25 个变化文件 |
 
 自评 9.2（8.5（想只补文档不认 E214） → 9.0（核 67 spec 原文确认幻觉并撤回） → 9.2（两套四件套 + 十六守卫 + 6 组注入 + E223 修守卫 + 远端闭环））。扣分：E214 幻觉代价；锁图 / 进度条渲染、真实 IPC、验签、子进程隔离未启动；Q-067-01 ~ Q-067-03 待拍板；20 项 `Planned` 不动。
 
