@@ -3285,4 +3285,6 @@ AX11 `Planned` → `DataLayer`，状态分层 21 / 2 / 1；`ax_guard.py` 动态�
 
 `src/core/download_history.rs` 落地：`open` / `record` / `query` / `reset`；6 类资源与 3 类结果封闭表；`key+kind` 去重、256 条上限淘汰最旧；`at` 由调用方注入，不读系统时钟；结构级 8 类坏输入回默认、条目级剔除，全部给 `[KCU]` DEGRADE 行；`reset` 只回写内置默认、不删任何文件，复用 065 `settings_io::PROTECTED_FILES` 逐项读回 `keep`；`.tmp` + rename 原子写。
 
-按 `00:137` 复核接口终点：`api::v1` **7 符号不变**，不扩公共面；新模块只被 `core/mod.rs`、`boot.rs LOADED_MODULES`、`ax.rs`、`ax_guard.py`、新守卫、CI 引用。AX06 `Planned` → `DataLayer`，状态分层 20 / 3 / 1；新建 `download_history_guard.py` 挂 CI 第 15 步。零新增第三方（26 包 / 25 第三方），UX HTML、两语言包、56 张 PNG 零 diff。E201–E207 共 7 个真问题留痕，含 E201 既有 `cache` 并发测试首跑 FAILED 1（复跑 3 次 438 / 0，未改测试、未改 `cache.rs`）。剩 20 项仍 `Planned`。远端状态见 `docs/verification/round-066.md`。
+按 `00:137` 复核接口终点：`api::v1` **7 符号不变**，不扩公共面；新模块只被 `core/mod.rs`、`boot.rs LOADED_MODULES`、`ax.rs`、`ax_guard.py`、新守卫、CI 引用。AX06 `Planned` → `DataLayer`，状态分层 20 / 3 / 1；新建 `download_history_guard.py` 挂 CI 第 15 步。零新增第三方（26 包 / 25 第三方），UX HTML、两语言包、56 张 PNG 零 diff。E201–E208 共 8 个真问题留痕，含 E201 既有 `cache` 并发测试首跑 FAILED 1（复跑 3 次 438 / 0，未改测试、未改 `cache.rs`）。剩 20 项仍 `Planned`。远端状态见 `docs/verification/round-066.md`。
+
+066 补记：远端主快照 `'+REF+'` 经 20-blob 精简增量 Git Data API 推送成功，1121 / 1121 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。推送前只读确认远端父提交为 `f629d6f`。066 补记以该 ref 为父，`force=false`。E208：提交命令被网关重跑，首次已创建 `3aac18a`，重跑报 `nothing to commit` RC=1，只读核唯一性后继续，不重复提交。历史行不重写。

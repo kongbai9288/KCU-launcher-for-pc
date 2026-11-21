@@ -44,7 +44,9 @@
 
 ## 6. 交付快照
 
-本地 `066 补记覆盖`，`066 补记覆盖` 文件 DIRTY 0。远端 `066 补记覆盖`，逐项 ALL_MATCH `066 补记覆盖`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `3aac18a`（主快照）→ 066 补记，**1121 文件 DIRTY 0**。远端主快照 `cc03cdae2ae7391026828037231c92ca904b75f2`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1121 / 1121，DIFF 0 / EXTRA 0 / truncated False）；066 补记以该 ref 为父。主包按 `git ls-files` 打包 1121 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时日志与注入备份已删。
+
+推送登记：推送前只读 `GET /git/ref/heads/main` 确认远端父提交为 `f629d6f`（065 补记），再用 20-blob 精简增量 + `base_tree`（tree `c7d6644`），RC=0；未强推、未重写历史。
 
 ## 7. 验证
 
@@ -72,6 +74,7 @@
 | E205 | 首跑 flaky 时若按模板写「全量通过」会构成 A15 谎报 | 验证报告保留首跑 `FAILED 1` 原样与三次复跑输出，四值表列「已失败」项 |
 | E206 | 新模块若把 `at` 取自 `SystemTime` 会把本机时钟写进可移植数据 | `at` 由调用方注入；守卫禁 `SystemTime` / `UNIX_EPOCH` |
 | E207 | 下载历史与 061 `play-stats.json`、065 `launch.json` 同目录，`reset` 若按目录清空会抹掉同意与状态文件 | D-066-5 只回写自身文件；单测对四个保护文件逐项读回 `keep` |
+| E208 | `git add -A && git commit` 被网关重跑：首次已创建 `3aac18a`，重跑报 `nothing to commit, working tree clean` RC=1 | 先只读核 `git log -1` / `DIRTY 0` / `git diff --name-only 1aa53a4..HEAD` 20 文件，确认主快照唯一且完整，再继续推送；不重复 commit、不强推（A216 / A145） |
 
 自评 9.3（8.7（想按编号顺推 AX01） → 9.1（真读全文 + 合规核对表 + EQ 复核） → 9.3（v1 不扩面 + 十四守卫 + 四组注入 + flaky 如实登记））。扣分：20 项仍 `Planned`；EQ-01 ~ EQ-13 与 4 条 Q-C 未拍；顶部栏进度 UI 未启动；6 项低可信度转述未交叉印证；既有 cache 并发 flaky 未定位到根因。
 

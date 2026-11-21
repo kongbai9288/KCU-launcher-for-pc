@@ -57,7 +57,7 @@ const NODES=[
 ['14','AX06 状态','DataLayer 3 / Planned 20 / GateOnly 1'],
 ['15','guard + CI','download_history_guard 第 15 步；十四守卫'],
 ['16','回归验证','**438 / 0**（复跑 3 次；首跑 437 / 1 FAILED 见 E201） / **477 / 0**（8 段，拆三段执行） / Windows GNU / 十四守卫'],
-['17','交付闭环','066 补记覆盖；不发通过标记；剩 20 项排队']
+['17','交付闭环','ALL_MATCH True；不发通过标记；剩 20 项排队']
 ];
 const LOG={
 '01':'[KCU] preflight 066 OK files=1114',
@@ -76,7 +76,7 @@ const LOG={
 '14':'[KCU] ax pool OK specs=24 planned=20 data_layer=3 gate_only=1',
 '15':'[KCU] guards=14 ci_steps=15 no_credential',
 '16':'VERIFY **438 / 0**（复跑 3 次；首跑 437 / 1 FAILED 见 E201） **477 / 0**（8 段，拆三段执行） win_gnu_ok',
-'17':'DELIVERY 066 补记覆盖 pass_mark=withheld next=ax_feature_pool'
+'17':'DELIVERY ALL_MATCH True pass_mark=withheld next=ax_feature_pool'
 };
 const STATE={
  '04':'planned=21 v1=7 compliance=8','05':'planned=21 v1=7 eq_clear=AX06',
