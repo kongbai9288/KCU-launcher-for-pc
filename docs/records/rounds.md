@@ -3246,3 +3246,5 @@ E145：059 的「未过期 PAT 未证实」关闭，055–059 受阻根因（凭
 `src/lib.rs` 12 行 `pub use`（29 符号）→ 0；新增 `src/api.rs::v1` 六符号稳定面，破坏性变更升 `v2` 并给迁移步骤。`src/core/popup.rs` 改 `PopupSpec` 13 条单一声明源，`catalog()` 从表派生，`Popup` / `PopupKind` / `catalog` / `open` 全收紧 `pub(crate)`；`open_registered` 未知 id 拒绝，`open_all_registered` / `close_all_registered` 统一行为。`userflow.rs` / `dispatcher/launcher.rs` / `lightweight/view.rs` 三处改走注册表，原断言一字未改。`tests/boot_fallback.rs:3` import 改 `api::v1::CancelToken`。新增 `scripts/api_guard.py` / `scripts/popup_guard.py` + CI 两步。
 
 零新增第三方，仍 26 包 / 25 第三方；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。UI 闸门未触发：UX HTML、两语言包、56 张 PNG 零 diff。远端状态见 `docs/verification/round-062.md`。
+
+062 补记：远端主快照 `'+REF+'` 经增量 Git Data API 推送成功，1087 / 1087 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。`api_push.py` 后台两次被网关 502 清掉，改 22-blob 精简增量后 RC=0；062 补记以该 ref 为父，`force=false`。历史行不重写。

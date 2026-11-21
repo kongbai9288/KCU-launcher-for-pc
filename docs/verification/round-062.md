@@ -85,10 +85,10 @@ B_TEST_RC=101
 
 | 项 | 值 |
 | --- | --- |
-| 本地 HEAD | `062 补记覆盖`（`062 补记覆盖` 文件，DIRTY 0） |
-| 远端 `refs/heads/main` | `062 补记覆盖` |
-| 逐项 ALL_MATCH | `062 补记覆盖` |
-| 主包 | `062 补记覆盖` 项，EXTRA 0 / MISSING 0 |
+| 本地 HEAD | `42e8c25`（主快照）→ 062 补记（1087 文件，DIRTY 0） |
+| 远端 `refs/heads/main` | 主快照 `e53f67e515eb5770d732f0fea3aeffe9e058fd60`；062 补记以该 ref 为父，`force=false` |
+| 逐项 ALL_MATCH | **True**（1087 / 1087，DIFF 0 / EXTRA 0 / truncated False） |
+| 主包 | 1087 项，EXTRA 0 / MISSING 0；预览包 57 项 |
 
 ## 6. 四值
 
@@ -101,3 +101,14 @@ B_TEST_RC=101
 | 受阻 | 无（055–059 远端受阻已于 060 解除；本轮 Git Data API 通道正常） |
 
 独立验证仍「部分通过」，存在未证实与未启动项，不发通过标记。
+
+## 062 补记：远端写入闭环
+
+| 项 | 值 |
+| --- | --- |
+| 远端主快照 | `'+REF+'`（增量 tree `3de197d`，22 个变化 blob，`force=false`） |
+| 本地主快照 | `42e8c25` |
+| 逐项比对 | `LOCAL 1087 / REMOTE 1087 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True` |
+| E168 | `api_push.py` 后台两次被网关 502 清掉、前台 HTTP 超时；改精简增量推送后 RC=0，不重写历史、不强推 |
+| 凭据 | 会话内有效 PAT 经环境变量传入；未写入仓库、日志或包；临时脚本与日志用后即删 |
+| 独立验证结论 | 仍「部分通过」，未发通过标记；实现层与交付层已闭环，未证实 / 未启动项不变 |

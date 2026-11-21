@@ -72,7 +72,9 @@
 
 ## 8. 交付快照
 
-本地 `062 补记覆盖`，`062 补记覆盖` 文件 DIRTY 0。远端 `062 补记覆盖`，逐项 ALL_MATCH `062 补记覆盖`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志与注入备份已删。
+本地 `42e8c25`（主快照）→ 062 补记，**1087 文件 DIRTY 0**。远端主快照 `e53f67e515eb5770d732f0fea3aeffe9e058fd60`（`force=false`），逐项 ALL_MATCH **True**（1087 / 1087，DIFF 0 / EXTRA 0 / truncated False）；062 补记以该 ref 为父。主包按 `git ls-files` 打包 1087 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时日志与注入备份已删。
+
+推送通道登记 E168：`api_push.py` 全量遍历 1087 文件的后台进程两次被网关 502 清掉（日志空 / rc 未写），前台直跑也 HTTP 超时；改精简增量推送（只上传 22 个变化 blob + `base_tree` 增量 tree），RC=0 后逐项比对 True。不重写历史、不强推。
 
 ## 9. 自我批判
 
