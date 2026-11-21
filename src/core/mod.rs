@@ -30,3 +30,4 @@ pub mod extension_gate;
 pub mod launch_progress;
 pub mod download_sources;
 pub mod instance_drop;
+pub mod banner_design;

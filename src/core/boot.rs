@@ -51,6 +51,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.launch_progress",
     "core.download_sources",
     "core.instance_drop",
+    "core.banner_design",
     "dispatcher.launcher",
 ];
 

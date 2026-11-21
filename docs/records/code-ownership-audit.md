@@ -504,3 +504,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 070 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`instance_drop.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。未分组集合、三类别落点、路径拒收编排是项目特有口径（`12:36` / `12:47`），无语义等价库可换，如实登记。023 A03 自写底座例外于 024 撤回的状态不变。
+
+## 071 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`banner_design.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_ID_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。图案分层、撤销重做栈、最近编辑编排是项目特有口径（`31-axolotl-launcher-features.md:55`），无语义等价库可换，如实登记。023 A03 自写底座例外于 024 撤回的状态不变。
