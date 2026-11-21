@@ -3248,3 +3248,11 @@ E145：059 的「未过期 PAT 未证实」关闭，055–059 受阻根因（凭
 零新增第三方，仍 26 包 / 25 第三方；`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动。UI 闸门未触发：UX HTML、两语言包、56 张 PNG 零 diff。远端状态见 `docs/verification/round-062.md`。
 
 062 补记：远端主快照 `'+REF+'` 经增量 Git Data API 推送成功，1087 / 1087 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。`api_push.py` 后台两次被网关 502 清掉，改 22-blob 精简增量后 RC=0；062 补记以该 ref 为父，`force=false`。历史行不重写。
+
+063 收口：调研轮，零功能加入。用户当轮「干」+「顺便调查美西螈启动器有哪些功能我没给你列的，列出来我选择性的让你去加入」+「隐私政策下轮发全文」。按 `00:248`，当轮「选择性加入」收窄 `00:44`「别人有的功能要有」，登记 D-063-1；062 结尾预告的「找下一条已决断功能」不执行。
+
+调研对象 Axolotl Launcher（美西螈启动器，`axlmc.org` / `axlmc/Axolotl`，GPL-3.0-only，Rust + Tauri + Vue）。一手承重：官网首页 + FAQ、GitHub Releases v1.11.0（2026-11-13）/ v1.11.1（2026-11-19）；权威二手：中文 Minecraft Wiki、极客范、AtomGit、GitCode；社区实测：明月庄主视频稿、腾讯频道帖；糖糕云 / 魔趣网等转述标低可信度。整理 46 项功能，对照三份需求文档后产出 **24 项未列候选 AX01–AX24**，主交付 `Axolotl未列功能候选清单.md`，仓库副本 `docs/research/31-axolotl-launcher-features.md`。
+
+AX23（本地 MCP Server）与 `11:18` 直接冲突，已登记不推定。平台口径冲突（官网 Win10/11 x64 + ARM64 vs 下载站 WinXP/Win7）如实标注。E169–E177 全部留痕，含子 agent 报告 3 处编号 / 状态错误与 1 处无效图片路径。
+
+`src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` / UX HTML / 两语言包 / 56 张 PNG 全部零 diff，仍 26 包 / 25 第三方。隐私政策全文是下轮输入，本轮不读、不存、不预判。远端状态见 `docs/verification/round-063.md`。

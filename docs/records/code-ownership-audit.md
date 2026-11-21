@@ -476,3 +476,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 062 架构收敛轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。本轮不换库：把 crate 顶层平铺的内部类型收进 `src/api.rs::v1`，弹窗构造从 13 处散落 `Popup::new` 收进 `POPUP_SPECS` 单一声明源，行为由 `PopupRegistry` 统一给出。`Popup` / `PopupKind` / `catalog()` / `PopupRegistry::open` 收紧 `pub(crate)`。023 A03 自写底座例外于 024 撤回的状态不变。
+
+## 063 调研轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。本轮不换库、不写实现：只做 Axolotl Launcher 功能调研与需求差集，产物落在 `docs/research/31-axolotl-launcher-features.md` 与交付文件。023 A03 自写底座例外于 024 撤回的状态不变。

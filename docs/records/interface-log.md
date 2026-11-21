@@ -724,3 +724,11 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I119 | `src/core/popup.rs` | `POPUP_SPECS` 13 条；`open_registered` / `open_all_registered` / `close_all_registered` / `registered_ids`；`PopupOpenError::UnknownId` |
 | I120 | 业务模块 | `userflow` / `dispatcher/launcher` / `lightweight/view` 三处统一走注册表；零散落构造 |
 | I121 | 状态 | 架构收敛轮；零新增依赖；UI 零 diff；UI 框架仍卡 EQ-01 |
+
+## 063 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I122 | `docs/research/31-axolotl-launcher-features.md` | Axolotl 46 项功能调研、24 项未列候选 AX01–AX24、来源等级、冲突与局限 |
+| I123 | 主交付 | `/data/workspace/Axolotl未列功能候选清单.md`，与仓库副本 SHA-256 一致 |
+| I124 | 状态 | 调研轮；`src/` 零 diff；零功能加入；零新增依赖；隐私政策全文下轮输入 |
