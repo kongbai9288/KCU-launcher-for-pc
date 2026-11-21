@@ -46,7 +46,9 @@ AX23 的对照：`12-4` / `12-24` 允许的是**开服器**给本地 AI 当工�
 
 ## 6. 交付快照
 
-本地 `063 补记覆盖`，`063 补记覆盖` 文件 DIRTY 0。远端 `063 补记覆盖`，逐项 ALL_MATCH `063 补记覆盖`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。主交付文件在 `/data/workspace/Axolotl未列功能候选清单.md`。
+本地 `706e885`（主快照）→ 063 补记，**1093 文件 DIRTY 0**。远端主快照 `619650d6773bacc8f83e3d8ef1298fff2939b1f3`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1093 / 1093，DIFF 0 / EXTRA 0 / truncated False）；063 补记以该 ref 为父。主包按 `git ls-files` 打包 1093 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时日志已删。主交付文件在 `/data/workspace/Axolotl未列功能候选清单.md`。
+
+推送登记：`api_push.py` 全量遍历在 062 已被网关 502 打断，本轮直接走 13-blob 精简增量 + `base_tree`，RC=0，未强推、未重写历史。
 
 ## 7. 验证
 

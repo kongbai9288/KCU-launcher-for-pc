@@ -3256,3 +3256,5 @@ E145：059 的「未过期 PAT 未证实」关闭，055–059 受阻根因（凭
 AX23（本地 MCP Server）与 `11:18` 直接冲突，已登记不推定。平台口径冲突（官网 Win10/11 x64 + ARM64 vs 下载站 WinXP/Win7）如实标注。E169–E177 全部留痕，含子 agent 报告 3 处编号 / 状态错误与 1 处无效图片路径。
 
 `src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` / UX HTML / 两语言包 / 56 张 PNG 全部零 diff，仍 26 包 / 25 第三方。隐私政策全文是下轮输入，本轮不读、不存、不预判。远端状态见 `docs/verification/round-063.md`。
+
+063 补记：远端主快照 `'+REF+'` 经 13-blob 精简增量 Git Data API 推送成功，1093 / 1093 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。063 补记以该 ref 为父，`force=false`。历史行不重写。
