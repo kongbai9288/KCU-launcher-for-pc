@@ -99,3 +99,5 @@ jobs:
         run: python3 scripts/ax_guard.py
       - name: settings_guard
         run: python3 scripts/settings_guard.py
+      - name: download_history_guard
+        run: python3 scripts/download_history_guard.py

@@ -751,3 +751,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I131 | `PROTECTED_FILES` | 4 个常量引用：consent / boot-state / diagnostic-bundle / play-stats |
 | I132 | `scripts/settings_guard.py` | CI `scan` 第 14 步；`ax_guard.py` 改动态状态求和 |
 | I133 | 状态 | AX11 `DataLayer`；`Planned 21` / `DataLayer 2` / `GateOnly 1`；零新增第三方 |
+
+## 066 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I134 | `src/core/download_history.rs` | AX06 数据层：本地记录、去重饱和、8 类坏输入、原子写、reset 保护 |
+| I135 | `api::v1` | **零改动**，7 符号不变；AX06 不扩公共面 |
+| I136 | `scripts/download_history_guard.py` | CI `scan` 第 15 步；禁网络 / 时钟 / 删除 / unwrap；核 v1 未扩面 |
+| I137 | 状态 | AX06 `DataLayer`；`Planned 20` / `DataLayer 3` / `GateOnly 1`；零新增第三方 |

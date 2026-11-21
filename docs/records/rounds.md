@@ -3280,3 +3280,9 @@ AX23（本地 MCP Server）与 `11:18` 直接冲突，已登记不推定。平�
 AX11 `Planned` → `DataLayer`，状态分层 21 / 2 / 1；`ax_guard.py` 动态求和，`settings_guard.py` 新建并挂 CI 第 14 步。`boot.rs LOADED_MODULES` 同步。零新增第三方（26 包 / 25 第三方），UX HTML、两语言包、56 张 PNG 零 diff，UI 闸门未触发。E190–E200 共 11 个真问题留痕。剩 21 项仍 `Planned`。远端状态见 `docs/verification/round-065.md`。
 
 065 补记：远端主快照 `'+REF+'` 经 20-blob 精简增量 Git Data API 推送成功，1114 / 1114 逐项 ALL_MATCH True（DIFF 0 / EXTRA 0 / truncated False）。065 补记以该 ref 为父，`force=false`。历史行不重写。
+
+066 收口：用户「干，遵守我的要求」。按 `00:248` 执行；本轮把 `00-requirements.txt` 全文 261 行与防错清单 479 行真读一遍，落 `docs/records/round-066-full-readback.md` 合规核对表（8 行逐条对照）。按 A208 核 065 结尾与 047 的 EQ-13，按 A211 真读功能池 21 项，选 **AX06 download_history** 数据层：不碰 EQ / 真实网络 IO / UI 闸门 / 新增依赖。
+
+`src/core/download_history.rs` 落地：`open` / `record` / `query` / `reset`；6 类资源与 3 类结果封闭表；`key+kind` 去重、256 条上限淘汰最旧；`at` 由调用方注入，不读系统时钟；结构级 8 类坏输入回默认、条目级剔除，全部给 `[KCU]` DEGRADE 行；`reset` 只回写内置默认、不删任何文件，复用 065 `settings_io::PROTECTED_FILES` 逐项读回 `keep`；`.tmp` + rename 原子写。
+
+按 `00:137` 复核接口终点：`api::v1` **7 符号不变**，不扩公共面；新模块只被 `core/mod.rs`、`boot.rs LOADED_MODULES`、`ax.rs`、`ax_guard.py`、新守卫、CI 引用。AX06 `Planned` → `DataLayer`，状态分层 20 / 3 / 1；新建 `download_history_guard.py` 挂 CI 第 15 步。零新增第三方（26 包 / 25 第三方），UX HTML、两语言包、56 张 PNG 零 diff。E201–E207 共 7 个真问题留痕，含 E201 既有 `cache` 并发测试首跑 FAILED 1（复跑 3 次 438 / 0，未改测试、未改 `cache.rs`）。剩 20 项仍 `Planned`。远端状态见 `docs/verification/round-066.md`。

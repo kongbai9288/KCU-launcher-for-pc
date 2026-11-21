@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 066 下载历史数据层</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:720px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:260px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+code{font:11px ui-monospace,Consolas,monospace;background:rgba(61,107,102,.08);padding:1px 4px;border-radius:3px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>066 运行逻辑</h1><div class="sub">AX06 数据层 · 合规复核 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">planned=21 v1=7 guarded=13</span><b>接口终点</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>合规复核</h3><p id="m1">未运行</p><span class="badge g">00 全文 261 行</span><span class="badge g">防错 479 行</span><span class="badge g">逐字 SHA</span><span class="badge r">A208 / A211</span></div>
+<div class="mini"><h3>本地记录</h3><p id="m2">未运行</p><span class="badge g">6 类资源</span><span class="badge g">3 类结果</span><span class="badge g">去重 + 饱和</span><span class="badge r">零网络请求</span></div>
+<div class="mini"><h3>坏输入与保护</h3><p id="m3">未运行</p><span class="badge g">8 类 DEGRADE</span><span class="badge g">原子写</span><span class="badge r">E192 四文件</span><span class="badge g">reset 不删文件</span></div>
+<div class="mini"><h3>本轮边界</h3><p id="m4">未运行</p><span class="badge g">v1 7 符号不变</span><span class="badge g">**438 / 0**（复跑 3 次；首跑 437 / 1 FAILED 见 E201）</span><span class="badge g">十四守卫</span><span class="badge r">20 项排队</span></div>
+</div><div class="note" id="note">用户当轮逐字：干，遵守我的要求。按 00:248 执行；本轮把 00 全文与防错清单真读一遍并落合规核对表。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[
+['01','开工预检','1aa53a4 / 1114 文件 / DIRTY 0'],
+['02','逐字落盘','66-round-066-instructions.txt = 干，遵守我的要求（24 字节）'],
+['03','真读全文','00 全文 261 行 / 防错清单 479 行 / 功能池 55 行'],
+['04','合规核对表','8 行逐条对照 00 硬约束，不写口头承诺'],
+['05','A208 / A211','核 047：EQ-13 是回滚第三条件，AX04 卡它'],
+['06','选 AX06','21 项里唯一不碰 EQ / 网络 / UI / 新依赖的数据层'],
+['07','接口终点','00:137：v1 不加符号，只接 mod / boot / ax / 守卫'],
+['08','封闭表','6 类资源 / 3 类结果；at 由调用方注入'],
+['09','8 类坏输入','结构级回默认、条目级剔除，全部 DEGRADE 行'],
+['10','去重饱和','同 key+kind 更新；超 256 条淘汰最旧'],
+['11','E192 复用','reset 只回写默认，不删任何文件'],
+['12','四文件保护','consent / boot / bundle / stats 逐项读回 keep'],
+['13','原子写','tmp + rename，无残留'],
+['14','AX06 状态','DataLayer 3 / Planned 20 / GateOnly 1'],
+['15','guard + CI','download_history_guard 第 15 步；十四守卫'],
+['16','回归验证','**438 / 0**（复跑 3 次；首跑 437 / 1 FAILED 见 E201） / **477 / 0**（8 段，拆三段执行） / Windows GNU / 十四守卫'],
+['17','交付闭环','066 补记覆盖；不发通过标记；剩 20 项排队']
+];
+const LOG={
+'01':'[KCU] preflight 066 OK files=1114',
+'02':'[KCU] spec 66-round-066-instructions.txt OK bytes=24',
+'03':'[KCU] readback 10_files SHA256_OK full_read=00:261 checklist:479',
+'04':'[KCU] compliance_table OK rows=8 sha_verbatim=1',
+'05':'[KCU] eq_recheck OK eq13=Q-047-01 ax04_blocked=1 ax06_clear=1',
+'06':'[KCU] select AX06 dependency=local_only eq=0 ui=0 net=0',
+'07':'[KCU] interface_end OK v1_symbols=7 unchanged=1',
+'08':'[KCU] closed_tables OK kinds=6 results=3 clock_injected=1',
+'09':'[KCU] import DEGRADE cases=8 panic=0',
+'10':'[KCU] dedup OK max_entries=256 evict=oldest',
+'11':'[KCU] E192 reset OK file_delete=0 bulk_delete=0',
+'12':'[KCU] protected=4 consent boot bundle stats readback=keep',
+'13':'[KCU] atomic_write OK tmp_cleared=1',
+'14':'[KCU] ax pool OK specs=24 planned=20 data_layer=3 gate_only=1',
+'15':'[KCU] guards=14 ci_steps=15 no_credential',
+'16':'VERIFY **438 / 0**（复跑 3 次；首跑 437 / 1 FAILED 见 E201） **477 / 0**（8 段，拆三段执行） win_gnu_ok',
+'17':'DELIVERY 066 补记覆盖 pass_mark=withheld next=ax_feature_pool'
+};
+const STATE={
+ '04':'planned=21 v1=7 compliance=8','05':'planned=21 v1=7 eq_clear=AX06',
+ '06':'planned=21 v1=7 selected=AX06','07':'planned=21 v1=7 endpoint=checked',
+ '08':'planned=21 v1=7 tables=closed','09':'planned=21 v1=7 bad_input=8',
+ '10':'planned=21 v1=7 dedup=1','11':'planned=21 v1=7 reset=safe',
+ '12':'planned=21 v1=7 protected=4','13':'planned=21 v1=7 atomic=1',
+ '14':'planned=20 v1=7 data_layer=3','15':'planned=20 v1=7 guarded=14',
+ '16':'planned=20 v1=7 verified','17':'planned=20 v1=7 ALL_MATCH'
+};
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(k>=9&&k<=12?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=i<5?'合规复核':i<9?'接口与封闭表':'数据层与交付';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=7?'api::v1 7 符号不变（零扩面）':(i>=5?'待核':'—');
+ document.getElementById('m1').textContent=i>=5?'真读全文 + 8 行核对表；EQ-13 已复核，AX06 不碰':(i>=4?'合规核对表已落盘':'未运行');
+ document.getElementById('m2').textContent=i>=10?'6 类 / 3 类封闭表；去重 + 256 上限；零网络请求':(i>=8?'封闭表与坏输入校验中':'未运行');
+ document.getElementById('m3').textContent=i>=13?'8 类 DEGRADE + 原子写；reset 不删文件，四文件读回 keep':(i>=9?'坏输入与保护处置中':'未运行');
+ document.getElementById('m4').textContent=i>=16?'**438 / 0**（复跑 3 次；首跑 437 / 1 FAILED 见 E201） / **477 / 0**（8 段，拆三段执行） / 十四守卫 / 20 项排队 / 不发通过标记':(i>=14?'v1 不变；UI 闸门未触发':'未运行');
+ document.getElementById('note').textContent=i>=11?'E192：reset 只回写内置默认，不删任何文件；四个状态文件逐项读回仍是 keep。':'用户当轮逐字：干，遵守我的要求。按 00:248 执行；本轮把 00 全文与防错清单真读一遍并落合规核对表。';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join('\n')||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;document.getElementById('state').textContent='planned=21 v1=7 guarded=13';upd()}
+upd();
+</script></body></html>

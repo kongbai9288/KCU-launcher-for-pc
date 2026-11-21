@@ -46,6 +46,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.storage",
     "core.ax",
     "core.settings_io",
+    "core.download_history",
     "dispatcher.launcher",
 ];
 
