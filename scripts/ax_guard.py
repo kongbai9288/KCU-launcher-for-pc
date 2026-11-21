@@ -26,7 +26,7 @@ if field('AX23', 'state') != 'AxState::GateOnly' or field('AX23', 'ui') != 'fals
     fail('ax23_not_gate_only')
 if 'no_ui' not in field('AX23', 'conflict'):
     fail('ax23_conflict_missing')
-for ax in ('AX05', 'AX06', 'AX11'):
+for ax in ('AX05', 'AX06', 'AX11', 'AX12'):
     if field(ax, 'state') != 'AxState::DataLayer':
         fail(ax + '_not_data_layer')
 if 'ai_provider_ui_excluded' not in field('AX18', 'conflict'):

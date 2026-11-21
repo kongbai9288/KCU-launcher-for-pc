@@ -67,3 +67,13 @@ E192：`privacy-consent.json` 与设置文件同目录，清理若按目录清�
 ## 067 / 068 补记：功能池不动
 
 用户 067 给两段新功能，按 `00:248` 覆盖 066 结尾「按功能池落下一项」预告。`Planned 20` / `DataLayer 3`（AX05、AX06、AX11）/ `GateOnly 1`（AX23）全部不变，`ax_guard.py` 不改。064–066 历史表格行不重写。067 两模块不进 AX 池，属用户当轮原文条目，登记在 `docs/decisions/067-extension-gate-and-launch-progress.md`。
+
+## 069 补记：AX12 状态覆盖
+
+| 编号 | 064 行 | 069 覆盖 |
+| --- | --- | --- |
+| AX12 | `Planned` / 排队（`00-171` 密钥不写死） | **`DataLayer`**：`src/core/download_sources.rs` 已落地三档策略、严格白名单、密钥缺失降级镜像、受限清单、原子写；下载页 UI 与真实下载 IO 未启动 |
+
+状态分层更新为 `Planned 19` / `DataLayer 4`（AX05、AX06、AX11、AX12）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到四项，动态求和不变（A240）；`src/core/ax.rs` 测试断言同步为 `DataLayer 4` / `Planned 19`。064–068 历史表格行不重写，本补记覆盖结论。
+
+`api::v1` 7 符号不变：AX12 是内部数据层，不扩公共面（`00:137`）。

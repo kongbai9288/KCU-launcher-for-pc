@@ -105,3 +105,5 @@ jobs:
         run: python3 scripts/extension_gate_guard.py
       - name: launch_progress_guard
         run: python3 scripts/launch_progress_guard.py
+      - name: download_sources_guard
+        run: python3 scripts/download_sources_guard.py

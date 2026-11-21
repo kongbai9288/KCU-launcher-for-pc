@@ -770,3 +770,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I140 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
 | I141 | 守卫与 CI | `extension_gate_guard.py` / `launch_progress_guard.py` 挂 CI 第 16 / 17 步；068 补双向注入与 `delivery_guard` 复跑 |
 | I142 | 状态 | AX 池 `Planned 20` / `DataLayer 3` / `GateOnly 1` 不变；零新增第三方 |
+
+## 069 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I143 | `src/core/download_sources.rs` | 三档策略 / 6 键白名单 / 8 类坏输入 / 密钥降级 / 受限清单 / 原子写 / 统一信封事件；`SOURCES_FILE=download-sources.json` |
+| I144 | `src/core/ax.rs` | AX12 `Planned` → `DataLayer`；`Planned 19` / `DataLayer 4` / `GateOnly 1` |
+| I145 | `scripts/download_sources_guard.py` | 挂 CI `scan` job 第 18 步；`ax_guard.py` 显式断言扩到 AX05 / AX06 / AX11 / AX12 |
+| I146 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |

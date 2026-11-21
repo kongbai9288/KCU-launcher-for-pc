@@ -491,3 +491,7 @@
 | A253 | 用 Python 三引号拼 HTML 里的 JS 时，`'\n'` 会被解释成真实换行写进字符串字面量，Node 报 `Invalid or unexpected token`。用 `String.fromCharCode(10)` 或双反斜杠转义，并对每份演示实跑一次 JS 语法检查。 |
 
 | A254 | 网关 502 中断提交会留下 `.git/index.lock`，下次 `git commit` 报 `Unable to create index.lock` RC=128。先 `ps` 核无运行中的 git 进程，删锁再提交；提交后只读核 HEAD 唯一性与 DIRTY 0，不重复 commit、不强推（A140 / A145）。 |
+
+| A255 | `let mut v = Vec::new();` 在首次 `push` 之前被 `.iter().any(...)` 读取会触发 E0282 `type annotations needed`。声明时给显式元素类型 `Vec<T>`，别等编译器从后面的 push 反推。 |
+| A256 | 往 `LOADED_MODULES` 之类常量表插项前，先读真实结尾：本项目 `boot.rs` 最后一项是 `dispatcher.launcher`，不是最后一个 `core.*`。锚点写短会静默 AssertionError，模块不进诊断包（A234）。 |
+| A257 | 守卫的禁用字面量表去重；重复项不会让检查更严，只会让维护者误以为有两个不同约束。部署前跑 `python -m py_compile`（A251）。 |
