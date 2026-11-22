@@ -397,3 +397,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 ## 075 皮肤草稿会话元数据层
 
 `src/core/skin_draft.rs`：`saved` / `original` 两类与 `clean` / `dirty` 双态显式 code、并列草稿集合上限 12、保存间隔 `0..=3600` 越界拒、激活项悬空回默认且删除时自动清空、离开提醒缺省开；顶层 4 键与草稿 4 键严格白名单，16 类坏输入回默认；`serialize()` 只写四键；状态变更走统一信封且草稿 id 不进事件载荷。草稿 id 全作不透明字符串，不内置皮肤目录 / 玩家名 / UUID / PNG 路径。`api::v1` 7 符号不变。皮肤编辑器 UI、纹理导出、3D 旋转预览、按玩家名 / UUID 查询与 PNG 下载未启动。
+
+## 076 逐条升级决策数据层
+
+`src/core/upgrade_plan.rs`：`compatible` / `conflict` / `unknown` 三值兼容性与 `defer` / `direct` / `clone` 三选一决策显式 code、按 id 索引候选项集合上限 24、页码 `1..=10` 由集合派生不存游标、单条确认且 `defer` 拒收、`conflict` 自动回退到 `defer` 并清确认态、矛盾态整条跳过；顶层 3 键与候选项 6 键严格白名单，17 类坏输入回默认；`serialize()` 只写三键；状态变更走统一信封且 id 与版本串不进事件载荷。模组 id 与 `current` / `candidate` 版本串全作不透明字符串，不解析 semver、不写死上游实值。`api::v1` 7 符号不变。真实目录复制、升级执行、版本比较执行、签名校验接入、升级决策 UI 未启动。

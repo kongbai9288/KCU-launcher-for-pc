@@ -35,3 +35,4 @@ pub mod widget_layout;
 pub mod appearance;
 pub mod first_run;
 pub mod skin_draft;
+pub mod upgrade_plan;

@@ -833,3 +833,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I168 | `src/core/ax.rs` | AX14 `Planned` → `DataLayer`；`Planned 13` / `DataLayer 10` / `GateOnly 1` |
 | I169 | `scripts/skin_draft_guard.py` | 挂 CI `scan` job 第 24 步；解析 11 个纯函数段 + **两个** impl 段字面量逐值比对（A269）+ **四张**常量表 `EXPECTED` 集合逐值比对（A270）；`ax_guard.py` 显式断言扩到十项 |
 | I170 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
+
+## 076 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I171 | `src/core/upgrade_plan.rs` | 按 id 索引候选项集合 / 双枚举显式 code / 三值兼容性 / 三选一决策 / 单条确认与冲突回退 / 派生页码 / 3+6+3+3 键白名单 / 17 类坏输入 / 原子写 / 统一信封事件；`UPGRADE_PLAN_FILE=upgrade-plan.json` |
+| I172 | `src/core/ax.rs` | AX09 `Planned` → `DataLayer`；`Planned 12` / `DataLayer 11` / `GateOnly 1` |
+| I173 | `scripts/upgrade_plan_guard.py` | 挂 CI `scan` job 第 25 步；解析 11 个纯函数段 + **两个** impl 段字面量逐值比对（A269）+ **四张**常量表 `EXPECTED` 集合逐值比对（A270）；核单条确认 / 冲突回退 / 矛盾态 / 页码双向边界；`ax_guard.py` 显式断言扩到十一项 |
+| I174 | `api::v1` / `dispatcher` / `popup` / `updater/policy.rs` / `plugins/upgrade.rs` | 零改动；7 符号 / 20 断言 / 13 spec 不变；034 / 036 / 037 判定层不由本层重复实现 |

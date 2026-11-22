@@ -137,3 +137,13 @@ E192：`privacy-consent.json` 与设置文件同目录，清理若按目录清�
 状态分层更新为 `Planned 13` / `DataLayer 10`（AX05、AX06、AX11、AX12、AX17、AX24、AX01、AX13、AX10、AX14）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到十项，动态求和不变（A240 / A262）；`src/core/ax.rs` 测试断言同步为 `DataLayer 10` / `Planned 13`。064–074 历史表格行不重写，本补记覆盖结论。`31-axolotl-launcher-features.md:80` 把 AX14 列为「重 UI、渲染方案未定」，按 070–074 处置口径收窄为不碰 UI 渲染后落地；AX15 因与 `banner_design.rs` 撤销重做栈同构，本轮排除并留痕（E276）。草稿保存间隔实际值与「已保存 / 原版」判定口径登记 Q-075-01；按玩家名 / UUID 查询与 PNG 下载的 OR 两路径都不落，登记 Q-075-02。
 
 `api::v1` 7 符号不变：AX14 是内部数据层，不扩公共面（`00:137`）。
+
+## 076 补记：AX09 状态覆盖
+
+| 编号 | 064 行 | 076 覆盖 |
+| --- | --- | --- |
+| AX09 | `Planned` / 排队（semver 版本比较 034、036 更新决策、037 手动同意升级） | **`DataLayer`**：`src/core/upgrade_plan.rs` 已落地按 id 索引候选项集合 / 三值兼容性 / 三选一决策 / 单条确认且 defer 拒收 / conflict 自动回退 / 派生页码 / 3+6+3+3 键白名单 / 原子写；真实目录复制、升级执行、版本比较执行、升级决策 UI 未启动 |
+
+状态分层更新为 `Planned 12` / `DataLayer 11`（AX05、AX06、AX11、AX12、AX17、AX24、AX01、AX13、AX10、AX14、AX09）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到十一项，动态求和不变（A240 / A262）；`src/core/ax.rs` 测试断言同步为 `DataLayer 11` / `Planned 12`。064–075 历史表格行不重写，本补记覆盖结论。AX09 口径里的 034 / 036 / 037 均为已实现模块（`src/updater/policy.rs` / `src/plugins/upgrade.rs`），不是待拍板 EQ；EQ-13 只挂在 AX04（`ax-feature-pool.md:10`），本轮不碰 AX04。AX02 / AX07 / AX21 / AX22 依赖真实网络 IO / 境外限制，AX03 / AX19 / AX20 依赖 NBT 或投影解析库，AX08 依赖 zip 解析库，AX16 / AX18 属 063 低可信度转述且 AI 提供商配置页已被 062 排除，AX15 与 `banner_design.rs` 撤销栈同构（075 E276），逐项不动并留痕。真实执行层与 `conflict` 强制升级口径登记 Q-076-01 / Q-076-02。
+
+`api::v1` 7 符号不变：AX09 是内部数据层，不扩公共面（`00:137`）。

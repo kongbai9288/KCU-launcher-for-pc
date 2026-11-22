@@ -119,3 +119,5 @@ jobs:
         run: python3 scripts/first_run_guard.py
       - name: skin_draft_guard
         run: python3 scripts/skin_draft_guard.py
+      - name: upgrade_plan_guard
+        run: python3 scripts/upgrade_plan_guard.py

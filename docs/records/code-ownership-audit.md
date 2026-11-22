@@ -524,3 +524,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 075 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`skin_draft.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_ID_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。草稿会话 / 分类 / 双态 / 间隔上限编排是项目特有口径（`11:248`、`11:211`），无语义等价库可换，如实登记。023 A03 自写底座例外于 024 撤回的状态不变。与 `banner_design.rs` 的分层撤销栈、`first_run.rs` 的顺序步骤游标边界分开，三者不合并。
+
+## 076 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`upgrade_plan.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_ID_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。逐条升级决策 / 三值兼容性 / 单条确认 / 派生页码编排是项目特有口径（`11:244`、`11:219`、`12:37`），无语义等价库可换，如实登记。版本比较与签名校验由 `src/updater/policy.rs`（036）与 `src/plugins/upgrade.rs`（037）持有，本层只接注入结果，不重复实现（`00:175`）。023 A03 自写底座例外于 024 撤回的状态不变。与 `first_run.rs` 的全局顺序游标、`skin_draft.rs` 的并列草稿双态、`banner_design.rs` 的分层撤销栈边界分开，四者不合并。
