@@ -824,3 +824,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I164 | `src/core/ax.rs` | AX10 `Planned` → `DataLayer`；`Planned 14` / `DataLayer 9` / `GateOnly 1` |
 | I165 | `scripts/first_run_guard.py` | 挂 CI `scan` job 第 23 步；解析 8 个纯函数段 + `impl StepState` 段字面量逐值比对（A269）+ 三张常量表 `EXPECTED` 集合逐值比对（A270）；`ax_guard.py` 显式断言扩到九项 |
 | I166 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
+
+## 075 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I167 | `src/core/skin_draft.rs` | 并列草稿集合 / 双枚举显式 code / 两类分类 / 双态 / 保存间隔上限 / 激活项与离开提醒 / 4+4+2+2 键白名单 / 16 类坏输入 / 原子写 / 统一信封事件；`SKIN_DRAFT_FILE=skin-draft.json` |
+| I168 | `src/core/ax.rs` | AX14 `Planned` → `DataLayer`；`Planned 13` / `DataLayer 10` / `GateOnly 1` |
+| I169 | `scripts/skin_draft_guard.py` | 挂 CI `scan` job 第 24 步；解析 11 个纯函数段 + **两个** impl 段字面量逐值比对（A269）+ **四张**常量表 `EXPECTED` 集合逐值比对（A270）；`ax_guard.py` 显式断言扩到十项 |
+| I170 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |

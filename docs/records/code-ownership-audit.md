@@ -520,3 +520,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 074 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`first_run.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_ID_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。步骤序列 / 三态 / 必选约束编排是项目特有口径（`00:21`、`11:12`、`11:217`、`11:242`、`11:245`），无语义等价库可换，如实登记。023 A03 自写底座例外于 024 撤回的状态不变。与 067 `launch_progress.rs` 的边界：后者单调阶段 + 取消冻结，本轮可回退步骤序列 + 跳过 / 必选 / 完成三态，两者不合并。
+
+## 075 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`skin_draft.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_ID_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。草稿会话 / 分类 / 双态 / 间隔上限编排是项目特有口径（`11:248`、`11:211`），无语义等价库可换，如实登记。023 A03 自写底座例外于 024 撤回的状态不变。与 `banner_design.rs` 的分层撤销栈、`first_run.rs` 的顺序步骤游标边界分开，三者不合并。

@@ -34,3 +34,4 @@ pub mod banner_design;
 pub mod widget_layout;
 pub mod appearance;
 pub mod first_run;
+pub mod skin_draft;

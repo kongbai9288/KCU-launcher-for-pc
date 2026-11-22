@@ -117,3 +117,5 @@ jobs:
         run: python3 scripts/appearance_guard.py
       - name: first_run_guard
         run: python3 scripts/first_run_guard.py
+      - name: skin_draft_guard
+        run: python3 scripts/skin_draft_guard.py

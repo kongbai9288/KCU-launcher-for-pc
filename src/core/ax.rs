@@ -28,7 +28,7 @@ pub(crate) const AX_SPECS: &[AxSpec] = &[
     AxSpec { id: "AX11", name: "settings_export", state: AxState::DataLayer, conflict: "", ui: true },
     AxSpec { id: "AX12", name: "download_sources", state: AxState::DataLayer, conflict: "", ui: true },
     AxSpec { id: "AX13", name: "appearance_modes", state: AxState::DataLayer, conflict: "", ui: true },
-    AxSpec { id: "AX14", name: "skin_editor", state: AxState::Planned, conflict: "", ui: true },
+    AxSpec { id: "AX14", name: "skin_editor", state: AxState::DataLayer, conflict: "", ui: true },
     AxSpec { id: "AX15", name: "studio_image_editor", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX16", name: "cn_search_filter", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX17", name: "banner_designer", state: AxState::DataLayer, conflict: "", ui: true },
@@ -74,12 +74,12 @@ mod tests {
 
     #[test]
     fn ax05_is_data_layer_this_round() {
-        for id in ["AX05", "AX06", "AX11", "AX12", "AX17", "AX24", "AX01", "AX13", "AX10"] {
+        for id in ["AX05", "AX06", "AX11", "AX12", "AX17", "AX24", "AX01", "AX13", "AX10", "AX14"] {
             assert_eq!(by_id(id).unwrap().state, AxState::DataLayer);
         }
-        assert_eq!(count_by_state(AxState::DataLayer), 9);
+        assert_eq!(count_by_state(AxState::DataLayer), 10);
         assert_eq!(count_by_state(AxState::GateOnly), 1);
-        assert_eq!(count_by_state(AxState::Planned), 14);
+        assert_eq!(count_by_state(AxState::Planned), 13);
     }
 
     #[test]
