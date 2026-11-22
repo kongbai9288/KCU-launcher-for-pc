@@ -88,7 +88,9 @@ AX09 的 spec name 是 `upgrade_compat`，实现模块名 `upgrade_plan.rs`；�
 
 ## 7. 交付快照
 
-本地 `待推`，`待推` 文件 DIRTY 0。远端 `待推`，逐项 ALL_MATCH `待推`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `febb9c4`（主快照）→ 076 补记，**1191 文件 DIRTY 0**。远端主快照 `e209173db846f1da9a8eba37d97912ae1263e11d`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1191 / 1191，DIFF 0 / EXTRA 0 / truncated False）；补记以该 ref 为父。主包按 `git ls-files` 打包 1191 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时脚本与日志用后即删。
+
+推送登记：推送前只读 `GET /git/ref/heads/main` 确认远端父提交为 `6276b6b`（075 补记），再用 19-blob 精简增量 + `base_tree`（tree `a345f8d`），RC=0；未强推、未重写历史。提交前核无 `.git/index.lock`（A254）。
 
 ## 8. 验证
 
