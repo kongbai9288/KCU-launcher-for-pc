@@ -117,3 +117,13 @@ E192：`privacy-consent.json` 与设置文件同目录，清理若按目录清�
 状态分层更新为 `Planned 15` / `DataLayer 8`（AX05、AX06、AX11、AX12、AX17、AX24、AX01、AX13）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到八项，动态求和不变（A240 / A262）；`src/core/ax.rs` 测试断言同步为 `DataLayer 8` / `Planned 15`。064–072 历史表格行不重写，本补记覆盖结论。069「AX13 卡 EQ-01」是相对排序理由，本轮收窄范围后落地，见 `docs/decisions/073-appearance.md` D-073-3。
 
 `api::v1` 7 符号不变：AX13 是内部数据层，不扩公共面（`00:137`）。
+
+## 074 补记：AX10 状态覆盖
+
+| 编号 | 064 行 | 074 覆盖 |
+| --- | --- | --- |
+| AX10 | `Planned` / 排队（统一调度器内置 json 与声明页、弹窗注册表、i18n 语言包） | **`DataLayer`**：`src/core/first_run.rs` 已落地可回退步骤序列 / 三态枚举 / 必选约束 / 有界容量 / 4+3+3 键白名单 / 原子写；向导 UI、Java 真实检测、账号绑定、`.kculf` 解析未启动 |
+
+状态分层更新为 `Planned 14` / `DataLayer 9`（AX05、AX06、AX11、AX12、AX17、AX24、AX01、AX13、AX10）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到九项，动态求和不变（A240 / A262）；`src/core/ax.rs` 测试断言同步为 `DataLayer 9` / `Planned 14`。064–073 历史表格行不重写，本补记覆盖结论。`11:242` 的两天计时 / 手动装拓展包两条启用路径按 A250 都不落，登记 Q-074-02；向导步骤目录来源登记 Q-074-01。
+
+`api::v1` 7 符号不变：AX10 是内部数据层，不扩公共面（`00:137`）。

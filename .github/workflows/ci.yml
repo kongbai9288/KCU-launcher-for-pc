@@ -115,3 +115,5 @@ jobs:
         run: python3 scripts/widget_layout_guard.py
       - name: appearance_guard
         run: python3 scripts/appearance_guard.py
+      - name: first_run_guard
+        run: python3 scripts/first_run_guard.py

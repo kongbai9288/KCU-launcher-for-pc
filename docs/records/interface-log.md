@@ -815,3 +815,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I160 | `src/core/ax.rs` | AX13 `Planned` → `DataLayer`；`Planned 15` / `DataLayer 8` / `GateOnly 1` |
 | I161 | `scripts/appearance_guard.py` | 挂 CI `scan` job 第 22 步；解析 8 个纯函数段 + `impl AppearanceMode` 段字面量逐值比对（A269）；`ax_guard.py` 显式断言扩到八项 |
 | I162 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
+
+## 074 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I163 | `src/core/first_run.rs` | 可回退步骤序列 / 三态枚举 / 必选约束 / 有界容量 / 4+3+3 键白名单 / 15 类坏输入 / 原子写 / 统一信封事件；`FIRST_RUN_FILE=first-run.json` |
+| I164 | `src/core/ax.rs` | AX10 `Planned` → `DataLayer`；`Planned 14` / `DataLayer 9` / `GateOnly 1` |
+| I165 | `scripts/first_run_guard.py` | 挂 CI `scan` job 第 23 步；解析 8 个纯函数段 + `impl StepState` 段字面量逐值比对（A269）+ 三张常量表 `EXPECTED` 集合逐值比对（A270）；`ax_guard.py` 显式断言扩到九项 |
+| I166 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
