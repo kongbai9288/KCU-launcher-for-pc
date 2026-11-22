@@ -58,6 +58,9 @@ A249 形态实测：84 号 spec 落盘后 `python3 scripts/delivery_guard.py` �
 
 本轮一次提交把 082（AX03 数据层 + 四件套）、083（082 交付收口 + 083 四件套）、084（083 交付闭环 + 084 四件套）全部产物纳入主快照；提交 hash、文件数与逐项 ALL_MATCH 结果于推送成功后写入 `docs/records/rounds.md` 084 补记（A206，不用模板值冒充）。082 / 083 / 084 开工三次 A145 补验均为远端 `c15a470` / `1226 / 1226 / ALL_MATCH True`。两个 zip 按 `git ls-files -z | zip -@` 重打（A205）。全仓零凭据；`scripts/__pycache__/` 构建产物按 A205 / A258 清理；临时脚本与日志用后即删。
 
+
+084 补记（推送后真实值）：主快照本地 `2f4e5e8` / 1243 文件 DIRTY 0；远端 ref `918cd9002a36c13edf1c3da6c48a06c090434446`（`force=false`，parent `c15a470`），28 项变化 + `base_tree=1511cd3` 增量推送 RC=0，完整 recursive tree `1243 / 1243 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True`。本补记以该 ref 为父二次推送（A206，不用模板值冒充）。
+
 ## 8. 验证
 
 | 项 | 值 |

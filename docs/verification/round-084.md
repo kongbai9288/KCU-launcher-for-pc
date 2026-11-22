@@ -69,6 +69,9 @@ CI 三 job 按 A116 实跑真实命令：`credential` → `NO_CREDENTIAL`（083 
 
 084 按 A254 提交前 `ps -eo pid,cmd` 核无运行中 git 进程、无 `.git/index.lock`；按 A11 逐项核 `git status --porcelain` 24 项（10 项修改 + 14 项新增）全部属 082 / 083 / 084 范围，无顺手改无关文件。按 A216 用 `scripts/api_push.py` 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史；推送后只读 `GET /git/ref/heads/main` 得新 ref，并用 `git ls-files -s -z` 全量 path+blob sha 与远端 recursive tree 求差集，逐项 ALL_MATCH 结果写进 `rounds.md` 084 补记。两个 zip 按 `git ls-files -z | zip -@` 重打，项数等于 tracked 数，EXTRA 0 / MISSING 0（A205）。具体 hash 与数值见补记，不在推送成功前写模板值。
 
+
+084 补记（推送后真实值）：主快照本地 `2f4e5e8` / 1243 文件 DIRTY 0；远端 ref `918cd9002a36c13edf1c3da6c48a06c090434446`（`force=false`，parent `c15a470`），28 项变化 + `base_tree=1511cd3` 增量推送 RC=0，完整 recursive tree `1243 / 1243 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True`。本补记以该 ref 为父二次推送（A206，不用模板值冒充）。
+
 ## 6. 未通过项与补齐计划（`00:9.1`）
 
 **结论：未通过**，不发通过标记，不附两个哈希。
