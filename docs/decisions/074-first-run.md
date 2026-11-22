@@ -80,7 +80,9 @@ AX10 的 spec name 是 `first_run_wizard`，实现模块名 `first_run.rs`；两
 
 ## 7. 交付快照
 
-本地 `待推`，`待推` 文件 DIRTY 0。远端 `待推`，逐项 ALL_MATCH `待推`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `9ca93e6`（主快照）→ 074 补记，**1177 文件 DIRTY 0**。远端主快照 `0f2dffa97afe7cf1ca2bd792df557fa010739845`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1177 / 1177，DIFF 0 / EXTRA 0 / truncated False）；补记以该 ref 为父。主包按 `git ls-files` 打包 1177 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时脚本与日志用后即删。
+
+推送登记：推送前只读 `GET /git/ref/heads/main` 确认远端父提交为 `fbdb81d`（073 补记），再用 20-blob 精简增量 + `base_tree`（tree `af35de8`），RC=0；未强推、未重写历史。提交前核无 `.git/index.lock`（A254）。
 
 ## 8. 验证
 
