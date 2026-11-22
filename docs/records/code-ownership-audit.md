@@ -536,3 +536,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 078 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`generator_session.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_TEXT_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。生成器会话元数据编排是项目特有口径（`11:29`、`11:210`、`11:240`、`12:6`），无语义等价库可换，如实登记。`00:175` 与 `11:29` 要求复用同一模块：三类生成器共用本模块 `KINDS` 一张表与一个会话集合，不分裂三套。023 A03 自写底座例外于 024 撤回的状态不变。与 `upgrade_plan.rs` 逐条决策、`search_filter.rs` 谓词过滤与排序、`skin_draft.rs` 并列草稿双态、`first_run.rs` 全局游标、`banner_design.rs` 分层撤销栈边界分开，不合并。配方 / 渐变算法、JSON 文本组件 schema、颜色码字面量、AI 提供商端点与密钥均未取得一手原文或已被 062 排除，不拼接第三方代码，登记 Q-078-01 / Q-078-02。
+
+## 079 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`seed_access.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_TEXT_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。种子可见性与审计元数据编排是项目特有口径（`12:14`、`12:19`、`12:24`、`12:50`、`11:262`），无语义等价库可换，如实登记。`00:175` 与 `11:15` 要求复用同一模块：种子记录、访客策略、审计条目共用本模块 `SeedWorkspace` 与一张 `POLICIES` 表，不分裂三套。023 A03 自写底座例外于 024 撤回的状态不变。与 `feature_gate.rs` 功能开关策略评估（带缓存 / TTL / 超时 / 设备能力上下文）、`region.rs` 双信号区域判定、`consent.rs` 隐私同意、`client_ai.rs` AI 闸门、`instance_drop.rs` 拖放路径计划、`generator_session.rs` 会话集合 + 三枚举 + 派生查询边界分开，不合并。NBT 从存档读种子、地形探索算法、全屏地图渲染、密码校验、权限提示 UI 均未取得一手原文或已被收窄排除，不拼接第三方代码，登记 Q-079-01 / Q-079-02。

@@ -409,3 +409,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 ## 078 生成器会话数据层
 
 `src/core/generator_session.rs`：`recipe` / `gradient` / `mod_translation` 三类生成器、`legacy` / `json` 双输出格式、`draft` / `ready` / `archived` 三值会话状态显式 code；会话集合 / 翻译条目表 / 历史三个有界集合；`renderable()` / `active_translations()` / `by_kind()` / `clipboard_candidates()` 四个派生纯查询；顶层 5 键与会话 6 键 / 翻译 4 键严格白名单，29 类坏输入回默认或跳过；`ready` 但结果为空在解析与设置两处拒收；`serialize()` 只写五键；状态变更走统一信封且输入 / 结果 / 键 / 值 / id 不进事件载荷。输入与结果全作不透明字符串，不解析算法、不写颜色码字面量、不写端点与密钥。`api::v1` 7 符号不变。生成算法、真实剪贴板写入、翻译执行、生成器 UI 未启动。
+
+## 079 种子可见性与审计数据层
+
+`src/core/seed_access.rs`：`visible` / `hint` / `hidden` 三档权限、`view` / `policy_change` / `guest_toggle` / `hidden` 四类审计动作显式 code；访客模式开关与密码设置标志；种子记录 / 审计条目 / 功能锁定 / 命令黑名单四个有界集合；`classify()` 3×2 六格可见性矩阵与三段派生集合、三档计数、四类审计计数、锁定与命令两判定；`hint` 档必带权限提示文本且非 `hint` 档必空，在解析与两处单条设置共三处拒收；顶层 7 键与记录 4 键 / 审计 4 键严格白名单，32 类坏输入回默认或跳过；`serialize()` 只写七键；状态变更走统一信封且种子值 / 提示文本 / 实例 id / 审计 target / scope 不进事件载荷。种子值与提示文本全作不透明字符串，不解析 NBT、不写地形算法、不写密码学、不写端点与密钥。`api::v1` 7 符号不变。NBT 从存档读种子、地形探索、全屏地图、密码校验、权限提示 UI 未启动。

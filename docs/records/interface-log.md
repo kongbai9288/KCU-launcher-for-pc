@@ -860,3 +860,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I180 | `src/core/ax.rs` | AX18 `Planned` → `DataLayer`，`conflict` 保留 `ai_provider_ui_excluded`；`Planned 10` / `DataLayer 13` / `GateOnly 1` |
 | I181 | `scripts/generator_session_guard.py` | 挂 CI `scan` job 第 27 步；解析 19 个纯函数段 + **三个** impl 段字面量逐值比对（A269）+ **六张**常量表 `EXPECTED` 集合逐值比对（A270）+ `use crate::core::robust;` 显式 import 与使用双核（A247）；核矛盾态双向 / 派生查询 / 单条突变 / 五组用户文本不进载荷；`ax_guard.py` 显式断言扩到十三项 |
 | I182 | `api::v1` / `dispatcher` / `popup` / 既有 13 个数据层模块 | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
+
+## 079 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I183 | `src/core/seed_access.rs` | 种子记录集合 / 访客开关与密码标志 / 权限档位与审计动作双枚举 / 3×2 可见性矩阵 / 有界审计表 / 功能锁定与命令黑名单两集合 / 八个派生纯查询 / 7+4+4+3+4 键白名单 / 32 类坏输入 / 原子写 / 统一信封事件；`SEED_ACCESS_FILE=seed-access.json` |
+| I184 | `src/core/ax.rs` | AX19 `Planned` → `DataLayer`，`conflict` 保持空；`Planned 9` / `DataLayer 14` / `GateOnly 1` |
+| I185 | `scripts/seed_access_guard.py` | 挂 CI `scan` job 第 28 步；解析 22 个纯函数段 + **两个** impl 段字面量逐值比对（A269）+ **五张**常量表 `EXPECTED` 集合逐值比对（A270）+ `use crate::core::robust;` 显式 import 与使用双核（A247）；核矛盾态三处 / 矩阵六格 / 派生查询 / 单条突变 / 五组用户文本不进载荷；`ax_guard.py` 显式断言扩到十四项 |
+| I186 | `api::v1` / `dispatcher` / `popup` / 既有 13 个 AX 数据层模块与判定层模块 | 零改动；7 符号 / 4 条 `pub use` 不变 |

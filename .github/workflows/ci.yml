@@ -125,3 +125,5 @@ jobs:
         run: python3 scripts/search_filter_guard.py
       - name: generator_session_guard
         run: python3 scripts/generator_session_guard.py
+      - name: seed_access_guard
+        run: python3 scripts/seed_access_guard.py
