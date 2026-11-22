@@ -10,7 +10,7 @@
 
 ## 2. 时间戳
 
-开工 `Sun Nov 22 13:29:57 CST 2026`；最终 `@FINAL_TS@`。
+开工 `Sun Nov 22 13:29:57 CST 2026`；最终 `Sun Nov 22 14:04:21 CST 2026`。
 
 ## 3. 本轮目标与范围
 
@@ -114,7 +114,9 @@ AX21 的 spec name 是 `redstone_multiplayer`，实现模块名 `lan_channel.rs`
 
 ## 7. 交付快照
 
-本地 `@LOCAL_HEAD@`，`@LOCAL_FILES@` 文件 DIRTY 0。远端 `@REMOTE_REF@`，逐项 ALL_MATCH `@ALLMATCH@`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `c89959f`（主快照）→ 080 补记，**1219 文件 DIRTY 0**。远端主快照 `33776623023f443e6fe1fd4fb1d59b1fa832d1ac`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1219 / 1219，DIFF 0 / EXTRA 0 / truncated False）；补记以该 ref 为父。主包按 `git ls-files` 打包 1219 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时脚本与日志用后即删。
+
+推送登记：推送前只读 `GET /git/ref/heads/main` 确认远端父提交为 `3e80108`（079 补记），再用 19-blob 精简增量 + `base_tree`（tree `2449352`），RC=0；未强推、未重写历史。提交前核无 `.git/index.lock`、无运行中 git 进程（A254 / A140）。
 
 ## 8. 验证
 
