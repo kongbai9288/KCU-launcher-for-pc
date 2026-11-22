@@ -74,7 +74,9 @@ AX01 的 spec name 是 `home_widgets`，实现模块名为 `widget_layout.rs`；
 
 ## 7. 交付快照
 
-本地 `待推`，`待推` 文件 DIRTY 0。远端 `待推`，逐项 ALL_MATCH `待推`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `c7b091b`（主快照）→ 072 补记，**1163 文件 DIRTY 0**。远端主快照 `ba247a261ef002c3920c1ec24433cc55584dfcdd`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1163 / 1163，DIFF 0 / EXTRA 0 / truncated False）；补记以该 ref 为父。主包按 `git ls-files` 打包 1163 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时脚本与日志用后即删。
+
+推送登记：推送前只读 `GET /git/ref/heads/main` 确认远端父提交为 `6241379`（071 补记），再用 20-blob 精简增量 + `base_tree`（tree `0bb8ffd`），RC=0；未强推、未重写历史。提交前核无 `.git/index.lock`（A254）。
 
 ## 8. 验证
 
