@@ -113,3 +113,5 @@ jobs:
         run: python3 scripts/banner_design_guard.py
       - name: widget_layout_guard
         run: python3 scripts/widget_layout_guard.py
+      - name: appearance_guard
+        run: python3 scripts/appearance_guard.py

@@ -806,3 +806,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I156 | `src/core/ax.rs` | AX01 `Planned` → `DataLayer`；`Planned 16` / `DataLayer 7` / `GateOnly 1` |
 | I157 | `scripts/widget_layout_guard.py` | 挂 CI `scan` job 第 21 步；逐行扫描 6 个纯函数段；`ax_guard.py` 显式断言扩到七项 |
 | I158 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
+
+## 073 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I159 | `src/core/appearance.rs` | 四模式 / 可选强调色 / 有界预设 / 两布尔 / 6+2+4 键白名单 / 15 类坏输入 / 原子写 / 统一信封事件；`APPEARANCE_FILE=appearance.json` |
+| I160 | `src/core/ax.rs` | AX13 `Planned` → `DataLayer`；`Planned 15` / `DataLayer 8` / `GateOnly 1` |
+| I161 | `scripts/appearance_guard.py` | 挂 CI `scan` job 第 22 步；解析 8 个纯函数段 + `impl AppearanceMode` 段字面量逐值比对（A269）；`ax_guard.py` 显式断言扩到八项 |
+| I162 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |

@@ -512,3 +512,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 072 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`widget_layout.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_ID_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。模式 / 槽位顺序 / 固定项编排是项目特有口径（`11-features-input.txt:16`、`31-axolotl-launcher-features.md:35`），无语义等价库可换，如实登记。023 A03 自写底座例外于 024 撤回的状态不变。
+
+## 073 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`appearance.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_ID_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。模式 / 预设 / 外观开关编排是项目特有口径（`11-features-input.txt:246`、`31-axolotl-launcher-features.md:46`），无语义等价库可换，如实登记。023 A03 自写底座例外于 024 撤回的状态不变。

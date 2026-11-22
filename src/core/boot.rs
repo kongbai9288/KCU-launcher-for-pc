@@ -53,6 +53,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.instance_drop",
     "core.banner_design",
     "core.widget_layout",
+    "core.appearance",
     "dispatcher.launcher",
 ];
 
