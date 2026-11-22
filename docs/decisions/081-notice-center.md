@@ -10,7 +10,7 @@
 
 ## 2. 时间戳
 
-开工 `Sun Nov 22 14:25:56 CST 2026`；最终 `@FINAL_TS@`。
+开工 `Sun Nov 22 14:25:56 CST 2026`；最终 `Sun Nov 22 15:08:08 CST 2026`。
 
 ## 3. 本轮目标与范围
 
@@ -125,7 +125,9 @@ AX02 的 spec name 是 `game_news`，实现模块名 `notice_center.rs`；两者
 
 ## 7. 交付快照
 
-本地 `@LOCAL_HEAD@`，`@LOCAL_FILES@` 文件 DIRTY 0。远端 `@REMOTE_REF@`，逐项 ALL_MATCH `ALL_MATCH True`。两个 zip 按 `git ls-files` 打包。全仓零凭据、临时日志已删。
+本地 `b288375`（主快照）→ 081 补记，**1226 文件 DIRTY 0**。远端主快照 `8e521aeb87f0b306c8e8206f6083455d169523d4`（`force=false`），主快照阶段逐项 ALL_MATCH **True**（1226 / 1226，DIFF 0 / EXTRA 0 / truncated False）；补记以该 ref 为父。主包按 `git ls-files` 打包 1226 项、预览包 57 项，EXTRA 0 / MISSING 0。全仓零凭据、临时脚本与日志用后即删。
+
+推送登记：推送前只读 `GET /git/ref/heads/main` 确认远端父提交为 `e7cdbcc`（080 补记 2），再用 19-blob 精简增量 + `base_tree`（tree `07ef159`），RC=0；未强推、未重写历史。提交前核到残留 `.git/index.lock` 并按 A254 / A140 清理后提交 RC=0，无运行中 git 进程。
 
 ## 8. 验证
 
