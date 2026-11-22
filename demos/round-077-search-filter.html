@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 077 运行逻辑</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:760px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:280px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>077 运行逻辑</h1><div class="sub">AX16 搜索筛选条件持久化数据层 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">planned=12 v1=7</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>开工与选项目的</h3><p id="m1">未运行</p><span class="badge g">四份原文全文</span><span class="badge g">A211 真读</span><span class="badge g">A271 预检</span><span class="badge r">D-077-2 我的默认</span></div>
+<div class="mini"><h3>AX16 数据层</h3><p id="m2">未运行</p><span class="badge g">7+5+2+2+5+4 键表</span><span class="badge g">双 impl 段比对</span><span class="badge g">v1 不变</span><span class="badge r">遍历执行未启动</span></div>
+<div class="mini"><h3>安全与边界</h3><p id="m3">未运行</p><span class="badge g">零外部事实依赖</span><span class="badge g">零新增依赖</span><span class="badge g">v1 不变</span><span class="badge r">11 项排队</span></div>
+<div class="mini"><h3>交付状态</h3><p id="m4">未运行</p><span class="badge g">**578 / 0**（复跑 3 次：0.31 s / 0.32 s / 0.33 s，均零 warning）</span><span class="badge g">二十五守卫</span><span class="badge g">ALL_MATCH</span><span class="badge r">11 项排队</span></div>
+</div><div class="note" id="note">用户 077 逐字：干。A266 生效，工具从未禁用；069–076 连续未通过，按 00:248 继续推进，卡点回显；076 的 E285 夹具错本轮未重演；不发通过标记。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[["01", "开工预检", "002fa4a / 1191 文件 / DIRTY 1（新 spec）", 0], ["02", "逐字落盘", "77 指令 3 字节 · SHA 9ee0280b", 0], ["03", "真读全文", "00 全文 261 行 / 防错 520 行 / 11 号 268 行 / 12 号 64 行", 0], ["04", "A248/A266 预检", "77/76/75/74/73 号 spec 均仅「干」；不重提工具禁用归因", 1], ["05", "9.1 裁决", "069–076 连续八轮未通过；按 00:248 覆盖，卡点回显", 1], ["06", "A211 真读找锚点", "11:94-100 / 11:109-117 / 11:118-123 / 11:205 / 11:206 / 11:208 四组 25 条已决断", 1], ["07", "A271 禁用表预检", "实跑全仓 *_guard.py；测试名首版避开 catalog()；源码全英文", 1], ["08", "A259/A250 复核", "11-1→11:208、11-3→11:210；OR 两范围值都落枚举", 1], ["09", "选 AX16 收窄", "cn_search_filter → 只取原文已决断语义；照 073 AX13 / 075 AX14 先例；D-077-2 我的默认", 1], ["10", "接口终点", "v1 7 符号不动 · mod/boot/ax/守卫/CI 五处 · 既有 12 模块零 diff", 0], ["11", "双枚举与六表", "name/type/size/modified/path + contains/equals/prefix/suffix · 7+5+2+2+5+4 键表 · 21 类坏输入", 0], ["12", "派生过滤与排序", "enabled 条件 AND · 排除项任一命中即拒 · apply 先过滤再派生索引 · 单条突变不批量", 1], ["13", "首跑全绿", "578 passed / 0 failed / 零 warning · 076 E285 夹具错未重演", 0], ["14", "不透明串与统一信封", "条件值不透明 · 不解析 semver/正则 · 载荷不含 ids/values/text", 0], ["15", "守卫与注入", "第 26 步 · A269 双 impl 段 + A270 六表 EXPECTED + A247 别名 · 双向注入", 0], ["16", "交付状态", "不发通过标记 · 11 项 Planned · Q/EQ 未拍 · 唯一下一步", 1]];
+const LOG={"01": "[KCU] preflight 077 OK tracked=1191 dirty=1", "02": "[KCU] spec 77-round-077-instructions.txt OK bytes=3 sha=9ee0280b", "03": "[KCU] readback OK 00:261 checklist:520 11:268 12:64", "04": "[KCU] A248/A266 OK spec_77=3_bytes no_platform_text", "05": "[KCU] 9.1 conflict OK override=00:248 blockers_echoed rounds=8", "06": "[KCU] A211 OK anchors=4_groups_25_lines decided_no_eq", "07": "[KCU] A271 OK forbidden_tables_checked test_name_safe src_ascii_only", "08": "[KCU] A259/A250 OK use_11:208_and_11:210 both_or_scopes_mapped", "09": "[KCU] select AX16 D-077-2 scope=no_traversal_no_snapshot_no_ui no_transcribed_impl", "10": "[KCU] interface_end OK v1_symbols=7 boot_modules=+1 twelve_modules_untouched", "11": "[KCU] strict_keys OK keys=7 condition=5 sort=2 scopes=2 dimensions=5 ops=4 bad_inputs=21", "12": "[KCU] derived OK and_semantics exclude_hit apply_pure single_item_mutation", "13": "[KCU] first_run OK 578_passed_0_failed zero_warning E285_not_repeated", "14": "[KCU] envelope Kind=Event target=search.filter payload=7 ids_values_text=absent", "15": "VERIFY **578 / 0**（复跑 3 次：0.31 s / 0.32 s / 0.33 s，均零 warning） **617 / 0**（8 段分段求和，非单条全量命令） win_gnu_ok / GUARDS 25 / INJECT true_fail", "16": "DELIVERY 待推 pass_mark=withheld next=ax_pool_11"};
+const STATE={"04": "A248=clear", "05": "9.1=override", "06": "anchors=25", "07": "A271=checked", "08": "Q-077-01=open", "09": "AX16=DataLayer", "11": "bad_inputs=21", "12": "apply=pure", "13": "FAILED=0", "14": "event=unified", "15": "guards=25", "16": "delivery=closed"};
+const MINI1=["预检", "逐字落盘", "真读全文", "A248/A266 预检", "9.1 裁决", "A211 真读找锚点", "A271 禁用表预检", "A259/A250 复核", "选 AX16 收窄", "接口终点", "双枚举与六表", "派生过滤与排序", "首跑全绿", "不透明串与统一信封", "守卫与注入", "交付状态"];
+const MINI2=["未运行", "77 指令 3 字节逐字落盘", "00 全文 261 行、防错 520 行、11 号 268 行、12 号 64 行全部回显", "77/76/75/74/73 号 spec 均仅「干」；72 号澄清已在 072 处理，本轮不重提工具禁用归因", "069–076 连续八轮未通过；用户 077「干」按 00:248 覆盖，卡点逐条回显", "真读全文找 11:94-100 七维度、11:109-117 九行为、11:118-123 六排序、11:205/206/208 三推广，四组共 25 条已决断", "实跑全仓守卫禁用字面量表并核扫描范围；测试名首版避开 catalog()，源码全英文避开 i18n_guard", "11-1 是条目编号改用 11:208、11-3 改用 11:210；11:101/102 OR 两范围值都落枚举，真实遍历不落", "选 AX16 cn_search_filter，只取项目原文已决断语义，不取 PCL WikiEntries 快照 / 中文关键词 / 作者环境加载器等转述实现；照 073 AX13、075 AX14 先例收窄，登记 D-077-2 我的默认", "v1 7 符号不动，mod/boot/ax/守卫/CI 五处引用；既有 12 个数据层模块零 diff", "SearchDimension name/type/size/modified/path 与 SearchOp contains/equals/prefix/suffix 九变体显式 code；顶层 7 键 + 条件 5 键 + 排序 2 键 + 两张值表严格白名单，21 类坏输入", "matches 对 enabled 条件取 AND、排除项任一命中即拒、空集合返 true；apply 先过滤再按 sort.key + desc 派生索引，纯函数不读文件；单条突变用 find 定位不批量", "首跑 lib 578 passed / 0 failed / 零 warning；076 的 E285 夹具预期错未重演，实现零改动、无 FAILED 留痕", "id 与条件值、候选项字段全当不透明字符串；不解析 semver / 正则 / 通配符；事件载荷只带 7 个计数与枚举码，ids / values / text 不进事件", "新守卫挂 CI 第 26 步，A269 双 impl 段逐值比对 + A270 六表 EXPECTED 集合 + A247 别名双核，双向注入", "578 / 0 · 分段求和 · Win GNU RC=0 · 四件套与台账闭环，不发通过标记"];
+const MINI3=["未运行", "未运行", "未运行", "A266：不把平台拼入用户位次的文本当用户指令", "00:9.1 连续八轮本应停下，按 00:248 用户当轮指令覆盖并回显卡点", "A211 真读全文找四组 25 条已决断、不依赖 EQ 的原文锚点", "A271 开工实跑全仓守卫禁用字面量表，避免 074 E275 的测试名碰撞重演", "A250 OR 两范围值都不落真实执行并登记 Q；A259 条目编号改真实行号", "A267 先读 ax.rs:33 真实 name 为 cn_search_filter；076 排除是相对排序理由，照 073 / 075 先例补记覆盖", "接口终点列全，api::v1 零改动，既有 12 模块判定层不由本层重复实现", "A189 严格字段白名单，禁止键整份拒；21 类坏输入跳过或回默认", "00:110 空集合与越界不崩；00:175 与 11:206 复用同一张 DIMENSIONS 表与同一模块；单条突变不批量", "00:9.2 首跑零 FAILED；17 个新单测的派生计数与 AND 语义逐项与实现对齐", "00:114：事件走统一信封，条件值 / id / 用户文本不进载荷", "A269 + A270 + A247 从首版实现；A258 不写凭据字面量；A262 不写死状态计数", "分段求和注明口径（A252）；演示 LOG 键数 = NODES 步数（A265）", "存在已失败 / 未证实 / 未启动"];
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(n[3]?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=MINI1[i]||'待执行';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=13?'Envelope Kind=Event · request_id 配对':(i>=9?'待构造':'—');
+ document.getElementById('m1').textContent=MINI2[i]||'未运行';
+ document.getElementById('m2').textContent=MINI3[i]||'未运行';
+ document.getElementById('m3').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('m4').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join(String.fromCharCode(10))||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;upd()}
+upd();
+</script></body></html>

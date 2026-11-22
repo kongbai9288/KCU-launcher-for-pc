@@ -121,3 +121,5 @@ jobs:
         run: python3 scripts/skin_draft_guard.py
       - name: upgrade_plan_guard
         run: python3 scripts/upgrade_plan_guard.py
+      - name: search_filter_guard
+        run: python3 scripts/search_filter_guard.py

@@ -57,6 +57,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.first_run",
     "core.skin_draft",
     "core.upgrade_plan",
+    "core.search_filter",
     "dispatcher.launcher",
 ];
 

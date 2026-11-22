@@ -401,3 +401,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 ## 076 逐条升级决策数据层
 
 `src/core/upgrade_plan.rs`：`compatible` / `conflict` / `unknown` 三值兼容性与 `defer` / `direct` / `clone` 三选一决策显式 code、按 id 索引候选项集合上限 24、页码 `1..=10` 由集合派生不存游标、单条确认且 `defer` 拒收、`conflict` 自动回退到 `defer` 并清确认态、矛盾态整条跳过；顶层 3 键与候选项 6 键严格白名单，17 类坏输入回默认；`serialize()` 只写三键；状态变更走统一信封且 id 与版本串不进事件载荷。模组 id 与 `current` / `candidate` 版本串全作不透明字符串，不解析 semver、不写死上游实值。`api::v1` 7 符号不变。真实目录复制、升级执行、版本比较执行、签名校验接入、升级决策 UI 未启动。
+
+## 077 搜索筛选条件数据层
+
+`src/core/search_filter.rs`：`name` / `type` / `size` / `modified` / `path` 五维度与 `contains` / `equals` / `prefix` / `suffix` 四运算符显式 code、`current` / `recursive` 两范围值都落、条件集合 / 排除集合 / 保存条件 / 搜索历史四个有界集合、排序规格与方向切换、`matches()` 对启用条件取 AND 且排除项任一命中即拒、`apply()` 先过滤再派生排序索引且不读文件；顶层 7 键与条件 5 键 / 排序 2 键严格白名单，21 类坏输入回默认或跳过；`serialize()` 只写七键；状态变更走统一信封且条件值 / id / 用户文本不进事件载荷。条件值与候选项字段全作不透明字符串，不解析数值 / 正则 / 通配符、不写死上游实值。`api::v1` 7 符号不变。真实目录遍历、结果批量操作、快照解析、筛选 UI 未启动。

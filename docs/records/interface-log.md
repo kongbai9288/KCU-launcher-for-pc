@@ -842,3 +842,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I172 | `src/core/ax.rs` | AX09 `Planned` → `DataLayer`；`Planned 12` / `DataLayer 11` / `GateOnly 1` |
 | I173 | `scripts/upgrade_plan_guard.py` | 挂 CI `scan` job 第 25 步；解析 11 个纯函数段 + **两个** impl 段字面量逐值比对（A269）+ **四张**常量表 `EXPECTED` 集合逐值比对（A270）；核单条确认 / 冲突回退 / 矛盾态 / 页码双向边界；`ax_guard.py` 显式断言扩到十一项 |
 | I174 | `api::v1` / `dispatcher` / `popup` / `updater/policy.rs` / `plugins/upgrade.rs` | 零改动；7 符号 / 20 断言 / 13 spec 不变；034 / 036 / 037 判定层不由本层重复实现 |
+
+## 077 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I175 | `src/core/search_filter.rs` | 谓词集合 / 排除集合 / 排序规格 / 保存条件 / 历史 / 双枚举显式 code / 派生过滤与排序 / 7+5+2+2+5+4 键白名单 / 21 类坏输入 / 原子写 / 统一信封事件；`SEARCH_FILTER_FILE=search-filter.json` |
+| I176 | `src/core/ax.rs` | AX16 `Planned` → `DataLayer`；`Planned 11` / `DataLayer 12` / `GateOnly 1` |
+| I177 | `scripts/search_filter_guard.py` | 挂 CI `scan` job 第 26 步；解析 18 个纯函数段 + **两个** impl 段字面量逐值比对（A269）+ **六张**常量表 `EXPECTED` 集合逐值比对（A270）+ `SORT_DIMENSIONS` 别名定义与使用双核（A247）；核 AND 语义 / 禁用条件跳过 / 派生排序 / 单条突变 / 用户文本不进载荷；`ax_guard.py` 显式断言扩到十二项 |
+| I178 | `api::v1` / `dispatcher` / `popup` / 既有 12 个数据层模块 | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
