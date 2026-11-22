@@ -405,3 +405,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 ## 077 搜索筛选条件数据层
 
 `src/core/search_filter.rs`：`name` / `type` / `size` / `modified` / `path` 五维度与 `contains` / `equals` / `prefix` / `suffix` 四运算符显式 code、`current` / `recursive` 两范围值都落、条件集合 / 排除集合 / 保存条件 / 搜索历史四个有界集合、排序规格与方向切换、`matches()` 对启用条件取 AND 且排除项任一命中即拒、`apply()` 先过滤再派生排序索引且不读文件；顶层 7 键与条件 5 键 / 排序 2 键严格白名单，21 类坏输入回默认或跳过；`serialize()` 只写七键；状态变更走统一信封且条件值 / id / 用户文本不进事件载荷。条件值与候选项字段全作不透明字符串，不解析数值 / 正则 / 通配符、不写死上游实值。`api::v1` 7 符号不变。真实目录遍历、结果批量操作、快照解析、筛选 UI 未启动。
+
+## 078 生成器会话数据层
+
+`src/core/generator_session.rs`：`recipe` / `gradient` / `mod_translation` 三类生成器、`legacy` / `json` 双输出格式、`draft` / `ready` / `archived` 三值会话状态显式 code；会话集合 / 翻译条目表 / 历史三个有界集合；`renderable()` / `active_translations()` / `by_kind()` / `clipboard_candidates()` 四个派生纯查询；顶层 5 键与会话 6 键 / 翻译 4 键严格白名单，29 类坏输入回默认或跳过；`ready` 但结果为空在解析与设置两处拒收；`serialize()` 只写五键；状态变更走统一信封且输入 / 结果 / 键 / 值 / id 不进事件载荷。输入与结果全作不透明字符串，不解析算法、不写颜色码字面量、不写端点与密钥。`api::v1` 7 符号不变。生成算法、真实剪贴板写入、翻译执行、生成器 UI 未启动。

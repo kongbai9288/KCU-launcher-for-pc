@@ -851,3 +851,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I176 | `src/core/ax.rs` | AX16 `Planned` → `DataLayer`；`Planned 11` / `DataLayer 12` / `GateOnly 1` |
 | I177 | `scripts/search_filter_guard.py` | 挂 CI `scan` job 第 26 步；解析 18 个纯函数段 + **两个** impl 段字面量逐值比对（A269）+ **六张**常量表 `EXPECTED` 集合逐值比对（A270）+ `SORT_DIMENSIONS` 别名定义与使用双核（A247）；核 AND 语义 / 禁用条件跳过 / 派生排序 / 单条突变 / 用户文本不进载荷；`ax_guard.py` 显式断言扩到十二项 |
 | I178 | `api::v1` / `dispatcher` / `popup` / 既有 12 个数据层模块 | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
+
+## 078 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I179 | `src/core/generator_session.rs` | 并列会话集合 / 三类生成器 / 三值状态 / 双输出格式 / 翻译条目表 / 四个派生纯查询 / 5+6+4+3+2+3 键白名单 / 29 类坏输入 / 原子写 / 统一信封事件；`GENERATOR_SESSION_FILE=generator-session.json` |
+| I180 | `src/core/ax.rs` | AX18 `Planned` → `DataLayer`，`conflict` 保留 `ai_provider_ui_excluded`；`Planned 10` / `DataLayer 13` / `GateOnly 1` |
+| I181 | `scripts/generator_session_guard.py` | 挂 CI `scan` job 第 27 步；解析 19 个纯函数段 + **三个** impl 段字面量逐值比对（A269）+ **六张**常量表 `EXPECTED` 集合逐值比对（A270）+ `use crate::core::robust;` 显式 import 与使用双核（A247）；核矛盾态双向 / 派生查询 / 单条突变 / 五组用户文本不进载荷；`ax_guard.py` 显式断言扩到十三项 |
+| I182 | `api::v1` / `dispatcher` / `popup` / 既有 13 个数据层模块 | 零改动；7 符号 / 20 断言 / 13 spec 不变 |

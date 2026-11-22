@@ -37,3 +37,4 @@ pub mod first_run;
 pub mod skin_draft;
 pub mod upgrade_plan;
 pub mod search_filter;
+pub mod generator_session;

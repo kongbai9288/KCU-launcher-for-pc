@@ -58,6 +58,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.skin_draft",
     "core.upgrade_plan",
     "core.search_filter",
+    "core.generator_session",
     "dispatcher.launcher",
 ];
 

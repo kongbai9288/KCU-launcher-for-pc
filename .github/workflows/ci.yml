@@ -123,3 +123,5 @@ jobs:
         run: python3 scripts/upgrade_plan_guard.py
       - name: search_filter_guard
         run: python3 scripts/search_filter_guard.py
+      - name: generator_session_guard
+        run: python3 scripts/generator_session_guard.py
