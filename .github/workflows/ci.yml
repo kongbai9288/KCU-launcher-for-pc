@@ -127,3 +127,5 @@ jobs:
         run: python3 scripts/generator_session_guard.py
       - name: seed_access_guard
         run: python3 scripts/seed_access_guard.py
+      - name: lan_channel_guard
+        run: python3 scripts/lan_channel_guard.py

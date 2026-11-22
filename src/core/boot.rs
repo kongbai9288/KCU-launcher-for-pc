@@ -60,6 +60,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.search_filter",
     "core.generator_session",
     "core.seed_access",
+    "core.lan_channel",
     "dispatcher.launcher",
 ];
 

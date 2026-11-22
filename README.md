@@ -413,3 +413,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 ## 079 种子可见性与审计数据层
 
 `src/core/seed_access.rs`：`visible` / `hint` / `hidden` 三档权限、`view` / `policy_change` / `guest_toggle` / `hidden` 四类审计动作显式 code；访客模式开关与密码设置标志；种子记录 / 审计条目 / 功能锁定 / 命令黑名单四个有界集合；`classify()` 3×2 六格可见性矩阵与三段派生集合、三档计数、四类审计计数、锁定与命令两判定；`hint` 档必带权限提示文本且非 `hint` 档必空，在解析与两处单条设置共三处拒收；顶层 7 键与记录 4 键 / 审计 4 键严格白名单，32 类坏输入回默认或跳过；`serialize()` 只写七键；状态变更走统一信封且种子值 / 提示文本 / 实例 id / 审计 target / scope 不进事件载荷。种子值与提示文本全作不透明字符串，不解析 NBT、不写地形算法、不写密码学、不写端点与密钥。`api::v1` 7 符号不变。NBT 从存档读种子、地形探索、全屏地图、密码校验、权限提示 UI 未启动。
+
+## 080 局域网互传通道协议数据层
+
+`src/core/lan_channel.rs`：`request` / `response` / `event` 三类消息、`discover` / `pair` / `transfer` / `close` 四阶段、`qr` / `link_code` 两种配对方式、`pc_to_phone` / `phone_to_pc` 两个传输方向显式 code；`TRANSITIONS` 6 对阶段转移与 `STAGE_FIELDS` 4 段字段表；`can_transition()` / `stage_fields()` / `next_stages()` / `message_kind_for()` / `field_allowed()` / `pair_ready()` / `channel_usable()` / `summary()` 八个派生纯查询；`pair` / `transfer` 阶段必带配对码、`transfer` 必带方向与通道开启、`close` / `discover` 必关通道，在解析与两处单条设置共三处拒收；顶层 7 键严格白名单，23 类坏输入回默认；`serialize()` 只写七键；状态变更走统一信封且房间号 / 配对码不进事件载荷。房间号与配对码全作不透明字符串，不建监听、不写端点与端口、不做二维码编解码、不判定境外。`api::v1` 7 符号不变。真实连接建立、文件传输执行、二维码生成、房间密码校验、协议 UI 未启动。

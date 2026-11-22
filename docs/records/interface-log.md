@@ -869,3 +869,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I184 | `src/core/ax.rs` | AX19 `Planned` → `DataLayer`，`conflict` 保持空；`Planned 9` / `DataLayer 14` / `GateOnly 1` |
 | I185 | `scripts/seed_access_guard.py` | 挂 CI `scan` job 第 28 步；解析 22 个纯函数段 + **两个** impl 段字面量逐值比对（A269）+ **五张**常量表 `EXPECTED` 集合逐值比对（A270）+ `use crate::core::robust;` 显式 import 与使用双核（A247）；核矛盾态三处 / 矩阵六格 / 派生查询 / 单条突变 / 五组用户文本不进载荷；`ax_guard.py` 显式断言扩到十四项 |
 | I186 | `api::v1` / `dispatcher` / `popup` / 既有 13 个 AX 数据层模块与判定层模块 | 零改动；7 符号 / 4 条 `pub use` 不变 |
+
+## 080 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I187 | `src/core/lan_channel.rs` | 四枚举显式 code / 单实例通道状态 / 7+3+4+2+2 键白名单 / `TRANSITIONS` 6 对 / `STAGE_FIELDS` 4 段 / 八个派生纯查询 / 23 类 load 坏输入 / 矛盾态三处拒收 / 原子写 / 统一信封事件；`LAN_CHANNEL_FILE=lan-channel.json` |
+| I188 | `src/core/ax.rs` | AX21 `Planned` → `DataLayer`，`conflict` 保持空；`Planned 8` / `DataLayer 15` / `GateOnly 1` |
+| I189 | `scripts/lan_channel_guard.py` | 挂 CI `scan` job 第 29 步；解析 9 个纯函数段 + **四个** impl 段字面量逐值比对（A269）+ **五张**常量表 `EXPECTED` 集合逐值比对并另核 `TRANSITIONS` / `STAGE_FIELDS`（A270）+ `use crate::core::robust;` 显式 import 与使用双核（A247）；核矛盾态三处 / 转移表六对 / 派生查询 / 单条突变 / 两组用户文本不进载荷；`ax_guard.py` 显式断言扩到十五项 |
+| I190 | `api::v1` / `dispatcher` / `popup` / 既有 14 个 AX 数据层模块与判定层模块 | 零改动；7 符号 / 4 条 `pub use` 不变 |

@@ -540,3 +540,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 079 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`seed_access.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_TEXT_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。种子可见性与审计元数据编排是项目特有口径（`12:14`、`12:19`、`12:24`、`12:50`、`11:262`），无语义等价库可换，如实登记。`00:175` 与 `11:15` 要求复用同一模块：种子记录、访客策略、审计条目共用本模块 `SeedWorkspace` 与一张 `POLICIES` 表，不分裂三套。023 A03 自写底座例外于 024 撤回的状态不变。与 `feature_gate.rs` 功能开关策略评估（带缓存 / TTL / 超时 / 设备能力上下文）、`region.rs` 双信号区域判定、`consent.rs` 隐私同意、`client_ai.rs` AI 闸门、`instance_drop.rs` 拖放路径计划、`generator_session.rs` 会话集合 + 三枚举 + 派生查询边界分开，不合并。NBT 从存档读种子、地形探索算法、全屏地图渲染、密码校验、权限提示 UI 均未取得一手原文或已被收窄排除，不拼接第三方代码，登记 Q-079-01 / Q-079-02。
+
+## 080 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`lan_channel.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_TEXT_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。局域网互传通道协议表是项目特有口径（`00:20` / `00:15` / `00:114` / `11:215` / `11:218` / `11:18` / `11:19`），无语义等价库可换，如实登记。`00:175` 与 `11:15` 要求复用同一模块：消息种类、阶段、配对方式、传输方向共用本模块 `ChannelState` 与同一组常量表，不分裂四套。023 A03 自写底座例外于 024 撤回的状态不变。与 `generator_session.rs` 并列会话集合 + 三枚举、`upgrade_plan.rs` 按 id 索引候选项 + 三选一决策、`search_filter.rs` 谓词集合 + 派生过滤排序、`seed_access.rs` 记录集合 + 可见性矩阵、`instance_drop.rs` 拖放路径计划边界分开：本层不持有记录集合、不做批量过滤、不做可见性分类，只做静态协议表查询与单实例阶段转移合法性，不合并。真实连接建立、二维码编解码、境外判定、房间密码校验、协议 UI 均未取得一手原文或已被收窄排除，不拼接第三方代码，登记 Q-080-01 / Q-080-02。

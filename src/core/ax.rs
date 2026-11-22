@@ -35,7 +35,7 @@ pub(crate) const AX_SPECS: &[AxSpec] = &[
     AxSpec { id: "AX18", name: "lab_generators", state: AxState::DataLayer, conflict: "ai_provider_ui_excluded", ui: true },
     AxSpec { id: "AX19", name: "seed_map", state: AxState::DataLayer, conflict: "", ui: true },
     AxSpec { id: "AX20", name: "projection_workshop", state: AxState::Planned, conflict: "", ui: true },
-    AxSpec { id: "AX21", name: "redstone_multiplayer", state: AxState::Planned, conflict: "", ui: true },
+    AxSpec { id: "AX21", name: "redstone_multiplayer", state: AxState::DataLayer, conflict: "", ui: true },
     AxSpec { id: "AX22", name: "shimu_account", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX23", name: "client_ai_gate", state: AxState::GateOnly, conflict: "11:18 gate_only_no_ui", ui: false },
     AxSpec { id: "AX24", name: "ungrouped_drop", state: AxState::DataLayer, conflict: "", ui: true },
@@ -74,12 +74,12 @@ mod tests {
 
     #[test]
     fn ax05_is_data_layer_this_round() {
-        for id in ["AX05", "AX06", "AX11", "AX12", "AX17", "AX24", "AX01", "AX13", "AX10", "AX14", "AX09", "AX16", "AX18", "AX19"] {
+        for id in ["AX05", "AX06", "AX11", "AX12", "AX17", "AX24", "AX01", "AX13", "AX10", "AX14", "AX09", "AX16", "AX18", "AX19", "AX21"] {
             assert_eq!(by_id(id).unwrap().state, AxState::DataLayer);
         }
-        assert_eq!(count_by_state(AxState::DataLayer), 14);
+        assert_eq!(count_by_state(AxState::DataLayer), 15);
         assert_eq!(count_by_state(AxState::GateOnly), 1);
-        assert_eq!(count_by_state(AxState::Planned), 9);
+        assert_eq!(count_by_state(AxState::Planned), 8);
     }
 
     #[test]
