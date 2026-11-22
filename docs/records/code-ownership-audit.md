@@ -548,3 +548,11 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 081 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方。`notice_center.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_TEXT_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。公告状态索引的 2+7+4+2+3+3 键表与 `BUILTIN_ID` 内置条目保护是项目特有口径（`11:12` / `11:219` / `11:231` / `11:10` / `11:22` / `11:16` / 017 S03·S04·S06），无语义等价库可换，如实登记。`00:175` 与 `11:15` 要求复用同一模块：分类、读态、动作、关闭路径共用本模块 `NoticeCenter` 与同一组常量表，不分裂四套；公共能力全部复用既有模块不复制第二份。023 A03 自写底座例外于 024 撤回的状态不变。与 `feature_gate.rs::Notice`（运行时派生、不持久化）、`popup.rs`（13 弹窗注册表）、`generator_session.rs`（会话集合 + 三枚举）、`upgrade_plan.rs`（候选项集合 + 三选一决策）、`search_filter.rs`（谓词集合 + 派生过滤排序）、`seed_access.rs`（记录集合 + 可见性矩阵 + 审计表）、`lan_channel.rs`（静态协议表 + 单实例阶段转移）边界分开：本层零内容持有、不持有记录集合、不做批量过滤、不做可见性分类、不做阶段转移，只做 `id → 分类 / 读态 / 动作 / 可关闭 / 详情 / 内置` 的状态映射与内置条目不可删，不合并。真实新闻拉取、版本比对、附件图片解码、公告弹窗渲染均未取得一手原文或已被收窄排除，不拼接第三方代码，登记 Q-081-01 / Q-081-02。
+
+## 082 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方 / 58 份 LICENSE 全文 / `THIRD-PARTY-NOTICES.md` 309 行。`world_editor.rs` 复用 `Envelope`（044 起 UUID v5 请求标识）、`robust::safe_join` / `read_or_default` / `MAX_TEXT_BYTES`（048）、`diagnostics::diag_line`、`settings_io::PROTECTED_FILES`（065）。存档编辑会话的 3+9+4+3+2+3+3 键表、`VERIFIED_LICENSE = "MIT"`、`LinkMode` 三值（`11:26` / `11:9`）、`EditField` 四值（`12:14` / `12:55`）是项目特有口径（`11:213` / `11:4` / `00:32` / `00:249`），无语义等价库可换，如实登记。`00:175` 与 `11:15` 要求复用同一模块：五枚举共用 `WorldEditor` 与同一组常量表，公共能力全部复用既有模块不复制第二份。023 A03 自写底座例外于 024 撤回的状态不变。与 `seed_access.rs`（记录集合 + 可见性矩阵 + 审计表）、`instance_drop.rs`（拖放路径计划）、`notice_center.rs`（公告状态索引 + 内置条目保护）、`generator_session.rs`（会话集合 + 三枚举）、`lan_channel.rs`（静态协议表 + 阶段转移）边界分开：本层零内容持有、不持有种子值 / 存档内容 / NBT 数据、不做可见性分类、不做路径计划、不做读态保护、不做阶段转移，只做 `id → 字段 / 格式 / 来源 / 许可证 / 链接形态 / 核验态 / 源产物对比态 / 会话态` 的状态映射。真实 NBT 读取写回、vianbt 库引入、源码与产物真实字节比对、插件加载执行、UI 渲染均未取得一手原文或已被收窄排除，不拼接第三方代码，登记 Q-082-01 / Q-082-02 / Q-082-03。
+
+## 084 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方 / 58 份 LICENSE 全文 / `THIRD-PARTY-NOTICES.md` 309 行。`src/` 零改动，AX03 `world_editor.rs` 保持 082 落地形态；083 的 28 组双向注入结论复核不变。A211 真读全文找出的 AX04 四锚点（`11:244` / `12:8` / `12:33` / `12:39`）属项目特有口径，无语义等价库可换，登记为 085 输入、本轮不拼接第三方代码。Q-082-01 / Q-082-02 / Q-082-03 保持待拍。

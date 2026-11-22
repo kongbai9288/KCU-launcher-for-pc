@@ -62,6 +62,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.seed_access",
     "core.lan_channel",
     "core.notice_center",
+    "core.world_editor",
     "dispatcher.launcher",
 ];
 

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 082 运行逻辑</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:760px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:280px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>082 运行逻辑</h1><div class="sub">AX03 存档编辑会话 + 开源组件许可证状态索引 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">planned=7 v1=7</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>开工与用户口径</h3><p id="m1">未运行</p><span class="badge g">四份原文全文</span><span class="badge g">A244 对照表</span><span class="badge g">00:230 一手核实</span><span class="badge r">D-082-2 我的默认</span></div>
+<div class="mini"><h3>AX03 数据层</h3><p id="m2">未运行</p><span class="badge g">3+9+4+3+2+3+3 键表</span><span class="badge g">五 impl 段比对</span><span class="badge g">v1 不变</span><span class="badge r">NBT 读取未启动</span></div>
+<div class="mini"><h3>安全与边界</h3><p id="m3">未运行</p><span class="badge g">零新增依赖</span><span class="badge g">零内容持有</span><span class="badge g">v1 不变</span><span class="badge r">6 项排队</span></div>
+<div class="mini"><h3>交付状态</h3><p id="m4">未运行</p><span class="badge g">668/0</span><span class="badge g">守卫全绿</span><span class="badge g">ALL_MATCH</span><span class="badge r">6 项排队</span></div>
+</div><div class="note" id="note">用户 082 逐字：干，还有我给你明确一下，我之前跟你说过咱们的所有东西都要用开源的，在保证许可证的情况下，只是在跟你说一下。A244 生效：落对照表 + 一手核实 + 00:137/00:245 显式核；「只是在跟你说一下」不扩范围、不新增依赖；069–081 连续未通过按 00:248 继续推进；不发通过标记。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[["01", "开工预检", "b462dd3 / 1226 文件 / DIRTY 1（新 spec）", 0], ["02", "081 远端补验", "c15a470 / 1226 ALL_MATCH True / 不重复推送", 1], ["03", "逐字落盘", "82 指令 159 字节完整句 · SHA 9ae4222c", 0], ["04", "真读全文", "00 全文 261 行 / 防错 520 行 / 11 号 268 行 / 12 号 64 行", 0], ["05", "A248/A266 预检", "82 号 spec 单句 159 字节；本轮第二行平台文本按 A266 不作指令、不进副本", 1], ["06", "9.1 裁决", "069–081 连续十三轮未通过；按 00:248 覆盖，卡点回显", 1], ["07", "A244 对照表", "开源+许可证逐条对照：26 包 / 25 第三方 / 58 份 LICENSE / 309 行声明", 1], ["08", "00:230 一手核实", "ViaNBT MIT / LICENSE 8 行 / tags 三项 / pushed_at 2026-10-27", 1], ["09", "A211 真读找锚点", "11:213 / 12:14 / 12:55 / 11:26 / 11:4 / 11:9 / 00:32 / 00:249 一组 8 条", 1], ["10", "A201 覆盖判定", "081「依赖 NBT 解析库」只覆盖读取执行层；补记覆盖不重写历史", 1], ["11", "选 AX03 收窄", "world_editor → 零内容持有的状态索引；D-082-2 我的默认", 1], ["12", "接口与通过标记", "00:137 列全 v1 不动；00:245 三条核完不发通过标记", 0], ["13", "五枚举与七表", "字段/格式/来源/链接/会话 · 3+9+4+3+2+3+3 键表 · MIT 单值", 0], ["14", "矛盾态与派生", "entry_consistent 八处调用 · 八个纯查询 · 单条突变不批量", 1], ["15", "首跑与复验", "668/0 → 668/0 · Win GNU · 守卫 · 注入全真 FAIL", 1], ["16", "交付状态", "不发通过标记 · 6 项 Planned · Q/EQ 未拍 · 唯一下一步", 1]];
+const LOG={"01": "[KCU] preflight 082 OK tracked=1226 dirty=1 head=b462dd3", "02": "[KCU] A145 OK remote=c15a470 ALL_MATCH True no_force_push", "03": "[KCU] spec 82-round-082-instructions.txt OK bytes=159 sha=9ae4222c", "04": "[KCU] readback OK 00:261 checklist:520 11:268 12:64", "05": "[KCU] A248/A266 OK spec_82=159_bytes no_platform_text_this_round", "06": "[KCU] 9.1 conflict OK override=00:248 blockers_echoed rounds=13", "07": "[KCU] A244 OK oss=26_pkg 25_vendor 58_licenses 309_notice_lines", "08": "[KCU] 00:230 OK ViaVersion/ViaNBT spdx=MIT license_lines=8 tags=3 pushed=2026-10-27", "09": "[KCU] A211 OK anchors=1_group_8_lines nbt_via_open_source_decided_at_11_213", "10": "[KCU] A201 OK ax-feature-pool:081 covered nbt_only_at_read_exec", "11": "[KCU] select AX03 D-082-2 scope=no_nbt_io_no_third_party_no_render_no_content_held", "12": "[KCU] 00:137 OK v1_symbols=7 boot_modules=+1 sixteen_modules_untouched 00:245 pass_mark=withheld", "13": "[KCU] strict_keys OK keys=3 entry=9 fields=4 formats=3 sources=2 links=3 states=3 verified_license=MIT", "14": "[KCU] protocol OK consistent_calls_eight pure_queries_eight single_item_mutation zero_user_text_in_event", "15": "VERIFY VERIFY lib=668/0 first_run=0_failed A245=1_flaky_failed guards=30/0 inj=28_true_fail", "16": "DELIVERY True(082开工A145补验1226/1226) pass_mark=withheld next=ax_pool_6"};
+const STATE={"02": "A145=clear", "05": "A248=clear", "06": "9.1=override", "07": "A244=done", "08": "00:230=executed", "09": "anchors=8", "10": "A201=covered", "11": "AX03=DataLayer", "13": "bad_inputs=27", "14": "consistent=5", "15": "E338=logged", "16": "delivery=closed"};
+const MINI1=["预检", "081 远端补验", "逐字落盘", "真读全文", "A248/A266 预检", "9.1 裁决", "A244 对照表", "00:230 一手核实", "A211 真读找锚点", "A201 覆盖判定", "选 AX03 收窄", "接口与通过标记", "五枚举与七表", "矛盾态与派生", "首跑与复验", "交付状态"];
+const MINI2=["开工预检：本地 b462dd3 / 1226 文件 / 新 spec 造成 DIRTY 1", "081 远端补验：末条工具结果被截断，按 A145 只读得 c15a470 / 1226 文件 ALL_MATCH True，不重复推送", "82 指令 159 字节完整句逐字落盘：干 + 开源许可证重申报，SHA 9ae4222c", "00 全文 261 行、防错 520 行、11 号 268 行、12 号 64 行全部回显（A211 / A244）", "82 号 spec 单句 159 字节，81/80/79/78/77/76/75/74/73/71 号均仅「干」；72 号澄清已在 072 处理，本轮第二行平台文本按 A266 不作指令、不进副本", "069–081 连续十三轮未通过；用户 082「干」按 00:248 覆盖，卡点逐条回显", "A244 逐条对照：26 包 / 25 第三方 vendor / 58 份 LICENSE 全文 / THIRD-PARTY-NOTICES 309 行 / code-ownership-audit 逐轮登记；用户说「只是在跟你说一下」不扩范围不新增依赖", "00:230 首次真执行：GET /repos/ViaVersion/ViaNBT 得 MIT / LICENSE.txt 8 行首行 / tags 三项 / pushed_at 2026-10-27；异常域名按 A69 不取；vianbt 对应属假设登记 Q-082-01", "真读全文找 11:213 第 6 条通过 vianbt 提供 NBT 能力、12:14 种子号需 NBT、12:55 世界管理四字段、11:26 异证链接与许可证前置与源产物对比、11:4 五字段登记、11:9 独立许可证独立进程、00:32 开源优先、00:249 许可证合规优先，一组共 8 条", "081 补记把 AX03 归到「依赖 NBT 解析库」是相对排序理由；NBT 只落在 11:213 读取执行层，状态索引不碰 IO，按 A201 补记覆盖", "选 AX03 world_editor，只取项目原文已决断语义，收窄为零内容持有的存档编辑会话 + 开源组件许可证状态索引，登记 D-082-2 我的默认", "00:137 接口终点列全：v1 7 符号不动，mod/boot/ax/守卫/CI 五处引用；00:245 三条核完，存在已失败/未证实/未启动，不发通过标记", "五枚举十五变体显式 code；3+9+4+3+2+3+3 键表严格白名单，27 类坏输入跳过或回默认，VERIFIED_LICENSE=MIT 单值另核", "entry_consistent 在 parse / add_entry / set_source / set_state / set_link_mode 八处调用；八个派生纯查询；单条突变不批量；change_event 载荷白名单十值", "首跑 668/0；复跑按 A245 留 1 次偶发并发 FAILED 回显，单独跑 3 次与复跑 3 次全过；分段求和 707/0；Win GNU RC=0；30 守卫 0 FAIL；28 组双向注入全真 FAIL", "082 代码与四件套在 083 收口轮一次提交推送；082 开工 A145 补验远端 c15a470 / ALL_MATCH True；不发通过标记，6 项 Planned 与 Q/EQ 未拍，唯一下一步按功能池落下一项"];
+const MINI3=["A145：远端 ref + 完整 tree 补验，不臆测失败也不重复推送", "A266：不把平台拼入用户位次的文本当用户指令；本轮 82 号 spec 逐字副本 159 字节单句（第二行平台文本按 A266 不进副本）", "00:9.1 连续十三轮本应停下，按 00:248 覆盖并回显卡点", "A244：逐条对照表 + 一手联网核实 + 00:137/00:245 显式核，不只回一句承诺", "00:230：069–081 十三轮写「未执行」本轮首次真执行，四处同步改口径，历史行不重写", "A201 结论变更后同步台账 / 决策，历史行不重写但补记覆盖；31 号调研「未提」与「11-6」同行的自相矛盾逐项回显", "A217 先核 seed_access / instance_drop / notice_center 三个既有模块边界；只接数据层，不把功能池已登记写成功能已实现", "A271 开工实跑全仓守卫禁用字面量表，避免 074 E275 的测试名碰撞重演", "A250：11:26 链接使用与 11:9 独立进程两条 OR 都落 LinkMode 枚举值、不擅自定优先级；11:4 五字段不抄进新增文档里用户标「不要写到任何地方」的分句", "A267 先读 ax.rs:20 真实 name 为 world_editor、conflict 为空；081 排除是相对排序理由，照七次先例补记覆盖", "接口终点列全，api::v1 零改动，feature_gate / popup / consent 判定层不由本层重复实现", "A189 严格字段白名单，禁止键整份拒；27 类坏输入跳过或回默认", "00:110 空集合与越界不崩；00:175 与 11:15 五枚举共用同一 WorldEditor；零内容持有，不写端点与端口（11:18 / 11:19）", "00:9.2 首跑按实留痕；夹具预期按 A264 逐项心算后落盘，实现零改动、断言强度不降", "00:114：事件走统一信封，条目 id / 许可证 slug / 种子值 / 作者不进载荷（E330 教训：守卫解析函数体核十值计数）", "A269 + A270 + A247 从首版实现；E322 教训：矛盾态抽单一函数并解析函数体五条字面量与八处调用点；A258 不写凭据字面量；A252 分段求和注明口径；A265 演示 LOG 键数 = NODES 步数；存在已失败 / 未证实 / 未启动"];
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(n[3]?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=MINI1[i]||'待执行';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=14?'Envelope Kind=Event · request_id 配对':(i>=10?'待构造':'—');
+ document.getElementById('m1').textContent=MINI2[i]||'未运行';
+ document.getElementById('m2').textContent=MINI3[i]||'未运行';
+ document.getElementById('m3').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('m4').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join(String.fromCharCode(10))||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;upd()}
+upd();
+</script></body></html>

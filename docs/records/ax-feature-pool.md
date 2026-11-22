@@ -211,3 +211,13 @@ AX02 / AX07 / AX21 / AX22 依赖真实网络 IO / 境外限制，AX03 / AX19 / A
 A217 边界：`src/core/popup.rs:44` / `:49` 已有 `declaration` / `notice` 弹窗占位，`src/core/feature_gate.rs:110` 已有 051 声明页三动作的运行时派生 `Notice`（不持久化、不分类、无已读态）；本轮只接可持久化的公告状态索引数据层，不把弹窗已登记写成功能已实现，不重复实现 051 三动作，`feature_gate.rs` / `popup.rs` / `consent.rs` 零 diff。
 
 `api::v1` 7 符号不变：AX02 是内部数据层，不扩公共面（`00:137`）。AX07 / AX22 依赖真实网络 IO / 境外限制 / 第三方端点且 11 号原文无对应已决断公告锚点，AX03 / AX20 依赖 NBT 或投影解析库，AX08 依赖 `.mrpack` / `.zip` 解析库且与 `instance_drop.rs` 同构（080 补记明写），AX04 的 EQ-13 与 Q-047-01 未拍板，AX15 与 `banner_design.rs` 撤销栈同构（075 E276），逐项不动并留痕。
+
+## 082 补记（083 收口轮落地）
+
+`src/core/ax.rs:20` AX03 `world_editor` `Planned` → `DataLayer`，`conflict` 保持空；`Planned 6` / `DataLayer 17` / `GateOnly 1`。`src/core/world_editor.rs` 落存档编辑会话 + 开源组件许可证状态索引数据层：五枚举十五变体显式 code、七张白名单表、`VERIFIED_LICENSE = "MIT"`、27 类坏输入、`entry_consistent()` 五条规则八处调用、八个派生纯查询、单条突变、原子写、统一信封十值载荷、零内容持有。`api::v1` 7 符号不变，既有 16 个数据层模块零 diff。
+
+081 补记把 AX03 归到「依赖 NBT 解析库」是只核 `31-axolotl-launcher-features.md:26` 转述、未逐行回显 11 / 12 号原文时写下的相对排序说明；`11:213` 第 6 条「通过vianbt向用户提供nbt能力」是已决断且直接点名开源库的锚点，`12:14` / `12:55` 给出字段语义，用户 082 当轮重申报「所有东西都要用开源的，在保证许可证的情况下」。按 073 / 075 / 077 / 078 / 079 / 080 / 081 七次收窄先例，只取项目原文已决断语义，收窄为不引第三方库、不碰真实 NBT 读取写回、不碰 UI 渲染、不写死 vianbt 字段 schema。064–081 历史行不重写（A181 / A201）。Q-082-01（`vianbt` 对应与引入形态）/ Q-082-02（转述五字段与提示）/ Q-082-03（`11:4` 其余四字段）待拍板。剩余 6 项 `Planned`：AX04 / AX07 / AX08 / AX15 / AX20 / AX22，下一声「干」按功能池落下一项。
+
+## 084 补记（083 交付闭环轮）
+
+6 项 `Planned` 保持不变：AX04 `mod_rollback` / AX07 `doh_support` / AX08 `instance_import` / AX15 `studio_image_editor` / AX20 `projection_workshop` / AX22 `shimu_account`；`Planned 6` / `DataLayer 17` / `GateOnly 1`，`api::v1` 7 符号不变，084 `src/` 零改动。A211 真读 `11-features-input.txt` / `12-server-features-input.txt` 全文后找到 AX04 的四条已决断锚点：`11:244`（同版本警告、高版本由用户选择版本后替换、顺序页码弹窗、每个单独选择）、`12:8`（高版本自动禁用低版本 jar，单个实例页面）、`12:33`（配置快照与回滚）、`12:39`（服务端/加载器版本回滚）。按 A267 核 `src/core/ax.rs:21` 真实 name `mod_rollback`、conflict 为空。085 按功能池落 AX04；064–083 历史行不重写（A181 / A201）。

@@ -131,3 +131,5 @@ jobs:
         run: python3 scripts/lan_channel_guard.py
       - name: notice_center_guard
         run: python3 scripts/notice_center_guard.py
+      - name: world_editor_guard
+        run: python3 scripts/world_editor_guard.py

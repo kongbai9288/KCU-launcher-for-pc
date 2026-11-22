@@ -887,3 +887,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I192 | `src/core/ax.rs` | AX02 `Planned` → `DataLayer`，`conflict` 保持空；`Planned 7` / `DataLayer 16` / `GateOnly 1` |
 | I193 | `scripts/notice_center_guard.py` | 挂 CI `scan` job；解析八个纯函数段 + **四个** impl 段字面量逐值比对（A269）+ **六张**常量表 `EXPECTED` 集合逐值比对并另核 `BUILTIN_ID`（A270）+ `use crate::core::robust;` 显式 import 与使用双核（A247）+ `entry_consistent()` 函数体三条字面量与五处调用点（E322）+ `change_event()` 函数体载荷白名单与十值计数（E330）；核内置条目保护 / 单条突变 / 四文件保护 / 用户文本不进载荷；`ax_guard.py` 显式断言扩到十六项 |
 | I194 | `api::v1` / `feature_gate.rs` / `popup.rs` / `consent.rs` / 既有 15 个 AX 数据层模块与判定层模块 | 零改动；7 符号 / 4 条 `pub use` 不变 |
+
+| I195 | `src/core/world_editor.rs` | 082 新增 AX03 数据层：`WorldEditor` / `EditorEntry` 与五枚举、七张白名单表、`VERIFIED_LICENSE = "MIT"`、27 类坏输入、`entry_consistent()` 五条规则八处调用、八个派生纯查询、单条突变、原子写、统一信封十值载荷、零内容持有 |
+| I196 | `src/core/ax.rs` / `src/core/boot.rs` / `src/core/mod.rs` | AX03 `Planned` → `DataLayer`，`conflict` 保持空，`Planned 6` / `DataLayer 17` / `GateOnly 1`；`LOADED_MODULES` 加 `core.world_editor`；`pub mod world_editor;` |
+| I197 | `scripts/world_editor_guard.py` | 挂 CI `scan` job；A269 五个 impl 段逐值、A270 七张常量表 `EXPECTED` 集合逐值 + `VERIFIED_LICENSE` 单值、A247 显式 import、E322 矛盾态函数体、E330 载荷函数体十值计数；083 补跑 28 组双向注入全真 FAIL |
+| I198 | `api::v1` / 既有 16 个 AX 数据层模块与判定层模块 / UX / 两语言包 / PNG | 零改动；7 符号 / 4 条 `pub use` 不变；083 `src/` 零改动（A246） |
+
+| I199 | `src/` / `api::v1` / 既有 17 个 AX 数据层模块与判定层模块 / UX / 两语言包 / PNG | 084 零改动；7 符号 / 4 条 `pub use` 不变（A246） |
+| I200 | `scripts/world_editor_guard.py` / `.github/workflows/ci.yml` | 082 已挂 `scan` job；084 复扫 30 守卫 0 FAIL，083 的 28 组双向注入结论复核不变 |
+| I201 | `scripts/api_push.py` | 084 按 A216 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史 |
