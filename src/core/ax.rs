@@ -15,7 +15,7 @@ pub(crate) struct AxSpec {
 }
 
 pub(crate) const AX_SPECS: &[AxSpec] = &[
-    AxSpec { id: "AX01", name: "home_widgets", state: AxState::Planned, conflict: "", ui: true },
+    AxSpec { id: "AX01", name: "home_widgets", state: AxState::DataLayer, conflict: "", ui: true },
     AxSpec { id: "AX02", name: "game_news", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX03", name: "world_editor", state: AxState::Planned, conflict: "", ui: true },
     AxSpec { id: "AX04", name: "mod_rollback", state: AxState::Planned, conflict: "", ui: true },
@@ -74,12 +74,12 @@ mod tests {
 
     #[test]
     fn ax05_is_data_layer_this_round() {
-        for id in ["AX05", "AX06", "AX11", "AX12", "AX17", "AX24"] {
+        for id in ["AX05", "AX06", "AX11", "AX12", "AX17", "AX24", "AX01"] {
             assert_eq!(by_id(id).unwrap().state, AxState::DataLayer);
         }
-        assert_eq!(count_by_state(AxState::DataLayer), 6);
+        assert_eq!(count_by_state(AxState::DataLayer), 7);
         assert_eq!(count_by_state(AxState::GateOnly), 1);
-        assert_eq!(count_by_state(AxState::Planned), 17);
+        assert_eq!(count_by_state(AxState::Planned), 16);
     }
 
     #[test]

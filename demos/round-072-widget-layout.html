@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 072 运行逻辑</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:720px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:260px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>072 运行逻辑</h1><div class="sub">AX01 首页小组件布局数据层 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">planned=17 v1=7</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>开工与选项目的</h3><p id="m1">未运行</p><span class="badge g">00 全文 261 行</span><span class="badge g">防错 510 行</span><span class="badge g">E251 已撤回</span><span class="badge r">D-072-2 我的默认</span></div>
+<div class="mini"><h3>AX01 数据层</h3><p id="m2">未运行</p><span class="badge g">3+2 键白名单</span><span class="badge g">id 不透明</span><span class="badge g">v1 不变</span><span class="badge r">拖拽渲染未启动</span></div>
+<div class="mini"><h3>安全与边界</h3><p id="m3">未运行</p><span class="badge g">工具从未禁用</span><span class="badge g">零新增依赖</span><span class="badge g">v1 不变</span><span class="badge r">16 项排队</span></div>
+<div class="mini"><h3>交付状态</h3><p id="m4">未运行</p><span class="badge g">**504 / 0**</span><span class="badge g">二十守卫</span><span class="badge g">ALL_MATCH</span><span class="badge r">16 项排队</span></div>
+</div><div class="note" id="note">用户 072 逐字：干 + 工具澄清。E251 撤回 071 归因；069/070/071 连续未通过，按 00:248 继续推进，卡点回显；不发通过标记。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[["01", "开工预检", "0ba17c8 / 1156 文件 / DIRTY 1（新 spec）", 0], ["02", "逐字落盘", "72 指令 117 字节 · SHA 6a42bb62", 0], ["03", "真读全文", "00 全文 261 行 / 防错清单 510 行（分两段）", 0], ["04", "E251 撤回", "核 71 号 spec 仅 3 字节「干」；撤回 071 归因与工具禁用条件", 1], ["05", "9.1 裁决", "069/070/071 连续未通过；用户 072「干」按 00:248 覆盖，卡点回显", 1], ["06", "功能池真读", "17 项 Planned 全表 + 069/070/071 排除清单", 0], ["07", "A259 复核", "11-16 / 11-24 是条目编号，改用 11:16 行号", 1], ["08", "选 AX01 收窄", "home_widgets → 不碰 UI 渲染的布局数据层；D-072-2 我的默认", 1], ["09", "接口终点", "v1 7 符号不动 · mod/boot/ax/守卫/CI 五处", 0], ["10", "模式与槽位", "compact/custom 显式 code · Vec<Slot> 上限 32 · 3+2 键白名单", 0], ["11", "排版与固定", "move_to 只改内存顺序 · pinned 布尔 · 12 类坏输入回默认", 1], ["12", "不写死组件", "id 不透明 · 无日历/问候语/最近世界类型表", 0], ["13", "统一信封", "Kind=Event · target=widget.layout · 只带 mode/slots/pinned", 0], ["14", "守卫与 CI", "第 21 步 · 6 个纯函数段逐行扫描 · 双向注入", 0], ["15", "回归与交付", "**504 / 0** / **543 / 0**（8 段分段求和，非单条全量命令） / Win GNU / 二十守卫 · 不发通过标记", 1]];
+const LOG={"01": "[KCU] preflight 072 OK tracked=1156 dirty=1", "02": "[KCU] spec 72-round-072-instructions.txt OK bytes=117 sha=6a42bb62", "03": "[KCU] readback OK 00:261 checklist:510 two_segments", "04": "[KCU] E251 RETRACT 71_spec=3_bytes tool_never_disabled", "05": "[KCU] 9.1 conflict OK override=00:248 blockers_echoed", "06": "[KCU] ax_pool OK planned=17 data=6 gate=1", "07": "[KCU] A259 OK use_11:16 drop_11-16_11-24", "08": "[KCU] select AX01 D-072-2 scope=no_ui_render", "09": "[KCU] interface_end OK v1_symbols=7 boot_modules=+1", "10": "[KCU] strict_keys OK keys=3 slot_keys=2 modes=2 bad_inputs=12", "11": "[KCU] layout OK move_to_pure pinned_bool cap=32", "12": "[KCU] opaque_ids OK calendar=0 greeting=0 recent_world=0", "13": "[KCU] envelope Kind=Event target=widget.layout payload=3", "14": "[KCU] guards=20 ci_steps=21 injection=bidirectional", "15": "VERIFY **504 / 0** **543 / 0**（8 段分段求和，非单条全量命令） win_gnu_ok / DELIVERY 待推 pass_mark=withheld next=ax_pool_16"};
+const STATE={"04": "E251=retracted", "05": "9.1=override", "07": "anchor=11:16", "08": "AX01=DataLayer", "10": "bad_inputs=12", "11": "cap=32", "12": "opaque=1", "13": "event=unified", "14": "guards=20", "15": "delivery=closed"};
+const MINI1=["预检", "逐字落盘", "真读全文", "E251 撤回", "9.1 裁决", "功能池真读", "A259 复核", "选 AX01 收窄", "接口终点", "模式与槽位", "排版与固定", "不写死组件", "统一信封", "守卫与 CI", "回归与交付"];
+const MINI2=["未运行", "72 指令 117 字节逐字落盘，含工具澄清句", "00 全文 261 行回显，防错清单 510 行分两段完整读", "核 71 号 spec 仅 3 字节「干」，撤回 071 归因与「按第二行决定是否禁用工具」条件", "069/070/071 连续未通过；用户 072「干」按 00:248 覆盖，卡点逐条回显", "真读 17 项 Planned 与三轮排除清单", "11-16 / 11-24 是条目编号，改用 11-features-input.txt:16 行号", "选 AX01 home_widgets，收窄为不碰 UI 渲染的布局数据层，登记 D-072-2 我的默认", "v1 7 符号不动，mod/boot/ax/守卫/CI 五处引用", "compact/custom 显式 code；Vec<Slot> 上限 32；顶层 3 键 + 槽位 2 键严格白名单", "move_to 只改内存顺序，pinned 布尔；8 类根级 + 4 类条目坏输入回默认", "组件 id 全当不透明字符串；不内置日历 / 问候语 / 最近世界类型表", "状态变更走统一 Envelope，载荷只带 mode / slots / pinned", "新守卫挂 CI 第 21 步，6 个纯函数段逐行扫描，双向注入", "504 / 0 · 分段求和 · Win GNU RC=0 · 四件套与台账闭环，不发通过标记"];
+const MINI3=["未运行", "未运行", "未运行", "A248 反向形态：不把平台拼入用户位次的文本当用户指令", "00:9.1 连续三轮本应停下，按 00:248 用户当轮指令覆盖并回显卡点", "A259 条目编号与行号分开核，调研历史行不重写", "A211 真读全文找 11:16 已决断、不依赖 EQ 的条目", "选 AX01 收窄范围，覆盖 069 相对排序理由，历史行不重写", "接口终点列全，api::v1 零改动", "A189 严格字段白名单，禁止键整份拒", "00:110 空集合与越界不崩，返回 false 且状态不变", "A30 / 00:26：不写死未取得一手原文的组件类型表", "00:114：事件走统一信封", "A258 不写凭据字面量；A262 不写死状态计数；A263 夹具锚点唯一", "分段求和注明口径（A252）；演示 LOG 键数 = NODES 步数（A265）", "存在已失败 / 未证实 / 未启动"];
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(n[3]?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=MINI1[i]||'待执行';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=12?'Envelope Kind=Event · request_id 配对':(i>=8?'待构造':'—');
+ document.getElementById('m1').textContent=MINI2[i]||'未运行';
+ document.getElementById('m2').textContent=MINI3[i]||'未运行';
+ document.getElementById('m3').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('m4').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join(String.fromCharCode(10))||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;upd()}
+upd();
+</script></body></html>

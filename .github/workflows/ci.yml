@@ -111,3 +111,5 @@ jobs:
         run: python3 scripts/instance_drop_guard.py
       - name: banner_design_guard
         run: python3 scripts/banner_design_guard.py
+      - name: widget_layout_guard
+        run: python3 scripts/widget_layout_guard.py

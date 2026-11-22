@@ -97,3 +97,13 @@ E192：`privacy-consent.json` 与设置文件同目录，清理若按目录清�
 状态分层更新为 `Planned 17` / `DataLayer 6`（AX05、AX06、AX11、AX12、AX17、AX24）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到六项，动态求和不变（A240）；`src/core/ax.rs` 测试断言同步为 `DataLayer 6` / `Planned 17`。064–070 历史表格行不重写，本补记覆盖结论。065 决策曾把 AX17 列入「重 UI 卡 EQ-01」排除表，按 070 对 AX24 的处置口径收窄范围后落地，见 `docs/decisions/071-banner-design.md` D-071-3。
 
 `api::v1` 7 符号不变：AX17 是内部数据层，不扩公共面（`00:137`）。
+
+## 072 补记：AX01 状态覆盖
+
+| 编号 | 064 行 | 072 覆盖 |
+| --- | --- | --- |
+| AX01 | `Planned` / 排队（每页可扩展统一格式、UI 框架卡 EQ-01） | **`DataLayer`**：`src/core/widget_layout.rs` 已落地模式 / 槽位顺序 / 固定项 / 有界容量 / 严格白名单 / 原子写；拖拽渲染、组件真实数据接入、固定项绑定语义未启动 |
+
+状态分层更新为 `Planned 16` / `DataLayer 7`（AX05、AX06、AX11、AX12、AX17、AX24、AX01）/ `GateOnly 1`（AX23）。`ax_guard.py` 显式断言扩到七项，动态求和不变（A240 / A262）；`src/core/ax.rs` 测试断言同步为 `DataLayer 7` / `Planned 16`。064–071 历史表格行不重写，本补记覆盖结论。069 的 D-069-1「AX01 卡 EQ-01」是相对 AX12 的排序理由，本轮收窄范围后落地，见 `docs/decisions/072-widget-layout.md` D-072-3。
+
+`api::v1` 7 符号不变：AX01 是内部数据层，不扩公共面（`00:137`）。

@@ -797,3 +797,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I152 | `src/core/ax.rs` | AX17 `Planned` → `DataLayer`；`Planned 17` / `DataLayer 6` / `GateOnly 1` |
 | I153 | `scripts/banner_design_guard.py` | 挂 CI `scan` job 第 20 步；逐行扫描 6 个纯函数段；`ax_guard.py` 显式断言扩到六项 |
 | I154 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
+
+## 072 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I155 | `src/core/widget_layout.rs` | 模式 / 槽位顺序 / 固定项 / 有界容量 / 3+2+2 键白名单 / 12 类坏输入 / 原子写 / 统一信封事件；`WIDGET_FILE=widget-layout.json` |
+| I156 | `src/core/ax.rs` | AX01 `Planned` → `DataLayer`；`Planned 16` / `DataLayer 7` / `GateOnly 1` |
+| I157 | `scripts/widget_layout_guard.py` | 挂 CI `scan` job 第 21 步；逐行扫描 6 个纯函数段；`ax_guard.py` 显式断言扩到七项 |
+| I158 | `api::v1` / `dispatcher` / `popup` | 零改动；7 符号 / 20 断言 / 13 spec 不变 |
