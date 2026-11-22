@@ -40,3 +40,4 @@ pub mod search_filter;
 pub mod generator_session;
 pub mod seed_access;
 pub mod lan_channel;
+pub mod notice_center;

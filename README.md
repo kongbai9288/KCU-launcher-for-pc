@@ -417,3 +417,7 @@ Playwright `file://` 中→英→中 0 控制台错误；`cargo test --offline -
 ## 080 局域网互传通道协议数据层
 
 `src/core/lan_channel.rs`：`request` / `response` / `event` 三类消息、`discover` / `pair` / `transfer` / `close` 四阶段、`qr` / `link_code` 两种配对方式、`pc_to_phone` / `phone_to_pc` 两个传输方向显式 code；`TRANSITIONS` 6 对阶段转移与 `STAGE_FIELDS` 4 段字段表；`can_transition()` / `stage_fields()` / `next_stages()` / `message_kind_for()` / `field_allowed()` / `pair_ready()` / `channel_usable()` / `summary()` 八个派生纯查询；`pair` / `transfer` 阶段必带配对码、`transfer` 必带方向与通道开启、`close` / `discover` 必关通道，在解析与两处单条设置共三处拒收；顶层 7 键严格白名单，23 类坏输入回默认；`serialize()` 只写七键；状态变更走统一信封且房间号 / 配对码不进事件载荷。房间号与配对码全作不透明字符串，不建监听、不写端点与端口、不做二维码编解码、不判定境外。`api::v1` 7 符号不变。真实连接建立、文件传输执行、二维码生成、房间密码校验、协议 UI 未启动。
+
+## 081 公告中心状态索引数据层
+
+`src/core/notice_center.rs`：`update` / `maintenance` / `activity` / `declaration` 四类公告、`unread` / `read` 两读态、`never` / `later` / `ack` 三动作、`button` / `escape` / `cancel` 三关闭路径显式 code；`BUILTIN_ID=declaration` 内置声明页条目不可删；`can_close()` / `visible_count()` / `unread_count()` / `by_category()` / `action_for()` / `is_builtin()` / `detail_available()` / `summary()` 八个派生纯查询；`entry_consistent()` 三条矛盾规则在解析与四处单条设置共五处调用；顶层 2 键 + 条目 7 键严格白名单，25 类坏输入回默认；`serialize()` 只写两键；状态变更走统一信封且公告 id / 标题 / 正文 / 附件不进事件载荷。**零内容持有**：标题、正文、附件、图片、更新 url 全不进本层，公告 id 作不透明字符串，不建监听、不写端点与端口。`api::v1` 7 符号不变。真实新闻拉取、版本比对、附件图片解码、公告弹窗渲染未启动。

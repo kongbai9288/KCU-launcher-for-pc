@@ -878,3 +878,12 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I188 | `src/core/ax.rs` | AX21 `Planned` → `DataLayer`，`conflict` 保持空；`Planned 8` / `DataLayer 15` / `GateOnly 1` |
 | I189 | `scripts/lan_channel_guard.py` | 挂 CI `scan` job 第 29 步；解析 9 个纯函数段 + **四个** impl 段字面量逐值比对（A269）+ **五张**常量表 `EXPECTED` 集合逐值比对并另核 `TRANSITIONS` / `STAGE_FIELDS`（A270）+ `use crate::core::robust;` 显式 import 与使用双核（A247）；核矛盾态三处 / 转移表六对 / 派生查询 / 单条突变 / 两组用户文本不进载荷；`ax_guard.py` 显式断言扩到十五项 |
 | I190 | `api::v1` / `dispatcher` / `popup` / 既有 14 个 AX 数据层模块与判定层模块 | 零改动；7 符号 / 4 条 `pub use` 不变 |
+
+## 081 轮
+
+| 编号 | 项 | 值 |
+| --- | --- | --- |
+| I191 | `src/core/notice_center.rs` | 四枚举显式 code / 公告状态索引零内容持有 / `KNOWN_KEYS` 2 键 + `ENTRY_KEYS` 7 键 + `CATEGORIES` 4 值 + `READ_STATES` 2 值 + `ACTIONS` 3 值 + `CLOSE_PATHS` 3 值 / `BUILTIN_ID=declaration` 内置条目不可删 / 八个派生纯查询 / 25 类 load 坏输入标签 / 矛盾态五处调用 / 原子写 / 统一信封事件；`NOTICE_CENTER_FILE=notice-center.json` |
+| I192 | `src/core/ax.rs` | AX02 `Planned` → `DataLayer`，`conflict` 保持空；`Planned 7` / `DataLayer 16` / `GateOnly 1` |
+| I193 | `scripts/notice_center_guard.py` | 挂 CI `scan` job；解析八个纯函数段 + **四个** impl 段字面量逐值比对（A269）+ **六张**常量表 `EXPECTED` 集合逐值比对并另核 `BUILTIN_ID`（A270）+ `use crate::core::robust;` 显式 import 与使用双核（A247）+ `entry_consistent()` 函数体三条字面量与五处调用点（E322）+ `change_event()` 函数体载荷白名单与十值计数（E330）；核内置条目保护 / 单条突变 / 四文件保护 / 用户文本不进载荷；`ax_guard.py` 显式断言扩到十六项 |
+| I194 | `api::v1` / `feature_gate.rs` / `popup.rs` / `consent.rs` / 既有 15 个 AX 数据层模块与判定层模块 | 零改动；7 符号 / 4 条 `pub use` 不变 |
