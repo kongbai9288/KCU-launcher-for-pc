@@ -59,6 +59,7 @@ A249 形态实测：89 号 spec 落盘后 `python3 scripts/delivery_guard.py` �
 
 本轮一次提交把 088 决策 / 验证覆盖补记与 089 全部产物纳入主快照；推送后只读核远端 ref 与完整 tree，逐项 ALL_MATCH 结果写入 `docs/records/rounds.md` 089 补记（A206，不用模板值冒充）。087 主快照 `d5a8427` / `1260 / 1260 / ALL_MATCH True` 为 087 两次 A145 补验共同确认的一手值；088 三次推送超时后远端 DIFF 18 / ALL_MATCH False 按 A209 单独登记，两者不混用。两个 zip 按 A205 重打。全仓零凭据；`scripts/__pycache__/` 保持 0 项；临时脚本与日志用后即删。
 
+089 补记（推送后真实值）：主快照本地 `ec6dec9` / 1272 文件 DIRTY 0；远端 ref `b08c268c338f36ca0828aab4c49d4e729f59ed68`（`force=false`，parent `d5a8427`），23 项变化 + `base_tree=48e9e4f` 增量推送 RC=0，完整 recursive tree `1272 / 1272 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True`。088 补记与 089 四件套随本次推送闭环，受阻状态解除；E363 两次以上网关超时仍计入已失败。本补记以该 ref 为父二次推送（A206，不用模板值冒充）。
 ## 8. 验证
 
 | 项 | 值 |
