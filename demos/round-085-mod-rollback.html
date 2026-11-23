@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 085 运行逻辑</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:760px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:280px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>085 运行逻辑</h1><div class="sub">AX04 `mod_rollback` 数据层 · 按 084 唯一下一步落地 · 非整页 UX 演示 · UI 闸门未触发</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">planned=7 v1=7</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>开工与 A202</h3><p id="m1">未运行</p><span class="badge g">四份原文全文</span><span class="badge g">A244 对照表</span><span class="badge g">00:230 核实</span><span class="badge r">D-085-2 我的默认</span></div>
+<div class="mini"><h3>落地与守卫</h3><p id="m2">未运行</p><span class="badge g">四锚点收窄</span><span class="badge g">42 组注入</span><span class="badge g">v1 不变</span><span class="badge r">5 项 Planned</span></div>
+<div class="mini"><h3>安全与边界</h3><p id="m3">未运行</p><span class="badge g">src/ 零改动</span><span class="badge g">零新增第三方</span><span class="badge g">v1 不变</span><span class="badge r">未发通过标记</span></div>
+<div class="mini"><h3>085 状态</h3><p id="m4">未运行</p><span class="badge g">687/0 回归</span><span class="badge g">守卫全绿</span><span class="badge g">726/0 分段</span><span class="badge r">未发通过标记</span></div>
+</div><div class="note" id="note">用户 084 逐字：干。083 末条工具结果被网关截断且无最终回复，四件套齐但 HEAD 仍 b462dd3、DIRTY 24、未提交未推送。按 A145 补验、按 068 先例 + A249 补 084 四件套，并把 082 / 083 / 084 全部产物一次提交推送、重打 zip；src/ 零改动、6 项 Planned 不变；不发通过标记。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[["01", "开工预检", "f66965a / TRACKED 1243 / DIRTY 0 / 远端 c025a78", 0], ["02", "A145 远端补验", "c025a78 / 1243 ALL_MATCH True / 不重复推送", 1], ["03", "逐字落盘", "85 号 spec 3 字节「干」· SHA 9ee0280b", 0], ["04", "真读全文", "00 261 行 / 防错 520 行 / 11 号 268 行 / 12 号 64 行", 0], ["05", "A202 核 084 尾部", "085 按功能池落 AX04 mod_rollback", 1], ["06", "A267 真实 slug", "ax.rs:21 name=mod_rollback conflict 空 · A217 无占位", 1], ["07", "A211 四锚点", "11:244 / 12:8 / 12:33 / 12:39 收窄", 1], ["08", "落地数据层", "src/core/mod_rollback.rs 990 行 · 19 单测", 0], ["09", "接四个终点", "ax.rs / boot.rs / mod.rs / ax_guard.py + CI step", 0], ["10", "新守卫", "scripts/mod_rollback_guard.py 269 行 · 六表逐值", 1], ["11", "首跑 FAILED", "686/1 夹具预期不符 · A264 改夹具实现零改动", 1], ["12", "A245 复核", "并发偶发 FAILED 单跑 3 次 + 复跑 3 次全量按实记", 1], ["13", "分段回归", "lib 687/0 · 集成 39 · doc 0 · 合计 726/0", 0], ["14", "双向注入", "42 组全真 FAIL · 0 假 OK · 七文件哈希复原", 1], ["15", "CI 三 job", "NO_CREDENTIAL / NO_EXPLANATORY / NO_HARDCODE", 1], ["16", "085 状态", "末条工具截断 · 四件套与提交推送未落地 · 不发通过标记", 1]];
+const LOG={"01": "[KCU] preflight 085 OK head=f66965a tracked=1243 dirty=0 lock=NO", "02": "[KCU] A145 OK remote=c025a78 ALL_MATCH True 1243/1243 no_force_push", "03": "[KCU] spec 85-round-085-instructions.txt OK bytes=3 sha=9ee0280b", "04": "[KCU] readback OK 00:261 checklist:520 11:268 12:64", "05": "[KCU] A202 OK 084_tail=AX04_mod_rollback", "06": "[KCU] A267/A217 OK slug=mod_rollback conflict=empty no_placeholder", "07": "[KCU] A211 OK anchors=11:244,12:8,12:33,12:39", "08": "[KCU] data_layer OK mod_rollback.rs=990_lines tests=19", "09": "[KCU] endpoints OK ax/boot/mod/ax_guard/ci v1=7_symbols_unchanged", "10": "[KCU] guard OK mod_rollback_guard.py=269_lines six_tables_explicit", "11": "[KCU] A264 OK lib_first=686/1 fixture_fixed impl_zero_diff", "12": "[KCU] A245 OK single_3x=0_failed full_3x=687/0,686/1,687/0 cache_sha=614776d3", "13": "[KCU] A252 OK lib=687 integrations=39 doc=0 total=726/0 win_gnu=RC0", "14": "[KCU] A159 OK injections=42 true_fail=42 fake_ok=0 restored=OK", "15": "[KCU] A116 OK credential=NO_CREDENTIAL wording=NO_EXPLANATORY hardcode=NO_HARDCODE", "16": "[KCU] 085 state OK delivery_layer=unclosed pass_mark=withheld next=086_closure"};
+const STATE={"02": "A145=clear", "05": "A202=AX04", "06": "A267=slug", "07": "A211=4_anchors", "10": "guard=269_lines", "11": "A264=fixture", "12": "A245=logged", "13": "lib=687/0", "14": "inject=42", "15": "CI=3_ok", "16": "delivery=unclosed"};
+const MINI1=["开工预检：本地 HEAD f66965a（084 补记），TRACKED 1243，DIRTY 0，无锁无运行中 git 进程，远端 c025a78 / 1243 ALL_MATCH True", "A145 远端补验：按 A145 只读 GET /git/ref/heads/main 得 c025a78 / 1243 文件 ALL_MATCH True，不重复推送、不强推、不重写历史", "85 号 spec 逐字 3 字节「干」落盘：SHA 9ee0280b，与 84 / 83 / 81–71 号 spec 同形态", "00 全文 261 行、防错 520 行、11 号 268 行、12 号 64 行全部回显（A18 / A211 / A244）；复读在写任何代码 / 文档之前完成", "按 A202 打开 084 决策尾部核一遍：唯一下一步为 085 按功能池落 AX04 mod_rollback，真读全文后按四锚点收窄，先按 A267 核 slug 与 conflict", "按 A267 先读 src/core/ax.rs:21 真实 name mod_rollback、conflict 空、ui true；按 A217 核 src/ 无同名占位，其余 rollback 字样语义不同不复用", "A211 真读全文找出四锚点：11:244 同版本警告与顺序页码弹窗、12:8 高版本禁用低版本 jar、12:33 配置快照与回滚、12:39 服务端/加载器版本回滚", "落地 src/core/mod_rollback.rs 990 行：四枚举显式 code、六张白名单表、cmp_precedence 版本判定、五条矛盾态规则九处调用、单步推进、原子写、十值信封载荷、19 单测", "接 ax.rs / boot.rs / mod.rs / ax_guard.py / CI scan job 五个终点；src/api.rs 零改动，v1 7 符号不变；Cargo / vendor / UX / 语言包零 diff", "新增 scripts/mod_rollback_guard.py 269 行并挂 CI：六表 EXPECTED 逐值、四 impl 段字面量、函数体解析、载荷白名单、禁用字面量分部件拼接", "首跑 lib 686/1：loader_snapshot_keep_is_rejected 夹具未先置 Keep 却预期 set_snapshot(LoaderVersion) 被拒；保留 FAILED 回显，按 A264 改夹具、实现零改动、断言强度不降", "A245：既有并发用例偶发 FAILED，单独跑该用例 3 次全过、复跑 3 次全量 FULL1 687/0 / FULL2 686/1 / FULL3 687/0；cache.rs 零 diff、SHA-1 锁定，计入已失败", "分段回归：lib 687/0、4 集成段 26、2 真加载段 13、doc 0，合计 726/0；Win GNU RC=0 / 29.02 s；tests/ 真实 6 文件按 A176 核过", "双向注入 42 组覆盖六表、四 impl、cmp_precedence、classify、import、坏输入、矛盾态函数体、载荷、v1 面、AX04 状态、boot / mod / CI / ax_guard；全真 FAIL、0 假 OK，恢复后哈希复原", "CI 三 job 按 A116 实跑真实命令：credential NO_CREDENTIAL、wording NO_EXPLANATORY、hardcode NO_HARDCODE；pyc 清理后用 ast.parse 检查语法", "085 末条全仓凭据扫描工具结果被网关截断不可用，四件套、台账、提交、推送、zip、最终回复全部未落地；文件已落盘不等于交付已闭环，不发通过标记"];
+const MINI2=["HEAD f66965a，TRACKED 1243，DIRTY 0，无锁无运行中 git 进程", "A145：远端 ref + 完整 tree 补验，不重复推送、不强推", "85 号 spec 逐字 3 字节落盘；84 / 83 号 spec 已落盘", "A18 / A211 / A244：00 全文、防错两段、11 / 12 号原文全文全部回显", "A202：引用旧决策前打开被引文件核一遍，不照念台账笔误", "A267 / A217：改状态前读真实 slug；核 src/ 已有占位再决定只接数据层", "A211：真读全文找已决断条目，不连续多轮只核状态", "cmp_precedence 版本判定，不用 Version 的 ==（A94 / A160）", "00:137：只接 mod / boot / 守卫 / CI，不扩稳定面", "A270 / A269：六表 EXPECTED 逐值 + 四 impl 段 code/parse 字面量比对", "00:9.2 / A264：先留 FAILED 回显，再改夹具，实现零改动", "A245：偶发并发 FAILED 单独跑 3 次 + 复跑 3 次全量，按实计入已失败", "A252：全量 726 / 0 由分段求和，注明各段口径", "A159 / A204 / A243：新守卫接 CI 前双向注入，恢复后哈希复原", "A116 / A258：CI 按 job 内容实跑，凭据前缀不写连续串", "A15：末条工具结果不可用就标受阻 / 已失败，不编造填满结构"];
+const MINI3=["A145：远端 ref + 完整 tree 补验，不臆测失败也不重复推送", "A202：084 尾部写的是 AX04，不把台账笔误当待办再念一遍", "A248：副本里没有的文字不写成用户指令", "00:34 / 00:260：每轮开工完整读 00 与防错清单，读漏视为未开工", "A266：平台文本不作用户当轮指令、不进 00:133 逐字副本", "A267：按真实 name slug 改状态，别按模块文件名猜", "A217：核 src/ 是否已有占位，只接数据层不写成功能已实现", "A211：原文里已决断、不依赖 EQ 的条目要真读全文找", "A246：新增内部数据层不顺手扩 api::v1", "A269 / A270：impl 段字面量与常量表逐值比对，不只核数量", "A271：新测试标识符先核全仓既有守卫的禁用字面量表", "A245：偶发并发 FAILED 不改被测实现、不加跳过", "A176：先 ls tests/*.rs 核真实文件名，不凭记忆拼测试名", "A265：NODES / LOG / MINI1 / MINI2 / MINI3 均 16 项对齐", "A205：交付 zip 按 git ls-files 清单打包，不夹 pyc", "00:245：存在已失败 / 未证实 / 未启动，不发通过标记"];
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(n[3]?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=MINI1[i]||'待执行';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=14?'Envelope Kind=Event · request_id 配对':(i>=10?'待构造':'—');
+ document.getElementById('m1').textContent=MINI2[i]||'未运行';
+ document.getElementById('m2').textContent=MINI3[i]||'未运行';
+ document.getElementById('m3').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('m4').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join(String.fromCharCode(10))||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;upd()}
+upd();
+</script></body></html>

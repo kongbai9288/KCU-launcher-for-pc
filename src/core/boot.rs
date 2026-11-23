@@ -63,6 +63,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.lan_channel",
     "core.notice_center",
     "core.world_editor",
+    "core.mod_rollback",
     "dispatcher.launcher",
 ];
 

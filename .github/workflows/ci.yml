@@ -133,3 +133,5 @@ jobs:
         run: python3 scripts/notice_center_guard.py
       - name: world_editor_guard
         run: python3 scripts/world_editor_guard.py
+      - name: mod_rollback_guard
+        run: python3 scripts/mod_rollback_guard.py

@@ -42,3 +42,4 @@ pub mod seed_access;
 pub mod lan_channel;
 pub mod notice_center;
 pub mod world_editor;
+pub mod mod_rollback;

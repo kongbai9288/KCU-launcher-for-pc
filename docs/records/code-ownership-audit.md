@@ -556,3 +556,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 084 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方 / 58 份 LICENSE 全文 / `THIRD-PARTY-NOTICES.md` 309 行。`src/` 零改动，AX03 `world_editor.rs` 保持 082 落地形态；083 的 28 组双向注入结论复核不变。A211 真读全文找出的 AX04 四锚点（`11:244` / `12:8` / `12:33` / `12:39`）属项目特有口径，无语义等价库可换，登记为 085 输入、本轮不拼接第三方代码。Q-082-01 / Q-082-02 / Q-082-03 保持待拍。
+
+## 085 / 086 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方 / 58 份 LICENSE 全文 / `THIRD-PARTY-NOTICES.md` 309 行。085 新增 `mod_rollback.rs` 复用既有 `semver::Version::cmp_precedence` / `serde_json` / `anyhow` / `robust` / `Envelope` / `diag_line` / `settings_io::PROTECTED_FILES`，不拼接上游源码；086 `src/` 零改动，AX04 保持 085 落地形态。Q-082-01 / Q-082-02 / Q-082-03 保持待拍。

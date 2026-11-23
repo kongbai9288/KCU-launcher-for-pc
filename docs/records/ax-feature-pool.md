@@ -221,3 +221,7 @@ A217 边界：`src/core/popup.rs:44` / `:49` 已有 `declaration` / `notice` 弹
 ## 084 补记（083 交付闭环轮）
 
 6 项 `Planned` 保持不变：AX04 `mod_rollback` / AX07 `doh_support` / AX08 `instance_import` / AX15 `studio_image_editor` / AX20 `projection_workshop` / AX22 `shimu_account`；`Planned 6` / `DataLayer 17` / `GateOnly 1`，`api::v1` 7 符号不变，084 `src/` 零改动。A211 真读 `11-features-input.txt` / `12-server-features-input.txt` 全文后找到 AX04 的四条已决断锚点：`11:244`（同版本警告、高版本由用户选择版本后替换、顺序页码弹窗、每个单独选择）、`12:8`（高版本自动禁用低版本 jar，单个实例页面）、`12:33`（配置快照与回滚）、`12:39`（服务端/加载器版本回滚）。按 A267 核 `src/core/ax.rs:21` 真实 name `mod_rollback`、conflict 为空。085 按功能池落 AX04；064–083 历史行不重写（A181 / A201）。
+
+## 085 / 086 补记（AX04 落地与交付闭环）
+
+AX04 `mod_rollback` 由 `Planned` 改 `DataLayer`（085 落地），conflict 保持空、`ui: true`；`Planned 5` / `DataLayer 18` / `GateOnly 1`，`api::v1` 7 符号不变，086 `src/` 零改动。A211 真读全文：085 落地的四锚点为 `11:244` / `12:8` / `12:33` / `12:39`；086 真读全文找出 AX08 `instance_import` 的七锚点 `11:15` / `11:21` / `11:222` / `12:35` / `12:36` / `12:40` / `12:41`，按 A267 核 `src/core/ax.rs` 真实 slug 与 conflict，登记为 087 输入、不代拍、不擅自定 5 项 `Planned` 之间的优先级。剩 5 项：`AX07 doh_support`（conflict `network_io_not_started`）/ `AX08 instance_import` / `AX15 studio_image_editor` / `AX20 projection_workshop` / `AX22 shimu_account`。064–084 历史行不重写（A181 / A201）。

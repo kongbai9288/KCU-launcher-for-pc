@@ -896,3 +896,8 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I199 | `src/` / `api::v1` / 既有 17 个 AX 数据层模块与判定层模块 / UX / 两语言包 / PNG | 084 零改动；7 符号 / 4 条 `pub use` 不变（A246） |
 | I200 | `scripts/world_editor_guard.py` / `.github/workflows/ci.yml` | 082 已挂 `scan` job；084 复扫 30 守卫 0 FAIL，083 的 28 组双向注入结论复核不变 |
 | I201 | `scripts/api_push.py` | 084 按 A216 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史 |
+
+| I202 | `src/core/mod_rollback.rs` / `scripts/mod_rollback_guard.py` | 085 新增 AX04 数据层与守卫；复用 `semver` / `serde_json` / `robust` / `Envelope` / `diag_line`，零新增第三方 |
+| I203 | `src/core/ax.rs` / `boot.rs` / `mod.rs` / `scripts/ax_guard.py` / `.github/workflows/ci.yml` | 085 接 AX04 状态、boot 模块、模块声明、守卫断言与 CI step；086 零改动 |
+| I204 | `src/api.rs` / `api::v1` | 085 / 086 零改动；7 符号 / 4 条 `pub use` 不变（A246） |
+| I205 | `scripts/api_push.py` | 086 按 A216 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史 |
