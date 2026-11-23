@@ -69,6 +69,7 @@ CI 三 job 按 A116 实跑真实命令：`credential` → `NO_CREDENTIAL`（全�
 
 087 按 A254 提交前 `ps -eo pid,cmd` 核无运行中 git 进程、无 `.git/index.lock`；按 A11 逐项核 `git status --porcelain` 全部属 086 补记 / 087 范围，无顺手改无关文件。按 A145 先只读核远端 ref 仍为 `e4723fb`、DIFF 5，再按 A216 用 `scripts/api_push.py` 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史；推送后只读 `GET /git/ref/heads/main` 得新 ref，并用 `git ls-files -s -z` 全量 path+blob sha 与远端 recursive tree 求差集，逐项 ALL_MATCH 结果写进 `rounds.md` 087 补记。两个 zip 按 A205 重打：主 zip 用 `git ls-files -z | zip -@`，`ui-previews.zip` 用 `demos/preview/*.png` 清单，项数分别等于 tracked 数与 PNG 数，EXTRA 0 / MISSING 0。具体 hash 与数值见补记，不在推送成功前写模板值。
 
+087 补记（推送后真实值）：主快照本地 `f40e278` / 1260 文件 DIRTY 0；远端 ref `247e7652777029cdb2accb021e023c12fb0a9d3d`（`force=false`，parent `e4723fb`），15 项变化 + `base_tree=9091cfc` 增量推送 RC=0，完整 recursive tree `1260 / 1260 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True`。086 补记 5 文件随本次推送闭环，受阻状态解除；E357 两次 502 仍计入已失败。本补记以该 ref 为父二次推送（A206，不用模板值冒充）。
 ## 6. 未通过项与补齐计划（`00:9.1`）
 
 **结论：未通过**，不发通过标记，不附两个哈希。

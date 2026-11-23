@@ -62,6 +62,7 @@ A249 形态实测：86 号 spec 落盘后 `python3 scripts/delivery_guard.py` �
 086 补记（推送后真实值）：主快照本地 `b598ac5` / 1255 文件 DIRTY 0；远端 ref `e4723fb09e3494b0915410fea237f6c5e908181f`（`force=false`，parent `c025a78`），23 项变化 + `base_tree=aa1ac3e` 增量推送 RC=0，完整 recursive tree `1255 / 1255 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True`。本补记以该 ref 为父二次推送（A206，不用模板值冒充）。
 
 
+087 补记（086 补记推送状态覆盖）：086 阶段二补记两次撞网关 502，远端 `e4723fb` / DIFF 5 / ALL_MATCH False，按 A206 / A209 写「受阻、ALL_MATCH 本轮不成立」。087 按 A145 补验远端未变后合并推送，远端 `247e765` / `1260 / 1260 / ALL_MATCH True`，086 补记 5 文件已入远端，受阻状态解除；E357 两次 502 仍计入四值「已失败」，不包装成已处理（A201，历史行不重写）。
 ## 8. 验证
 
 | 项 | 值 |
