@@ -225,3 +225,7 @@ A217 边界：`src/core/popup.rs:44` / `:49` 已有 `declaration` / `notice` 弹
 ## 085 / 086 补记（AX04 落地与交付闭环）
 
 AX04 `mod_rollback` 由 `Planned` 改 `DataLayer`（085 落地），conflict 保持空、`ui: true`；`Planned 5` / `DataLayer 18` / `GateOnly 1`，`api::v1` 7 符号不变，086 `src/` 零改动。A211 真读全文：085 落地的四锚点为 `11:244` / `12:8` / `12:33` / `12:39`；086 真读全文找出 AX08 `instance_import` 的七锚点 `11:15` / `11:21` / `11:222` / `12:35` / `12:36` / `12:40` / `12:41`，按 A267 核 `src/core/ax.rs` 真实 slug 与 conflict，登记为 087 输入、不代拍、不擅自定 5 项 `Planned` 之间的优先级。剩 5 项：`AX07 doh_support`（conflict `network_io_not_started`）/ `AX08 instance_import` / `AX15 studio_image_editor` / `AX20 projection_workshop` / `AX22 shimu_account`。064–084 历史行不重写（A181 / A201）。
+
+## 087 补记
+
+AX04 `mod_rollback` 保持 `DataLayer`（085 落地），conflict 空、`ui: true`；`Planned 5` / `DataLayer 18` / `GateOnly 1`，`api::v1` 7 符号不变，087 `src/` 零改动。A211 真读全文复核 AX08 `instance_import` 七锚点 `11:15` / `11:21` / `11:222` / `12:35` / `12:36` / `12:40` / `12:41`，按 A267 核 `src/core/ax.rs:24–39` 真实 slug 与 conflict，顺延为 088 输入、不代拍、不擅自定 5 项 `Planned` 之间的优先级。剩 5 项：`AX07 doh_support`（conflict `network_io_not_started`）/ `AX08 instance_import` / `AX15 studio_image_editor` / `AX20 projection_workshop` / `AX22 shimu_account`。064–086 历史行不重写（A181 / A201）。

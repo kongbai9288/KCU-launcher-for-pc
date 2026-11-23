@@ -55,6 +55,10 @@ A248 / A266 预检：85 号 spec 副本全文 3 字节 `干`；平台拼入用�
 
 085 代码、守卫、测试与双向注入于 085 轮落地；085 四件套与台账、提交、推送、zip 由 086 按 068 / 084 先例 + A249 补齐。提交 hash、文件数与逐项 ALL_MATCH 结果写进 `docs/records/rounds.md` 086 补记（A206，不用模板值冒充）。085 开工 A145 补验为远端 `c025a78` / `1243 / 1243 ALL_MATCH True`。
 
+
+086 补记（推送后真实值）：主快照本地 `b598ac5` / 1255 文件 DIRTY 0；远端 ref `e4723fb09e3494b0915410fea237f6c5e908181f`（`force=false`，parent `c025a78`），23 项变化 + `base_tree=aa1ac3e` 增量推送 RC=0，完整 recursive tree `1255 / 1255 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True`。本补记以该 ref 为父二次推送（A206，不用模板值冒充）。
+
+
 ## 8. 验证
 
 | 项 | 值 |

@@ -901,3 +901,5 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I203 | `src/core/ax.rs` / `boot.rs` / `mod.rs` / `scripts/ax_guard.py` / `.github/workflows/ci.yml` | 085 接 AX04 状态、boot 模块、模块声明、守卫断言与 CI step；086 零改动 |
 | I204 | `src/api.rs` / `api::v1` | 085 / 086 零改动；7 符号 / 4 条 `pub use` 不变（A246） |
 | I205 | `scripts/api_push.py` | 086 按 A216 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史 |
+
+| I206 | `scripts/api_push.py` | 087 按 A145 先核远端 ref 未变，再以 `base_tree` 增量 POST 把 086 补记与 087 产物一次同步，`force=false`，不强推、不重写历史 |

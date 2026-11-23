@@ -560,3 +560,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 085 / 086 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方 / 58 份 LICENSE 全文 / `THIRD-PARTY-NOTICES.md` 309 行。085 新增 `mod_rollback.rs` 复用既有 `semver::Version::cmp_precedence` / `serde_json` / `anyhow` / `robust` / `Envelope` / `diag_line` / `settings_io::PROTECTED_FILES`，不拼接上游源码；086 `src/` 零改动，AX04 保持 085 落地形态。Q-082-01 / Q-082-02 / Q-082-03 保持待拍。
+
+## 087 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方 / 58 份 LICENSE 全文 / `THIRD-PARTY-NOTICES.md` 309 行。087 `src/` 零改动，AX04 保持 085 落地形态，复用既有 `semver` / `serde_json` / `robust` / `Envelope` / `diag_line`，不拼接上游源码。Q-082-01 / Q-082-02 / Q-082-03 保持待拍。
