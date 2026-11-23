@@ -43,3 +43,4 @@ pub mod lan_channel;
 pub mod notice_center;
 pub mod world_editor;
 pub mod mod_rollback;
+pub mod instance_import;

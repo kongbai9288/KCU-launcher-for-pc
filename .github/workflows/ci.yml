@@ -135,3 +135,5 @@ jobs:
         run: python3 scripts/world_editor_guard.py
       - name: mod_rollback_guard
         run: python3 scripts/mod_rollback_guard.py
+      - name: instance_import_guard
+        run: python3 scripts/instance_import_guard.py

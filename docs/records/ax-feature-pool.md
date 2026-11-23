@@ -229,3 +229,11 @@ AX04 `mod_rollback` 由 `Planned` 改 `DataLayer`（085 落地），conflict 保
 ## 087 补记
 
 AX04 `mod_rollback` 保持 `DataLayer`（085 落地），conflict 空、`ui: true`；`Planned 5` / `DataLayer 18` / `GateOnly 1`，`api::v1` 7 符号不变，087 `src/` 零改动。A211 真读全文复核 AX08 `instance_import` 七锚点 `11:15` / `11:21` / `11:222` / `12:35` / `12:36` / `12:40` / `12:41`，按 A267 核 `src/core/ax.rs:24–39` 真实 slug 与 conflict，顺延为 088 输入、不代拍、不擅自定 5 项 `Planned` 之间的优先级。剩 5 项：`AX07 doh_support`（conflict `network_io_not_started`）/ `AX08 instance_import` / `AX15 studio_image_editor` / `AX20 projection_workshop` / `AX22 shimu_account`。064–086 历史行不重写（A181 / A201）。
+
+## 088 补记
+
+AX08 `instance_import` 由 `Planned` 改 `DataLayer`（上一轮落地），conflict 空、`ui: true`；`Planned 4` / `DataLayer 19` / `GateOnly 1`，`api::v1` 7 符号不变，088 `src/` 零改动。A211 真读全文复核 AX08 七锚点 `11:15` / `11:21` / `11:222` / `12:35` / `12:36` / `12:40` / `12:41`；按 A217 核 `src/core/` 既有 `instance.rs` / `instance_drop.rs` 语义不同、不复用。剩 4 项 `Planned`：`AX07 doh_support`（conflict `network_io_not_started`）/ `AX15 studio_image_editor` / `AX20 projection_workshop` / `AX22 shimu_account`。064–087 历史行不重写（A181 / A201）。
+
+## 089 补记
+
+AX08 `instance_import` 保持 `DataLayer`（088 落地），conflict 空、`ui: true`；`Planned 4` / `DataLayer 19` / `GateOnly 1`，`api::v1` 7 符号不变，089 `src/` 零改动。A211 真读全文复核 AX08 七锚点 `11:15` / `11:21` / `11:222` / `12:35` / `12:36` / `12:40` / `12:41`，按 A267 核 `src/core/ax.rs:24–39` 真实 slug 与 conflict，顺延为 090 输入、不代拍、不擅自定 4 项 `Planned` 之间的优先级。剩 4 项：`AX07 doh_support`（conflict `network_io_not_started`）/ `AX15 studio_image_editor` / `AX20 projection_workshop` / `AX22 shimu_account`。064–088 历史行不重写（A181 / A201）。

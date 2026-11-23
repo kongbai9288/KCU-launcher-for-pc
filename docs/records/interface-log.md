@@ -903,3 +903,9 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I205 | `scripts/api_push.py` | 086 按 A216 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史 |
 
 | I206 | `scripts/api_push.py` | 087 按 A145 先核远端 ref 未变，再以 `base_tree` 增量 POST 把 086 补记与 087 产物一次同步，`force=false`，不强推、不重写历史 |
+
+| I207 | `src/core/instance_import.rs` / `scripts/instance_import_guard.py` | 088 新增 AX08 数据层与守卫；复用 `serde_json` / `robust` / `Envelope` / `diag_line`，零新增第三方 |
+| I208 | `src/core/ax.rs` / `boot.rs` / `mod.rs` / `scripts/ax_guard.py` / `.github/workflows/ci.yml` | 088 接 AX08 状态、boot 模块、模块声明、守卫断言与 CI step；本轮 `src/` 零改动、仅修守卫 5 处断言 |
+| I209 | `src/api.rs` / `api::v1` | 零改动；7 符号 / 4 条 `pub use` 不变（A246） |
+
+| I210 | `scripts/api_push.py` | 089 按 A145 先核远端 ref 未变，再以 `base_tree` 增量 POST 把 088 覆盖补记与 089 产物一次同步，`force=false`，不强推、不重写历史 |
