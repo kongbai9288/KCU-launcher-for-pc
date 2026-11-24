@@ -60,6 +60,8 @@ A249 形态实测：90 号 spec 落盘后 `python3 scripts/delivery_guard.py` �
 
 本轮一次提交把 090 代码 / 守卫 / 五处接线与 090 四件套、台账补记纳入主快照；推送后只读核远端 ref 与完整 tree，逐项 ALL_MATCH 结果写入 `docs/records/rounds.md` 090 补记（A206，不用模板值冒充）。开工 A145 补验为 `a5b4547` / `1272 / 1272 / ALL_MATCH True`。两个 zip 按 A205 重打。全仓零凭据；`scripts/__pycache__/` 保持 0 项；临时注入脚本用后即删。
 
+090 补记（推送后真实值）：主快照本地 `a653fe3` / 1279 文件 DIRTY 0；远端 ref `c7f30715a63cff6b11169cc01a002cc46ea188f3`（`force=false`，parent `a5b4547`），19 项变化 + `base_tree=92f251d` 增量推送 RC=0，完整 recursive tree `1279 / 1279 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True`。090 四件套、AX20 数据层与五处接线一并入远端。E366 / E367 仍计入四值「已失败」。本补记以该 ref 为父二次推送（A206，不用模板值冒充）。
+
 ## 8. 验证
 
 | 项 | 值 |
