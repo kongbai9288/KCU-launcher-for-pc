@@ -909,3 +909,8 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I209 | `src/api.rs` / `api::v1` | 零改动；7 符号 / 4 条 `pub use` 不变（A246） |
 
 | I210 | `scripts/api_push.py` | 089 按 A145 先核远端 ref 未变，再以 `base_tree` 增量 POST 把 088 覆盖补记与 089 产物一次同步，`force=false`，不强推、不重写历史 |
+
+| I211 | `src/core/projection.rs` / `scripts/projection_guard.py` | 090 新增 AX20 数据层与守卫；复用 `serde_json` / `robust` / `Envelope` / `diag_line` / `PROTECTED_FILES`，零新增第三方 |
+| I212 | `src/core/ax.rs` / `boot.rs` / `mod.rs` / `scripts/ax_guard.py` / `.github/workflows/ci.yml` | 090 接 AX20 状态、boot 模块、模块声明、守卫断言与 CI step |
+| I213 | `scripts/instance_import_guard.py` | 090 按 A240 / A262 把写死状态计数改动态持有（E366），状态计数由 `ax_guard.py` 持有 |
+| I214 | `src/api.rs` / `api::v1` | 零改动；7 符号 / 4 条 `pub use` 不变（A246） |

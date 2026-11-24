@@ -237,3 +237,7 @@ AX08 `instance_import` 由 `Planned` 改 `DataLayer`（上一轮落地），conf
 ## 089 补记
 
 AX08 `instance_import` 保持 `DataLayer`（088 落地），conflict 空、`ui: true`；`Planned 4` / `DataLayer 19` / `GateOnly 1`，`api::v1` 7 符号不变，089 `src/` 零改动。A211 真读全文复核 AX08 七锚点 `11:15` / `11:21` / `11:222` / `12:35` / `12:36` / `12:40` / `12:41`，按 A267 核 `src/core/ax.rs:24–39` 真实 slug 与 conflict，顺延为 090 输入、不代拍、不擅自定 4 项 `Planned` 之间的优先级。剩 4 项：`AX07 doh_support`（conflict `network_io_not_started`）/ `AX15 studio_image_editor` / `AX20 projection_workshop` / `AX22 shimu_account`。064–088 历史行不重写（A181 / A201）。
+
+## 090 补记
+
+AX20 `projection_workshop` 由 `Planned` 改 `DataLayer`（090 落地），conflict 空、`ui: true`；`Planned 3` / `DataLayer 20` / `GateOnly 1`，`api::v1` 7 符号不变。按 A230 逐条核 4 项冲突：AX07 `doh_support`（conflict `network_io_not_started`，技术受阻非需求冲突，真读全文无已决断 DoH 锚点）/ AX15 `studio_image_editor`（与 `banner_design.rs` 撤销栈同构，075 E276）/ AX22 `shimu_account`（浏览器授权依赖真实网络 IO + 第三方端点 + 境外限制 + `11:18` API 不共有）三项排除留痕、状态保持 `Planned`、AX07 conflict 不清，登记 Q-090-01 / Q-090-02；AX20 按 `11:250` 原文已决断锚点收窄落地，历史行不重写（A181 / A201）。A211 真读全文复核六锚点 `11:250` / `11:244` / `11:147` / `11:150` / `11:23` / `11:24` / `11:10` / `12:35` / `12:36`；按 A267 核 `src/core/ax.rs:24–39` 真实 slug，按 A217 核 `src/core/` 无 `projection*` 占位。091 前的剩 3 项：`AX07 doh_support` / `AX15 studio_image_editor` / `AX22 shimu_account`。064–089 历史行不重写（A181 / A201）。

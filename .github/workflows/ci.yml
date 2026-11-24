@@ -137,3 +137,5 @@ jobs:
         run: python3 scripts/mod_rollback_guard.py
       - name: instance_import_guard
         run: python3 scripts/instance_import_guard.py
+      - name: projection_guard
+        run: python3 scripts/projection_guard.py

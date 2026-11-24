@@ -65,6 +65,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.world_editor",
     "core.mod_rollback",
     "core.instance_import",
+    "core.projection",
     "dispatcher.launcher",
 ];
 

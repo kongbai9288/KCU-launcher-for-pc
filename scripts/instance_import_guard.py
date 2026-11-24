@@ -274,8 +274,14 @@ ax_rows = [r for r in re.findall(r'AxSpec \{([^}]*)\}', ax) if 'id: "AX' in r]
 ax_states = [re.search(r'state: AxState::(\w+)', r).group(1) for r in ax_rows]
 ax_planned = ax_states.count('Planned')
 ax_data = ax_states.count('DataLayer')
-if len(ax_rows) != 24 or ax_planned != 4 or ax_data != 19:
-    fail('ax_state_counts rows=%d planned=%d data=%d' % (len(ax_rows), ax_planned, ax_data))
+# A240 / A262 / E366：状态计数由 ax_guard 动态持有，本守卫只核行数与关键项断言
+if len(ax_rows) != 24 or ax_states.count('GateOnly') != 1:
+    fail('ax_table_shape rows=%d gate=%d' % (len(ax_rows), ax_states.count('GateOnly')))
+axg = (ROOT / 'scripts/ax_guard.py').read_text()
+if "'AX08'" not in axg:
+    fail('ax_guard_explicit_assert_missing AX08')
+if 'planned = sum(' not in axg or 'data = sum(' not in axg:
+    fail('ax_guard_not_dynamic')
 
 print('INSTANCE_IMPORT_GUARD_OK root_keys=%d entry_keys=%d formats=%d kinds=%d actions=%d states=%d '
       'path_kinds=%d four_impl_literals_match component_path_check consistent_checks_five calls=%d '
