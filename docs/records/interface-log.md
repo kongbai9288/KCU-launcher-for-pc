@@ -914,3 +914,8 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I212 | `src/core/ax.rs` / `boot.rs` / `mod.rs` / `scripts/ax_guard.py` / `.github/workflows/ci.yml` | 090 接 AX20 状态、boot 模块、模块声明、守卫断言与 CI step |
 | I213 | `scripts/instance_import_guard.py` | 090 按 A240 / A262 把写死状态计数改动态持有（E366），状态计数由 `ax_guard.py` 持有 |
 | I214 | `src/api.rs` / `api::v1` | 零改动；7 符号 / 4 条 `pub use` 不变（A246） |
+
+| I215 | `src/core/studio_image.rs` / `scripts/studio_image_guard.py` | 091 新增 AX15 数据层与守卫；复用 `serde_json` / `robust` / `Envelope` / `diag_line` / `PROTECTED_FILES`，零新增第三方 |
+| I216 | `src/core/ax.rs` / `boot.rs` / `mod.rs` / `scripts/ax_guard.py` / `.github/workflows/ci.yml` | 091 接 AX15 状态、boot 模块、模块声明、守卫断言与 CI step |
+| I217 | `scripts/projection_guard.py` | 091 按 A201 / A158 把 090 写死的 AX15 `Planned` 断言改 `DataLayer`（E369） |
+| I218 | `src/api.rs` / `api::v1` | 零改动；7 符号 / 4 条 `pub use` 不变（A246） |

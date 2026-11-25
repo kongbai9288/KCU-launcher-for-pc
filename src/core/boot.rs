@@ -66,6 +66,7 @@ pub const LOADED_MODULES: &[&str] = &[
     "core.mod_rollback",
     "core.instance_import",
     "core.projection",
+    "core.studio_image",
     "dispatcher.launcher",
 ];
 

@@ -279,9 +279,9 @@ if "'AX20'" not in axg:
     fail('ax_guard_explicit_assert_missing')
 if 'planned = sum(' not in axg or 'data = sum(' not in axg:
     fail('ax_guard_not_dynamic')
-# A230：AX07 硬技术冲突保持，AX15 / AX22 仍 Planned，不擅自升级
+# A230：AX07 硬技术冲突保持，AX15 091 已落 DataLayer，AX22 仍 Planned
 for ax_id, state, conflict in [('AX07', 'Planned', 'network_io_not_started'),
-                               ('AX15', 'Planned', ''),
+                               ('AX15', 'DataLayer', ''),
                                ('AX22', 'Planned', '')]:
     row = re.search(r'AxSpec \{ id: "' + ax_id + r'", name: "([a-z_]+)", state: AxState::(\w+), conflict: "([^"]*)"', ax)
     if not row or row.group(2) != state or row.group(3) != conflict:

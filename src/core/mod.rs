@@ -45,3 +45,4 @@ pub mod world_editor;
 pub mod mod_rollback;
 pub mod instance_import;
 pub mod projection;
+pub mod studio_image;
