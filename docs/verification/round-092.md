@@ -71,7 +71,13 @@ A202 核出的口径偏差 E375：091 结尾写「4 条 Q-C」，打开 `pending
 
 ## 5. 提交、远端核对与 CI 三 job 实跑
 
-092 按 A254 提交前 `ps -eo pid,cmd` 核无运行中 git 进程、无 `.git/index.lock`；按 A11 逐项核 `git status --porcelain` 全部属 092 范围。按 A216 用 `scripts/api_push.py` 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史；推送后只读 `GET /git/ref/heads/main` 得新 ref，并用完整 recursive tree 求差集，逐项 ALL_MATCH 结果写进 `rounds.md` 092 补记。两个 zip 按 A205 重打：主 zip 用 `git ls-files -z | zip -@`，`ui-previews.zip` 用 `demos/preview/*.png` 清单。具体 hash、CI 三 job 实跑输出与数值见补记，不在推送成功前写模板值（A206 / A116）。
+092 按 A254 提交前 `ps -eo pid,cmd` 核无运行中 git 进程、无 `.git/index.lock`；按 A11 逐项核 `git status --porcelain` 全部属 092 范围。按 A216 用 `scripts/api_push.py` 以 `base_tree` 增量 POST 只传变化条目，`force=false`，不强推、不重写历史；推送后只读 `GET /git/ref/heads/main` 得新 ref，并用完整 recursive tree 求差集，逐项 ALL_MATCH 结果写进 `rounds.md` 092 补记。两个 zip 按 A205 重打：主 zip 用 `git ls-files -z | zip -@`，`ui-previews.zip` 用 `demos/preview/*.png` 清单。推送真实结果：本地提交 `df6170e`（`round 092: pending decisions flattened, guard and delivery`，14 项 staged、TRACKED 1286 → 1292、DIRTY 0、无锁）；远端 `GET /git/ref/heads/main` → `d65c0d1a3be2abd62065d3d550b28b46174a4261`，parent `1ec52d5`，message 与本地一致；`api_push.py` 输出 `remote blob 1292 OK concurrent=8 remote_reused=1153` / `remote tree main INCREMENTAL changes=14 base_tree=79f4398` / `remote push main OK commit=d65c0d1 files=1292 via=git_data_api`，RC=0、`force=false`。完整 recursive tree 复核 `LOCAL 1292 / REMOTE 1292 / DIFF 0 / EXTRA 0 / TRUNCATED False / ALL_MATCH True`（A145 / A206，逐项写实际结果，不用模板值）。
+
+CI 三 job 按 A116 实跑 `ci.yml` 真实命令：`credential` → `NO_CREDENTIAL`（全仓字节扫描 1292 文件 hits 0、`git grep -lE` tracked 0 命中、`ci.yml` 0 命中）、`wording` → `NO_EXPLANATORY`、`hardcode` → `NO_HARDCODE`。092 新文件宽口径措辞扫描 0 命中、占位符 0、`scripts/__pycache__/` 0 项。A11 逐项核 `git status --porcelain` 14 项全部属 092 范围，`src/` / `Cargo.toml` / `Cargo.lock` / `vendor/` 零 diff（A208 不擅自开工）。
+
+两个 zip 按 A205 重打：主包 `git ls-files | zip -q -@` 1292 项、`ui-previews.zip` 按 `demos/preview/*.png` 清单 56 项，`MAIN_DIFF 0 / EXTRA 0 / MISSING 0 / PREVIEW_DIFF 0 / PYC_IN_MAIN 0 / DIR_ENTRIES 0`；主包 62372802 字节、预览包 57594422 字节。
+
+E373 / E374 为 091 登记的索引锁与偶发并发 FAILED；092 首跑 lib 即 `780 passed; 0 failed`，未触发 A245，E374 仍按 091 保留在四值「已失败」。092 无网关 502、无 `.git/index.lock` 残留、无重复「干」登记（92 号 spec 与 91 号同 sha，按 A34 不重复落盘、不建 93 号）。补记自身推送后的最终远端 ref 在对话回显（A206）。
 
 ## 6. 未通过项与补齐计划（`00:9.1`）
 
