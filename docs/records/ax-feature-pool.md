@@ -245,3 +245,7 @@ AX20 `projection_workshop` 由 `Planned` 改 `DataLayer`（090 落地），confl
 ## 091 补记
 
 AX15 `studio_image_editor` 由 `Planned` 改 `DataLayer`（091 落地），conflict 空、`ui: true`；`Planned 2` / `DataLayer 21` / `GateOnly 1`，`api::v1` 7 符号不变。按 A230 逐条核 3 项冲突：AX07 `doh_support`（conflict `network_io_not_started`，技术受阻非需求冲突，真读全文无已决断 DoH 锚点）/ AX22 `shimu_account`（浏览器授权依赖真实网络 IO + 第三方端点 + 境外限制 + `11:18` API 不共有）两项排除留痕、状态保持 `Planned`、AX07 conflict 不清，登记 Q-091-01 / Q-091-02 / Q-091-03；AX15 按 `12:63` 原文已决断锚点收窄落地，历史行不重写（A181 / A201）。A211 真读全文复核八锚点 `12:63` / `12:59` / `11:243` / `11:147` / `11:150` / `11:23` / `11:24` / `11:10` / `11:26` / `11:16` / `12:35` / `12:36`；按 A267 核 `src/core/ax.rs:20–43` 真实 slug，按 A217 核 `src/core/` 无 `studio*` / `image*` / `logo*` / `pixel*` 占位。092 前的剩 2 项：`AX07 doh_support` / `AX22 shimu_account`，两项均卡网络前置 / Q / EQ，按 090 唯一下一步「若回任一 Q / EQ 则改走拍板闭环」转拍板闭环。064–090 历史行不重写（A181 / A201）。
+
+## 092 补记
+
+092 为拍板闭环轮，`src/core/ax.rs` 零改动：AX07 `doh_support` / `Planned` / `network_io_not_started`、AX22 `shimu_account` / `Planned` / 空 conflict、AX23 `client_ai_gate` / `GateOnly` 原样；`Planned 2` / `DataLayer 21` / `GateOnly 1`，`api::v1` 7 符号不变。按 A230 逐条核 2 项冲突并写进 `pending-question-environments.md` 092 段：AX07 技术受阻非需求冲突（EQ-03 Win7 TLS 前置 + 真实网络 IO 未启动，00 / 11 / 12 号全文无 DoH 锚点）、AX22 浏览器授权依赖真实网络 IO + 第三方端点 + `11:7` / 054 境外限制 + `11:18` API 不共有，两项排除留痕、状态保持 `Planned`、AX07 conflict 不清，不擅自定优先级（A208）。Q-091-01 / Q-091-02 / Q-091-03 与 Q-C 口径修正 E375 见 092 段。064–091 历史行不重写（A181 / A201）。

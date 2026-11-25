@@ -919,3 +919,7 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I216 | `src/core/ax.rs` / `boot.rs` / `mod.rs` / `scripts/ax_guard.py` / `.github/workflows/ci.yml` | 091 接 AX15 状态、boot 模块、模块声明、守卫断言与 CI step |
 | I217 | `scripts/projection_guard.py` | 091 按 A201 / A158 把 090 写死的 AX15 `Planned` 断言改 `DataLayer`（E369） |
 | I218 | `src/api.rs` / `api::v1` | 零改动；7 符号 / 4 条 `pub use` 不变（A246） |
+
+| I219 | `docs/records/pending-question-environments.md` / `scripts/pending_decisions_guard.py` | 092 摊平可拍环境与新守卫；零新增第三方、零新增模块 |
+| I220 | `.github/workflows/ci.yml` / `docs/index.md` | 092 挂 `pending_decisions_guard` step、必读清单加 092 六项 |
+| I221 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |

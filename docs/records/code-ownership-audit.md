@@ -580,3 +580,7 @@ log 零传递依赖；vendor 时裁掉 optional deps、dev deps 与引用外部 
 ## 091 轮
 
 零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方 / 58 份 LICENSE 全文 / `THIRD-PARTY-NOTICES.md` 309 行。091 `src/core/studio_image.rs` 复用既有 `serde_json` / `anyhow` / `robust` / `Envelope` / `diag_line` / `settings_io::PROTECTED_FILES`，不拼接上游源码、不引图像库、不持有图片字节。Q-082-01 / Q-082-02 / Q-082-03、Q-090-01 / Q-090-02、Q-091-01 / Q-091-02 / Q-091-03 保持待拍。
+
+## 092 轮
+
+零新增第三方，`Cargo.toml` / `Cargo.lock` / `vendor/` 一行未动，仍 26 包 / 25 第三方 / 58 份 LICENSE 全文 / `THIRD-PARTY-NOTICES.md` 309 行。092 为拍板闭环轮，`src/` 零改动、不拼接上游源码、不引新库。Q-082-01 / Q-082-02 / Q-082-03、Q-090-01 / Q-090-02、Q-091-01 / Q-091-02 / Q-091-03 与 EQ-01 ~ EQ-13 保持待拍。

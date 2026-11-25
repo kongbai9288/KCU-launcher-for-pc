@@ -224,3 +224,84 @@ E127 / E128 / E129 三处台账滞后已追加补记；`scripts/delivery_guard.p
 **057 状态**
 
 用户未点 EQ 编号。本轮真读 `00-requirements.txt` 第 12 节，落地 §12 启动级兜底（不依赖任何 EQ）：`BootState` 持久化计数、四级 `Tier`、四项诊断包落盘、dispatcher 接线。B04 / B05 / B07 / B09 / B10 仍**未开工**，卡点 EQ-01 / 源仓库与许可未给 / EQ-05 / EQ-11 / 推进口径未决断不变。EQ-01 ~ EQ-13 仍待拍板，EQ-14（049）、EQ-15（050）已关闭；Q-C01 / Q-C02 / Q-C08 / Q-037-01 仍待拍板。本轮未新增 EQ。
+
+## 092 摊平
+
+状态：092 复核，不代拍。范围：EQ-01 ~ EQ-13（13 条；EQ-14 / EQ-15 已关闭）、3 条 Q-C + Q-037-01（共 4 项）、Q-091-01 / Q-091-02 / Q-091-03、058–091 新增 Q 共 31 条、2 项 `Planned`。每条状态一律「待拍板 / 未证实」。历史行不重写（A181 / A201）。
+
+### A 组：阻塞 2 项 `Planned`（拍板面最小）
+
+| 项 | 环境 | 选项 | 后果 | 耦合 |
+| --- | --- | --- | --- | --- |
+| EQ-03 + AX07 `doh_support` | Win7 SP1 x86/x64；KB3140245 / DefaultSecureProtocols / SChannel / rustls ProcessPrng 补丁分开登记（A119）；`src/core/http.rs` 只有 plan 构造器，无 TcpStream；`31-axolotl-launcher-features.md:35` 写「真实网络 IO 未启动、Win7 TLS 前置（EQ-03）」；00 / 11 / 12 号全文无 DoH 锚点 | ① 先起真实网络执行层再落 DoH ② 保持 `Planned`，DoH 降级为端点配置项 ③ 明确不做 DoH 并从功能池撤下 | ① 需新增网络栈与 Win7 运行时验证，体积与 MSRV 变化；② 不引入依赖，AX07 conflict 保持 `network_io_not_started`；③ 与「别人有的功能要有」（00:44）冲突，需显式撤回 | EQ-01（UI 框架）、EQ-11（i686 / MSVC / Win7 运行时）、Q-091-01（AX22 端点）、B10（推进口径） |
+| EQ-01 + Q-091-01 + AX22 `shimu_account` | WebView2 Evergreen Runtime 最低 Win10，Win7 无分发；`11:7` 境外离线账户限制、054 双信号 Unknown 放行；`11:18` API 不共有（063 `client_ai_gate` 为 GateOnly）；第三方端点 / 浏览器授权形态 / 签名校验口径未给 | ① 给出端点与授权形态后再落 ② 只落「断开关联」本地状态、不碰网络 ③ 保持 `Planned` | ① 需端点配置化 + 境外限制判定先定；② 不写死端点，但功能只剩本地开关；③ 2 项 `Planned` 继续挂账 | EQ-03、EQ-01、B05（HMCL 源与许可未给）、`11:7` / 054 |
+| Q-091-02 + Q-091-03 | 090 `projection.rs` 已落 fit / original / scaled 三档视图；075 `banner_design.rs` 撤销栈 `MAX_HISTORY=64`；091 `studio_image.rs` 显式不碰两者（E369 口径） | ① 复用既有模块 ② 各模块独立注册表 ③ 等 EQ-01 拍板后一次定 | ① 减少重复常量表，边界由守卫持有；② 三份同构数据层，A284 张力继续；③ UI 闸门不开则两者都停在文档层 | A100（UI 渲染层）、EQ-01、`00:175` 复用口径 |
+
+### B 组：3 条 Q-C + Q-037-01（共 4 项）
+
+| 项 | 环境 / 已证实事实 | 选项 | 后果 | 耦合 |
+| --- | --- | --- | --- | --- |
+| Q-C01 | 轻量 13 项排除清单，当前 13 项 | 增删清单 | 改动影响 `excluded_assets_cover_normal_ui_and_heavy_components` 断言 | A68 / 016 |
+| Q-C02 | 正常模式实现层单主题 / 深浅双主题 | 单主题 / 双主题 | 双主题需 `view_uses_single_theme` 反向验证 | A79 / 018 |
+| Q-C08 | 一级导航当前 9 项 | 增删项 | 配置类功能挂一级导航会撞 A85 | A85 / 020 |
+| Q-037-01 | 身份哈希 `sha512(plugin_id)[..16]`；改内容哈希后升级确认弹窗不可达（本文件 EQ-02 段） | 保持身份哈希 / 改内容哈希并重定义「同一插件」判定键 | 后者使 037 升级确认口径悬空 | EQ-02 / A96 |
+
+091 结尾写「4 条 Q-C」。按 A202 打开 `pending-question-environments.md` 尾部、`c-class-default-recheck.md`、`b-class-status-recheck.md:85` 核：真实待拍为 Q-C01 / Q-C02 / Q-C08 三条 Q-C 加一条 Q-037-01，共 4 项，Q-037-01 不属 Q-C 组。口径修正登记 E375，历史行不重写（A181 / A201）。
+
+### C 组：EQ-01 ~ EQ-13 逐编号索引（不重复铺场景，A150）
+
+| 编号 | 台账锚点 | 状态 |
+| --- | --- | --- |
+| EQ-01 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-02 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-03 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-04 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-05 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-06 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-07 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-08 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-09 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-10 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-11 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-12 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+| EQ-13 | `pending-question-environments.md` 048–057 段；`b-class-status-recheck.md:61` | 未证实（待拍板） |
+EQ-14（048 新增 / 049 按选项②关闭）、EQ-15（048 新增 / 050 按选项①关闭）已关闭，不计入 13 条待拍。逐条环境 / 事实 / 选项 / 后果见本文件 048–057 段，092 不重写。
+
+### D 组：058–091 新增 Q 全集（31 条，按轮次）
+
+- 067 轮：Q-067-01 / Q-067-03（定义见 `docs/decisions/067-*.md`，状态未证实 / 待拍板）
+- 070 轮：Q-070-01（定义见 `docs/decisions/070-*.md`，状态未证实 / 待拍板）
+- 071 轮：Q-071-01 / Q-071-02（定义见 `docs/decisions/071-*.md`，状态未证实 / 待拍板）
+- 072 轮：Q-072-01 / Q-072-02（定义见 `docs/decisions/072-*.md`，状态未证实 / 待拍板）
+- 073 轮：Q-073-01 / Q-073-02（定义见 `docs/decisions/073-*.md`，状态未证实 / 待拍板）
+- 074 轮：Q-074-01 / Q-074-02（定义见 `docs/decisions/074-*.md`，状态未证实 / 待拍板）
+- 075 轮：Q-075-01 / Q-075-02（定义见 `docs/decisions/075-*.md`，状态未证实 / 待拍板）
+- 076 轮：Q-076-01 / Q-076-02（定义见 `docs/decisions/076-*.md`，状态未证实 / 待拍板）
+- 077 轮：Q-077-01 / Q-077-02（定义见 `docs/decisions/077-*.md`，状态未证实 / 待拍板）
+- 078 轮：Q-078-01 / Q-078-02（定义见 `docs/decisions/078-*.md`，状态未证实 / 待拍板）
+- 079 轮：Q-079-01 / Q-079-02（定义见 `docs/decisions/079-*.md`，状态未证实 / 待拍板）
+- 080 轮：Q-080-01 / Q-080-02（定义见 `docs/decisions/080-*.md`，状态未证实 / 待拍板）
+- 081 轮：Q-081-01 / Q-081-02（定义见 `docs/decisions/081-*.md`，状态未证实 / 待拍板）
+- 082 轮：Q-082-01（定义见 `docs/decisions/082-*.md`，状态未证实 / 待拍板）
+- 090 轮：Q-090-01 / Q-090-02（定义见 `docs/decisions/090-*.md`，状态未证实 / 待拍板）
+- 091 轮：Q-091-01 / Q-091-02 / Q-091-03（定义见 `docs/decisions/091-*.md`，状态未证实 / 待拍板）
+Q-028-01 / Q-028-02、Q-031-01（033 已关闭）、Q-047-01、Q-A ~ Q-H 组（013 已答复，见 `docs/records/round-013-answers.md`）不重开；`docs/records/open-questions.md` 93 条（`grep -cE '^\| Q-[A-H][0-9]'` 实跑 93）状态列以该文件为准，092 不把词频当条数（A35）。
+
+### 已决断
+
+真读 00 / 11 / 12 号全文后逐条分列（A164）。以下为原文已决断、不依赖 EQ 的锚点；实现状态另按 9.3 分层，不合并表述：
+- `00:24`「所有的ui等都使用框架方式」已决断；EQ-01 待拍的是具体框架与 Win7 降级路线，不是「要不要框架」。
+- `00:8` ≤2GB 首次默认轻量、可经 `launch.json` 手动控制；`boot.rs` 已落判定层。
+- `11:7` 境外离线账户限制、不得用网络打法；054 已落双信号 + Unknown 放行。
+- `11:10` 每一个弹窗都需要有关闭逻辑；`popup.rs` 已落同一 `closeDlg`。
+- `11:18` 不把 API 写成共有；063 `client_ai_gate` 为 GateOnly。
+- `12:63` png 快速设置服务器 logo 自动调整像素；091 已落 AX15 数据层，六动作与渲染层未启动。
+- `12:12` 关机需点击关机实例、关窗口须先保存；原文已决断，执行层未启动。
+
+### 未决断
+
+EQ-01 ~ EQ-13（13 条）、3 条 Q-C + Q-037-01、Q-091-01 / 02 / 03、D 组 31 条历史 Q、2 项 `Planned` 的网络前置、B05 的 HMCL 源仓库与许可、`11:242` 第 34 条「使用满两天」时长路径（Q-067-02）、6 项低可信度转述、逐版本归属。全部保持「待拍板 / 未证实」，092 不代拍、不定 2 项 `Planned` 之间的优先级（A208 / A164 / A250）。
+
+### 092 逐值默认（A203 / A177，均为我的默认，不写成用户已决断）
+
+D-092-1 本轮性质：拍板闭环轮，`src/` 零改动、`Cargo.*` 零 diff、不落功能实现。D-092-2 清单口径：只列环境 / 选项 / 后果 / 耦合，状态一律待拍板。D-092-3 Q-C 口径修正：3 条 Q-C + Q-037-01 共 4 项（E375）。D-092-4 EQ 口径：EQ-01 ~ EQ-13 共 13 条待拍，EQ-14 / EQ-15 已关闭。D-092-5 功能池不变：`Planned 2` / `DataLayer 21` / `GateOnly 1`，AX07 conflict 保持 `network_io_not_started`。D-092-6 新增 `scripts/pending_decisions_guard.py` 挂 CI `scan`，双向注入按实记数。D-092-7 四件套 + 台账补记 + 两个 zip 重打，一次提交一次增量推送。D-092-8 按 `00:245` 不发通过标记。D-092-9 唯一下一步：等用户拍板，按 A208 不擅自开工硬做。
