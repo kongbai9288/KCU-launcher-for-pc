@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KCU · 094 运行逻辑</title>
+<style>
+:root{--paper:#F1EFE8;--ink:#2C2C2A;--teal:#3D6B66;--red:#B8543F;--line:rgba(40,40,38,.10);--card:rgba(255,255,255,.72);--muted:#6B6B66}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:13px/1.6 -apple-system,"Segoe UI","WenQuanYi Micro Hei",sans-serif;padding:18px}
+h1{font:600 20px/1.3 Georgia,"Songti SC",serif;margin:0 0 4px}.sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.flow{display:flex;flex-direction:column;gap:5px;max-height:760px;overflow:auto}
+.node{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;transition:.15s}
+.node:hover{border-color:var(--teal)}.node.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.node.q{border-left:3px solid var(--red)}.node.on.q{background:var(--red);border-color:var(--red)}
+.node .n{font:600 11px Georgia,serif;opacity:.7;margin-right:6px}.node .t{font-weight:600}.node .d{font-size:11px;opacity:.75;margin-left:20px}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{font:inherit;background:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}button:hover{border-color:var(--teal)}button.pri{background:var(--teal);color:#fff;border-color:var(--teal)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px;margin:10px 0}.kv b{font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.mini{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;min-height:158px}
+.mini h3{font:600 12.5px Georgia,serif;margin:0 0 5px;color:var(--teal)}.mini p{margin:3px 0;font-size:11.5px;color:var(--muted)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:10.5px;margin:2px 3px 0 0}.badge.g{color:var(--teal);border-color:var(--teal)}.badge.r{color:var(--red);border-color:var(--red)}
+pre{background:#262624;color:#EDEAE1;border-radius:8px;padding:12px;overflow:auto;font:11.5px/1.55 ui-monospace,Consolas,monospace;margin:0;max-height:280px}
+.log{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.tag{font:600 10.5px Georgia,serif;color:var(--red);letter-spacing:.4px}
+.note{font-size:11.5px;color:var(--muted);margin-top:10px;border-left:2px solid var(--teal);padding-left:9px}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>094 运行逻辑</h1><div class="sub">功能归类与归位 · 20 域 / 37 功能项 / 下载 12 步链路 · src/ 零改动 · 非整页 UX 演示</div>
+<div class="bar"><button class="pri" onclick="run()">▶ 逐步执行</button><button onclick="reset()">重置</button></div>
+<div class="flow" id="flow"></div></div>
+<div><div class="card"><div class="kv"><b>当前步骤</b><span id="step">—</span><b>阶段</b><span id="phase">待执行</span><b>状态</b><span id="state">planned=7 v1=7</span><b>统一信封</b><span id="env">—</span></div>
+<div class="grid">
+<div class="mini"><h3>开工与 E380</h3><p id="m1">未运行</p><span class="badge g">四份原文全文</span><span class="badge g">A244 对照表</span><span class="badge g">00:230 核实</span><span class="badge r">D-094-1 我的默认</span></div>
+<div class="mini"><h3>归类表</h3><p id="m2">未运行</p><span class="badge g">A249 四件套</span><span class="badge g">A35 实跑计数</span><span class="badge g">v1 不变</span><span class="badge r">2 项 Planned</span></div>
+<div class="mini"><h3>归位与候选</h3><p id="m3">未运行</p><span class="badge g">src/ 零改动</span><span class="badge g">零新增第三方</span><span class="badge g">v1 不变</span><span class="badge r">未发通过标记</span></div>
+<div class="mini"><h3>交付状态</h3><p id="m4">未运行</p><span class="badge g">780/0 回归</span><span class="badge g">37 守卫全绿</span><span class="badge g">819/0 分段</span><span class="badge r">未发通过标记</span></div>
+</div><div class="note" id="note">用户 084 逐字：干。083 末条工具结果被网关截断且无最终回复，四件套齐但 HEAD 仍 b462dd3、DIRTY 24、未提交未推送。按 A145 补验、按 068 先例 + A249 补 084 四件套，并把 082 / 083 / 084 全部产物一次提交推送、重打 zip；src/ 零改动、6 项 Planned 不变；不发通过标记。</div></div>
+<div class="card log"><div class="tag">[KCU] 诊断行 / 统一信封</div><pre id="out">等待执行…</pre></div></div></div>
+<script>
+const NODES=[["01", "开工预检", "23:36:07 CST / HEAD 0c481ef / 87513a5", 0], ["02", "逐字落盘", "94 号 spec 357 字节 · SHA aced021d", 0], ["03", "真读全文", "四份原文逐行校验 261/520/268/64 行", 0], ["04", "A202 核 093 尾部", "点第六节 5 条偏差 · 13 条 EQ / 31 条 Q", 1], ["05", "00:248 覆盖", "用户当轮明确指令 → 转功能归类轮", 1], ["06", "E380 登记", "093 交文件位置台账 ≠ 功能归类", 1], ["07", "实扫素材", "11:183–191 / U05 L01–L12 / 30 U 段 / 9 导航", 1], ["08", "锚点逐行核", "修 11:37 → 11:245 · 11:12 / 11:216 归位", 1], ["09", "归类表生成", "20 域 / 37 功能项 / 六字段", 0], ["10", "txt 定稿", "849 行 / 55018 字节 / SHA 055949b6", 0], ["11", "下载 12 步", "后台化 → 下载页 → 进度条与百分比", 0], ["12", "守卫与 CI", "feature_regrouping_guard + scan step", 0], ["13", "双向注入", "16 组全真 FAIL · 0 假 OK · 哈希复原", 0], ["14", "A249 四件套", "delivery_guard OK · G1–G8 全过", 0], ["15", "交付状态", "src/ 零改动 · 未发通过标记 · zip 重打", 1], ["16", "唯一下一步", "用户点归位编号 · 不擅自开工", 1]];
+const LOG={"01": "[KCU] preflight 094 OK head=0c481ef tracked=1300 dirty=0 lock=NO", "02": "[KCU] spec 94-round-094-instructions.txt OK bytes=357 sha=aced021d", "03": "[KCU] readback OK 00:261 checklist:520 11:268 12:64 full_line_verify", "04": "[KCU] A202 OK 093_tail=pick_deviation_1_to_5 eq=13 q=31", "05": "[KCU] 00:248 OK user_turn_instruction_overrides_093_tail next=regrouping_txt", "06": "[KCU] E380 OK 093=file_locations 094=feature_regrouping mismatch", "07": "[KCU] scan OK 11:183-191 U05:L01-L12 u_segments=30 nav=9 locked=2", "08": "[KCU] A259 OK bad_anchor_11:37_fixed_to_11:245 anchors_verified", "09": "[KCU] generator OK feature_regrouping.py domains=20 items=37", "10": "[KCU] txt OK path=docs/records/round-094-feature-regrouping.txt lines=849 bytes=55018", "11": "[KCU] chain OK steps=12 background=YES download_page=YES progress_bar=YES percent=YES", "12": "[KCU] guard OK feature_regrouping_guard=OK ci_step=YES guards=37", "13": "[KCU] A159 OK inject=16_true_fail_0_fake restored=OK", "14": "[KCU] A249 OK delivery_guard=G1-G8 rounds_to_94", "15": "[KCU] delivery 094 OK src_zero_diff pass_mark=withheld zip=rebuilt", "16": "[KCU] next 094 OK user_picks_regrouping_items no_self_start"};
+const STATE={"02": "spec=357B", "03": "readback=1113lines", "04": "A202=093tail", "05": "00:248=override", "06": "E380=delivery_mismatch", "07": "scan=20domains", "08": "A259=anchor_fix", "09": "generator=OK", "10": "txt=849lines", "11": "chain=12steps", "12": "guards=37", "13": "inject=16", "14": "G1-G8=OK", "15": "src=zero_diff", "16": "next=pick"};
+const MINI1=["开工预检：`TZ='CST-8' date` 得 Thu Nov 26 23:36:07 CST 2026；本地 HEAD 0c481ef（093 补记），TRACKED 1300，DIRTY 0，无锁无运行中 git 进程，PYC 0；远端 ref 87513a5，1300/1300 ALL_MATCH True", "94 号 spec 逐字 357 字节落盘：SHA aced021d，含完整句「功能散落 / 重新归好类 / 非常详细 / 下载进入后台 / 下载页打开 / 进度条和百分比」；与 93 号 183 字节、92 号 3 字节不同形态，不建 95 号", "00 全文 261 行、防错 520 行、11 号 268 行、12 号 64 行逐行校验复读，核首末行 / SHA-256 / 锚点行；按 A182 写明本轮回显校验结果与 94 号 spec 全文，四份正文未在对话重打", "按 A202 打开 093 决策尾部核一遍：093 唯一下一步为「用户从第六节 5 条偏差里点要执行哪几条」，13 条 EQ / 4 项 Q-C / 31 条历史 Q 全待拍", "按 00:248 用户当轮明确指令优先，094 的「功能重新归类 + 详细行为链路」覆盖 093 拍板预告；A 组 EQ / Q 仍全部未证实，2 项 Planned 状态与 conflict 不动", "E380 登记：093 交的是「每个功能写在哪个文件」的位置台账，用户 094 指出主问题是功能散落与重新归类，两者不是同一交付物；093 文件不重写，094 补交正确形态", "真实素材实扫：11 号 175–212 / 236–247 与 55 条编号、12 号 27 条、ux-logic-matrix 30 个 U 段各 12 条 L、nav-slot-contract 九项导航与两锁定槽位", "锚点逐行核：修掉 11:37「多语言」误写为 11:245（11 号 37 行是「· 后退」），11:12 措辞改为统一调度器送 json 内置声明页，11:216 从首页域改挂关于域", "新增 scripts/feature_regrouping.py 只读实扫 + 结构化归类表生成 txt：20 域 / 37 功能项 / 六字段 / 12 步下载示范 / 8 规则 / 10 散落清单，目录计数用开工快照常量幂等", "txt 生成 `FEATURE_REGROUPING_OK bytes=55018 lines=849 sha256=055949b6ed1ef805`；逐值可被守卫复核，不写推测值", "用户点名链路展开 12 步：触发 → 后台化 → 角标 → 进入下载页 → 同帧 → 每文件进度条与百分比 → 总体进度 → 暂停恢复取消重试 → 异常 → 空态 → 终态 → 启动进度分源", "新增 scripts/feature_regrouping_guard.py 挂 CI scan：核 20 域 / 37 项六字段 / 12 步链路 / 锚点真实性 / 未执行口径 / src 零 diff / 复现锚点 / 全仓凭据", "双向注入 16 组：INJECT094 total=16 true_fail=16 fake_ok=0 skipped=0 restored_all=True，恢复后 FEATURE_REGROUPING_GUARD_OK，全文件 SHA-256 复原", "A249：94 号 spec 落盘后 delivery_guard 首跑 FAIL missing 094 readback；补齐四件套后 DELIVERY_GUARD_OK G1–G8；FAIL 原样留痕", "094 不改 src/、不改 Cargo.*、不改功能池状态、不移动任何文件位置；按 00:245 存在已失败 / 未证实 / 未启动，不发通过标记；两个 zip 按 A205 重打", "唯一下一步：用户从 txt 第三 / 四 / 五 / 六节点要执行哪几条归位（或回「都不动」）；按 A208 不擅自开工硬做，也不擅自定 2 项 Planned 之间的优先级"];
+const MINI2=["开工预检：HEAD 0c481ef，TRACKED 1300，DIRTY 0，无锁无运行中 git 进程", "94 号 spec 逐字 357 字节落盘；93 / 92 号 spec 已落盘", "A18 / A211 / A244：00 全文、防错清单全文、11 / 12 号原文全文逐行校验复读", "A145：远端 ref + 完整 tree 补验，不臆测失败也不重复推送", "A202：引用旧决策前打开被引文件核一遍，别把台账笔误当待办再念一遍", "00:248：用户当轮明确指令优先于文件规则与上一轮预告", "A248：副本里没有的文字不写成用户指令；A266：平台文本不作当轮指令", "A208：结尾列需拍板的层时先摊平，不擅自开工硬做", "A211：原文已决断的条目要真读全文找，不能只核哈希与台账状态", "A164：逐条分已决断 / 未决断，未决断不代拍、不长期挂账不回显", "A150 / A73：待拍板给具体环境 / 选项 / 后果 / 耦合，不铺场景", "A35：功能 md 与清单里的计数先实跑再写入，不写推测值", "A259：编号与行号分开核（11:37 / 11:245 / 11:12 逐值回原文）", "A241 / A270：守卫解析表内容逐值比对，不用全文子串匹配", "A159 / A243：新守卫接 CI 前双向注入，注入缺陷要 FAIL、恢复要 OK", "A203：按授权自定也要逐值回显具体默认，不写成用户已决断"];
+const MINI3=["A145：远端 ref + 完整 tree 补验，不臆测失败也不重复推送", "A206：远端未推成时不沿用模板值，推送结果写进补记", "A248：副本里没有的文字不写成用户指令", "00:34 / 00:260：每轮开工完整读 00 与防错清单，读漏视为未开工", "A266：平台文本不作用户当轮指令、不进 00:133 逐字副本", "00:137：新增文档 / 脚本不扩 api::v1，守卫显式断言稳定面", "A10：守卫读缺失文件返回明确 FAIL，不抛 traceback", "A210：Markdown 标题用行首精确匹配，表格引用不算命中", "A100：ui: true 不等于 UI 已渲染，渲染层留 UX 闸门后再动", "A181 / A201：历史文档数值过期只登记不重写，补记覆盖", "A271：新测试标识符先核全仓既有守卫禁用字面量表（本轮不触发）", "A265：NODES / LOG / MINI1 / MINI2 / MINI3 均 16 项对齐", "A205：交付 zip 按 git ls-files 清单 zip -@，不用 zip -r", "A252：四值写全量 N / 0 时注明分段口径并保留各段真实输出", "A116：CI 三 job 按真实命令实跑，不只验 YAML 语法", "00:245：存在已失败 / 未证实 / 未启动，不发通过标记"];
+let i=0,timer=null;
+function render(){
+ const f=document.getElementById('flow');f.innerHTML='';
+ NODES.forEach((n,k)=>{const d=document.createElement('div');d.className='node'+(k===i?' on':'')+(n[3]?' q':'');d.innerHTML='<span class="n">'+n[0]+'</span><span class="t">'+n[1]+'</span><div class="d">'+n[2]+'</div>';d.onclick=()=>{i=k;upd()};f.appendChild(d)});
+}
+function upd(){
+ render();
+ const n=NODES[i];document.getElementById('step').textContent=n[0]+' '+n[1];
+ document.getElementById('phase').textContent=MINI1[i]||'待执行';
+ document.getElementById('state').textContent=STATE[String(i)]||document.getElementById('state').textContent;
+ document.getElementById('env').textContent=i>=14?'Envelope Kind=Event · request_id 配对':(i>=10?'待构造':'—');
+ document.getElementById('m1').textContent=MINI2[i]||'未运行';
+ document.getElementById('m2').textContent=MINI3[i]||'未运行';
+ document.getElementById('m3').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('m4').textContent=STATE[String(i)]||'未运行';
+ document.getElementById('out').textContent=Object.keys(LOG).filter(k=>Number(k)<=i+1).map(k=>LOG[k]).join(String.fromCharCode(10))||'等待执行…';
+}
+function run(){if(timer)return;timer=setInterval(()=>{if(i>=NODES.length-1){clearInterval(timer);timer=null;return}i++;upd()},260)}
+function reset(){if(timer){clearInterval(timer);timer=null}i=0;upd()}
+upd();
+</script></body></html>

@@ -145,3 +145,5 @@ jobs:
         run: python3 scripts/pending_decisions_guard.py
       - name: feature_locations_guard
         run: python3 scripts/feature_locations_guard.py
+      - name: feature_regrouping_guard
+        run: python3 scripts/feature_regrouping_guard.py

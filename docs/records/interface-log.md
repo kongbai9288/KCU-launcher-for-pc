@@ -928,3 +928,8 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I223 | `scripts/feature_locations_guard.py` / `.github/workflows/ci.yml` / `docs/index.md` | 093 新守卫挂 `scan` step、必读清单加 093 八项 |
 | I224 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |
 | I225 | `docs/features/settings-groups.md` / `demos/ui-full-kcu-paper.html` | E378 登记：文档记 9 分组 / 实跑 11 pane；历史文件不重写，候选待拍板 |
+
+| I226 | `docs/records/round-094-feature-regrouping.txt` / `scripts/feature_regrouping.py` | 094 功能归类与归位表与只读实扫生成脚本；零新增第三方、零新增实现模块 |
+| I227 | `scripts/feature_regrouping_guard.py` / `.github/workflows/ci.yml` / `docs/index.md` | 094 新守卫挂 `scan` step、必读清单加 094 八项 |
+| I228 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |
+| I229 | `docs/records/round-093-feature-locations.txt` / `docs/records/round-094-feature-regrouping.txt` | E380 登记：093 回答「文件在哪」，094 回答「功能归哪一类、行为链路怎么归位」；093 历史文件不重写 |

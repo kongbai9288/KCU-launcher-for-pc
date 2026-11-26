@@ -253,3 +253,7 @@ AX15 `studio_image_editor` 由 `Planned` 改 `DataLayer`（091 落地），confl
 ## 093 补记
 
 093 为位置清单交付轮，`src/core/ax.rs` 零改动：AX07 `doh_support` / `Planned` / `network_io_not_started`、AX22 `shimu_account` / `Planned` / 空 conflict、AX23 `client_ai_gate` / `GateOnly` 原样；`Planned 2` / `DataLayer 21` / `GateOnly 1`，`api::v1` 7 符号不变。用户当轮明确指令「提交所有功能写的位置的 txt」按 `00:248` 覆盖 092 唯一下一步「等用户拍板 A 组」；A 组 EQ-03 + AX07、EQ-01 + Q-091-01 + AX22 与其余 11 条 EQ / 4 项 Q-C / 31 条历史 Q 保持「未证实（待拍板）」，不擅自开工、不擅自定 2 项优先级（A208）。位置清单第六节 5 条候选调整全部待拍板未执行。064–092 历史行不重写（A181 / A201）。
+
+## 094 补记
+
+094 为功能归类交付轮，`src/core/ax.rs` 零改动：AX07 `doh_support` / `Planned` / `network_io_not_started`、AX22 `shimu_account` / `Planned` / 空 conflict、AX23 `client_ai_gate` / `GateOnly` 原样；`Planned 2` / `DataLayer 21` / `GateOnly 1`，`api::v1` 7 符号不变。用户当轮明确指令「功能散落、重新归类、详细行为链路」按 `00:248` 覆盖 093 唯一下一步「点第六节 5 条偏差」；A 组最小拍板面、其余 11 条 EQ、Q-C01 / Q-C02 / Q-C08 / Q-037-01、Q-091-01 / 02 / 03 与 D 组 31 条历史 Q 保持「待拍板 / 未证实」。093 的 5 条偏差、094 的 8 条候选规则与 10 条散落归位同为待拍板未执行。064–093 历史行不重写（A181 / A201）。
