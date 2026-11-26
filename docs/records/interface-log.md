@@ -923,3 +923,8 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I219 | `docs/records/pending-question-environments.md` / `scripts/pending_decisions_guard.py` | 092 摊平可拍环境与新守卫；零新增第三方、零新增模块 |
 | I220 | `.github/workflows/ci.yml` / `docs/index.md` | 092 挂 `pending_decisions_guard` step、必读清单加 092 六项 |
 | I221 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |
+
+| I222 | `docs/records/round-093-feature-locations.txt` / `scripts/feature_locations.py` | 093 功能位置清单与只读实扫生成脚本；零新增第三方、零新增实现模块 |
+| I223 | `scripts/feature_locations_guard.py` / `.github/workflows/ci.yml` / `docs/index.md` | 093 新守卫挂 `scan` step、必读清单加 093 八项 |
+| I224 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |
+| I225 | `docs/features/settings-groups.md` / `demos/ui-full-kcu-paper.html` | E378 登记：文档记 9 分组 / 实跑 11 pane；历史文件不重写，候选待拍板 |

@@ -143,3 +143,5 @@ jobs:
         run: python3 scripts/studio_image_guard.py
       - name: pending_decisions_guard
         run: python3 scripts/pending_decisions_guard.py
+      - name: feature_locations_guard
+        run: python3 scripts/feature_locations_guard.py

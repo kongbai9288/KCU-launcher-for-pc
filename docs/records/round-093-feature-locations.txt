@@ -1,0 +1,521 @@
+KCU Launcher 功能位置清单（093 轮）
+文件：docs/records/round-093-feature-locations.txt
+生成：python3 scripts/feature_locations.py（只读实扫，不改功能文件）
+开工时间戳：Thu Nov 26 13:30:12 CST 2026
+生成时间戳：Thu Nov 26 22:22:15 CST 2026
+本地 HEAD（生成时）：1d4b4b2 round 093: feature location inventory, generator, guard and delivery
+远端 ref（092 补记，A145 开工时核）：5c9313e284d5ac8dd6b5947265f184d423bc88fc
+tracked 文件数：1300
+用户 093 逐字指令（183 字节）：干，还有你需要向我提交现在所有功能写的位置的txt，估计这么多轮下来有些功能放的位置应该要改一下了（包括设置当中的具体设置项）
+本轮动作：只交位置与候选调整清单，不移动任何文件位置，不改设置项，候选全部标待拍板未执行。
+
+==============================================================================
+一、总览（计数均为本脚本实跑目录枚举）
+==============================================================================
+  src/core/*.rs                48
+  src/core 总行数                 22332
+  src 顶层文件                     2
+  tests/*.rs                   6
+  scripts/*_guard.py           35
+  demos/*.html                 80
+  demos/preview/*.png          56
+  docs/decisions/*.md          86
+  docs/verification/*.md       88
+  docs/features/*.md           72
+  docs/design/*.md             13
+  docs/records/*.md            55
+  docs/spec/*.txt              94
+  docs/licenses/*              62
+  docs/index.md 必读清单项          523
+  目录职责：
+    src/core/            实现层数据层与判定层；src/dispatcher/ 统一调度；src/lightweight/ 轻量；src/plugins/ 插件；src/updater/ 更新；src/api.rs 稳定面；src/lib.rs crate 根
+    tests/               行为与边界测试（6 个集成段 + lib 单测）
+    scripts/             守卫与推送/复读/位置清单脚本
+    demos/               UX 整页 HTML + 逐轮运行逻辑 HTML；demos/preview/ PNG 预览；demos/lang/ 两份语言包
+    docs/decisions/      逐轮决策（按轮次编号，不以功能域命名）
+    docs/verification/   逐轮独立验证报告（按轮次编号）
+    docs/features/       功能说明（按功能名命名）
+    docs/design/         UX 逻辑矩阵、槽位契约、设置 ID 表
+    docs/records/        轮次台账、接口台账、功能池、待拍板清单、所有权审计、需求合规审计
+    docs/spec/           用户原文逐字副本与项目约束
+    docs/licenses/       第三方 LICENSE 全文；vendor/ 第三方源码；THIRD-PARTY-NOTICES.md 声明
+
+==============================================================================
+二、实现层模块逐文件位置（48 个 src/core/*.rs，22332 行）
+==============================================================================
+列：文件 | 行数 | mod.rs 声明行 | AX/状态 | 功能 slug | 单测数 | DEFAULT_STATE | 守卫 | 决策(命中数) | 功能文档 | 演示
+  appearance.rs | 538 | 35 | AX13 DataLayer | appearance_modes | 12 | Y | appearance_guard.py | 8 | - | round-073-appearance.html
+  args.rs | 120 | 8 | - 基础设施/早期数据层 | - | 8 | N | - | 9 | core-args.md | round-030-args-q.html
+  asynk.rs | 250 | 13 | - 基础设施/早期数据层 | - | 6 | N | - | 7 | core-asynk.md | -
+  ax.rs | 100 | 26 | - 基础设施/早期数据层 | - | 6 | N | appearance_guard.py,ax_guard.py,banner_design_guard.py,download_history_guard.py,download_sources_guard.py,feature_locations_guard.py,first_run_guard.py,generator_session_guard.py,instance_drop_guard.py,instance_import_guard.py,lan_channel_guard.py,mod_rollback_guard.py,notice_center_guard.py,pending_decisions_guard.py,projection_guard.py,search_filter_guard.py,seed_access_guard.py,settings_guard.py,skin_draft_guard.py,studio_image_guard.py,upgrade_plan_guard.py,widget_layout_guard.py,world_editor_guard.py | 32 | - | round-063-axolotl.html
+  banner_design.rs | 525 | 33 | AX17 DataLayer | banner_designer | 12 | Y | banner_design_guard.py | 13 | - | -
+  boot.rs | 564 | 21 | - 基础设施/早期数据层 | - | 16 | Y | appearance_guard.py,banner_design_guard.py,download_history_guard.py,download_sources_guard.py,extension_gate_guard.py,first_run_guard.py,generator_session_guard.py,instance_drop_guard.py,instance_import_guard.py,lan_channel_guard.py,launch_progress_guard.py,mod_rollback_guard.py,notice_center_guard.py,projection_guard.py,search_filter_guard.py,seed_access_guard.py,settings_guard.py,skin_draft_guard.py,studio_image_guard.py,upgrade_plan_guard.py,widget_layout_guard.py,world_editor_guard.py | 31 | - | round-057-boot-fallback.html
+  cache.rs | 377 | 12 | - 基础设施/早期数据层 | - | 12 | N | panic_guard.py | 26 | core-cache.md | round-014-cache-async.html,round-029-cache.html
+  client_ai.rs | 61 | 24 | AX23 GateOnly | client_ai_gate | 4 | N | ai_gate_guard.py | 5 | - | -
+  config.rs | 236 | 4 | - 基础设施/早期数据层 | - | 10 | N | instance_import_guard.py,mod_rollback_guard.py,policy_guard.py,settings_guard.py | 29 | core-config.md | -
+  consent.rs | 247 | 23 | - 基础设施/早期数据层 | - | 10 | N | privacy_guard.py,settings_guard.py | 17 | plugin-upgrade-consent.md | -
+  diagnostics.rs | 41 | 2 | - 基础设施/早期数据层 | - | 3 | N | appearance_guard.py,banner_design_guard.py,download_history_guard.py,download_sources_guard.py,extension_gate_guard.py,first_run_guard.py,generator_session_guard.py,instance_drop_guard.py,instance_import_guard.py,lan_channel_guard.py,launch_progress_guard.py,mod_rollback_guard.py,notice_center_guard.py,projection_guard.py,search_filter_guard.py,seed_access_guard.py,settings_guard.py,skin_draft_guard.py,studio_image_guard.py,upgrade_plan_guard.py,widget_layout_guard.py,world_editor_guard.py | 23 | core-diagnostics.md | -
+  download_history.rs | 400 | 28 | AX06 DataLayer | download_history | 13 | N | download_history_guard.py | 2 | - | -
+  download_sources.rs | 514 | 31 | AX12 DataLayer | download_sources | 11 | N | download_sources_guard.py | 4 | - | -
+  endpoints.rs | 255 | 16 | - 基础设施/早期数据层 | - | 11 | N | launch_progress_guard.py | 7 | - | -
+  envelope.rs | 229 | 1 | - 基础设施/早期数据层 | - | 11 | N | appearance_guard.py,banner_design_guard.py,download_sources_guard.py,extension_gate_guard.py,first_run_guard.py,generator_session_guard.py,instance_drop_guard.py,instance_import_guard.py,lan_channel_guard.py,launch_progress_guard.py,mod_rollback_guard.py,notice_center_guard.py,projection_guard.py,search_filter_guard.py,seed_access_guard.py,skin_draft_guard.py,studio_image_guard.py,upgrade_plan_guard.py,widget_layout_guard.py,world_editor_guard.py | 11 | core-envelope.md,envelope.md | -
+  extension_gate.rs | 538 | 29 | - 基础设施/早期数据层 | - | 12 | N | extension_gate_guard.py | 1 | - | -
+  feature_gate.rs | 796 | 18 | - 基础设施/早期数据层 | - | 15 | N | - | 5 | - | -
+  first_run.rs | 563 | 36 | AX10 DataLayer | first_run_wizard | 14 | Y | first_run_guard.py | 7 | - | -
+  generator_session.rs | 936 | 40 | AX18 DataLayer | lab_generators | 17 | Y | generator_session_guard.py | 4 | - | -
+  http.rs | 227 | 6 | - 基础设施/早期数据层 | - | 15 | N | ai_gate_guard.py,download_history_guard.py,download_sources_guard.py,extension_gate_guard.py,launch_progress_guard.py | 38 | http-request-plan.md | -
+  instance.rs | 240 | 9 | - 基础设施/早期数据层 | - | 13 | N | instance_drop_guard.py,instance_import_guard.py,lang_guard.py,mod_rollback_guard.py,seed_access_guard.py,semver_guard.py | 24 | core-instance.md | round-070-instance-drop.html,round-088-instance-import.html
+  instance_drop.rs | 454 | 32 | AX24 DataLayer | ungrouped_drop | 12 | Y | instance_drop_guard.py | 7 | - | -
+  instance_import.rs | 842 | 46 | AX08 DataLayer | instance_import | 28 | Y | instance_import_guard.py | 8 | - | -
+  integrity.rs | 658 | 17 | - 基础设施/早期数据层 | - | 18 | N | - | 4 | software-integrity.md | round-052-integrity.html
+  lan_channel.rs | 844 | 42 | AX21 DataLayer | redstone_multiplayer | 19 | Y | lan_channel_guard.py | 2 | - | -
+  launch_progress.rs | 221 | 30 | - 基础设施/早期数据层 | - | 8 | N | extension_gate_guard.py,launch_progress_guard.py | 4 | - | -
+  leak.rs | 130 | 14 | - 基础设施/早期数据层 | - | 4 | N | appearance_guard.py,first_run_guard.py,generator_session_guard.py,lan_channel_guard.py,search_filter_guard.py,seed_access_guard.py,skin_draft_guard.py,upgrade_plan_guard.py | 10 | core-leak.md | -
+  log.rs | 187 | 5 | - 基础设施/早期数据层 | - | 8 | N | api_guard.py,first_run_guard.py,generator_session_guard.py,instance_import_guard.py,lan_channel_guard.py,mod_rollback_guard.py,notice_center_guard.py,popup_guard.py,projection_guard.py,search_filter_guard.py,seed_access_guard.py,studio_image_guard.py,upgrade_plan_guard.py,world_editor_guard.py | 49 | backlog.md,core-log.md,lightweight-login.md,log.md,recommendation-catalog.md,server-auto-command-log-trigger.md,server-backlog.md,ui-visual-catalog.md,ux-logic-completion.md | -
+  mod.rs | 48 | - | - 未登记 | - | 0 | N | appearance_guard.py,banner_design_guard.py,download_history_guard.py,download_sources_guard.py,extension_gate_guard.py,feature_locations_guard.py,first_run_guard.py,generator_session_guard.py,instance_drop_guard.py,instance_import_guard.py,lan_channel_guard.py,launch_progress_guard.py,mod_rollback_guard.py,notice_center_guard.py,projection_guard.py,search_filter_guard.py,seed_access_guard.py,settings_guard.py,skin_draft_guard.py,studio_image_guard.py,upgrade_plan_guard.py,widget_layout_guard.py,world_editor_guard.py | 48 | dispatcher-mode.md | round-008-mode-views.html,round-085-mod-rollback.html
+  mod_rollback.rs | 990 | 45 | AX04 DataLayer | mod_rollback | 19 | Y | mod_rollback_guard.py | 4 | - | -
+  notice_center.rs | 830 | 43 | AX02 DataLayer | game_news | 17 | Y | notice_center_guard.py | 2 | - | -
+  paths.rs | 96 | 3 | - 基础设施/早期数据层 | - | 5 | N | - | 6 | core-paths.md | -
+  popup.rs | 368 | 10 | - 基础设施/早期数据层 | - | 12 | N | api_guard.py,extension_gate_guard.py,popup_guard.py,privacy_guard.py | 26 | core-popup.md | round-062-api-popup.html
+  projection.rs | 994 | 47 | AX20 DataLayer | projection_workshop | 36 | Y | projection_guard.py,studio_image_guard.py | 4 | - | round-090-projection.html
+  region.rs | 869 | 19 | - 基础设施/早期数据层 | - | 20 | N | - | 9 | region-offline-restriction.md | round-054-region.html
+  robust.rs | 240 | 15 | - 基础设施/早期数据层 | - | 8 | N | appearance_guard.py,banner_design_guard.py,download_history_guard.py,download_sources_guard.py,extension_gate_guard.py,first_run_guard.py,generator_session_guard.py,instance_drop_guard.py,instance_import_guard.py,lan_channel_guard.py,mod_rollback_guard.py,notice_center_guard.py,projection_guard.py,search_filter_guard.py,seed_access_guard.py,skin_draft_guard.py,studio_image_guard.py,upgrade_plan_guard.py,widget_layout_guard.py,world_editor_guard.py | 29 | - | -
+  search_filter.rs | 923 | 39 | AX16 DataLayer | cn_search_filter | 17 | Y | search_filter_guard.py | 5 | - | -
+  seed_access.rs | 997 | 41 | AX19 DataLayer | seed_map | 19 | Y | seed_access_guard.py | 4 | - | -
+  settings_io.rs | 337 | 27 | AX11 DataLayer | settings_export | 12 | N | appearance_guard.py,banner_design_guard.py,download_history_guard.py,download_sources_guard.py,extension_gate_guard.py,feature_locations_guard.py,first_run_guard.py,generator_session_guard.py,instance_drop_guard.py,lan_channel_guard.py,mod_rollback_guard.py,notice_center_guard.py,search_filter_guard.py,seed_access_guard.py,settings_guard.py,skin_draft_guard.py,upgrade_plan_guard.py,widget_layout_guard.py,world_editor_guard.py | 19 | - | -
+  skin_draft.rs | 628 | 37 | AX14 DataLayer | skin_editor | 15 | Y | skin_draft_guard.py | 4 | - | -
+  stats.rs | 514 | 22 | - 基础设施/早期数据层 | - | 14 | N | - | 18 | normal-stats.md | round-061-play-stats.html
+  storage.rs | 106 | 25 | AX05 DataLayer | storage_analysis | 6 | N | - | 2 | - | -
+  studio_image.rs | 881 | 48 | AX15 DataLayer | studio_image_editor | 29 | Y | studio_image_guard.py | 6 | - | -
+  upgrade_plan.rs | 687 | 38 | AX09 DataLayer | upgrade_compat | 16 | Y | upgrade_plan_guard.py | 6 | - | -
+  userflow.rs | 193 | 11 | - 基础设施/早期数据层 | - | 5 | N | - | 4 | core-userflow.md | -
+  widget_layout.rs | 446 | 34 | AX01 DataLayer | home_widgets | 11 | Y | widget_layout_guard.py | 4 | - | -
+  window.rs | 156 | 7 | - 基础设施/早期数据层 | - | 8 | N | lang_guard.py | 41 | window-handle-contract.md | round-041-window-handle.html
+  world_editor.rs | 936 | 44 | AX03 DataLayer | world_editor | 18 | Y | world_editor_guard.py | 4 | - | -
+
+  mod.rs 全文 48 行，逐行列出 pub mod 声明；boot.rs 的 LOADED_MODULES 为诊断包模块列表，接线位置见 src/core/boot.rs。
+  api.rs 仅 4 条 pub use / 7 个稳定符号（CancelToken / Envelope / Kind / CloseAction / PopupOpenError / PopupRegistry / ClientAiGate），069 起未扩面。
+
+==============================================================================
+三、功能池 24 项（src/core/ax.rs:20–43）→ 代码位置
+==============================================================================
+列：AX | slug | 状态 | conflict | ui | 实现文件 | 守卫 | 决策
+  AX01 | home_widgets | DataLayer | (空) | true | widget_layout.rs | widget_layout_guard.py | 064-privacy-policy-and-ax-pool.md,072-widget-layout.md
+  AX02 | game_news | DataLayer | (空) | true | notice_center.rs | notice_center_guard.py | 081-notice-center.md
+  AX03 | world_editor | DataLayer | (空) | true | world_editor.rs | world_editor_guard.py | 082-world-editor.md,083-delivery-reconciliation.md
+  AX04 | mod_rollback | DataLayer | (空) | true | mod_rollback.rs | mod_rollback_guard.py | 084-delivery-closure.md,085-mod-rollback.md
+  AX05 | storage_analysis | DataLayer | (空) | true | storage.rs | - | -
+  AX06 | download_history | DataLayer | (空) | true | download_history.rs | download_history_guard.py | 066-download-history.md,076-upgrade-plan.md
+  AX07 | doh_support | Planned | network_io_not_started | false | 未落实现（保持 Planned/GateOnly） | - | 088-instance-import-delivery.md,089-delivery-closure.md
+  AX08 | instance_import | DataLayer | (空) | true | instance_import.rs | instance_import_guard.py | 086-delivery-closure.md,087-delivery-closure.md
+  AX09 | upgrade_compat | DataLayer | (空) | true | upgrade_plan.rs | upgrade_plan_guard.py | 076-upgrade-plan.md
+  AX10 | first_run_wizard | DataLayer | (空) | true | first_run.rs | first_run_guard.py | 074-first-run.md
+  AX11 | settings_export | DataLayer | (空) | true | settings_io.rs | - | 065-settings-export-import-cleanup.md
+  AX12 | download_sources | DataLayer | (空) | true | download_sources.rs | download_sources_guard.py | 069-download-sources.md,070-instance-drop.md
+  AX13 | appearance_modes | DataLayer | (空) | true | appearance.rs | appearance_guard.py | 073-appearance.md
+  AX14 | skin_editor | DataLayer | (空) | true | skin_draft.rs | skin_draft_guard.py | 075-skin-draft.md
+  AX15 | studio_image_editor | DataLayer | (空) | true | studio_image.rs | studio_image_guard.py | 088-instance-import-delivery.md,089-delivery-closure.md
+  AX16 | cn_search_filter | DataLayer | (空) | true | search_filter.rs | search_filter_guard.py | 077-search-filter.md
+  AX17 | banner_designer | DataLayer | (空) | true | banner_design.rs | banner_design_guard.py | 071-banner-design.md
+  AX18 | lab_generators | DataLayer | ai_provider_ui_excluded | true | generator_session.rs | generator_session_guard.py | 078-generator-session.md
+  AX19 | seed_map | DataLayer | (空) | true | seed_access.rs | seed_access_guard.py | 079-seed-access.md
+  AX20 | projection_workshop | DataLayer | (空) | true | projection.rs | projection_guard.py | 088-instance-import-delivery.md,089-delivery-closure.md
+  AX21 | redstone_multiplayer | DataLayer | (空) | true | lan_channel.rs | lan_channel_guard.py | 080-lan-channel.md
+  AX22 | shimu_account | Planned | (空) | true | 未落实现（保持 Planned/GateOnly） | - | 088-instance-import-delivery.md,089-delivery-closure.md
+  AX23 | client_ai_gate | GateOnly | 11:18 gate_only_no_ui | false | client_ai.rs | - | -
+  AX24 | ungrouped_drop | DataLayer | (空) | true | instance_drop.rs | instance_drop_guard.py | 070-instance-drop.md
+  计数：Planned 2 / DataLayer 21 / GateOnly 1；AX07 conflict=network_io_not_started（EQ-03），AX22 空 conflict（待拍板）。
+
+==============================================================================
+四、设置当中的具体设置项（用户点名范围）
+==============================================================================
+4.1 实现层根键（src/core/config.rs + src/core/settings_io.rs）
+  SETTINGS_FILE = "launch.json"；路径入口 src/core/paths.rs（c/kcu/kculauncher/config/launch.json 由 00:8 原文给定）
+  settings_io.rs KNOWN_KEYS（6 个）：
+    - os_class
+    - language
+    - mirror_speedtest
+    - endpoints
+    - ports
+    - download_region
+  Config::empty 默认值：language="zh-CN"；mirror_speedtest=true；os_class 由调用方传入；endpoints={}；ports={}；download_region=None（src/core/config.rs:12–23）
+  DERIVED_KEYS（导出差集排除）：os_class（src/core/settings_io.rs:29）
+  PROTECTED_FILES（清理时保留，4 项）：
+    - STATE_FILE = "boot-state.json"  （定义 boot.rs）
+    - BUNDLE_FILE = "diagnostic-bundle.json"  （定义 boot.rs）
+    - CONSENT_FILE = "privacy-consent.json"  （定义 consent.rs）
+    - STATS_FILE = "play-stats.json"  （定义 stats.rs）
+  上限常量（src/core/settings_io.rs:14–18）：
+    - SETTINGS_FILE = "launch.json"
+    - TMP_SUFFIX = ".tmp"
+    - MAX_IMPORT_BYTES = 64 * 1024
+    - MAX_ROOT_KEYS = 64
+    - MAX_ENDPOINTS = 64
+    - MAX_PORTS = 64
+    - MAX_VALUE_BYTES = 4096
+  导入校验：未知键 reject + DEGRADE 诊断；类型/长度/控制字符逐项；export_diff 排除派生键；atomic_write 走 .tmp + fs::rename。
+
+4.2 各模块内部状态键（18 个模块带 DEFAULT_STATE，逐值来自源码 r#"..."#）
+  appearance.rs              键=schema,mode,accent,background,transparency,presets
+    {"schema":1,"mode":"light","accent":null,"background":false,"transparency":false,"presets":[]}
+  banner_design.rs           键=schema,layers,recent
+    {"schema":1,"layers":[],"recent":[]}
+  boot.rs                    键=schema,failures
+    {"schema":1,"failures":0}
+  first_run.rs               键=schema,cursor,finished,steps
+    {"schema":1,"cursor":0,"finished":false,"steps":[]}
+  generator_session.rs       键=schema,format,sessions,translations,history
+    {"schema":1,"format":"legacy","sessions":[],"translations":[],"history":[]}
+  instance_drop.rs           键=schema,collapsed,ungrouped
+    {"schema":1,"collapsed":false,"ungrouped":[]}
+  instance_import.rs         键=schema,format,current,entries
+    {"schema":1,"format":"mrpack","current":0,"entries":[]}
+  lan_channel.rs             键=schema,stage,method,direction,room_id,pair_code,channel_open
+    {"schema":1,"stage":"discover","method":"qr","direction":"","room_id":"","pair_code":"","channel_open":false}
+  mod_rollback.rs            键=schema,scope,current,items
+    {"schema":1,"scope":"instance","current":0,"items":[]}
+  notice_center.rs           键=schema,entries
+    {"schema":1,"entries":[{"id":"declaration","category":"declaration","read":"unread","action":"later","closable":true,"detail":true,"builtin":true}]}
+  projection.rs              键=schema,current,entries
+    {"schema":1,"current":0,"entries":[]}
+  search_filter.rs           键=schema,scope,sort,conditions,excludes,saved,history
+    {"schema":1,"scope":"current","sort":{"key":"name","desc":false},"conditions":[],"excludes":[],"saved":[],"history":[]}
+  seed_access.rs             键=schema,guest_mode,password_required,records,audit,locked_features,command_deny
+    {"schema":1,"guest_mode":false,"password_required":false,"records":[],"audit":[],"locked_features":[],"command_deny":[]}
+  skin_draft.rs              键=schema,active,leave_warn,drafts
+    {"schema":1,"active":null,"leave_warn":true,"drafts":[]}
+  studio_image.rs            键=schema,session,entries
+    {"schema":1,"session":"draft","entries":[]}
+  upgrade_plan.rs            键=schema,page_size,choices
+    {"schema":1,"page_size":5,"choices":[]}
+  widget_layout.rs           键=schema,mode,slots
+    {"schema":1,"mode":"compact","slots":[]}
+  world_editor.rs            键=schema,session,entries
+    {"schema":1,"session":"draft","entries":[]}
+
+4.3 键白名单常量表（40 张，逐值来自源码数组）
+  appearance.rs              KNOWN_KEYS             schema,mode,accent,background,transparency,presets
+  appearance.rs              PRESET_KEYS            id,accent
+  banner_design.rs           KNOWN_KEYS             schema,layers,recent
+  banner_design.rs           LAYER_KEYS             pattern,dye
+  download_sources.rs        KNOWN_KEYS             schema,tier,max_concurrent,restricted_auto,restricted,key_present
+  first_run.rs               KNOWN_KEYS             schema,cursor,finished,steps
+  first_run.rs               STEP_KEYS              id,required,state
+  generator_session.rs       KNOWN_KEYS             schema,format,sessions,translations,history
+  generator_session.rs       SESSION_KEYS           id,kind,format,input,result,state
+  generator_session.rs       TRANSLATION_KEYS       id,key,value,enabled
+  instance_drop.rs           KNOWN_KEYS             schema,collapsed,ungrouped
+  instance_import.rs         ROOT_KEYS              schema,format,current,entries
+  instance_import.rs         ENTRY_KEYS             id,path,kind,action,state,bytes
+  lan_channel.rs             KNOWN_KEYS             schema,stage,method,direction,room_id,pair_code,channel_open
+  mod_rollback.rs            ROOT_KEYS              schema,scope,current,items
+  mod_rollback.rs            ITEM_KEYS              id,mod_id,installed,candidate,kind,disable_lower,choice,snapshot
+  notice_center.rs           KNOWN_KEYS             schema,entries
+  notice_center.rs           ENTRY_KEYS             id,category,read,action,closable,detail,builtin
+  projection.rs              ROOT_KEYS              schema,current,entries
+  projection.rs              ENTRY_KEYS             id,format,path,view,scale,state,decided
+  region.rs                  ALLOWED_SIGNAL_KEYS    locale,timezone,user_override,special_build,account,authenticated,action,offline
+  region.rs                  FORBIDDEN_SIGNAL_KEYS  ip,geoip,vpn,proxy,asn,isp,network_probe,latitude,longitude,country_by_ip,url,endpoint,token,key,secret,api
+  search_filter.rs           KNOWN_KEYS             schema,scope,sort,conditions,excludes,saved,history
+  search_filter.rs           CONDITION_KEYS         id,dimension,op,value,enabled
+  search_filter.rs           SORT_KEYS              key,desc
+  seed_access.rs             KNOWN_KEYS             schema,guest_mode,password_required,records,audit,locked_features,command_deny
+  seed_access.rs             SEED_KEYS              instance_id,value,policy,note
+  seed_access.rs             AUDIT_KEYS             id,action,target,scope
+  settings_io.rs             KNOWN_KEYS             os_class,language,mirror_speedtest,endpoints,ports,download_region
+  settings_io.rs             DERIVED_KEYS           os_class
+  skin_draft.rs              KNOWN_KEYS             schema,active,leave_warn,drafts
+  skin_draft.rs              DRAFT_KEYS             id,kind,state,interval
+  studio_image.rs            ROOT_KEYS              schema,session,entries
+  studio_image.rs            ENTRY_KEYS             id,format,path,target_px,fit,state,decided
+  upgrade_plan.rs            KNOWN_KEYS             schema,page_size,choices
+  upgrade_plan.rs            CHOICE_KEYS            id,current,candidate,compat,mode,confirmed
+  widget_layout.rs           KNOWN_KEYS             schema,mode,slots
+  widget_layout.rs           SLOT_KEYS              id,pinned
+  world_editor.rs            KNOWN_KEYS             schema,session,entries
+  world_editor.rs            ENTRY_KEYS             id,field,format,source,license,link_mode,verified,diff_checked,state
+
+4.4 演示层设置页（demos/ui-full-kcu-paper.html）
+  data-tab / data-pane 实跑各 11 个：general / download / cache / recommend / status / ai / plugins / crash / privacy / experimental / auto
+  id="set*" 控件实跑 15 个：setAiAddr,setAiResult,setAiState,setAiTest,setBudConc,setBudLimit,setBudTier,setCacheAll,setCacheExpired,setCrashAddr,setCrashMask,setCrashOn,setLang,setSrvScan,setSrvState
+  逐分组逐项（列：分组 | 语言包键 | 设置项文案 | 该组首个 option 默认值 | 该组控件 id）：
+  [general] 默认首项=zh-CN 控件=setLang
+    set.lang       界面语言
+    t.0062         主题
+    t.0066         数据目录
+    t.0067         公告提示
+    t.0072         崩溃后
+    t.0074         旧版 jar
+    t.0076         用户指定
+  [download] 默认首项=一次带多个 id 控件=-
+    t.0048         每页条数
+    t.0083         批量请求
+    t.0086         并发上限
+    t.0087         单飞去重
+    t.0090         镜像测速
+    t.0092         地域软策略
+    t.0094         强制境外
+    t.0096         用途边界
+  [cache] 默认首项=取增量，不清缓存 控件=setCacheAll,setCacheExpired
+    t.0100         C1 内存
+    t.0101         C2 磁盘
+    t.0102         C3 网络
+    t.0103         C4 预取
+    t.0105         普通刷新
+    t.0107         强制刷新
+    t.0109         事件推送
+    t.0111         失败回退
+  [recommend] 默认首项=开启 控件=-
+    t.0115         推荐总开关
+    t.0116         权重可自定义
+    t.0076         用户指定
+    t.0118         不感兴趣
+    t.0121         推荐来源
+    t.0123         刷新方式
+    t.0125         缓存
+    t.0126         排序口径
+  [status] 默认首项=自动尝试连接 控件=setBudConc,setBudLimit,setBudTier,setSrvScan,setSrvState
+    t.0133         添加后
+    t.0136         打开列表时
+    t.0139         同步间隔
+    t.0143         连接结果
+    t.0145         锁定的服务器
+    t.0147         连不上的
+    t.0150         其余顺序
+    t.0118         不感兴趣
+    t.0153         自动读取
+    t.0155         隐藏的服务器
+    t.0158         快速进入过的
+    t.0159         显示内容
+    t.0160         每次自动连几台
+    t.0165         同时连接
+    t.0169         轻量机器
+    t.0172         新加的服务器
+    t.0174         范围外的
+    t.0177         优先
+    t.0179         其次
+    t.0181         范围
+    t.0183         锁定实例
+  [ai] 默认首项=每次请求单独确认 控件=setAiAddr,setAiResult,setAiState,setAiTest
+    t.0189         接口地址
+    t.0190         连接状态
+    t.0191         确认粒度
+    t.0193         删除权限
+    t.0196         请求正文
+    t.0197         审计
+    t.0198         关页
+    t.0199         失败分类
+  [plugins] 默认首项=插件只能加自己的位置 控件=-
+    t.0201         插件目录
+    t.0202         槽位规则
+    t.0204         清单校验
+    t.0206         隔离
+    t.0209         更新通道
+    t.0211         签名校验
+    t.0213         版本比较
+    t.0215         失败降级
+    plugin.set.upgrade 升级
+    plugin.set.fault 插件有问题时
+    plugin.set.icon 侧边栏图标
+  [crash] 默认首项=off 控件=setCrashAddr,setCrashMask,setCrashOn
+    crash.enable   出问题时记录
+    crash.addr     接收地址
+    crash.mask     先抹掉私人信息
+    crash.dir      诊断包位置
+  [privacy] 默认首项=默认脱敏（可手动关） 控件=-
+    t.0221         日志上传
+    t.0223         保留期
+    t.0224         外传确认
+    t.0197         审计
+    t.0228         文件管理
+    t.0229         锁定
+    t.0230         凭据保护
+    t.0231         诊断包
+  [experimental] 默认首项=关闭 控件=-
+    t.0233         多操作入口
+    t.0234         Win7 兼容
+    t.0236         插件化更新灰度
+    t.0237         加载器 schema
+  [auto] 默认首项=服务器自己输出的日志 控件=-
+    auto.source.only 只看
+    auto.source.chat 玩家聊天
+    auto.source.test 测试规则
+    auto.source.plugin 插件
+    t.0031         版本
+    t.0240         平台
+    t.0241         架构
+    t.0242         开源许可
+    t.0243         界面
+    t.0062         主题
+    t.0247         字号
+    t.0251         纸纹
+    t.0254         圆角
+
+4.5 稳定设置 ID（docs/design/ + docs/features/ 中 core.* 全集，67 个去重值）
+  [core.args] 1 项
+    core.args                          core-args.md,dispatcher-task.md,index.md
+  [core.asynk] 1 项
+    core.asynk                         core-asynk.md,dispatcher.md,index.md
+  [core.cache] 1 项
+    core.cache                         core-cache.md,dispatcher-launcher.md,dispatcher.md
+  [core.config] 1 项
+    core.config                        core-config.md,index.md
+  [core.credential] 1 项
+    core.credential                    credential-guard.md,index.md
+  [core.diagnostics] 1 项
+    core.diagnostics                   backlog.md,core-diagnostics.md,index.md
+  [core.download] 2 项
+    core.download                      backlog.md
+    core.download.mirror               backlog.md
+  [core.envelope] 1 项
+    core.envelope                      core-envelope.md,dispatcher-launcher.md,index.md
+  [core.fallback] 1 项
+    core.fallback                      fallback.md,index.md
+  [core.hotkey] 1 项
+    core.hotkey                        backlog.md
+  [core.i18n] 1 项
+    core.i18n                          backlog.md
+  [core.instance] 1 项
+    core.instance                      core-instance.md,dispatcher-launcher.md,dispatcher.md
+  [core.ipc] 1 项
+    core.ipc                           envelope.md,index.md
+  [core.jvm] 1 项
+    core.jvm                           backlog.md
+  [core.leak] 1 项
+    core.leak                          core-leak.md,dispatcher.md,index.md
+  [core.loader] 1 项
+    core.loader                        backlog.md
+  [core.locked] 3 项
+    core.locked                        handoff.md,implementation-strategy.md,nav-slot-contract.md
+    core.locked.about                  auto-disable-feature.md,nav-slot-contract.md,nav-slot-lock.md
+    core.locked.settings               auto-disable-feature.md,nav-slot-contract.md,nav-slot-lock.md
+  [core.log] 1 项
+    core.log                           backlog.md,core-log.md,dispatcher.md
+  [core.nav] 9 项
+    core.nav.download                  nav-slot-contract.md
+    core.nav.home                      nav-slot-contract.md
+    core.nav.instances                 nav-slot-contract.md
+    core.nav.login                     nav-slot-contract.md
+    core.nav.logs                      nav-slot-contract.md
+    core.nav.mods                      nav-slot-contract.md
+    core.nav.notices                   nav-slot-contract.md
+    core.nav.serverhost                nav-slot-contract.md
+    core.nav.servers                   nav-slot-contract.md
+  [core.paths] 1 项
+    core.paths                         core-paths.md,dispatcher.md,index.md
+  [core.popup] 1 项
+    core.popup                         core-popup.md,dispatcher.md,index.md
+  [core.rec] 21 项
+    core.rec                           nav-slot-contract.md,recommendation-catalog.md,ux-logic-matrix.md
+    core.rec.cache                     recommendation-catalog.md
+    core.rec.dismiss                   recommendation-catalog.md
+    core.rec.download                  recommendation-catalog.md
+    core.rec.enabled                   recommendation-catalog.md
+    core.rec.home_launch               recommendation-catalog.md
+    core.rec.home_server               recommendation-catalog.md
+    core.rec.java                      recommendation-catalog.md
+    core.rec.loader                    recommendation-catalog.md
+    core.rec.local                     recommendation-catalog.md
+    core.rec.mirror                    recommendation-catalog.md
+    core.rec.mods                      recommendation-catalog.md
+    core.rec.notices                   recommendation-catalog.md
+    core.rec.official                  recommendation-catalog.md
+    core.rec.plugin                    recommendation-catalog.md
+    core.rec.rank_table                recommendation-catalog.md
+    core.rec.refresh                   recommendation-catalog.md
+    core.rec.sources                   recommendation-catalog.md
+    core.rec.user_first                recommendation-catalog.md
+    core.rec.version                   recommendation-catalog.md
+    core.rec.weights_editable          recommendation-catalog.md
+  [core.region] 1 项
+    core.region                        region-offline-restriction.md
+  [core.status] 11 项
+    core.status                        server-status-settings.md
+    core.status.cache                  recommendation-catalog.md
+    core.status.custom                 recommendation-catalog.md
+    core.status.display                recommendation-catalog.md
+    core.status.history                recommendation-catalog.md
+    core.status.interval               recommendation-catalog.md
+    core.status.label                  recommendation-catalog.md
+    core.status.maintenance            recommendation-catalog.md
+    core.status.online                 recommendation-catalog.md
+    core.status.source                 recommendation-catalog.md
+    core.status.timeout                recommendation-catalog.md
+  [core.userflow] 1 项
+    core.userflow                      core-userflow.md,index.md
+  [core.xxx] 1 项
+    core.xxx                           _template.md
+
+4.6 语言包（demos/lang/）
+  en-US.js：set.* 键 3 个 = set.dir,set.lang,set.theme；t.NNNN 键 1318 个
+  zh-CN.js：set.* 键 3 个 = set.dir,set.lang,set.theme；t.NNNN 键 1318 个
+
+4.7 单个设置项的位置链示例（界面语言）
+  1 实现层默认值   src/core/config.rs:18  language="zh-CN"
+  2 导入白名单     src/core/settings_io.rs:21–28  KNOWN_KEYS 含 language；:62 类型校验 string
+  3 演示层控件     demos/ui-full-kcu-paper.html  data-pane="general" → id="setLang" → data-i18n="set.lang"
+  4 语言包文案     demos/lang/zh-CN.js / en-US.js  "set.lang"
+  5 分组文档       docs/features/settings-groups.md（常规）；docs/design/ux-logic-matrix.md U09/U22
+  同一设置项分散在 5 处，无单一注册表；4.1 的根键与 4.2 的模块内部键是两套不同口径。
+
+==============================================================================
+五、文档 / 演示 / 守卫 / 台账的位置索引
+==============================================================================
+  docs/index.md                 必读清单 515 项（按文件路径线性列出）
+  docs/records/interface-log.md 接口台账 I1–I221（按轮次追加，含 092 的 I219–I221）
+  docs/records/rounds.md        逐轮变更记录（按轮次追加）
+  docs/records/ax-feature-pool.md 功能池 24 项状态与 conflict 台账
+  docs/records/pending-question-environments.md  EQ-01 ~ EQ-13 / Q-C / 历史 Q 可拍环境（092 摊平段）
+  docs/records/requirement-compliance-audit.md 需求合规逐条对照
+  docs/records/code-ownership-audit.md 第三方与所有权审计
+  docs/records/open-questions.md 93 条待拍板问题（Q-A ~ Q-H 组 013 已答复）
+  docs/features/index.md        功能文档索引
+  scripts/*_guard.py           34 个守卫，逐个对应一个模块或一条口径；CI .github/workflows/ci.yml scan job 挂全部
+  docs/decisions/0NN-*.md      85 份，按轮次编号；查某功能需跨多轮
+  docs/verification/round-NNN.md 87 份，按轮次编号
+  demos/round-NNN-*.html       逐轮运行逻辑演示；demos/ui-full-*.html 为整页 UX 演示
+
+==============================================================================
+六、位置偏差与候选调整（真实核出，全部待拍板未执行）
+==============================================================================
+偏差 1 设置分组数不一致
+  现状：docs/decisions/020-nav-slots-settings.md D03 与 docs/features/settings-groups.md 记 9 分组 / 测量命令写 grep -c data-pane= 输出 9；demos/ui-full-kcu-paper.html 实跑 data-tab 11 / data-pane 11（多 crash 崩溃反馈、auto 自动化）。scripts/settings_guard.py 不核 tab 数，故 092 轮既有 34 个守卫全绿，本轮新增守卫另计。
+  候选 A 文档改 11 并同步测量命令；候选 B 演示层合并到 9；候选 C 登记偏差不改。
+  影响面：docs/decisions/020（历史行不重写）、docs/features/settings-groups.md、docs/design/ux-logic-matrix.md U22、demos/ui-full-kcu-paper.html、语言包 t.* 键、5 张设置 PNG、settings_guard.py 是否新增 tab 断言。
+  状态：待拍板，未执行。
+
+偏差 2 设置项真值分散
+  现状：根键 6 个在 config.rs / settings_io.rs；18 个模块各有 DEFAULT_STATE；40 张 *_KEYS 白名单；11 个演示分组与 15 个控件在 HTML；set.*/t.* 键在两份语言包；core.* ID 在 docs/design 与 docs/features。6 处无单一注册表。
+  候选 A 抽单一设置注册表模块（键 / 默认值 / 分组 / 控件 id / 语言包键 / 校验口径逐值）；候选 B 保持分散，加交叉守卫逐值对齐；候选 C 按域归中到少数模块。
+  影响面：src/core/ 新增或合并模块数、35 个守卫、86 份决策、80 份演示 HTML、两份语言包、docs/index.md 必读清单。
+  状态：待拍板，未执行。
+
+偏差 3 同构数据层模块按轮次线性堆积
+  现状：src/core/ 48 个模块 / 22332 行；069–091 期间多轮各新建一个 400–1000 行模块（18 个带 DEFAULT_STATE、40 张白名单表），每个重复 JSON 默认态、原子写、统一信封、diag_line、路径校验。00:175 原文为同类功能复用同一模块，11:15 原文为文件归中。
+  候选 A 按域合并（外观 / 编辑器 / 下载 / 实例 / 通知 / 网络 六域）；候选 B 抽公共 state_store 保留 48 个薄模块；候选 C 维持现状并只交本清单。
+  影响面：48 个文件路径、mod.rs 48 行声明、boot.rs LOADED_MODULES、34 个守卫的正则锚点、85 份决策的文件路径引用、523 项必读清单、6 个集成测试 import。
+  状态：待拍板，未执行。本轮采用候选 C（只交清单）。
+
+偏差 4 索引按轮次而非按功能域
+  现状：85 份决策 / 87 份验证 / 79 份 HTML / 72 份功能文档 / 34 个守卫 / 515 项必读清单，按轮次编号或线性堆叠；查一个功能要跨多轮台账。
+  候选 A 以本 txt 作为功能域索引并逐轮维护；候选 B 目录按域重排；候选 C 维持现状。
+  影响面：docs/index.md、interface-log.md、delivery_guard.py 的轮次 glob、CI 路径、历史文件路径引用（A181 历史不重写）。
+  状态：待拍板，未执行。本轮采用候选 A（本 txt 即索引）。
+
+偏差 5 功能池 24 项与 48 个模块非一一对应
+  现状：ax.rs 24 项 AX 中 21 项 DataLayer 各对应 1 个模块，AX07 / AX22 无实现文件，AX23 为 GateOnly；其余 27 个模块为基础设施或早期数据层，不在功能池表内。
+  候选 A 本清单第二节逐文件标注 AX / 状态 / 归属；候选 B 扩 ax.rs 到 48 项；候选 C 维持。
+  影响面：ax_guard.py 显式断言表、ax-feature-pool.md、本清单第二节、未来状态迁移轮次。
+  状态：待拍板，未执行。本轮采用候选 A（已在本清单第二节落地标注）。
+
+==============================================================================
+七、约束与状态
+==============================================================================
+  本轮不移动文件、不改设置项、不改 src/、不改 Cargo.* / vendor/、不改功能池状态、不改 api::v1。
+  候选调整全部标「待拍板，未执行」；093 用户当轮明确指令为提交位置 txt，按 00:248 覆盖 092 结尾「等用户拍板 A 组」的预告，A 组 EQ / Q 仍全部未证实。
+  四值：已证实（本清单全部计数与键值来自实扫 / 实跑）；已失败（E213–E375 历史项 + 偏差 1 的文档数值过期）；未证实（13 条 EQ / 4 项 Q-C / 31 条历史 Q / 2 项 Planned / 候选调整后果）；未启动（真实网络 IO / UI 宿主 / 渲染层 / 文件迁移执行）。
+  通过标记：按 00:245 不发；独立验证部分通过。
+  唯一下一步：用户从第六节 5 条偏差里点要执行哪几条（或回「都不动」），再按 A208 排迁移轮次；不擅自开工硬做。
+
+生成命令：python3 scripts/feature_locations.py
+校验命令：python3 scripts/feature_locations_guard.py

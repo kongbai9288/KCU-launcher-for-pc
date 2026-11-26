@@ -249,3 +249,7 @@ AX15 `studio_image_editor` 由 `Planned` 改 `DataLayer`（091 落地），confl
 ## 092 补记
 
 092 为拍板闭环轮，`src/core/ax.rs` 零改动：AX07 `doh_support` / `Planned` / `network_io_not_started`、AX22 `shimu_account` / `Planned` / 空 conflict、AX23 `client_ai_gate` / `GateOnly` 原样；`Planned 2` / `DataLayer 21` / `GateOnly 1`，`api::v1` 7 符号不变。按 A230 逐条核 2 项冲突并写进 `pending-question-environments.md` 092 段：AX07 技术受阻非需求冲突（EQ-03 Win7 TLS 前置 + 真实网络 IO 未启动，00 / 11 / 12 号全文无 DoH 锚点）、AX22 浏览器授权依赖真实网络 IO + 第三方端点 + `11:7` / 054 境外限制 + `11:18` API 不共有，两项排除留痕、状态保持 `Planned`、AX07 conflict 不清，不擅自定优先级（A208）。Q-091-01 / Q-091-02 / Q-091-03 与 Q-C 口径修正 E375 见 092 段。064–091 历史行不重写（A181 / A201）。
+
+## 093 补记
+
+093 为位置清单交付轮，`src/core/ax.rs` 零改动：AX07 `doh_support` / `Planned` / `network_io_not_started`、AX22 `shimu_account` / `Planned` / 空 conflict、AX23 `client_ai_gate` / `GateOnly` 原样；`Planned 2` / `DataLayer 21` / `GateOnly 1`，`api::v1` 7 符号不变。用户当轮明确指令「提交所有功能写的位置的 txt」按 `00:248` 覆盖 092 唯一下一步「等用户拍板 A 组」；A 组 EQ-03 + AX07、EQ-01 + Q-091-01 + AX22 与其余 11 条 EQ / 4 项 Q-C / 31 条历史 Q 保持「未证实（待拍板）」，不擅自开工、不擅自定 2 项优先级（A208）。位置清单第六节 5 条候选调整全部待拍板未执行。064–092 历史行不重写（A181 / A201）。
