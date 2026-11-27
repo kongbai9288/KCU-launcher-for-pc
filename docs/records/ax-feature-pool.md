@@ -261,3 +261,7 @@ AX15 `studio_image_editor` 由 `Planned` 改 `DataLayer`（091 落地），confl
 ## 095 补记
 
 095 为归类覆盖度核对轮，`src/core/ax.rs` 零改动：AX07 `doh_support` / `Planned` / `network_io_not_started`、AX22 `shimu_account` / `Planned` / 空 conflict、AX23 `client_ai_gate` / `GateOnly` 原样；`Planned 2` / `DataLayer 21` / `GateOnly 1`，`api::v1` 7 符号不变。用户当轮「我设计好再给你」按 `00:248` 覆盖 094「点第三 / 四 / 五 / 六节里要执行哪几条归位」的预告；A 组最小拍板面、其余 11 条 EQ、Q-C01 / Q-C02 / Q-C08 / Q-037-01、Q-091-01 / 02 / 03 与 D 组 31 条历史 Q 保持「待拍板 / 未证实」。093 的 5 条偏差、094 的 8 条规则与 10 条散落归位、095 的 7 条真漏候选域 / 4 条部分覆盖 / 2 条锚点补挂同为待拍板未执行。064–094 历史行不重写（A181 / A201）。
+
+## 096 补记
+
+096 为逐 L 行为链路摊平轮，`src/core/ax.rs` 零改动：AX07 `doh_support` / `Planned` / `network_io_not_started`、AX22 `shimu_account` / `Planned` / 空 conflict、AX23 `client_ai_gate` / `GateOnly` 原样；`Planned 2` / `DataLayer 21` / `GateOnly 1`，`api::v1` 7 符号不变。用户 096 只发「干」，按 `00:248` 覆盖 095「等用户归位方案」的预告；A 组最小拍板面、其余 11 条 EQ、Q-C01 / Q-C02 / Q-C08 / Q-037-01、Q-091-01 / 02 / 03 与 D 组 31 条历史 Q 保持「待拍板 / 未证实」。093 的 5 条偏差、094 的 8 条规则与 10 条散落归位、095 的 13 条缺口与 34 条补充项、096 的 47 行骨架归位字段同为待拍板未执行。064–095 历史行不重写（A181 / A201）。

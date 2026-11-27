@@ -149,3 +149,5 @@ jobs:
         run: python3 scripts/feature_regrouping_guard.py
       - name: feature_coverage_guard
         run: python3 scripts/feature_coverage_guard.py
+      - name: behavior_chains_guard
+        run: python3 scripts/behavior_chains_guard.py

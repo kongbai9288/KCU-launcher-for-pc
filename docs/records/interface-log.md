@@ -938,3 +938,8 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I231 | `scripts/feature_coverage_guard.py` / `.github/workflows/ci.yml` / `docs/index.md` | 095 新守卫挂 `scan` step、必读清单加 095 八项 |
 | I232 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |
 | I233 | `docs/records/round-094-feature-regrouping.txt` / `docs/records/round-095-coverage-gaps.txt` | E382 登记：094 按域归纳漏收 7 条原文功能，095 逐条补核；094 历史文件不重写、零 diff |
+
+| I234 | `docs/records/round-096-behavior-chains.txt` / `scripts/behavior_chains.py` | 096 用户可见行为链路全集（29 标题 / 348 条 L）与只读实扫生成脚本；零新增第三方、零新增实现模块 |
+| I235 | `scripts/behavior_chains_guard.py` / `.github/workflows/ci.yml` / `docs/index.md` | 096 新守卫挂 `scan` step、必读清单加 096 八项 |
+| I236 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |
+| I237 | `docs/records/round-094-feature-regrouping.txt` / `round-095-coverage-gaps.txt` / `round-096-behavior-chains.txt` | E385 登记：094 只展开下载域 12 步、095 查清覆盖未展开 L、096 逐 L 摊平；094 / 095 历史文件不重写、零 diff |
