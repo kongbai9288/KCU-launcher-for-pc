@@ -933,3 +933,8 @@ CORRECTION：013 轮记录的「GitHub Actions 不向本地沙盒分发工具链
 | I227 | `scripts/feature_regrouping_guard.py` / `.github/workflows/ci.yml` / `docs/index.md` | 094 新守卫挂 `scan` step、必读清单加 094 八项 |
 | I228 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |
 | I229 | `docs/records/round-093-feature-locations.txt` / `docs/records/round-094-feature-regrouping.txt` | E380 登记：093 回答「文件在哪」，094 回答「功能归哪一类、行为链路怎么归位」；093 历史文件不重写 |
+
+| I230 | `docs/records/round-095-coverage-gaps.txt` / `scripts/feature_coverage.py` | 095 归类覆盖度核对表与只读实扫生成脚本；零新增第三方、零新增实现模块 |
+| I231 | `scripts/feature_coverage_guard.py` / `.github/workflows/ci.yml` / `docs/index.md` | 095 新守卫挂 `scan` step、必读清单加 095 八项 |
+| I232 | `src/core/ax.rs` / `src/api.rs` / `Cargo.toml` / `Cargo.lock` | 零改动；AX07 / AX22 状态与 conflict 原样，v1 7 符号 / 4 条 `pub use` 不变（A246） |
+| I233 | `docs/records/round-094-feature-regrouping.txt` / `docs/records/round-095-coverage-gaps.txt` | E382 登记：094 按域归纳漏收 7 条原文功能，095 逐条补核；094 历史文件不重写、零 diff |

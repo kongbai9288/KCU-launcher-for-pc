@@ -147,3 +147,5 @@ jobs:
         run: python3 scripts/feature_locations_guard.py
       - name: feature_regrouping_guard
         run: python3 scripts/feature_regrouping_guard.py
+      - name: feature_coverage_guard
+        run: python3 scripts/feature_coverage_guard.py
